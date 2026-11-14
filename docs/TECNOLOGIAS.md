@@ -1,0 +1,100 @@
+# Registro de decisiones y tecnologías
+
+Estados válidos:
+
+- **CONFIRMADO**: decisión elegida expresamente por el responsable humano.
+- **PROPUESTO**: recomendación sin aprobación. No se usa como si estuviera aprobada.
+- **VERIFICAR**: hay que comprobarla antes de usarla, en la fase indicada (skill `verificar-decision`).
+- **BLOQUEADO**: no se puede ejecutar hasta que ocurra lo indicado.
+- **SUPERADO**: sustituida por otra, con referencia.
+
+Toda transición lleva fecha, autor y evidencia. Una recomendación nunca se convierte en aprobación implícita.
+
+Las comprobaciones del 12/11/2026 se hicieron leyendo documentación oficial. Las versiones exactas de las librerías se vuelven a comprobar al instalarlas (fase 1).
+
+## Decisiones de producto
+
+| ID | Decisión | Estado | Evidencia | Próxima acción |
+| --- | --- | --- | --- | --- |
+| D-001 | Carpeta local `C:\dev\agentes-correo-humanaia` | CONFIRMADO | Elección del responsable, 12/11/2026 | — |
+| D-002 | Supabase (BD, Auth, RLS) + Vercel (una app Next.js) | CONFIRMADO | Elección del responsable, 12/11/2026 | Crear cuentas y proyectos en la fase 1 |
+| D-003 | Cobro recurrente automático con Stripe | CONFIRMADO | Elección del responsable, 12/11/2026 | Fase 6 |
+| D-004 | Estilo visual de la captura de referencia | CONFIRMADO | Elección del responsable, 12/11/2026 | `docs/DISENO.md`, fase 3 |
+| D-005 | Arnés de equipo de ingeniería (constitución, orquestador, agentes, SDD, enrutado de modelos); producto final, no MVP | CONFIRMADO | Instrucción del responsable, 12/11/2026 | — |
+| D-006 | La licencia se activa con un código de un solo uso; cada conexión se registra y se revoca por separado | CONFIRMADO | Aprobación del plan, 12/11/2026 · ADR-0002 | Diseño en la función 001 |
+| D-007 | El texto del prompt vive en el repositorio; versiones inmutables con huella; el panel solo elige versión por canal | CONFIRMADO | Aprobación del plan, 12/11/2026 · ADR-0005 | Fase 4 |
+| D-008 | `problemas` del informe y reglas por cliente son valores de lista cerrada | CONFIRMADO | Aprobación del plan, 12/11/2026 | `contratos/informe.schema.json` |
+| D-009 | Se mantienen las 3 herramientas. Unir `confirmar_orden` en `enviar_informe` solo si la prueba real lo exige | CONFIRMADO | Aprobación del plan, 12/11/2026 | Decidir al cerrar la fase 1 |
+| D-010 | El impago suspende la licencia tras un periodo de gracia, con estado manual; Stripe arranca en observación | CONFIRMADO | Aprobación del plan, 12/11/2026 · ADR-0006 | Fase 6 |
+| D-011 | Enrutado de modelos dentro de Claude (Fable, Opus, Sonnet, Haiku) | CONFIRMADO | Aprobación del plan, 12/11/2026 | `docs/EQUIPO.md` |
+| D-012 | Constitución de ingeniería | CONFIRMADO | Ratificada por el responsable, 12/11/2026 · `docs/CONSTITUCION.md` v1.0 | — |
+| D-013 | El prompt no se entrega en estado `pausada`; solo el estado y la orden | PROPUESTO | Plan aprobado; caso «pausado pero me lo piden en conversación» sin resolver | Aclarar en la función 001 |
+| D-014 | Estructura del repositorio de `docs/ESQUELETO.md` | CONFIRMADO | Respuesta «Sí, cerrar fase 0» del responsable, 12/11/2026. El cierre exigía ratificar la constitución y aprobar el esqueleto | — |
+| D-015 | Un chat por fase, trabajando en paralelo cuando se pueda | CONFIRMADO | Instrucciones del responsable, 12/11/2026: «crea un chat para cada etapa» y «si pueden trabajar en paralelo mejor» | Alcance del paralelo, propuesto por el orquestador: especificación, aclaraciones, diseño y plan de cada fase. El código sigue las dependencias de `docs/PLAN.md` |
+| D-016 | Vercel sin coste hasta el final de la fase 1: se desarrolla en local y la prueba gratuita de 14 días del plan Pro se activa cuando el conector esté listo para la prueba real. El pago se decide al cerrar la fase 1 | CONFIRMADO | Instrucción del responsable, 13/11/2026 («Empecemos con eso») · Datos en T-018 | No crear la cuenta ni activar la prueba antes de tiempo: solo hay una por cuenta de usuario. La activa una persona |
+| D-017 | Las fases 2 y 4 comparten desarrollo con la fase 1 y trabajan a la vez que ella | CONFIRMADO | Instrucción del responsable, 13/11/2026 | `docs/PLAN.md`, apartado «Reparto en chats». Las puertas P0 y P1 de cada fase las sigue abriendo el responsable. Reparto entre las fases 2 y 4 propuesto por el orquestador y confirmado por el responsable el 13/11/2026 |
+| D-018 | Reglas de ahorro de uso: chats cortos con relevo en disco, orquestar con Sonnet, especificaciones acotadas, encargos por apartado y dos fases a la vez como mucho | CONFIRMADO | Aprobación del responsable, 14/11/2026, tras medir el consumo (chats de hasta 851.000 tokens; límite semanal de Fable al 83 %) | `docs/EQUIPO.md`, apartado «Ahorro de uso». Sustituye el alcance de D-015 en lo que toca al número de fases a la vez |
+| D-019 | Delegación en las fases 1 y 3: el orquestador decide en nombre del responsable las cuestiones abiertas y abre las puertas P0 y P1, eligiendo siempre la opción de mayor calidad, seguridad y legibilidad para personas | CONFIRMADO | Instrucción del responsable, 14/11/2026: «termina fase 3 y fase 1 por completo, tienes permisos para decidir, siempre elige calidad y seguridad y legibilidad óptimas para humanos» | Cada decisión delegada se anota en `aclaraciones.md` como «decidido por delegación (D-019)», con su motivo, para que el responsable pueda revisarla. **No se delega**: crear cuentas o proyectos, poner secretos, aprobar gasto, activar la prueba de Vercel, publicar en producción, cambiar la constitución o los permisos, ni cerrar la fase (puerta P7). Los commits locales quedan permitidos en esas fases; no se sube nada a un remoto |
+
+## Decisiones técnicas verificadas
+
+| ID | Decisión | Estado | Verificación (12/11/2026) |
+| --- | --- | --- | --- |
+| T-001 | Node 26 LTS y TypeScript | CONFIRMADO | Node 26 es LTS y el valor por defecto en Vercel. [nodejs.org](https://nodejs.org/en/about/previous-releases) · [Vercel](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions) |
+| T-002 | Next.js 16.4 (App Router) | CONFIRMADO | Última versión estable; mínimo Node 20.9. [nextjs.org](https://nextjs.org/blog) |
+| T-003 | Supabase plan Pro, región `eu-central-1` (Fráncfort) | CONFIRMADO | Regiones UE: `eu-west-1`, `eu-west-3`, `eu-central-1`, `eu-north-1`. Londres y Zúrich no son UE. La región no se puede cambiar. El plan gratuito se pausa a los 7 días y no tiene copias. [Regiones](https://supabase.com/docs/guides/platform/regions) · [Precios](https://supabase.com/pricing) · [DPA](https://supabase.com/legal/dpa) |
+| T-004 | Claves `sb_publishable_…` (cliente) y `sb_secret_…` (solo servidor) | CONFIRMADO | Las antiguas `anon` / `service_role` se retiran a finales de 2026. [Claves](https://supabase.com/docs/guides/api/api-keys) |
+| T-005 | Patrón de RLS: `(select auth.uid())`, índices en columnas de política, `security definer` con `search_path = ''` fuera de esquemas expuestos, vistas con `security_invoker`, autorización por tablas propias y nunca por `user_metadata` | CONFIRMADO | [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security) |
+| T-006 | Vercel plan Pro con funciones fijadas en `fra1` | CONFIRMADO | Por defecto se ejecutan en `iad1` (EE. UU.). Hobby es solo para uso no comercial y no tiene DPA. [Regiones](https://vercel.com/docs/regions) · [Región de funciones](https://vercel.com/docs/functions/configuring-functions/region) · [Hobby](https://vercel.com/docs/plans/hobby) · [DPA](https://vercel.com/legal/dpa) |
+| T-007 | Conector por Streamable HTTP sin estado | CONFIRMADO | Especificación MCP vigente 2026-07-28: transportes estándar stdio y Streamable HTTP. [Transportes](https://modelcontextprotocol.io/specification/latest/basic/transports) |
+| T-008 | Librerías `mcp-handler` 2.x y `@modelcontextprotocol/server` 2.x | CONFIRMADO | `mcp-handler` 2.3.1 incluye `withMcpAuth` y `protectedResourceHandler`; no incluye servidor de autorización. [SDK](https://github.com/modelcontextprotocol/typescript-sdk) · [mcp-handler](https://github.com/vercel/mcp-handler) |
+| T-009 | Autorización OAuth 2.1 con PKCE y pantalla propia. Token solo en cabecera `Authorization` | CONFIRMADO | Única vía admitida por Claude y ChatGPT a la vez. El token en la URL está prohibido por la especificación; ChatGPT no admite claves fijas; en Claude las cabeceras fijas están en beta limitada. [Autorización MCP](https://modelcontextprotocol.io/specification/latest/basic/authorization) · [Claude](https://claude.com/docs/connectors/building/authentication.md) · [ChatGPT](https://developers.openai.com/apps-sdk/build/auth) |
+| T-010 | Callbacks en lista cerrada: `https://claude.ai/api/mcp/auth_callback`, `https://chatgpt.com/connector_platform_oauth_redirect` y `https://chatgpt.com/connector/oauth/{callback_id}` | CONFIRMADO | Documentación de ambos asistentes (mismas fuentes que T-009). Se vuelven a comprobar en la prueba real |
+| T-011 | Metadatos de recurso protegido (RFC 9728) y registro de clientes por CIMD y por DCR | CONFIRMADO | CIMD es el recomendado y DCR está obsoleto pero Claude recurre a él. Mismas fuentes que T-009 |
+| T-012 | Sin Docker en la máquina de desarrollo: migraciones SQL escritas a mano, `supabase db push` contra un proyecto de desarrollo, pruebas pgTAP en CI | CONFIRMADO | `supabase start` y `supabase test db` exigen Docker. [CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) · [test db](https://supabase.com/docs/reference/cli/supabase-test-db) · [db push](https://supabase.com/docs/reference/cli/supabase-db-push) |
+| T-013 | CLI de Supabase como dependencia de desarrollo (`npm i -D supabase`) | CONFIRMADO | Misma fuente que T-012 |
+| T-014 | El panel no emite facturas | CONFIRMADO | Un sistema que expide facturas queda sujeto a Verifactu; uno que solo registra el estado de pago, no. [AEAT](https://sede.agenciatributaria.gob.es/Sede/iva/sistemas-informaticos-facturacion-verifactu/preguntas-frecuentes/cuestiones-generales-ambitos-aplicacion.html) |
+| T-015 | Stripe Billing: tarjeta y adeudo SEPA, portal de cliente, estados `trialing`, `active`, `incomplete`, `incomplete_expired`, `past_due`, `unpaid`, `canceled`, `paused` | CONFIRMADO | [Webhooks de suscripciones](https://docs.stripe.com/billing/subscriptions/webhooks) · [Tarifas](https://stripe.com/es/pricing) |
+| T-016 | Arnés de Claude Code: agentes en `.claude/agents/` con `model` y `effort`; skills en `.claude/skills/`; reglas por ruta en `.claude/rules/`; ganchos con `node`; permisos `deny` / `ask` | CONFIRMADO | [Subagentes](https://code.claude.com/docs/en/sub-agents.md) · [Skills](https://code.claude.com/docs/en/skills.md) · [Ganchos](https://code.claude.com/docs/en/hooks.md) · [Permisos](https://code.claude.com/docs/en/permissions.md) · [Modelos](https://code.claude.com/docs/en/model-config.md) · [Memoria](https://code.claude.com/docs/en/memory.md) |
+| T-017 | La app de escritorio carga del proyecto los agentes, las skills, el gancho y las reglas de permisos. El gancho se declara como una sola cadena con ruta relativa: `node .claude/hooks/bloquear-secretos.mjs` | CONFIRMADO | Comprobado en una sesión abierta en la carpeta, 12/11/2026 (antes V-105). `docs/EVIDENCIAS-FASE-0.md`, apartado 5 |
+| T-018 | Precios y prueba de Vercel. Plan Pro: 20 $/mes con un puesto de desarrollador y 20 $ de crédito de uso; cada puesto adicional, 20 $/mes; puestos de solo lectura gratis. Prueba gratuita de Pro: 14 días, sin tarjeta para empezar, una sola por cuenta de usuario, con límites (un propietario, 10 miembros, 16 horas de CPU, 1.000.000 de invocaciones); si al acabar no hay método de pago, la cuenta pasa a Hobby. El plan Hobby es solo para uso personal o no comercial | CONFIRMADO | 13/11/2026. [Precios](https://vercel.com/pricing) · [Plan Pro](https://vercel.com/docs/plans/pro-plan) · [Prueba](https://vercel.com/docs/plans/pro-plan/trials) · [Términos, actualizados el 19/10/2026](https://vercel.com/legal/terms). Sin aclarar: las peticiones incluidas (10 millones según la página de precios, 1 millón según la documentación) |
+
+## Pendiente de verificar
+
+| ID | Qué hay que comprobar | Fase | Cómo |
+| --- | --- | --- | --- |
+| V-101 | Que un conector personalizado funcione en tareas programadas de Claude. La documentación dice «funcionan con tus conectores» sin nombrar los personalizados | 1 | Prueba real |
+| V-102 | Lo mismo en ChatGPT, y en qué planes se permiten herramientas de escritura. No hay fuente oficial y las de terceros se contradicen | 1 | Prueba real |
+| V-103 | Que las herramientas de escritura no dejen la ejecución desatendida esperando una aprobación | 1 | Prueba real, con «permitir en todas las ejecuciones programadas» en Claude |
+| V-104 | Compatibilidad de versiones del protocolo: Claude declara hasta 2025-11-25 y las librerías implementan 2026-07-28 con modo de compatibilidad | 1 | Prueba real |
+| V-116 | Que las reglas por ruta de `.claude/rules/` se carguen al tocar archivos de esas rutas. No se puede comprobar hasta que existan `src/`, `supabase/` o `prompts/` | 1 | Al crear el primer archivo de cada ruta, comprobar que la regla se aplica |
+| V-106 | Servidor de autorización: construir el mínimo o usar una librería. No se conoce ninguna que cubra CIMD y pantalla propia en funciones sin estado | 1 | Diseño de la función 001 |
+| V-107 | Conexión del conector con un rol de Postgres propio desde Vercel (agrupador de conexiones de Supabase) | 2 | Documentación y prueba |
+| V-108 | Exigir doble factor (`aal2`) en las políticas de superadmin; disponibilidad del gancho de claims en el plan Pro | 2 | Documentación y prueba pgTAP |
+| V-109 | Versión vigente de zod y su encaje con los esquemas JSON de `contratos/` | 1 | Documentación |
+| V-110 | Librería de interfaz y de gráficos | 3 | Documentación y prueba de accesibilidad |
+| V-111 | Proveedor de correo para avisos de alertas, con alojamiento en la UE | 4 | Documentación |
+| V-112 | Supervisión de errores que no capture cuerpos de petición, con datos en la UE | 1 | Documentación |
+| V-113 | Mecanismo de límite de intentos en Vercel (cortafuegos de la plataforma o contador en la BD) | 2 | Documentación |
+| V-114 | Entorno previo: rama de Supabase o segundo proyecto, y su coste | 1 | Documentación |
+| V-115 | Versiones de las acciones de GitHub usadas en `.github/workflows/` y fijarlas por huella | 1 | Documentación |
+
+## Decisiones bloqueadas o a cargo del responsable
+
+| ID | Decisión | Estado | Qué falta |
+| --- | --- | --- | --- |
+| B-001 | Quién emite la factura legal: el programa de facturación habitual, o Stripe con un conector homologado (Invopop, Billit) | BLOQUEADO | Consulta con la gestoría antes de la fase 6. Stripe por sí solo no cumple Verifactu. Fechas vigentes: sociedades 1/1/2027, resto 1/7/2027. Hacienda anunció el 5/10/2026 que prevé aplazarlo a octubre de 2028; no hay norma aprobada. [BOE](https://www.boe.es/buscar/act.php?id=BOE-A-2023-24840) · [Stripe](https://stripe.com/es/resources/more/what-is-verifactu-spain) · [Invopop](https://docs.invopop.com/apps/stripe) |
+| B-002 | Gasto mensual: Supabase Pro (25 $) + Vercel Pro (20 $ por desarrollador) + comisiones de Stripe (0,7 % de Billing; 1,5 % + 0,25 € por tarjeta del EEE o 0,35 € por adeudo SEPA) | PROPUESTO | Vercel: aplazado por D-016; se decide al cerrar la fase 1, con el resultado de la prueba real. Supabase: aprobación antes de crear el proyecto |
+| B-003 | Publicación en producción | BLOQUEADO | Lista de publicación de `docs/SEGURIDAD.md` completa y autorización expresa (fase 6) |
+
+## Descartado
+
+| Opción | Motivo |
+| --- | --- |
+| Clave de licencia en la URL del conector | Prohibido por la especificación MCP y desaconsejado por Claude |
+| Cabecera fija con la clave | ChatGPT no la admite; en Claude está en beta limitada |
+| Servidor OAuth de Supabase como autorizador del conector | Está en beta pública y no hay pruebas documentadas con Claude ni ChatGPT. [Supabase](https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication) |
+| Plan gratuito de Supabase o Hobby de Vercel | Pausa por inactividad y sin copias; uso comercial prohibido y sin DPA |
+| Transporte SSE | Ya no figura en la especificación vigente |
+| Equipos de agentes experimentales de Claude Code | Experimentales, desactivados por defecto y con mucho más consumo |
+| Gancho declarado con comando y argumentos por separado (`args`) y la ruta en una variable del proyecto | En la app de escritorio en Windows el gancho no bloqueaba nada y no daba aviso. Comprobado el 12/11/2026; la causa exacta no se ha determinado. Se usa una sola cadena con ruta relativa (T-017) |

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:humanaia:agentes-correo:contratos:enviar-informe:1",
+  "title": "enviar_informe",
+  "description": "Última llamada de cada revisión, también si ha fallado o está en pausa. Valida y guarda el informe y cierra la ejecución. Los campos que no figuran en el contrato del informe se descartan. Repetir la llamada con la misma ejecución no duplica nada.",
+  "x-anotaciones": {
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entrada", "salida"],
+  "properties": {
+    "entrada": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ejecucion_id", "informe"],
+      "properties": {
+        "ejecucion_id": {
+          "description": "El que devolvió obtener_instrucciones en esta revisión.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "informe": {
+          "$ref": "urn:humanaia:agentes-correo:contratos:informe:1"
+        }
+      }
+    },
+    "salida": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["guardado"],
+      "properties": {
+        "guardado": { "type": "boolean" },
+        "repetido": {
+          "description": "true si ya había un informe para esa ejecución.",
+          "type": "boolean"
+        },
+        "campos_descartados": {
+          "description": "Cuántos campos ajenos traía. Solo el número.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "motivo": {
+          "description": "Solo cuando guardado es false. Nunca incluye el valor recibido.",
+          "enum": ["ejecucion_desconocida", "informe_invalido"]
+        }
+      }
+    }
+  }
+}

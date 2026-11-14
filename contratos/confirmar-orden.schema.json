@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:humanaia:agentes-correo:contratos:confirmar-orden:1",
+  "title": "confirmar_orden",
+  "description": "Confirma que el agente ha aplicado la orden que recibió en obtener_instrucciones. Solo existen dos órdenes: pausar y reanudar. Confirmar dos veces la misma orden no falla.",
+  "x-anotaciones": {
+    "readOnlyHint": false,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entrada", "salida"],
+  "properties": {
+    "entrada": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orden_id"],
+      "properties": {
+        "orden_id": {
+          "description": "El identificador de la orden recibida.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "salida": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmada"],
+      "properties": {
+        "confirmada": {
+          "description": "false si la orden no existe o no es de este cliente.",
+          "type": "boolean"
+        },
+        "repetida": {
+          "description": "true si ya estaba confirmada.",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

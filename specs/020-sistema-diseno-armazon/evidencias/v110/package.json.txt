@@ -1,0 +1,25 @@
+{
+  "name": "prueba-v110",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Prueba real mínima de V-110: semántica y teclado de las librerías candidatas, con datos ficticios.",
+  "scripts": {
+    "prueba": "node --test prueba.test.mjs"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.0",
+    "axe-core": "4.14.0",
+    "jsdom": "^26.0.0",
+    "radix-ui": "^1.8.1",
+    "react": "19.3.1",
+    "react-aria-components": "1.22.1",
+    "react-dom": "19.3.1",
+    "recharts": "3.10.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}

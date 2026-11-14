@@ -1,0 +1,93 @@
+// Prueba real mínima de V-110, parte del diálogo modal, separada en pasos pequeños
+// para saber cuál se cuelga en el navegador simulado. Se ejecuta con un límite de tiempo.
+import { test, before, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
+
+const dom = new JSDOM('<!doctype html><html lang="es"><head><title>Prueba V-110</title></head><body></body></html>', {
+  url: 'http://localhost/',
+  pretendToBeVisual: true,
+});
+const g = globalThis;
+g.window = dom.window;
+g.document = dom.window.document;
+for (const k of Object.getOwnPropertyNames(dom.window)) {
+  if (k in g && k !== 'navigator') continue;
+  try { Object.defineProperty(g, k, { value: dom.window[k], configurable: true, writable: true }); } catch { /* no se puede redefinir */ }
+}
+const cssEscape = (s) => String(s).replace(/[^a-zA-Z0-9_ -￿-]/g, (c) => `\\${c}`);
+if (!g.CSS) g.CSS = {};
+if (!g.CSS.escape) g.CSS.escape = cssEscape;
+if (!dom.window.CSS) dom.window.CSS = g.CSS;
+g.IS_REACT_ACT_ENVIRONMENT = true;
+if (!g.ResizeObserver) g.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
+if (!dom.window.matchMedia) dom.window.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
+if (!dom.window.HTMLElement.prototype.scrollIntoView) dom.window.HTMLElement.prototype.scrollIntoView = () => {};
+
+let React, h, rtl, userEvent, RAC;
+
+before(async () => {
+  React = (await import('react')).default;
+  h = React.createElement;
+  rtl = await import('@testing-library/react');
+  userEvent = (await import('@testing-library/user-event')).default;
+  RAC = await import('react-aria-components');
+});
+
+afterEach(() => rtl.cleanup());
+
+function montar() {
+  rtl.render(
+    h(RAC.DialogTrigger, null,
+      h(RAC.Button, null, 'Pausar agente'),
+      h(RAC.ModalOverlay, null,
+        h(RAC.Modal, null,
+          h(RAC.Dialog, { role: 'alertdialog' },
+            h(RAC.Heading, { slot: 'title' }, 'Pausar el agente de Cliente Ficticio'),
+            h('p', null, 'Se aplicará en la siguiente revisión del agente.'),
+            h(RAC.Button, { slot: 'close' }, 'Cancelar'),
+            h(RAC.Button, { slot: 'close' }, 'Confirmar pausa'))))),
+  );
+  return rtl.screen.getByRole('button', { name: 'Pausar agente' });
+}
+
+// Busca el diálogo sin los mensajes de error gigantes de la librería de pruebas.
+const dialogo = () => document.querySelector('[role="alertdialog"]');
+
+test('A · se abre con teclado y tiene nombre accesible', async () => {
+  const user = userEvent.setup({ document });
+  const disparador = montar();
+  disparador.focus();
+  await user.keyboard('{Enter}');
+  await rtl.waitFor(() => assert.notEqual(dialogo(), null, 'el diálogo existe'), { timeout: 2000 });
+  const d = dialogo();
+  const idTitulo = d.getAttribute('aria-labelledby');
+  assert.notEqual(idTitulo, null, 'lleva aria-labelledby');
+  assert.equal(document.getElementById(idTitulo)?.textContent, 'Pausar el agente de Cliente Ficticio');
+  assert.equal(d.contains(document.activeElement), true, 'al abrir, el foco entra en el diálogo');
+  console.log('  diálogo · foco inicial en:', document.activeElement?.tagName, JSON.stringify(document.activeElement?.textContent));
+});
+
+test('B · Escape cierra y el foco vuelve al botón que lo abrió', async () => {
+  const user = userEvent.setup({ document });
+  const disparador = montar();
+  disparador.focus();
+  await user.keyboard('{Enter}');
+  await rtl.waitFor(() => assert.notEqual(dialogo(), null), { timeout: 2000 });
+  await user.keyboard('{Escape}');
+  await rtl.waitFor(() => assert.equal(dialogo(), null, 'el diálogo se cierra'), { timeout: 2000 });
+  await rtl.waitFor(() => assert.equal(document.activeElement, disparador, 'el foco vuelve'), { timeout: 2000 });
+});
+
+test('C · el tabulador no saca el foco del diálogo', async () => {
+  const user = userEvent.setup({ document });
+  const disparador = montar();
+  disparador.focus();
+  await user.keyboard('{Enter}');
+  await rtl.waitFor(() => assert.notEqual(dialogo(), null), { timeout: 2000 });
+  const d = dialogo();
+  for (let i = 0; i < 6; i += 1) {
+    await user.tab();
+    assert.equal(d.contains(document.activeElement), true, `tras ${i + 1} tabulaciones el foco sigue dentro`);
+  }
+});

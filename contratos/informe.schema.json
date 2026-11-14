@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:humanaia:agentes-correo:contratos:informe:1",
+  "title": "Informe de una revisión",
+  "description": "Cifras y estado de una revisión del agente de correo. Solo admite enteros acotados, booleanos y valores de listas cerradas. Antes de validar, el servidor descarta cualquier campo que no figure aquí y solo cuenta cuántos eran; no guarda ni su nombre ni su valor. Está prohibido añadir campos de texto libre (constitución, artículo 1).",
+  "x-version-esquema": 1,
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "estado",
+    "modo",
+    "asistente",
+    "almacenamiento",
+    "version_prompt",
+    "frecuencia_horas",
+    "tratados",
+    "sin_tratar",
+    "borradores",
+    "documentos",
+    "facturas_pendientes",
+    "urgentes",
+    "comprobaciones",
+    "problemas"
+  ],
+  "properties": {
+    "estado": {
+      "description": "ok: todo se hizo. aviso: se revisó pero quedó algo sin hacer. error: no se pudo revisar. pausado: hay una pausa en vigor.",
+      "enum": ["ok", "aviso", "error", "pausado"]
+    },
+    "modo": {
+      "enum": ["conversacion", "desatendido"]
+    },
+    "asistente": {
+      "enum": ["claude", "chatgpt", "otro"]
+    },
+    "almacenamiento": {
+      "enum": ["drive", "onedrive", "dropbox", "otro"]
+    },
+    "version_prompt": {
+      "description": "Versión del prompt que ha seguido el agente. Solo dígitos y puntos.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$",
+      "maxLength": 12
+    },
+    "frecuencia_horas": {
+      "description": "Cada cuántas horas está programada la revisión.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 168
+    },
+    "tratados": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "sin_tratar": { "type": "integer", "minimum": 0, "maximum": 100000 },
+    "borradores": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "documentos": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "facturas_pendientes": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "urgentes": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "comprobaciones": {
+      "description": "Si pudo entrar al correo y a la nube, si leyó el contexto y si dejó el registro de la revisión.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correo", "almacenamiento", "contexto", "registro"],
+      "properties": {
+        "correo": { "type": "boolean" },
+        "almacenamiento": { "type": "boolean" },
+        "contexto": { "type": "boolean" },
+        "registro": { "type": "boolean" }
+      }
+    },
+    "problemas": {
+      "description": "Códigos del catálogo cerrado sobre el funcionamiento del propio agente. Nunca frases.",
+      "type": "array",
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "sin_acceso_correo",
+          "sin_acceso_almacenamiento",
+          "sin_contexto",
+          "registro_no_guardado",
+          "error_borrador",
+          "error_guardar_documento",
+          "error_etiquetado",
+          "limite_correos_alcanzado",
+          "factura_requiere_acceso",
+          "otro_agente_detectado",
+          "conector_humanaia_inestable",
+          "otro"
+        ]
+      }
+    }
+  }
+}

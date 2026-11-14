@@ -1,0 +1,55 @@
+// Página mínima para la prueba real de V-110 en un navegador. Datos ficticios.
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import * as RAC from 'react-aria-components';
+import { LineChart, Line, XAxis, YAxis } from 'recharts';
+import axe from 'axe-core';
+
+window.axe = axe;
+const h = React.createElement;
+
+function Tabla() {
+  const [orden, setOrden] = React.useState({ column: 'nombre', direction: 'ascending' });
+  const filas = [
+    { id: 1, nombre: 'Cliente Alfa', estado: 'Activo' },
+    { id: 2, nombre: 'Cliente Beta', estado: 'En pausa' },
+    { id: 3, nombre: 'Cliente Gamma', estado: 'Sin señal' },
+  ];
+  const ordenadas = [...filas].sort((a, b) => (orden.direction === 'ascending' ? 1 : -1) * a[orden.column].localeCompare(b[orden.column]));
+  return h(RAC.Table, { 'aria-label': 'Clientes', sortDescriptor: orden, onSortChange: setOrden },
+    h(RAC.TableHeader, null,
+      h(RAC.Column, { id: 'nombre', isRowHeader: true, allowsSorting: true }, 'Nombre'),
+      h(RAC.Column, { id: 'estado', allowsSorting: true }, 'Estado')),
+    h(RAC.TableBody, null, ordenadas.map((f) => h(RAC.Row, { key: f.id, id: f.id },
+      h(RAC.Cell, null, f.nombre), h(RAC.Cell, null, f.estado)))));
+}
+
+function App() {
+  const datos = [{ dia: '10 nov', tratados: 12 }, { dia: '11 nov', tratados: 18 }, { dia: '12 nov', tratados: 9 }];
+  return h('main', null,
+    h('h1', null, 'Prueba de V-110'),
+    h(RAC.DialogTrigger, null,
+      h(RAC.Button, { id: 'abrir' }, 'Pausar agente'),
+      h(RAC.ModalOverlay, { style: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)' } },
+        h(RAC.Modal, { style: { background: '#fff', margin: '10vh auto', padding: 24, maxWidth: 420 } },
+          h(RAC.Dialog, { role: 'alertdialog' },
+            h(RAC.Heading, { slot: 'title' }, 'Pausar el agente de Cliente Ficticio'),
+            h('p', null, 'Se aplicará en la siguiente revisión del agente.'),
+            h(RAC.Button, { slot: 'close', id: 'cancelar' }, 'Cancelar'),
+            h(RAC.Button, { slot: 'close', id: 'confirmar' }, 'Confirmar pausa'))))),
+    h('h2', null, 'Clientes'),
+    h(Tabla),
+    h('h2', null, 'Alta de cliente'),
+    h(RAC.Form, null,
+      h(RAC.TextField, { name: 'nombre', isRequired: true },
+        h(RAC.Label, null, 'Nombre comercial'),
+        h(RAC.Input, { id: 'nombre' }),
+        h(RAC.FieldError, null, 'Escribe el nombre comercial.')),
+      h(RAC.Button, { type: 'submit', id: 'crear' }, 'Crear cliente')),
+    h('h2', null, 'Correos tratados por día'),
+    h(LineChart, { width: 400, height: 200, data: datos, accessibilityLayer: true, title: 'Correos tratados por día' },
+      h(XAxis, { dataKey: 'dia' }), h(YAxis, null),
+      h(Line, { dataKey: 'tratados', isAnimationActive: false })));
+}
+
+createRoot(document.getElementById('raiz')).render(h(App));

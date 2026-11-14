@@ -1,0 +1,67 @@
+// Segunda página de la prueba real de V-110: el mismo diálogo de confirmación
+// con las tres familias de primitivas candidatas, para comparar el manejo del foco.
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import * as RAC from 'react-aria-components';
+import { AlertDialog as RadixAlert } from 'radix-ui';
+import { AlertDialog as BaseAlert } from '@base-ui/react/alert-dialog';
+import axe from 'axe-core';
+
+window.axe = axe;
+const h = React.createElement;
+const fondo = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)' };
+const caja = { position: 'fixed', top: '10vh', left: '50%', transform: 'translateX(-50%)', background: '#fff', padding: 24, width: 420, maxWidth: '90vw' };
+
+function ConAria() {
+  return h(RAC.DialogTrigger, null,
+    h(RAC.Button, { id: 'abrir-aria' }, 'Pausar agente (React Aria)'),
+    h(RAC.ModalOverlay, { style: fondo },
+      h(RAC.Modal, { style: caja },
+        h(RAC.Dialog, { role: 'alertdialog', id: 'dialogo-aria' },
+          h(RAC.Heading, { slot: 'title' }, 'Pausar el agente de Cliente Ficticio'),
+          h('p', null, 'Se aplicará en la siguiente revisión del agente.'),
+          h(RAC.Button, { slot: 'close' }, 'Cancelar'),
+          h(RAC.Button, { slot: 'close' }, 'Confirmar pausa')))));
+}
+
+function ConRadix() {
+  return h(RadixAlert.Root, null,
+    h(RadixAlert.Trigger, { id: 'abrir-radix' }, 'Pausar agente (Radix)'),
+    h(RadixAlert.Portal, null,
+      h(RadixAlert.Overlay, { style: fondo }),
+      h(RadixAlert.Content, { style: caja, id: 'dialogo-radix' },
+        h(RadixAlert.Title, null, 'Pausar el agente de Cliente Ficticio'),
+        h(RadixAlert.Description, null, 'Se aplicará en la siguiente revisión del agente.'),
+        h(RadixAlert.Cancel, null, 'Cancelar'),
+        h(RadixAlert.Action, null, 'Confirmar pausa'))));
+}
+
+function ConBase() {
+  return h(BaseAlert.Root, null,
+    h(BaseAlert.Trigger, { id: 'abrir-base' }, 'Pausar agente (Base UI)'),
+    h(BaseAlert.Portal, null,
+      h(BaseAlert.Backdrop, { style: fondo }),
+      h(BaseAlert.Popup, { style: caja, id: 'dialogo-base' },
+        h(BaseAlert.Title, null, 'Pausar el agente de Cliente Ficticio'),
+        h(BaseAlert.Description, null, 'Se aplicará en la siguiente revisión del agente.'),
+        h(BaseAlert.Close, null, 'Cancelar'),
+        h(BaseAlert.Close, null, 'Confirmar pausa'))));
+}
+
+class Limite extends React.Component {
+  constructor(p) { super(p); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  render() {
+    return this.state.error
+      ? h('p', { 'data-fallo': this.props.nombre }, `No se pudo montar ${this.props.nombre}: ${String(this.state.error.message).slice(0, 200)}`)
+      : this.props.children;
+  }
+}
+
+createRoot(document.getElementById('raiz')).render(
+  h('main', null,
+    h('h1', null, 'Prueba de V-110: diálogo de confirmación'),
+    h(Limite, { nombre: 'React Aria' }, h(ConAria)),
+    h(Limite, { nombre: 'Radix' }, h(ConRadix)),
+    h(Limite, { nombre: 'Base UI' }, h(ConBase))),
+);

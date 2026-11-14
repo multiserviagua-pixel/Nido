@@ -1,0 +1,28 @@
+# Plantilla. No acredita nada hasta que se instale en un repositorio remoto
+# y se vean sus resultados. El CI completo (tipos, estilo, pruebas, pgTAP,
+# escáneres) se monta en la fase 1.
+#
+# V-115: comprobar las versiones vigentes de estas acciones y fijarlas por
+# huella antes de usarlas.
+
+name: Arnés
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  comprobar:
+    name: Comprobador documental
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+      - name: Comprobar trazabilidad, cabeceras y secretos
+        run: node scripts/comprobar-specs.mjs

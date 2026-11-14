@@ -1,0 +1,156 @@
+// Prueba real mínima de V-110 (librería de interfaz y de gráficos).
+// Comprueba, con datos ficticios y sin navegador, que las candidatas se instalan
+// con Node 26 y React 19.3 y que entregan semántica y manejo de teclado accesibles.
+// No sustituye a la revisión en navegador con lector de pantalla (CA-026 de la 020).
+import { test, before, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { JSDOM } from 'jsdom';
+
+const dom = new JSDOM('<!doctype html><html lang="es"><head><title>Prueba V-110</title></head><body></body></html>', {
+  url: 'http://localhost/',
+  pretendToBeVisual: true,
+});
+const g = globalThis;
+g.window = dom.window;
+g.document = dom.window.document;
+// Expone como globales todo lo que ofrece la ventana simulada y Node no tiene.
+for (const k of Object.getOwnPropertyNames(dom.window)) {
+  if (k in g && k !== 'navigator') continue;
+  try { Object.defineProperty(g, k, { value: dom.window[k], configurable: true, writable: true }); } catch { /* no se puede redefinir */ }
+}
+// jsdom no trae CSS.escape; las librerías lo usan para construir selectores.
+const cssEscape = (s) => String(s).replace(/[^a-zA-Z0-9_ -￿-]/g, (c) => `\\${c}`);
+if (!g.CSS) g.CSS = {};
+if (!g.CSS.escape) g.CSS.escape = cssEscape;
+if (!dom.window.CSS) dom.window.CSS = g.CSS;
+g.IS_REACT_ACT_ENVIRONMENT = true;
+if (!g.ResizeObserver) g.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
+if (!dom.window.ResizeObserver) dom.window.ResizeObserver = g.ResizeObserver;
+if (!dom.window.matchMedia) dom.window.matchMedia = () => ({ matches: false, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {} });
+if (!dom.window.HTMLElement.prototype.scrollIntoView) dom.window.HTMLElement.prototype.scrollIntoView = () => {};
+
+let React, h, rtl, userEvent, RAC, Recharts, axe;
+
+before(async () => {
+  React = (await import('react')).default;
+  h = React.createElement;
+  rtl = await import('@testing-library/react');
+  userEvent = (await import('@testing-library/user-event')).default;
+  RAC = await import('react-aria-components');
+  Recharts = await import('recharts');
+  axe = (await import('axe-core')).default;
+});
+
+afterEach(() => rtl.cleanup());
+
+// Reglas que jsdom no puede evaluar (necesitan pintado real) o que no aplican a un fragmento suelto.
+const AXE = { rules: { 'color-contrast': { enabled: false }, region: { enabled: false }, 'landmark-one-main': { enabled: false }, 'page-has-heading-one': { enabled: false } } };
+async function infracciones() {
+  const r = await axe.run(document.body, AXE);
+  return r.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.length} nodo(s)`);
+}
+
+test('diálogo modal: nombre accesible, foco retenido, Escape cierra y el foco vuelve', async () => {
+  const user = userEvent.setup({ document });
+  rtl.render(
+    h(RAC.DialogTrigger, null,
+      h(RAC.Button, null, 'Pausar agente'),
+      h(RAC.ModalOverlay, null,
+        h(RAC.Modal, null,
+          h(RAC.Dialog, { role: 'alertdialog' },
+            h(RAC.Heading, { slot: 'title' }, 'Pausar el agente de Cliente Ficticio'),
+            h('p', null, 'Se aplicará en la siguiente revisión del agente.'),
+            h(RAC.Button, { slot: 'close' }, 'Cancelar'),
+            h(RAC.Button, { slot: 'close' }, 'Pausar agente'))))),
+  );
+  const disparador = rtl.screen.getByRole('button', { name: 'Pausar agente' });
+  // Se abre con teclado: el navegador simulado no implementa los eventos de puntero que usa la librería.
+  disparador.focus();
+  await user.keyboard('{Enter}');
+  const dialogo = await rtl.screen.findByRole('alertdialog');
+  assert.equal(dialogo.getAttribute('aria-labelledby') !== null, true, 'el diálogo lleva aria-labelledby');
+  assert.equal(rtl.within(dialogo).getByRole('heading').textContent, 'Pausar el agente de Cliente Ficticio');
+
+  const v = await infracciones();
+  assert.deepEqual(v, [], `axe con el diálogo abierto: ${v.join('; ')}`);
+
+  for (let i = 0; i < 10; i += 1) {
+    await user.tab();
+    assert.equal(dialogo.contains(document.activeElement), true, `tras ${i + 1} tabulaciones el foco sigue dentro`);
+  }
+  await user.keyboard('{Escape}');
+  await rtl.waitFor(() => assert.equal(rtl.screen.queryByRole('alertdialog'), null));
+  await rtl.waitFor(() => assert.equal(document.activeElement, disparador, 'el foco vuelve al botón que abrió el diálogo'));
+});
+
+test('tabla: encabezados, orden con teclado y aria-sort', async () => {
+  const user = userEvent.setup({ document });
+  function Tabla() {
+    const [orden, setOrden] = React.useState({ column: 'nombre', direction: 'ascending' });
+    const filas = [{ id: 1, nombre: 'Cliente Alfa', estado: 'Activo' }, { id: 2, nombre: 'Cliente Beta', estado: 'En pausa' }];
+    const ordenadas = [...filas].sort((a, b) => (orden.direction === 'ascending' ? 1 : -1) * a[orden.column].localeCompare(b[orden.column]));
+    return h(RAC.Table, { 'aria-label': 'Clientes', sortDescriptor: orden, onSortChange: setOrden },
+      h(RAC.TableHeader, null,
+        h(RAC.Column, { id: 'nombre', isRowHeader: true, allowsSorting: true }, 'Nombre'),
+        h(RAC.Column, { id: 'estado', allowsSorting: true }, 'Estado')),
+      h(RAC.TableBody, null, ordenadas.map((f) => h(RAC.Row, { key: f.id, id: f.id },
+        h(RAC.Cell, null, f.nombre), h(RAC.Cell, null, f.estado)))));
+  }
+  rtl.render(h(Tabla));
+  const tabla = rtl.screen.getByRole('grid', { name: 'Clientes' });
+  const cabeceras = rtl.within(tabla).getAllByRole('columnheader');
+  assert.equal(cabeceras.length, 2);
+  assert.equal(cabeceras[0].getAttribute('aria-sort'), 'ascending');
+  assert.equal(rtl.within(tabla).getAllByRole('row').length, 3, 'una fila de cabecera y dos de datos');
+
+  const v = await infracciones();
+  assert.deepEqual(v, [], `axe con la tabla: ${v.join('; ')}`);
+
+  cabeceras[0].focus();
+  await user.keyboard('{Enter}');
+  await rtl.waitFor(() => assert.equal(rtl.within(tabla).getAllByRole('columnheader')[0].getAttribute('aria-sort'), 'descending'));
+  const primera = rtl.within(tabla).getAllByRole('row')[1];
+  assert.match(primera.textContent, /Cliente Beta/, 'el orden cambia con el teclado');
+});
+
+test('formulario: etiqueta asociada y error asociado al campo', async () => {
+  const user = userEvent.setup({ document });
+  rtl.render(
+    h(RAC.Form, null,
+      h(RAC.TextField, { name: 'nombre', isRequired: true },
+        h(RAC.Label, null, 'Nombre comercial'),
+        h(RAC.Input, null),
+        h(RAC.FieldError, null, 'Escribe el nombre comercial.')),
+      h(RAC.Button, { type: 'submit' }, 'Crear cliente')),
+  );
+  const campo = rtl.screen.getByRole('textbox', { name: 'Nombre comercial' });
+  assert.equal(campo.required || campo.getAttribute('aria-required') === 'true', true, 'el campo se anuncia como obligatorio');
+  await user.click(rtl.screen.getByRole('button', { name: 'Crear cliente' }));
+  await rtl.waitFor(() => assert.equal(campo.getAttribute('aria-invalid'), 'true'));
+  const descrito = campo.getAttribute('aria-describedby') ?? '';
+  const textos = descrito.split(' ').filter(Boolean).map((id) => document.getElementById(id)?.textContent ?? '');
+  assert.equal(textos.some((t) => t.includes('Escribe el nombre comercial.')), true, 'el error queda asociado al campo');
+  assert.equal(document.activeElement, campo, 'el foco va al primer campo con error');
+
+  const v = await infracciones();
+  assert.deepEqual(v, [], `axe con el formulario en error: ${v.join('; ')}`);
+});
+
+test('gráfico de líneas (SVG): se dibuja y la capa de accesibilidad lo hace alcanzable con teclado', async () => {
+  const datos = [{ dia: '10 nov', tratados: 12 }, { dia: '11 nov', tratados: 18 }, { dia: '12 nov', tratados: 9 }];
+  const { container } = rtl.render(
+    h(Recharts.LineChart, { width: 400, height: 200, data: datos, accessibilityLayer: true, title: 'Correos tratados por día' },
+      h(Recharts.XAxis, { dataKey: 'dia' }),
+      h(Recharts.YAxis, null),
+      h(Recharts.Line, { dataKey: 'tratados', isAnimationActive: false })),
+  );
+  const svg = container.querySelector('svg');
+  assert.notEqual(svg, null, 'dibuja con SVG');
+  const enfocable = container.querySelector('[tabindex="0"]');
+  console.log('  recharts · atributos del SVG:', JSON.stringify({
+    role: svg.getAttribute('role'), tabindex: svg.getAttribute('tabindex'),
+    ariaLabel: svg.getAttribute('aria-label'), tieneTitle: svg.querySelector('title') !== null,
+    hayElementoEnfocable: enfocable !== null, etiquetaEnfocable: enfocable?.tagName ?? null,
+  }));
+  assert.notEqual(enfocable, null, 'hay un elemento del gráfico alcanzable con el tabulador');
+});

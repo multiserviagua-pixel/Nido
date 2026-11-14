@@ -1,0 +1,22 @@
+# Dependencias y compilación
+node_modules/
+.next/
+out/
+dist/
+coverage/
+
+# Secretos y entorno: nunca se suben
+.env
+.env.*
+!.env.example
+
+# Herramientas
+.vercel/
+supabase/.temp/
+supabase/.branches/
+.claude/settings.local.json
+
+# Sistema y editor
+Thumbs.db
+.DS_Store
+*.log

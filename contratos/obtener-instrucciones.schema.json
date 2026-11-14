@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:humanaia:agentes-correo:contratos:obtener-instrucciones:1",
+  "title": "obtener_instrucciones",
+  "description": "Primera llamada de cada revisión. Devuelve siempre un estado explícito. Solo con estado «activa» entrega la versión, el prompt, las reglas del cliente y la orden vigente. Abre una ejecución, que se cierra con enviar_informe. El cliente se deriva del token: no hay parámetros.",
+  "x-anotaciones": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false
+  },
+  "x-cuestion-abierta": "La herramienta anota la ejecución y marca la orden como entregada. Hay que decidir en el diseño de la función 001 si eso es compatible con declararla de solo lectura.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entrada", "salida"],
+  "properties": {
+    "entrada": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "salida": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["estado", "ejecucion_id", "orden", "instrucciones"],
+      "properties": {
+        "estado": {
+          "description": "activa: hay instrucciones. pausada: no tocar el correo. suspendida: licencia no vigente; no tocar el correo.",
+          "enum": ["activa", "pausada", "suspendida"]
+        },
+        "ejecucion_id": {
+          "description": "Identificador que hay que devolver en enviar_informe.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "orden": {
+          "description": "Orden pendiente de confirmar, si la hay.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "tipo"],
+              "properties": {
+                "id": { "type": "string", "format": "uuid" },
+                "tipo": { "enum": ["pausar", "reanudar"] }
+              }
+            }
+          ]
+        },
+        "instrucciones": {
+          "description": "Solo con estado «activa». En cualquier otro caso es null.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["version", "huella_sha256", "prompt", "reglas"],
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$"
+                },
+                "huella_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "prompt": {
+                  "description": "Texto de la versión, tal como está registrado. No puede relajar los límites del arranque local.",
+                  "type": "string",
+                  "maxLength": 100000
+                },
+                "reglas": {
+                  "description": "Parámetros del cliente. Claves y valores cerrados.",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "max_correos_por_revision",
+                    "ventana_dias",
+                    "guardar_adjuntos",
+                    "preparar_borradores",
+                    "descargar_facturas_por_enlace"
+                  ],
+                  "properties": {
+                    "max_correos_por_revision": { "type": "integer", "minimum": 1, "maximum": 100 },
+                    "ventana_dias": { "type": "integer", "minimum": 1, "maximum": 14 },
+                    "guardar_adjuntos": { "type": "boolean" },
+                    "preparar_borradores": { "type": "boolean" },
+                    "descargar_facturas_por_enlace": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

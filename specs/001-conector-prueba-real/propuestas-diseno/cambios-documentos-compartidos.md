@@ -1,0 +1,31 @@
+# 001 · Cambios que el diseño necesita en documentos compartidos
+
+Fecha: 13/11/2026 · Autor: `arquitecto` · Estado: PROPUESTA
+
+No se ha aplicado ninguno. Los decide el chat de coordinación con el responsable, después de la puerta P1. Se suman a los de `specs/001-conector-prueba-real/propuestas.md`; cuando uno de aquí sustituye a uno de allí, se dice.
+
+| N.º | Documento | Cambio propuesto | Por qué |
+| --- | --- | --- | --- |
+| 1 | `docs/TECNOLOGIAS.md`, V-106 | Pasar a decisión verificada: servidor de autorización propio y mínimo. Estado PROPUESTO hasta la puerta P1 | Diseño de la 001, apartado «Servidor de autorización» |
+| 2 | `docs/TECNOLOGIAS.md`, T-008 | Dejar solo `@modelcontextprotocol/server` 2.4.0. `mcp-handler` no se usa | El SDK ya trae el manejador sin estado para las dos épocas (asunto A-11 del diseño) |
+| 3 | `docs/TECNOLOGIAS.md`, T-010 | Lista cerrada de dos callbacks: el de Claude y el estable de ChatGPT. El de parte variable solo se añadiría, con su valor exacto, si la prueba real lo exige. Sustituye a la propuesta 10 de `propuestas.md` | El conector emite `iss`; los documentos de cliente publicados declaran un callback cada uno (`verificaciones.md`, 4.4 y 9.5) |
+| 4 | `docs/TECNOLOGIAS.md`, T-011 | Añadir los hosts admitidos para CIMD (`claude.ai`, `chatgpt.com`) y las URL de los dos documentos de cliente | `verificaciones.md`, 9.5 |
+| 5 | `docs/TECNOLOGIAS.md`, V-107 | Anotar la mitad documental: en el agrupador compartido, el usuario de un rol propio es `[ROL].[REFERENCIA]`. La prueba la hace la función 001 contra el proyecto de desarrollo | `verificaciones.md`, 9.2 |
+| 6 | `docs/TECNOLOGIAS.md`, V-109 | Cerrar: no se usa `zod` como dependencia directa; los contratos se validan como esquemas JSON con el validador que trae el SDK | Diseño de la 001, apartado «Herramientas» |
+| 7 | `docs/TECNOLOGIAS.md`, V-113 | Anotar: la cabecera fiable del origen es `x-vercel-forwarded-for`; la función 001 cuenta fallos en la base de datos con el HMAC del origen | `verificaciones.md`, 9.1 |
+| 8 | `docs/TECNOLOGIAS.md`, tabla de verificadas | Añadir, como PROPUESTO: `postgres` 4.1.1, `@electric-sql/pglite` 0.5.16 (desarrollo) y `@modelcontextprotocol/client` 2.4.0 (desarrollo) | `verificaciones.md`, 9.3 |
+| 9 | `docs/TECNOLOGIAS.md`, decisiones de producto | Registrar, si el responsable lo acepta: un segundo proyecto gratuito de Supabase para preproducción; producción sin almacén del conector durante la fase 1 | Asuntos A-1 y A-2 del diseño |
+| 10 | `docs/adr/` | Registrar el ADR del borrador `adr-borrador-autorizacion-del-conector.md` y anotar en ADR-0002 y ADR-0003 que lo precisan | Cambia el punto 2 y precisa el 6 del ADR-0002; precisa el punto 4 del ADR-0003 |
+| 11 | `docs/ESQUELETO.md` | Añadir: `src/mcp/entrada.ts`, `src/mcp/salida.ts`, `src/mcp/prompt-ficticio.ts`, `src/app/api/operacion/route.ts`, `src/lib/supabase/almacen.ts`, `src/lib/supabase/autorizacion.ts`, `src/lib/registro/sucesos.ts`, `supabase/conector-prueba/`, `prompts/agente-prueba/`, `scripts/conector/`, `tests/conector/` | Rutas nuevas del diseño (asunto A-12) |
+| 12 | `docs/ESQUELETO.md`, convención «Conector» | Añadir: «`src/lib/oauth/` y `src/lib/licencias/` solo usan `src/lib/supabase/autorizacion.ts`» | Dos roles de base de datos, dos módulos |
+| 13 | `docs/SEGURIDAD.md`, tabla de amenazas | Añadir: confusión de tipo de token; registro DCR masivo; documento CIMD que amplía callbacks; envío cruzado que bloquea a un instalador; captura de la credencial de operación en la máquina compartida; llenado del registro con peticiones rechazadas | Amenazas que el diseño cubre o declara y que no están en el registro |
+| 14 | `docs/SEGURIDAD.md`, A-01, A-02, A-05 y A-22 | Añadir «función 001 (parcial)» en «Dónde se comprueba»; en A-01, decir que en la 001 la conexión nueva solo se anota. Coincide con las propuestas 8 y 9 de `propuestas.md` | El diseño ya incluye el límite de intentos sencillo, los tokens como HMAC y el tope de tamaño |
+| 15 | `docs/SEGURIDAD.md`, «Reglas para quien implementa» | Añadir: «Ningún error lleva en su mensaje un valor recibido. Del error de una librería solo se conserva su código» | Next.js escribe en los registros de la plataforma el mensaje de los errores no capturados |
+| 16 | `docs/INSTALACION-CLIENTE.md`, paso 4 | Sustituir la lista de correo por la regla «se bloquea todo lo que no haga falta para leer, etiquetar y crear borradores», nombrando: enviar, responder, reenviar, eliminar o mover a la papelera, crear filtros o reglas y marcar como correo no deseado. Es un documento de límites del agente: lo aprueba el responsable | H-3: `reply` envía y `create_filter` puede reenviar o eliminar |
+| 17 | `docs/INSTALACION-CLIENTE.md`, paso 3 | Añadir: «La pantalla muestra a qué asistente se va a volver. Comprobarlo antes de escribir el código» | H-8 |
+| 18 | `contratos/informe.schema.json`, `description` | Decir que el esquema es el que se publica y el que se guarda, y que el servidor descarta y cuenta los campos ajenos antes de validar. Sustituye a la propuesta 6 de `propuestas.md` | Diseño de la 001, apartado «Herramientas» |
+| 19 | `contratos/obtener-instrucciones.schema.json`, `x-cuestion-abierta` | Sustituirla por la decisión de la puerta P1. Coincide con la propuesta 7 de `propuestas.md` | Asunto A-3 del diseño |
+| 20 | `scripts/patrones-secretos.mjs` y la configuración del escáner de la función 002 | Añadir los patrones `hia_a_`, `hia_r_` y `hia_op_` seguidos de 43 caracteres de base64url | Para que un token o una credencial de operación en una evidencia haga fallar el escáner (PRUEBA-031) |
+| 21 | `docs/MODELO-DATOS.sql`, tabla `tokens` | Añadir la columna `sal` y la referencia al cliente OAuth; y funciones de autorización con la forma de la tabla «Funciones del almacén» del diseño | Para que la fase 2 conserve la rotación con par derivado. Lo decide la función 014 |
+| 22 | `specs/014-autorizacion-definitiva/`, cuestiones 6, 16 y 28 | Tener en cuenta lo decidido en la 001: par derivado con sal; rol propio de autorización; callback estable de ChatGPT con `iss` | Para que la fase 2 no las reabra sin saberlo |
+| 23 | Reglas de la integración de la función 002 | Confirmar que `prompts/**`, `supabase/**` y `src/app/api/operacion/**` son rutas críticas | Supuesto S-8 del diseño |
