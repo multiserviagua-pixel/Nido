@@ -24,7 +24,7 @@ Lee `docs/PLAN.md` (la fase y sus criterios), `docs/ARQUITECTURA.md`, `docs/SEGU
 
 ## Criterios
 
-- **Tamaño acotado**: como mucho unos 20 requisitos y 5 cuestiones abiertas por función. Si no cabe, propón dividir la función en vez de alargarla. Una especificación que nadie puede revisar de una sentada no sirve.
+- **Tamaño acotado**: como mucho unos 20 requisitos y 5 cuestiones abiertas por función, y `especificacion.md` de como mucho unos 25 KB (D-023). No hagas anexos de detalle: el detalle técnico es del diseño. Si no cabe, propón dividir la función en vez de alargarla. Una especificación que nadie puede revisar de una sentada no sirve.
 - Solo es cuestión abierta lo que únicamente el responsable puede decidir (dinero, cuentas, plazos, política del producto). Para lo demás, elige el valor por defecto razonable y anótalo como supuesto en una línea.
 - No repitas en cada función los requisitos generales de la constitución: cítalos por artículo.
 - Si un requisito no se puede probar, reescríbelo hasta que se pueda.

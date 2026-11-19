@@ -14,6 +14,8 @@ Eres el revisor del equipo. Compruebas que un cambio hace lo que pide su tarea, 
 
 La tarea `T-NNN` en `specs/NNN/tareas.md`, sus requisitos en `especificacion.md`, el diseño, los contratos afectados y el cambio real (`git diff` o los archivos indicados). No te fíes del resumen del autor.
 
+Lectura acotada (D-023): lee el cambio y los apartados que cita; lo demás, localízalo con Grep y lee solo ese tramo. En una segunda vuelta, revisa solo lo que cambió desde el dictamen anterior.
+
 ## Qué compruebas
 
 1. **Alcance**: el cambio corresponde a una sola tarea y no toca nada fuera de ella.

@@ -44,6 +44,7 @@ Reglas:
 - Los agentes están en `.claude/agents/` con su modelo. No cambies el modelo en la llamada salvo por un escalado anotado (`docs/EQUIPO.md`).
 - En paralelo solo tareas marcadas `[P]`.
 - Quien implementa no revisa. El `revisor` y el `auditor-seguridad` reciben el cambio, no tu opinión sobre él.
+- **Proceso proporcional (D-029).** Tarea fuera de rutas críticas: prueba delante + `revisor`; sin `auditor-seguridad` y sin relevo por tarea. Ruta crítica (OAuth y licencias, RLS y migraciones, webhooks, entrega del prompt, CI y ajustes): `revisor` + `auditor-seguridad`. Al planificar, agrupa en una sola T- las tareas pequeñas y contiguas del mismo agente; apunta a unas 15 tareas por función, no a 60.
 - Si los agentes del proyecto no estuvieran disponibles en esta sesión, usa el agente general con el contenido del archivo del agente como encargo, e indica el modelo en la llamada. Anótalo como incidencia de V-105.
 
 ## 3. Comprueba
@@ -68,11 +69,24 @@ Actualiza el `Estado` de la función y el estado de las tareas. Si el paso ha ca
 
 El límite de uso es de la cuenta y lo comparten todos los chats (`docs/EQUIPO.md`, apartado «Ahorro de uso»).
 
-- **Chat corto.** Al terminar un paso del ciclo, o si la conversación ya es larga, escribe `specs/NNN/relevo.md` (qué está hecho, qué falta, decisiones tomadas, siguiente paso, archivos que leer) y di al responsable que continúe en un chat nuevo que empiece por ese archivo. No sigas alargando el mismo chat.
+- **Chat corto.** Al terminar un paso del ciclo, o si la conversación ya es larga, escribe `specs/NNN/relevo.md` y di al responsable que continúe en un chat nuevo que empiece por ese archivo. No sigas alargando el mismo chat.
+- **Relevo auténtico.** El relevo describe el estado actual, no la historia:
+  - Se **reescribe entero** cada vez; no se le añaden apartados de «manda sobre lo anterior». La historia ya está en git y en `docs/TECNOLOGIAS.md`.
+  - Ocupa como mucho unas 40 líneas, con cuatro apartados: Estado, Falta (en orden), Decisiones del responsable pendientes y Siguiente paso.
+  - Cada afirmación del Estado se comprueba antes de escribirla, con la evidencia al lado:
+    - commits: hash de `git log`;
+    - pruebas: «N en verde» copiado de la salida de `npm test` ejecutado en ese momento;
+    - dictámenes: la ruta del archivo.
+  - Lo que no se ha comprobado se escribe como «sin comprobar», nunca como hecho (art. 13).
+  - No se copia la justificación de un subagente sin contrastarla.
 - **Si retomas un trabajo**, empieza por `relevo.md` y lee solo lo que indica.
 - **Encargos acotados**: indica al subagente la ruta y el apartado exacto que debe leer. No le mandes leer documentos enteros si le basta una parte.
 - **Dos subagentes a la vez como mucho.** Comprueba en disco lo que escribe cada uno antes de lanzar el siguiente. Si uno falla, dilo; no lo relances en bucle.
-- **No rehagas lo ya escrito** para ajustarlo de tamaño: se recorta al diseñar.
+- **Tope de contexto.** Al pasar de unos 150.000 tokens de contexto, o tras dos pasos del ciclo, escribe el relevo y termina. No sigas en el mismo chat.
+- **Un solo orquestador por fase.** Si ves en el relevo o en disco que otro chat trabaja la misma función, para y dilo.
+- **Lee por tramos.** Para comprobar un documento grande, usa Grep y lee el tramo; no lo leas entero. No vigiles archivos con bucles de `sleep`: espera el aviso del subagente.
+- **Tamaños** (D-023): `diseno.md` ≤ 40 KB; especificación, plan y tareas ≤ 25 KB. Si el comprobador avisa, el siguiente encargo sobre ese documento empieza por recortarlo.
+- **Correcciones por apartado.** Tras un dictamen, el arquitecto cambia solo los apartados afectados, y la segunda vuelta revisa solo lo cambiado.
 
 ## Lo que nunca haces
 

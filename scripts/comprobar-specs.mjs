@@ -9,7 +9,7 @@
 //
 // Uso: node scripts/comprobar-specs.mjs
 
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buscarSecretos } from './patrones-secretos.mjs';
@@ -546,9 +546,27 @@ seccion('Sin secretos en el repositorio', () => {
 // Resultado
 // ---------------------------------------------------------------------
 
+// Avisos de tamaño (D-023): no hacen fallar, pero se listan.
+const avisos = [];
+const LIMITES = { 'diseno.md': 40000, 'especificacion.md': 25000, 'plan.md': 25000, 'tareas.md': 25000 };
+for (const carpeta of readdirSync(join(RAIZ, 'specs'))) {
+  if (carpeta.startsWith('_')) continue;
+  for (const [archivo, limite] of Object.entries(LIMITES)) {
+    const ruta = join(RAIZ, 'specs', carpeta, archivo);
+    if (!existsSync(ruta)) continue;
+    const kb = statSync(ruta).size;
+    if (kb > limite) avisos.push(`specs/${carpeta}/${archivo}: ${Math.round(kb / 1000)} KB (límite ${limite / 1000} KB)`);
+  }
+}
+
 console.log('Comprobador del arnés\n');
 for (const s of secciones) {
   console.log(`  ${s.ok ? 'OK   ' : 'ERROR'}  ${s.nombre}${s.detalle ? ` (${s.detalle})` : ''}`);
+}
+
+if (avisos.length > 0) {
+  console.log(`\n${avisos.length} ${avisos.length === 1 ? 'aviso' : 'avisos'} de tamaño (D-023, recortar en el siguiente paso):`);
+  for (const a of avisos) console.log(`  - ${a}`);
 }
 
 if (errores.length > 0) {

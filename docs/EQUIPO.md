@@ -5,7 +5,7 @@
 | Agente | Función | Puede escribir en | Modelo | Esfuerzo |
 | --- | --- | --- | --- | --- |
 | `orquestador` | Conduce el ciclo SDD, reparte tareas, aplica puertas, informa al responsable | `specs/` (coordinación), `docs/PLAN.md`, `docs/TECNOLOGIAS.md` | `sonnet` | `medium` |
-| `arquitecto` | Diseño técnico, ADR, contratos, plan y tareas | `specs/`, `docs/adr/`, `contratos/` | `fable` | `high` |
+| `arquitecto` | Diseño técnico, ADR, contratos, plan y tareas | `specs/`, `docs/adr/`, `contratos/` | `opus` | `high` |
 | `especificador` | Requisitos medibles, casos negativos, criterios de aceptación | `specs/` | `opus` | `high` |
 | `auditor-seguridad` | Amenazas de la función y dictamen en rutas críticas | Nada | `opus` | `high` |
 | `revisor` | Revisión independiente contra especificación, contratos y constitución | Nada | `opus` | `high` |
@@ -42,7 +42,7 @@ El criterio es el coste de equivocarse, no el tamaño de la tarea.
 
 | Nivel | Modelo | Para qué | Por qué |
 | --- | --- | --- | --- |
-| 1 | `fable` (arquitecto), `opus` (especificador, auditor, revisor) | Decisiones caras de deshacer y juicio independiente | Un error aquí se multiplica en todo lo que viene después |
+| 1 | `opus` (arquitecto, especificador, auditor, revisor); `fable` solo por escalado anotado | Decisiones caras de deshacer y juicio independiente | Un error aquí se multiplica en todo lo que viene después |
 | 2 | `sonnet` | Implementar con especificación, contrato y prueba delante | El trabajo está acotado y se comprueba con pruebas y revisión |
 | 3 | `haiku` | Buscar, listar, comprobar cabeceras, dar formato | No requiere juicio y se repite mucho |
 
@@ -87,11 +87,20 @@ Lo que no hace: escribir código de producto, aprobar su propio trabajo, saltars
 Medido el 14/11/2026: el gasto no venía del trabajo útil, sino de chats muy largos (hasta 851.000 tokens de contexto, que se reenvían en cada mensaje), de orquestar con Fable en todos los chats, de especificaciones de más de 300 KB y de seis fases a la vez. Reglas desde entonces:
 
 1. **Chats cortos.** Un chat por función y por tramo del ciclo, no uno por fase. Al terminar un paso, o al pasar de unos 150.000 tokens de contexto, el orquestador escribe `specs/NNN/relevo.md` y el trabajo sigue en un chat nuevo que empieza leyendo ese archivo. El estado vive en disco, no en la conversación.
-2. **Orquestar con Sonnet.** Los chats de fase y de coordinación se abren con Sonnet. Fable queda para el `arquitecto`; Opus, para `especificador`, `auditor-seguridad` y `revisor`.
+2. **Orquestar con Sonnet.** Los chats de fase y de coordinación se abren con Sonnet (`.claude/settings.json` fija `sonnet` por defecto; en la terminal, `claude --agent orquestador`). Opus para `arquitecto`, `especificador`, `auditor-seguridad` y `revisor`. Fable solo por escalado anotado (D-023).
 3. **Especificaciones acotadas.** Como mucho unos 20 requisitos y 5 cuestiones abiertas por función. Si no cabe, la función se divide.
 4. **Encargos que citan el apartado exacto.** Se pasa la ruta y el apartado que hay que leer, no documentos enteros. `docs/MODELO-DATOS.sql` solo se lee completo en tareas de base de datos.
 5. **Dos fases a la vez como mucho**, y dos subagentes a la vez por chat.
 6. **No se rehace lo ya escrito** para ajustarlo a estas reglas: las especificaciones anteriores se recortan al diseñarlas.
+
+### Segunda medición (19/11/2026, D-023)
+
+Del 12 al 14/11 el gasto fue de unos 117 millones de unidades ponderadas: el 77 % con Fable y el 21 % con Opus. Los chats de orquestación, abiertos con Fable y de hasta 850.000 tokens, se llevaron cerca del 60 %. Los diseños llegaron a 100–275 KB por función, y cada arquitecto, auditor y revisor los releía enteros. Hubo 35 encargos al especificador y trabajo repetido por tener dos chats en la misma fase. Las reglas de arriba existían, pero solo como texto. Desde D-023 se hacen cumplir:
+
+7. **Tamaños con aviso automático.** `diseno.md` ≤ 40 KB; `especificacion.md`, `plan.md` y `tareas.md` ≤ 25 KB. `node scripts/comprobar-specs.mjs` lista los que se pasan. Un documento que se pasa se recorta en su siguiente paso, y no se le añade nada sin recortarlo antes.
+8. **Correcciones por apartado.** Tras un dictamen se cambian solo los apartados afectados, y la segunda vuelta revisa solo lo cambiado.
+9. **Un solo orquestador por fase.** Antes de abrir uno, se cierra el anterior. Nunca dos chats sobre la misma función.
+10. **Sin esperas que gastan.** El orquestador no lanza bucles con `sleep` para vigilar archivos: espera el aviso del subagente.
 
 No se rebaja el modelo ni el esfuerzo de `auditor-seguridad` y `revisor`, ni se quita ninguna puerta o prueba.
 
