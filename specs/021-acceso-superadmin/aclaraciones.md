@@ -111,3 +111,15 @@ Evidencia en `evidencias/verificacion-identidad-y-correo.md`. Respuestas escrita
 | Proveedor de correo | «proveedores de correo, gmail y microsoft?? a eso te refieres?» | Responsable, 13/11/2026 | Es una pregunta, no una decisión: se contesta y se vuelve a preguntar |
 | Códigos de recuperación: con qué se hacen | «si», a la opción «La función experimental de Supabase», recomendada con una condición | Responsable, 13/11/2026 | Se usa la función experimental del servicio de identidad, con la condición presentada: comprobarla con una prueba real antes de diseñar sobre ella y dejar escrita la alternativa (construirlos) |
 | Quién envía los correos de Nido | «si», a «Google Workspace», y la dirección «accesos@humannaia.com» | Responsable, 13/11/2026 | Los correos de invitación y de restablecimiento salen de la cuenta de empresa de Google Workspace, desde esa dirección. V-111 queda acotada a verificar ese envío en la documentación oficial de Google. La contraseña o clave de envío la pone una persona en el gestor de variables (artículo 4) |
+
+## Decisiones por delegación (D-019), 14/11/2026
+
+Decididas por el orquestador de la fase 3 en nombre del responsable (D-019); el detalle y el motivo de cada una están en «Asuntos decididos por delegación (D-019)» de `diseno.md`.
+
+- **A-1:** opción (a), rol propio `acceso`, condicionada a V-107. Si V-107 es inviable, la opción (b) (clave secreta) **no entra en vigor automáticamente**: exige diseño propio y nuevo dictamen del `auditor-seguridad`. Motivo: el dictamen no la adopta sin otra revisión y la seguridad pesa más que el plazo.
+- **A-2:** `proxy.ts` acotado a /acceso y /admin, con ADR y dictamen, solo si T-P4 confirma el límite.
+- **A-3 a A-10 y A-12:** la propuesta del arquitecto.
+- **A-4:** vale la regla de la columna «Propuesta», con la entrada nueva en la 024 para cambios hechos fuera del panel y el acta firmada para REQ-022 (la firma del acta es del responsable, no delegable).
+- **M-5:** cookie de dispositivo reconocido con contador propio, levantamiento del bloqueo por otro administrador y función fuera del panel. No relaja contraseña ni segundo factor.
+- **Enmienda 1 de la especificación (pendiente):** M-5 cambia REQ-007, REQ-024, REQ-038, REQ-040, REQ-041 y CA-017. Se encarga al `especificador` y, sin hallazgos bloqueantes, la apruebo por delegación.
+- **Reservado a una persona:** A-11 (dominio del correo, proveedor, V-107/V-111, prueba real T-P3) y A-13.

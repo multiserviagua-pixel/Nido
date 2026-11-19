@@ -44,3 +44,7 @@ Dadas el 12/11/2026 en el chat de la fase 1. El texto literal está en `aclaraci
 - **No se despliega nada** hasta que el responsable confirme las condiciones de inicio (requisito 74 de la 002) y apruebe el calendario.
 - **Estructura de la app, provisional** (diseño de la 002 sin aprobar y pendiente de rehacer): una sola app Next.js en la raíz, con `src/app/`, `src/lib/plataforma/` (único lugar que lee variables de entorno), `src/lib/registro/` (único lugar con `console`), `scripts/bateria/`, `scripts/plataforma/` y `tests/`. Funciones solo en `fra1`, sin `proxy.ts` ni `middleware`. Los cambios entran por una orden de integración con batería y revisión.
 - **Base de datos:** el proyecto `nido-desarrollo` de Supabase (plan gratuito, `eu-central-1`) está preparado en la consola y lo crea el responsable. Afecta a la fase 2.
+
+## Desde la función 003, 14/11/2026
+
+La 003 ya no está aplazada (D-022). El requisito sobre el repositorio local de la 002 habla de «mientras la 003 siga aplazada»: ajustar su texto en el diseño. Además, la batería local debe informar la comprobación de pgTAP como «no ejecutable en local» sin fallar, y ejecutarla en el CI.

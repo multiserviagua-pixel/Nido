@@ -32,3 +32,64 @@ Fecha: 12/11/2026 · Autor: orquestador de la fase 3, a partir del informe del `
 | `docs/SEGURIDAD.md`, A-07 | Añadir la fase 3 a «dónde se comprueba» | La fase 3 también lee datos de clientes |
 | `docs/ARQUITECTURA.md`, flujo 2 | Aclarar qué recibe una licencia revocada | Frontera 8 |
 | `docs/TECNOLOGIAS.md` | Anotar como decisiones las respuestas del responsable a las cuestiones 1, 7, 9 y 11, cuando las dé | Skill `sdd-aclarar`, paso 6 |
+
+## Peticiones del diseño (14/11/2026)
+
+Autor: `arquitecto`, al escribir `diseno.md`. Sustituyen o concretan las fronteras de arriba donde coinciden. **Ninguna está aplicada.** Los números D-, L-, O-, DD- y A- son los de `diseno.md`.
+
+### A la fase 1 (001 y 002)
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-01 | Caducidad del código de activación de 15 minutos, no 10, y cambiar el texto de la pantalla de activación («Caduca a los 10 minutos») | La 022 aprobada dice 15 (cuestión 3); el diseño de la 001 dice 10. Asunto A-5 |
+| P-02 | Decidir qué pasa con la orden de operación `generar_codigo` cuando exista el panel: retirarla fuera del entorno local, o que deje fila de auditoría | Es una segunda vía para crear códigos sin la fila I-10. Asunto A-6 |
+| P-03 | `src/lib/oauth/secretos.ts` ofrece una función que sortea un código y devuelve el código y su HMAC, importable solo desde `src/lib/licencias/generar-codigo.ts` fuera de `src/lib/oauth/`. El tipo entra en el cálculo del HMAC, para que el de un código no pueda coincidir con el de un token | REQ-020, REQ-022; amenaza AM-06 |
+| P-04 | Códigos nuevos en la lista cerrada de `registro.ts`: `clientes_no_permitida`, `clientes_objeto_ajeno`, `clientes_resultado_incierto`, `clientes_lectura_fallida` | Supervisión sin valores |
+| P-05 | Rutas críticas nuevas: `src/lib/clientes/`, `src/lib/licencias/`, `src/app/admin/clientes/acciones.ts` | Licencias y códigos |
+| P-06 | Al verificar V-112: la supervisión de errores no captura cuerpos de respuesta ni argumentos de acciones de servidor | El código viaja en el cuerpo de una respuesta (REQ-024) |
+
+### A la fase 2 (010, 011, 014)
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-07 | `clientes`: restricción de caracteres del nombre; `nombre_clave` mantenida por la base de datos con `privado.clave_nombre()` e índice único; `version`; `baja_en`; `creado_en` inmutable (D-1) | REQ-049, REQ-051 a REQ-053, REQ-077 |
+| P-08 | `licencias`: hechos con fecha en lugar de `estado` y `estado_manual` (`revocada_en`, `suspension_manual_en`, `suspension_cobro_en`, `caduca_en`, `creada_por`); una sin revocar por cliente; `cliente_id` inmutable (D-2) | REQ-013, REQ-017, REQ-072 |
+| P-09 | `codigos_activacion`: `anulado_en`; `vivo` con índice único parcial por licencia; uso y anulación excluyentes; caducidad a 15 minutos por restricción; autor de la sesión; campos inmutables; **`codigo_hmac` sin permiso de lectura para ninguna sesión** (D-3) | REQ-022, REQ-068, REQ-070, REQ-076 |
+| P-10 | `conexiones`: `motivo_revocacion` de lista cerrada (`administrador`, `credencial_reutilizada`, `revocacion_licencia`), presente si y solo si está revocada (D-4) | REQ-025, REQ-073 |
+| P-11 | Disparadores de inmutabilidad como segunda capa (D-5) y ningún permiso de escritura de `authenticated` sobre las cuatro tablas; claves ajenas sin borrado en cascada (D-6) | REQ-057, REQ-059 a REQ-061, REQ-076 |
+| P-12 | Una sola regla de estado para el panel y para el conector (D-7) | Que lo que ve el panel sea lo que recibe el agente |
+| P-13 | Las siete lecturas (L-1 a L-7), que comprueban `es_admin()` por sí mismas, y las once operaciones (O-1 a O-11), con la forma de exponerlas que la 010 fije para la 021 | REQ-031 a REQ-034 |
+| P-14 | `auditoria`: `accion` de lista cerrada con I-01 a I-12 e I-41, `fila_principal_id`, inserción solo desde funciones, y **sin** el disparador genérico sobre estas cuatro tablas (D-10) | REQ-034; la 024 prohíbe mostrar operaciones técnicas |
+| P-15 | El conector comprueba conexión y licencia en la misma consulta que atiende cada llamada y cada renovación, **también la respuesta repetida de la ventana de gracia**; sin memoria de tokens válidos ni lecturas de réplica | REQ-027, CA-019 |
+| P-16 | La activación rechaza códigos usados, anulados o caducados, y los de licencia revocada, suspendida o caducada o de cliente de baja; toma los cerrojos en el orden cliente, licencia, código | REQ-063; amenaza AM-12 |
+| P-17 | La revocación automática por credencial reutilizada usa la misma función interna que la del panel, con su motivo. La fase 2 escribe los hechos H-03, H-04 y H-05 de la 024 | REQ-025 |
+| P-18 | Si la 014 purga códigos, no purga pendientes | REQ-023 |
+| P-19 | En la fase 3, un usuario de cliente no lee ninguna fila de estas cuatro tablas. Lo que la fase 5 necesite lo abre con su diseño | CA-022. Asunto A-3 |
+| P-20 | Datos ficticios de D-12 y un sitio donde ejecutar pgTAP con varias conexiones a la vez (D-13) | CA-001 a CA-004, CA-009, CA-034, CA-035, CA-042 |
+
+### A otras funciones de la fase 3
+
+| N.º | A quién | Petición |
+| --- | --- | --- |
+| P-21 | 020 | Plantillas de ruta en `rutas.ts`; estados en `catalogo.ts`; textos en `textos.ts`; `DialogoConfirmacionTecleada` en `src/components/dialogo/`, en la muestra y en su PRUEBA-011; `src/app/muestra/clientes/` en el inventario |
+| P-22 | 021 | Su prueba estática cubre `src/app/admin/clientes/`; `administradores.correo` legible desde la lectura de códigos; confirmar que un diálogo abierto se sustituye al caducar la sesión |
+| P-23 | 023 | Una función que dé «Sin señal» y «En pausa» para una lista de hasta 25 clientes (L-7); los dos estados en el catálogo; sus secciones en `secciones.ts` |
+| P-24 | 024 | I-11 vinculable también a I-06 y a I-03; confirmar la lectura de CA-025 (una fila principal más las vinculadas); qué identifica a un código en su página |
+| P-25 | 025 | Una única fuente en la base de datos para los valores por defecto, que usa el alta; su sección en `secciones.ts`; confirmar que I-41 la escribe el alta |
+
+### A fases posteriores
+
+| N.º | A quién | Petición |
+| --- | --- | --- |
+| P-26 | Fase 4 (030, 032) | Cambio de canal; alerta por conexión nueva, que es el único aviso de un código generado con una sesión comprometida (asunto A-8) |
+| P-27 | Fase 5 (040) | Su sección de usuarios en `secciones.ts`; revisar CA-022 de la 022 cuando abra lecturas a los usuarios de cliente |
+| P-28 | Fase 6 (050) | La causa de cobro como `suspension_cobro_en`; ninguna función suya toca la causa manual; «forzar activa» como hecho aparte, que nunca quita la causa manual |
+
+### A coordinación y al responsable
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-29 | **Aplicar la nota aclaratoria del artículo 2**, con fecha y versión. El responsable la eligió el 12/11/2026 y no está en `docs/CONSTITUCION.md`. Solo la puede hacer el responsable | REQ-074. Sin ella, la ficha con el identificador en la dirección incumple el artículo 2. Asunto A-1 |
+| P-30 | ADR: ampliación de ADR-0003 («operaciones del panel»), enmienda del punto 7 de ADR-0006 (dos causas de suspensión) y, si hace falta, del punto 4 de ADR-0002 (15 minutos, un código vivo) | Cambian fronteras o valores de ADR vigentes |
+| P-31 | Pasar a `aclaraciones.md` las 19 decisiones por delegación (DD-01 a DD-19) de `diseno.md` | D-019 pide anotarlas allí; el encargo del arquitecto no le dejaba editar ese archivo |
+| P-32 | `docs/SEGURIDAD.md`: rutas críticas de P-05. `docs/DISENO.md`: ficha de cliente con sus secciones y el aviso de baja con conexiones activas. `docs/ARQUITECTURA.md`, flujo 1: un solo código vivo y 15 minutos | Documentos compartidos |

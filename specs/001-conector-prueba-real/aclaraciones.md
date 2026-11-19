@@ -232,3 +232,53 @@ Ninguna todavía. Previsibles cuando haya respuesta: D-013 (pausa) y las que res
 | Qué hacer con la ventana abierta | «Sí, prioriza el conector» (botón, a «La prueba de 14 días de Vercel ya corre: ¿priorizo el conector para aprovecharla?») | Responsable, 13/11/2026, chat de la fase 1 | Prioridad al diseño e implementación del conector; REQ-080 prevé que no todo quepa |
 
 La especificación vuelve a PROPUESTA hasta que el responsable apruebe la enmienda.
+
+## Decisiones por delegación (D-019), 14/11/2026
+
+| Cuestión | Decisión | Motivo |
+| --- | --- | --- |
+| Consolidar la especificación y volver a abrir P0 | Decidido por delegación (D-019): versión de 20 requisitos; el texto íntegro pasa al anexo con identificadores `RD-`/`CAD-` | Una persona puede revisarla de una sentada sin perder ninguna obligación |
+| Numeración: los números `REQ-`/`CA-` de este archivo y del diseño anteriores a esta fecha son los antiguos | Decidido por delegación (D-019): número antiguo = `RD-`/`CAD-` del mismo número en el anexo | Evita reescribir el historial; el diseño se pasa a la numeración nueva al revisarlo |
+| Puertas P0, P1 y P7 «las abre una persona» (REQ-007 y CA-008 de la 002) frente a la delegación | Decidido por delegación (D-019): el requisito se mantiene. Las puertas y los cambios reservados siguen exigiendo una aprobación registrada del responsable; mientras dure D-019 esa aprobación consta como «orquestador por delegación» y el responsable la puede revisar | Mantener el control del responsable sin bloquear el trabajo; no se rebaja ninguna prueba |
+
+## Decisiones del 14/11/2026 incorporadas (delegación D-019)
+
+| Qué | Origen | Efecto |
+| --- | --- | --- |
+| Supabase: proyecto existente `Nido`, `eu-north-1`, plan gratuito; funciones de Vercel en `arn1` | D-020, responsable, 14/11/2026 | Sustituye a `eu-central-1` y `fra1` en todo texto de esta función. Sigue dentro de la UE. El proyecto no lo crea ningún agente: ya existe |
+| La prueba real se hace solo con la cuenta Claude Max del responsable; ChatGPT sin cuenta | D-021, responsable, 14/11/2026 | ChatGPT queda «no probado» y V-102 sin resolver; no cuenta como «no» ni como «sí» |
+| Repositorio remoto `multiserviagua-pixel/Nido`, privado | D-022, responsable, 14/11/2026 | Alimenta la función 003; esta función sigue en local |
+| Los agentes no crean cuentas ni secretos | D-019 | Sin cambio |
+
+## Decisiones del diseño por delegación (D-019), 19/11/2026
+
+Asuntos abiertos del diseño anterior (A-n) y nuevos, resueltos por el `arquitecto` en `diseno.md`, eligiendo la opción de más seguridad y calidad. El responsable puede revisarlos. Lo no delegable está en `diseno.md`, «Asuntos para el responsable» (R-1 a R-6).
+
+| Asunto | Decisión | Motivo |
+| --- | --- | --- |
+| A-1 Dónde vive el estado | `Nido`, esquema `conector_prueba`; batería en PGlite; tras las pruebas locales contra `Nido`, revertir y reaplicar con contraseñas nuevas solo en Vercel | D-020; crear otro proyecto no es delegable; las credenciales locales mueren con los roles |
+| A-2 Producción | Sin estado ni variables del conector: rutas en 503 y operación en 404 | Nadie puede activar nada; CA-024 se cumple sin enmienda |
+| A-3 Anotación de `obtener_instrucciones` | `readOnlyHint: false` y fuera `x-cuestion-abierta`, antes de implementar; sujeto al dictamen del `auditor-seguridad` en P1 | Escribe estado (ejecución, orden entregada): «solo lectura» no es veraz. En Claude no cambia nada porque las tres herramientas van en «Always allow» |
+| A-4 Permitir siempre leer, etiquetar y crear borrador | Se aplica la especificación tal como está (RD-062); la medición extra es R-4 | Relajar RD-062 es aceptar un riesgo: no es delegable |
+| A-5 Plan de ChatGPT | Sin objeto mientras no haya cuenta (D-021) | — |
+| A-6 Registros de la plataforma | Sin enmienda: el token en la URL solo lo envía la batería, en local; la consulta de `/oauth/autorizar` no lleva secretos ni datos personales | CA-006 es automático y local |
+| A-7 Credenciales en la máquina | Las de preproducción nunca en local; `operar` es orden de la persona desde la carpeta sellada de la 002 | La solución de fondo es el asunto A-3 de la 002 |
+| A-8 Callbacks | Dos, con `iss`; si ChatGPT usara el variable, se añade el valor exacto con un despliegue revisado | Lista cerrada |
+| A-9 Quién aplica el SQL | Una persona, en el editor SQL | Ningún agente con credencial de administración |
+| A-10 Calendario | Día de prueba = bloque de 24 h desde la primera ejecución programada; el periodo empieza el día D; objetivo antes del 22/11 y como muy tarde el 23/11 a las 08:00 | Tres bloques antes de `decision-pago` (26/11) |
+| A-11 `mcp-handler` | No se usa: solo el SDK oficial (cambio de T-008) | No aporta nada necesario |
+| A-12 Rutas nuevas respecto a `docs/ESQUELETO.md` | Aprobadas (marcadas «(n)» en el diseño) | Necesarias y acotadas |
+| A-13 Concurrencia sin pgTAP | En la batería sobre PGlite y, con bloqueos reales, contra `Nido` antes de desplegar, con evidencia | No hay CI todavía |
+| A-14 Límite de peticiones | Sin límite por conexión; vale el WAF de la 002 en `/api/*` | Datos ficticios; A-22 es de la fase 2 |
+| A-15 Tipo de tarea en Claude | Tarea programada de Cowork, con aprobación automática; nunca «sin aprobaciones» | Es la que usaría un cliente; «sin aprobaciones» ampliaría el permiso a herramientas de correo (RD-062) |
+| Plan Max frente a RD-078 | Se anota Max; Pro queda «no probado» (R-6) | D-021 |
+| CA-008 real con un solo asistente | Segunda conexión abierta por la persona con el cliente MCP oficial; la parte «otro asistente» queda no ejecutada | Evidencia honesta (artículo 13) |
+| Validador | `ajv` 8.20.0 como dependencia directa | El SDK 2.4.0 ya no lo trae (registro de npm, 19/11/2026) |
+| Enmienda E-1 a RD-023 | Propuesta en `diseno.md`; la aplica el orquestador | RD-028 pide duración, protocolo y asistente |
+
+## Asuntos nuevos para el responsable tras el dictamen del diseño (19/11/2026)
+
+Sin respuesta todavía; detalle en `diseno.md`, «Asuntos para el responsable».
+
+- **R-7** (M-2 del dictamen): si en la cuenta Max algún conector, complemento o capacidad distinto de Gmail de pruebas y HumanaIA no se puede desactivar para la tarea, ¿se hace igual la prueba? Hace falta la respuesta antes del paso 6 del guion.
+- **A-3, revisada:** `readOnlyHint: false` deja de ser decisión por delegación. La respuesta expresa del responsable se recoge en P1 (RD-016).

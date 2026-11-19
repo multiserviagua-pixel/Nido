@@ -20,3 +20,7 @@ supabase/.branches/
 Thumbs.db
 .DS_Store
 *.log
+
+# TypeScript y Next.js (generados)
+next-env.d.ts
+*.tsbuildinfo

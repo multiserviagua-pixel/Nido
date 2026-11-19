@@ -142,3 +142,46 @@ Para el registro de decisiones, que mantiene el chat de coordinación (ver `prop
 | Base de datos | El responsable pidió preparar el proyecto en la consola de Supabase. El orquestador dejó relleno el formulario, sin enviarlo: nombre `nido-desarrollo`, región `eu-central-1`, sin exposición automática de tablas, RLS automático, plan gratuito. La contraseña y la creación son del responsable. Plan de pago de Supabase solo en producción, según le dijo al chat de la fase 3 | Responsable, 13/11/2026 | Excepción puntual a REQ-070: este primer proyecto lo crea el responsable desde la consola |
 
 La especificación vuelve a PROPUESTA hasta que el responsable apruebe la enmienda. El diseño escrito el 12/11/2026 y su dictamen son anteriores a ella y hay que rehacerlos sobre el texto enmendado.
+
+## Decisiones por delegación (D-019), 14/11/2026
+
+| Cuestión | Decisión | Motivo |
+| --- | --- | --- |
+| Consolidar la especificación y volver a abrir P0 | Decidido por delegación (D-019): versión de 20 requisitos; el texto íntegro pasa al anexo con identificadores `RD-`/`CAD-` | Una persona puede revisarla de una sentada sin perder ninguna obligación |
+| Numeración: los números `REQ-`/`CA-` de este archivo y del diseño anteriores a esta fecha son los antiguos | Decidido por delegación (D-019): número antiguo = `RD-`/`CAD-` del mismo número en el anexo | Evita reescribir el historial; el diseño se pasa a la numeración nueva al revisarlo |
+| Puertas P0, P1 y P7 «las abre una persona» (REQ-007 y CA-008 de la 002) frente a la delegación | Decidido por delegación (D-019): el requisito se mantiene. Las puertas y los cambios reservados siguen exigiendo una aprobación registrada del responsable; mientras dure D-019 esa aprobación consta como «orquestador por delegación» y el responsable la puede revisar | Mantener el control del responsable sin bloquear el trabajo; no se rebaja ninguna prueba |
+
+## Decisiones del 14/11/2026 incorporadas (delegación D-019)
+
+| Qué | Origen | Efecto |
+| --- | --- | --- |
+| Supabase: proyecto existente `Nido`, `eu-north-1`, plan gratuito; funciones de Vercel en `arn1` | D-020, responsable, 14/11/2026 | Sustituye a `eu-central-1` y `fra1` en todo texto de esta función. Sigue dentro de la UE. El proyecto no lo crea ningún agente: ya existe |
+| La prueba real se hace solo con la cuenta Claude Max del responsable; ChatGPT sin cuenta | D-021, responsable, 14/11/2026 | ChatGPT queda «no probado» y V-102 sin resolver; no cuenta como «no» ni como «sí» |
+| Repositorio remoto `multiserviagua-pixel/Nido`, privado | D-022, responsable, 14/11/2026 | Alimenta la función 003; esta función sigue en local |
+| Los agentes no crean cuentas ni secretos | D-019 | Sin cambio |
+
+## Asuntos abiertos del diseño: decididos por delegación (D-019), 19/11/2026
+
+Los anota el `arquitecto` al rehacer `diseno.md`. Crear cuentas, poner secretos, aprobar gasto y aceptar riesgos no se delegan: quedan para el responsable (diseño, «Asuntos y pendientes del responsable»).
+
+| Asunto | Decisión | Motivo |
+| --- | --- | --- |
+| A-1 Vercel guarda ruta, consulta, agente y origen fuera de la UE | Opción a: se admite, con la regla para toda función de que nada secreto, personal ni de correo viaja en la ruta ni en la consulta; `nido` sin «Observability Plus» y `pre-nido` con ella solo durante la prueba real. Exige enmendar REQ-019, CA-021 y la respuesta 9; la registra el orquestador | Única vía sin reabrir D-002; el dato sensible no llega a salir |
+| A-2 Token de proyecto | Se comprueba primero (PRUEBA-029); si no existe, preproducción la despliega una persona | Más seguro |
+| A-3 Cuenta de Windows compartida | Opción 1, cuenta aparte para los agentes; producción se niega sin ella o sin aceptación escrita del responsable | Única barrera real; crear la cuenta no se delega |
+| A-4 Revisión declarada | Límite declarado hasta la 003; aceptarlo es del responsable | Aceptar riesgos no se delega |
+| A-5 Cuatro lecturas | Confirmadas | Las más seguras |
+| A-6 Qué pide firma | `APROBADA`, `EN CURSO`, `CERRADA` y editar especificaciones aprobadas; mientras rija D-019, la declaración firmada `delegacion` cubre solo esas rutas de puerta | Cumple D-019 sin abrir rutas no delegables |
+| A-7 Todo commit por `integrar` tras el ancla | Confirmado; coordinación ajusta `docs/PLAN.md` | REQ-008 |
+| A-8 Diferencias con el esqueleto | Aprobadas, con `arn1` (D-020) | Las necesitan batería y operación |
+| A-9 Servicios gratuitos | Sentry Developer UE, UptimeRobot y Gitleaks, confirmados tras su verificación; el pago de Vercel lo decide el responsable | Sin coste; el gasto no se delega |
+| A-12 Arranque | Confirmado: rama `arranque/002` y ancla firmada por el responsable | El procedimiento no se integra a sí mismo |
+| A-13 Lista de reservadas ampliada | Aceptada entera | Fija quién aprueba qué |
+| A-14 Ventana | a) criterios por lugar como en el diseño; b) REQ-014 no se enmienda: lo no hecho queda «no ejecutado»; c) recorte según la fecha del primer despliegue; d) riesgo de agotamiento, al responsable | Sin rebajar requisitos |
+
+## Correcciones tras el dictamen de segunda vuelta, 19/11/2026
+
+Se añaden sin modificar las líneas anteriores (`dictamen-diseno-2.md`, MAYOR 6 y m-6):
+
+- Queda sin efecto lo dicho en «Decisiones por delegación (D-019), 14/11/2026» sobre que una puerta o un cambio reservado conste aprobado como «orquestador por delegación»: un cambio reservado exige siempre firma del responsable, y la delegación solo cubre la línea `Estado:` de las carpetas que enumere la declaración firmada `delegacion` (diseño, «Delegación»).
+- A-1 deja de estar decidido por delegación: es aceptar un riesgo y aprobar un gasto. Queda pendiente del responsable: `aceptacion-riesgo` firmada con `asunto` A-1 (ruta, consulta, IP y agente guardados por Vercel fuera de la UE), aprobación de la enmienda de REQ-019 y CA-021, y el gasto de «Observability Plus» en `pre-nido`.

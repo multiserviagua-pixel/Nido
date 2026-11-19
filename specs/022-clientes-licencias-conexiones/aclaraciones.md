@@ -89,3 +89,16 @@ Abierta por el responsable el 13/11/2026 en el diálogo de preguntas del chat de
 ## Enmienda del 13/11/2026 (después de la puerta P0)
 
 La función 025 (reglas por cliente) obliga a retocar esta especificación. Presentada al responsable en el diálogo de preguntas del chat de la fase 3; respuesta literal: «Sí, apruebo las dos». En la 022: dar de alta un cliente guarda también sus reglas por defecto. En la 024: el inventario gana las acciones de cambiar y de restablecer las reglas de un cliente, y la fila de auditoría puede anotar qué reglas cambiaron, de lista cerrada y sin valores. La especificación sigue APROBADA; la enmienda la aplica el `especificador`.
+
+## Decisiones por delegación (D-019), 14/11/2026
+
+El responsable delegó las decisiones no reservadas a una persona (D-019). Sobre los asuntos abiertos del diseño y las DD-01 a DD-19 de `diseno.md`:
+
+- **DD-01 a DD-19:** aceptadas tal como están en el diseño; cada una lleva su motivo.
+- **A-2 (lectura de CA-025):** vale DD-14, «una fila principal más las vinculadas del inventario de la 024». Motivo: es la lectura coherente con el inventario cerrado.
+- **A-3:** en la fase 3 un usuario de cliente no lee ninguna fila de estas tablas. Motivo: mínimo privilegio (art. 3); lo que el cliente necesite lo verá la fase 5 por vistas propias. Se pide a la fase 2 en `propuestas.md`.
+- **A-5:** 15 minutos en la 022 y en la pantalla de activación de la 001. Motivo: lo aprobado por el responsable es 15. Se pide a la 001 en `propuestas.md`.
+- **A-6:** toda creación de código deja fila de auditoría; si la orden `generar_codigo` de la 001 se mantiene, escribe la misma fila. Motivo: una segunda vía sin rastro rompe el art. 3.
+- **A-7:** se acepta la regla de nombres (DD-05, DD-06). Los alfabetos mezclados quedan como riesgo aceptado y anotado.
+- **A-8:** aceptado: la alerta de conexión nueva es de la fase 4; hasta entonces se detecta por ficha y auditoría.
+- **Reservados a una persona, sin decidir:** A-1 (aplicar la nota aclaratoria del artículo 2 a la constitución: enmienda, la aplica coordinación con fecha y versión) y A-4 (dónde ejecutar pgTAP; impide pasar a VERIFICADA).
