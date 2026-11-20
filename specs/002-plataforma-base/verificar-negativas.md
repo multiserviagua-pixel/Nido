@@ -29,4 +29,8 @@ Límites conocidos (no cubiertos por selectores):
 
 - `export { runtime }` y `export { preferredRegion }` se prohíben siempre, aunque el valor fuera `nodejs`: el valor no se puede resolver con un selector, y se declara en el propio `export const`.
 - `import * as p from "node:process"; p.env`, `globalThis.process.env` y `new globalThis.URL(...)` no se detectan.
-- `route.ts` sin `manejador.ts`, `new Error` no literal y la clave secreta (fase 2) no se expresan en esta configuración y quedan para T-004 y posteriores.
+- `route.ts` sin `manejador.ts` y la clave secreta (fase 2) no se expresan en esta configuración: lo primero lo comprueba `tests/unit/plataforma/rutas.test.ts` (T-004) y lo segundo queda para la fase 2. `new Error` no literal y `throw` de otra cosa que `ErrorDeAplicacion` sí se cubren (T-004, ver abajo).
+
+## Negativas de la regla de errores (T-004)
+
+Ejecutadas con la API `ESLint.lintText` sobre texto, con `eslint.config.mjs`, en `tests/unit/plataforma/reglas-errores.test.ts`. Todas saltan por `no-restricted-syntax`: 17 `throw new Error(variable)`; 18 `throw "x"`; 19 `throw new TypeError()`; 20 `throw new Error("x")` (lanzar `Error` tampoco vale); 21 `new Error` con plantilla; 22 `Error(variable)` sin `new`; 23 `throw e` de lo capturado; 24 el caso 17 en `entrada.ts`. Permitidos: `throw new ErrorDeAplicacion("…")`, `new Error("literal")` como valor, la definición en `errores.ts` y `new URL`/`JSON.parse` en `entrada.ts`. Límite: `Promise.reject(...)` y `new Error` con argumento literal fuera de `throw` no se detectan. Tampoco se detectan, por la misma razón, `new TypeError(v)` ni `new globalThis.Error(v)` usados como valor (sin `throw`): la regla deja pasar ambos.

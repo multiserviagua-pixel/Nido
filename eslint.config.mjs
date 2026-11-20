@@ -53,6 +53,22 @@ const sintaxisJsonGlobal = {
     "MemberExpression[property.name='parse'][object.type='MemberExpression'][object.object.name='globalThis'][object.property.name='JSON']",
   message: "JSON.parse solo en src/lib/plataforma/entrada.ts.",
 };
+// Errores (diseño §App base, punto 2): solo se lanza `ErrorDeAplicacion(codigo)`; `Error`
+// solo con argumento literal y como valor, nunca lanzado.
+const sintaxisErrores = [
+  {
+    selector: "ThrowStatement > :not(NewExpression[callee.name='ErrorDeAplicacion'])",
+    message: "throw solo de new ErrorDeAplicacion(codigo).",
+  },
+  {
+    selector: "NewExpression[callee.name='Error'] > .arguments:not(Literal)",
+    message: "new Error solo con argumento literal.",
+  },
+  {
+    selector: "CallExpression[callee.name='Error'] > .arguments:not(Literal)",
+    message: "Error() solo con argumento literal.",
+  },
+];
 const propiedadesEnv = {
   object: "process",
   property: "env",
@@ -102,7 +118,13 @@ export default defineConfig([
       "no-console": "error",
       "no-restricted-properties": ["error", propiedadesEnv, propiedadesJson, propiedadesUrl],
       "no-restricted-imports": ["error", importacionesEnv],
-      "no-restricted-syntax": ["error", ...sintaxisEdge, sintaxisUrl, sintaxisJsonGlobal],
+      "no-restricted-syntax": [
+        "error",
+        ...sintaxisEdge,
+        ...sintaxisErrores,
+        sintaxisUrl,
+        sintaxisJsonGlobal,
+      ],
     },
   },
   {
@@ -120,7 +142,7 @@ export default defineConfig([
     files: ["src/lib/plataforma/entrada.ts"],
     rules: {
       "no-restricted-properties": ["error", propiedadesEnv],
-      "no-restricted-syntax": ["error", ...sintaxisEdge],
+      "no-restricted-syntax": ["error", ...sintaxisEdge, ...sintaxisErrores],
     },
   },
   globalIgnores([
