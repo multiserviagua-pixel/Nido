@@ -1,9 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as ruta from "../../../src/app/api/salud/route";
 
 const url = "http://localhost/api/salud?q=TEXTO-CANARIO-123";
 
 describe("/api/salud (PRUEBA-025 y 044, partes L)", () => {
+  beforeEach(() => {
+    vi.stubEnv("ENTORNO", "desarrollo");
+    for (const n of [
+      "SUPERVISION_DSN",
+      "COMMIT_DESPLEGADO",
+      "VERCEL",
+      "VERCEL_ENV",
+      "VERCEL_REGION",
+      "VERCEL_URL",
+    ]) {
+      vi.stubEnv(n, undefined);
+    }
+  });
+  afterEach(() => vi.unstubAllEnvs());
+
   it("GET: 200, cuerpo exacto de un solo campo y no-store", async () => {
     const r = await ruta.GET(new Request(url));
     expect(r.status).toBe(200);

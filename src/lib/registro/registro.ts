@@ -1,4 +1,5 @@
 import type { Codigo } from "./codigos";
+import { consolaOriginal } from "./salida";
 
 export type Nivel = "info" | "aviso" | "error";
 
@@ -6,6 +7,5 @@ export type Nivel = "info" | "aviso" | "error";
 // Ningún argumento libre: ni mensajes, ni valores recibidos, ni objetos de error (art. 1).
 export function registrar(nivel: Nivel, codigo: Codigo, ruta: string): void {
   const linea = JSON.stringify({ nivel, codigo, ruta, momento: new Date().toISOString() });
-  if (nivel === "error") console.error(linea);
-  else console.log(linea);
+  consolaOriginal(nivel === "error" ? "error" : "log")(linea);
 }
