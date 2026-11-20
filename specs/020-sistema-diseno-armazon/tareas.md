@@ -53,9 +53,10 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 ## Bloque 2 · Base sin decisiones visuales
 
 ### T-006 `[P]` · Escala inicial e iconos
-`disenador-ui` · R · pendiente · Depende de: (a) nada; (b) T-003 · REQ-029, REQ-033, REQ-086 · CA-024, CA-046, CA-056
+`disenador-ui` · R · en curso: (a) hecha e integrada (20/11/2026), falta (b) · Depende de: (a) nada; (b) T-003 · REQ-029, REQ-033, REQ-086 · CA-024, CA-046, CA-056
 - (a) Escala y papeles en `docs/DISENO.md`, con los valores iniciales ajustados solo donde no llegan al contraste, y sus diferencias. Prueba: revisión del `revisor` contra el contraste de `propuestas.md`.
 - (b) Iconos como componentes SVG en `c/iconos/` y `LICENCIAS.md`. Prueba: PRUEBA-008 (iconos).
+- Dictamen (a) (20/11/2026): revisor APTO sin bloqueantes ni mayores (recalculó 39 pares y los degradados a 33 puntos); aprobado por delegación D-036, 20/11/2026. Solo `docs/DISENO.md`; `comprobar-specs` SUPERADO. Pendiente, sin bloquear (menores): (1) `--acento` en colores forzados vale `Highlight` y sirve a enlaces y botón; separar un papel de enlace con `LinkText` o justificarlo, en T-007 (f); (2) `diseno.md` dice «degradados de la misma rampa» pero `--degradado-grafico` mezcla acento y neutro; las sombras usan `rgb(… / alfa)` frente a «hexadecimal opaco» (excepción por escrito o en PRUEBA-005); `rgb(0 0 0)` en oscuro: usar neutro 950; (3) tabla de prohibidas: añadir el valor en oscuro (`--foco` sobre `--acento` 1,00:1) y `--correcto`/`--aviso` sobre `--degradado-grafico` en claro (4,24 y 4,25); (4) explicar en la tabla de diferencias por qué se crean `--menu-actual`, `--menu-texto-secundario`, `--serie-2` a `--serie-4` y los degradados.
 
 ### T-007 `[P]` · Formatos, texto de dato, dirección, textos, valores y contraste
 `ingeniero-frontend` · D (parte (c)); el resto, R · en curso: (a) a (e) hechas e integradas (20/11/2026), faltan (f) y (g) · Depende de: T-002; (f) y (g), además T-003 y T-006 · REQ-012, REQ-029, REQ-030, REQ-036, REQ-038, REQ-039, REQ-043, REQ-046 a REQ-050, REQ-053, REQ-055, REQ-056, REQ-059, REQ-071, REQ-075, REQ-076, REQ-079, REQ-080, REQ-083, REQ-085, REQ-086, REQ-088 · CA-008, CA-009, CA-013, CA-017, CA-022, CA-027, CA-036 a CA-041, CA-044, CA-051, CA-054 a CA-057
