@@ -82,6 +82,10 @@ const RE_HOST = /^[a-z0-9.-]{1,253}$/i;
 // Grupos: clave, host, proyecto (los usa supervision.ts; una sola copia).
 export const RE_DSN = /^https:\/\/([0-9a-f]{32})@(o[0-9]+\.ingest\.de\.sentry\.io)\/([0-9]+)$/;
 
+// El entorno lo decide `ENTORNO`, que pone una persona; NO se confía en `NODE_ENV`: lo fija el
+// empaquetador o el ejecutor de pruebas (`next build`/`next start` lo fuerzan a `production`, Vitest
+// a `test`) y no distingue desarrollo, preproducción y producción. Un valor distinto de
+// `production` nunca basta para abrir `desarrollo`; solo puede cerrarlo (A-3).
 // Único predicado de «desarrollo» (validación y cierre en fallo): ENTORNO=desarrollo, NODE_ENV
 // distinto de production y ninguna variable VERCEL* con valor. Ausente o ilegible: no.
 function predicadoDesarrollo(fuente: Fuente): boolean {
@@ -156,6 +160,12 @@ export function validarConfiguracion(fuente: Fuente): Resultado {
 export function cargarConfiguracion(): Configuracion {
   const fuente: Record<string, string | undefined> = {};
   for (const nombre of NOMBRES_CONFIGURACION) fuente[nombre] = process.env[nombre];
+  // Mismo criterio que `esDesarrollo`: cualquier VERCEL* presente (también las que no están en la
+  // lista cerrada, como VERCEL_GIT_COMMIT_SHA) impide `desarrollo` (A-1). Solo nombres y valores
+  // hacia el predicado; no se imprime nada.
+  for (const nombre of Object.keys(process.env)) {
+    if (nombre.startsWith("VERCEL")) fuente[nombre] = process.env[nombre];
+  }
   const resultado = validarConfiguracion(fuente);
   if (!resultado.ok) throw new ErrorDeAplicacion(resultado.codigo);
   return resultado.valor;

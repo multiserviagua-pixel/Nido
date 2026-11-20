@@ -152,6 +152,35 @@ describe("configuracion: lista cerrada", () => {
     expect((capturado as ErrorDeAplicacion).codigo).toBe("configuracion_invalida");
     expect((capturado as Error).message).not.toContain(MARCA);
   });
+
+  it("A-1: cargarConfiguracion mira todo process.env: VERCEL_GIT_COMMIT_SHA invalida desarrollo", () => {
+    for (const n of NOMBRES_CONFIGURACION) vi.stubEnv(n, BASE_DES[n]);
+    vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "abcdef1");
+    let capturado: unknown;
+    try {
+      cargarConfiguracion();
+    } catch (e) {
+      capturado = e;
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    expect(capturado).toBeInstanceOf(ErrorDeAplicacion);
+    expect((capturado as ErrorDeAplicacion).codigo).toBe("configuracion_invalida");
+  });
+});
+
+describe("configuracion: DSN con saltos de línea (A-2)", () => {
+  it.each([
+    ["salto de línea al final", DSN + "\n"],
+    ["salto de línea al principio", "\n" + DSN],
+    ["retorno de carro al final", DSN + "\r"],
+  ])("DSN con %s se rechaza como mal formado", (_n, dsn) => {
+    for (const base of [BASE_PRO, BASE_DES]) {
+      const r = validarConfiguracion({ ...base, SUPERVISION_DSN: dsn });
+      expect(r).toMatchObject({ ok: false, codigo: "configuracion_invalida" });
+      if (!r.ok) expect(r.variables).toContain("SUPERVISION_DSN");
+    }
+  });
 });
 
 describe("region (PRUEBA-012, parte L)", () => {
@@ -225,5 +254,14 @@ describe("/api/salud con configuración (PRUEBA-012 y 044, partes L)", () => {
     }
     expect(salida.join("\n")).not.toContain(MARCA);
     expect(salida.join("\n")).toMatch(/configuracion_invalida|region_no_permitida/);
+  });
+
+  it("A-1: desarrollo con VERCEL_GIT_COMMIT_SHA presente: 503 sin valores", async () => {
+    poner(BASE_DES);
+    vi.stubEnv("VERCEL_GIT_COMMIT_SHA", MARCA);
+    const r = await salud.GET(new Request("http://x/api/salud"));
+    expect(r.status).toBe(503);
+    expect(await r.text()).toBe('{"estado":"error"}');
+    expect(salida.join("\n")).not.toContain(MARCA);
   });
 });
