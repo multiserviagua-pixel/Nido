@@ -1,25 +1,29 @@
-# 010 · Relevo (20/11/2026)
+# 010 · Relevo (20/11/2026, fin del chat del carril B)
 
-Chat de la fase 2, función 010. Empieza por este archivo y lee solo lo que indica.
+Chat de la fase 2, función 010. Empieza por este archivo. `Estado: EN CURSO`. La carpeta principal sigue en `main`; nada de esto está en `main` salvo lo ya commiteado.
 
 ## Estado
 
-- `especificacion.md`: `Estado: PLANIFICADA`. P1 abierta por el responsable el 20/11/2026 (respuestas expresas en el chat); anotada en la tabla de aprobación de `plan.md`.
-- `diseno.md` (≈39 KB): dictamen vuelta 2 `specs/010-base-datos-rls/dictamen-diseno-2.md`: APTO CON CONDICIONES, 0 bloqueantes (N-1 a N-8 repartidos en tareas). Vuelta 1: `dictamen-diseno.md`.
-- `plan.md` y `tareas.md`: 15 tareas T-001 a T-015 (T-013 `plataforma` y T-014 `qa` con pasos de una persona, reservadas, art. 14). Todos los REQ y CA aparecen en `tareas.md` (comprobado por mí).
-- Decisiones de P1: `bd.yml` y protección de `main` sí; `@electric-sql/pglite-pgtap` 0.0.18 ya (D-034); enmienda de `search_path = pg_catalog, pg_temp` con alcance N-1 y CA-009/REQ-012 con lista residual; cliente de baja sin reactivar; `service_role` solo sobre `versiones_prompt`; riesgo residual de `postgres`; políticas en M07 y pgTAP en T-008 a T-011; rutas de `ingeniero-bd` autorizadas por el encargo.
-- Sin comprobar: ninguna prueba (no hay código). Sin commits ni cambios de rama míos.
+- Retoques de `diseno.md` (arquitecto): hechos, sin commit. Tamaño comprobado: 39.207 → 40.620 bytes (+1,4 KB, aviso de D-023; el comprobador da SUPERADO). Para volver a 0 neto se podría acortar «Lo que queda para el plan».
+- `pglite-pgtap` 0.0.18: VERIFICADA con Node 26.13.0 en un directorio aislado (`ok()`, `is()`, `finish()` correctos, `npm audit` 0). Anotada en `verificaciones.md`. Aún NO instalada en el repositorio (lo hace la tarea que la necesite, T-008).
+- T-001: `en revisión` en `tareas.md`. Rama vigente `tarea/010-T-001-v3`, en el worktree `.claude/worktrees/agent-a42966b03a8b49f66`, commits 790a496, c2f3dcd y 7e96b65, encima de 2df0ffe, 72230cf y 0bf1b0f (ramas v2 y original conservadas). Comprobado por mí: `npx vitest run supabase/tests/pglite tests/unit/bd` 65 en verde; `tsc` limpio; `comprobar-specs` SUPERADO.
+- Dictámenes del `revisor` y del `auditor-seguridad` (3 vueltas, 0 bloqueantes, APTO CON CONDICIONES): `evidencias/T-001/dictamenes.md`. Las condiciones abiertas están en su tabla de la vuelta 3.
+- `npm test` completo: 118 de 119 en verde en el worktree; falla de forma intermitente `tests/unit/plataforma/reglas-eslint.test.ts` (002) por tiempo de espera de 5 s al coincidir con PGlite. Propuesta n.º 33 en `propuestas.md`.
+- Propuestas nuevas 33 (timeout 002) y 34 (D-1 atomicidad por `do` único; D-9 R-4 `statement_timeout`) en `propuestas.md`.
 
 ## Falta (en orden)
 
-1. Retoques menores de `diseno.md` por apartado, sin añadir volumen (arquitecto): texto de N-2(a) y N-6 en D-3; N-5 en D-9 R-4; N-8 en D-1 y D-10; recuento de pruebas (1.351) antes de T-015; cinco archivos que faltan en «Piezas»; lista cerrada de esquemas de plataforma (N-1); escáner de secretos en CA-020.
-2. Una persona enmienda `.claude/rules/bd.md`, ADR-0003, `ingeniero-bd.md`, `migracion-bd`, `docs/SEGURIDAD.md` y `docs/TECNOLOGIAS.md` (`search_path`, propuesta 29) antes de T-003, y la coordinación avisa a la 001 antes de que aplique SQL en `Nido`.
-3. `sdd-implementar` T-001 (una tarea cada vez, `ingeniero-bd`, prueba delante; luego `revisor` y `auditor-seguridad`).
+1. Una última pasada pequeña de `ingeniero-bd` en T-001 (esfuerzo normal, mismas ramas): hallazgos 1, 2 y 4 del auditor (una línea cada uno, con prueba delante) y la regla L 14 del 3 si se quiere cerrar ya. Luego revisión acotada de lo cambiado (`auditor-seguridad`).
+2. Integrar T-001 en `main` (sí agrupado del responsable). Deja el nombre de rama `tarea/010-T-001` apuntando a v3 (el worktree original la tiene ocupada).
+3. T-002 (depende de T-001 y de L 14 del hallazgo 3). T-003 espera a la enmienda de `search_path` (punto 2 del relevo anterior: una persona/coordinación enmienda `.claude/rules/bd.md`, ADR-0003, `ingeniero-bd.md`, `migracion-bd`, `docs/SEGURIDAD.md`, `docs/TECNOLOGIAS.md`) y a avisar a la 001 antes de aplicar SQL en `Nido`.
+4. Pasar `comprobaciones-cli.md` a `verificaciones.md` (comprobaciones 1 y 3 confirmadas; 2 confirmada por código fuente sin ejecutar; 4 VERIFICAR en T-013).
 
 ## Decisiones del responsable pendientes
 
-Ninguna de P1. Pendiente de una persona: las enmiendas del punto 2 y la instalación de `pglite-pgtap` tras verificar su README con Node 26 (`verificar-decision`).
+- **Sí agrupado para `main`**: commit de los retoques de `diseno.md`, `verificaciones.md`, `propuestas.md`, `tareas.md`, `especificacion.md` (EN CURSO), `evidencias/T-001/` y la integración de la rama v3. Sin push.
+- Confirmar que la atomicidad de M01 y de su reversión (guarda + un único `do`) sustituye a `begin/commit` de D-1.
+- Aceptar o resolver el fallo intermitente de la 002 (propuesta 33) antes de integrar.
 
 ## Siguiente paso
 
-Retoques del diseño (punto 1) y después T-001. `propuestas.md` n.º 17 a 32 las traslada la coordinación a los documentos compartidos.
+Chat nuevo que empiece por este archivo: punto 1 de «Falta», con un solo subagente opus a la vez.

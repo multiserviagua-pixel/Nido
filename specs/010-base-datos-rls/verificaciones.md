@@ -92,3 +92,8 @@ Todo se detalla en `diseno.md`, «Datos», apartado D-4.
 
 - [Registro de npm](https://registry.npmjs.org/@electric-sql/pglite-pgtap): `@electric-sql/pglite-pgtap` 0.0.18, publicada el 19/11/2026, licencia Apache-2.0, del repositorio oficial `electric-sql/pglite`. Exige exactamente `@electric-sql/pglite` 0.5.17, la misma versión que fija D-033. El [anuncio de PGlite v0.4](https://electric-sql.com/blog/2026/03/25/announcing-pglite-v04) incluye pgTAP entre las extensiones disponibles.
 - **Estado: PROPUESTA, sin usar todavía.** Por D-027 no se puede instalar antes del 26/11/2026 sin una excepción. Falta leer su README: cómo se importa y si funciona con Node 26. Ver `diseno.md`, «Dependencias nuevas».
+
+### Verificación 20/11/2026 (D-034)
+
+- **Estado: VERIFICADA.** README de `@electric-sql/pglite-pgtap` 0.0.18 leído (registro de npm). Importación: `import { pgtap } from '@electric-sql/pglite-pgtap'` y `new PGlite({ extensions: { pgtap } })`, luego `CREATE EXTENSION IF NOT EXISTS pgtap;`.
+- Prueba en un directorio aislado con Node 26.13.0: instalación exacta con `--ignore-scripts` junto a `@electric-sql/pglite` 0.5.17, `ok()`, `is()` y `finish()` devuelven «ok 1», «ok 2»; `npm audit`: 0 vulnerabilidades. Sin comprobar: pruebas de RLS o de roles dentro de PGlite (las hará T-008 a T-011).

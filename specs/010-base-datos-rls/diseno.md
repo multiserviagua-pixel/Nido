@@ -14,16 +14,16 @@ Rutas de `docs/ESQUELETO.md`; todo es nuevo salvo «cambia». Agente `ingeniero-
 
 | Ruta | Qué hace |
 | --- | --- |
-| `supabase/migrations/2026112000NN00_<nombre>.sql` y `supabase/reversiones/<mismo nombre>.sql` (10 + 10) | Estructura y vuelta atrás (D-1). Marca de tiempo como pide la CLI ([migration new](https://supabase.com/docs/reference/cli/supabase-migration-new)); lo confirma la tarea 1 |
+| `supabase/migrations/2026112000NN00_<nombre>.sql` y `supabase/reversiones/<mismo nombre>.sql` (10 + 10) | Estructura y vuelta atrás (D-1). Marca de tiempo como pide la CLI ([migration new](https://supabase.com/docs/reference/cli/supabase-migration-new)); T-001 lo confirma |
 | `supabase/seed.sql`, `supabase/datos/volumen.sql` | D-10. Nunca en producción |
 | `supabase/config.toml` (cambia) | `[api] schemas = ["public"]`, `extra_search_path = ["public", "extensions"]` (CA-028); `[db.seed] enabled = false` (D-10) |
-| `supabase/tests/0N_<tema>.test.sql` (9), `declaradas.json`, `ayudas/perfiles.psql` | pgTAP, número declarado (CA-023) y ayudas (`como(perfil)` con `set local`, identificadores del seed, huella de una tabla; si `pg_prove` no admite `\ir`, se repiten en cada archivo) |
+| `supabase/tests/0N_<tema>.test.sql` (9), `declaradas.json`, `ayudas/perfiles.psql`, `ayudas/sombras.psql` | pgTAP, número declarado (CA-023) y ayudas: `como(perfil)` con `set local`, identificadores del seed, huella de una tabla; sombras en `pg_temp` generadas del catálogo (N-3). Si `pg_prove` no admite `\ir`, se repiten en cada archivo |
 | `supabase/tests/pglite/` | Arnés local con el preámbulo y los casos de `scripts/probar-modelo.mjs` |
-| `scripts/bd/ciclo-migraciones.mjs`, `instantanea-catalogo.sql`, `concurrencia-licencia.sh` | CI: ciclo por migración y catálogo ordenado de `public` y `privado` (CA-024, CA-025, CA-031); dos sesiones `psql` (CA-021) |
+| `scripts/bd/ciclo-migraciones.mjs`, `instantanea-catalogo.sql`, `concurrencia-licencia.sh`, `casos/` | CI: ciclo por migración y catálogo ordenado de `public` y `privado` (CA-024, CA-025, CA-031), con una migración que falla en `casos/`; dos sesiones `psql` (CA-021) |
 | `scripts/bd/aplicar-produccion.mjs`, `revertir.mjs`, `entornos.mjs`; `supabase/aprobaciones-produccion.md` | Producción con simulación (CA-026, CA-032), entorno derivado del destino (D-1); aprobaciones (fecha, commit, migración, responsable) |
-| `supabase/procedimientos/administradores.sql`, `docs/operacion/administradores.md`, `docs/operacion/rol-conector.md` | Alta y baja de administradores fuera de la API (REQ-060); procedimiento del rol `conector` (D-9) |
-| `tests/unit/bd/*.test.ts` | L 1 a 14 (apartado «Pruebas») |
-| `.github/workflows/bd.yml`; `package.json` (cambia, solo `aislamiento`) | CI y orden local sobre el arnés. Agente `plataforma`. **Cambio de CI: aprobación humana** (artículo 14) |
+| `supabase/procedimientos/administradores.sql`; `docs/operacion/administradores.md`, `rol-conector.md`, `migraciones.md` | Administradores fuera de la API (REQ-060); guías del rol `conector` (D-9) y de migraciones y reversiones (D-1, N-8) |
+| `tests/unit/bd/*.test.ts`; `tests/unit/plataforma/bd-flujo.test.ts` | L 1 a 14 («Pruebas»); orden y fallos de `bd.yml` (REQ-051) |
+| `.github/workflows/bd.yml`; `package.json` y `package-lock.json` (cambian: `aislamiento`, P1-b) | CI y orden local sobre el arnés. Agente `plataforma`. **Cambio de CI: aprobación humana** (artículo 14) |
 
 ## Contratos
 
@@ -40,7 +40,7 @@ Cada archivo empieza con la guarda `do $$ begin if current_user <> 'postgres' th
 | M01 | `privado_rol_y_permisos` | `privado` (`revoke all … from public`); `conector` (D-9); copia de `pg_default_acl` de `postgres` a una temporal (`on commit drop`); cierre (D-4); después, `privado.permisos_por_defecto_previos` con RLS, `revoke all` y esas filas | Falla si queda otro objeto en `public` o `privado`; si no, restaura los permisos por defecto y borra tabla, rol y esquema, sin `cascade` |
 | M02 | `clientes_y_acceso` | Tipos de §2; `clientes`, `administradores`, `usuarios_cliente`, `licencias`, `codigos_activacion`, `conexiones`, `reglas_cliente`, `ordenes`, `ajustes_globales`, `catalogo_problemas`, `suscripciones`, con RLS y `revoke all`, sin políticas ni permisos | Borra tablas y tipos |
 | M03 | `internas_autorizacion_y_cobro` | `clientes_oauth`, `codigos_autorizacion`, `tokens`, `eventos_stripe`, igual (REQ-008) | Borra las tablas |
-| M04 | `auditoria` · **PROTEGIDA** | `auditoria`; `privado.impedir_cambios()`, `privado.registrar_auditoria()`, `privado.auditar()` (D-3); inmutabilidad (`enable always`) y auditoría de las tablas de M02 | Solo en CI, tampoco en `Nido`: guarda SQL que exige `current_setting('app.reversion_protegida', true) = 'ci'`, marca que solo fija `ciclo-migraciones.mjs` |
+| M04 | `auditoria` · **PROTEGIDA** | `auditoria`; `privado.impedir_cambios()`, `privado.registrar_auditoria()`, `privado.auditar()` (D-3); inmutabilidad (`enable always`) y auditoría de las tablas de M02 | Solo en CI, ni en `Nido`: guarda SQL que exige `current_setting('app.reversion_protegida', true) = 'ci'`, que solo fija `ciclo-migraciones.mjs`. Variable de sesión: guarda contra accidentes, no contra quien actúa a propósito con `postgres` (N-8; P1-h) |
 | M05 | `versiones_prompt` · **PROTEGIDA** | `versiones_prompt` (D-8) y `publicaciones`, con inmutabilidad (`enable always`) y auditoría | Igual que M04 |
 | M06 | `ejecuciones_informes_alertas` | `ejecuciones`, `informes`, `alertas`, integridad (D-2, 5 y 6), índices, auditoría de `alertas` | Borra disparadores, funciones y tablas |
 | M07 | `reglas_de_acceso` | `privado.es_admin()`, `privado.clientes_del_usuario()`, valores fijados y baja (D-3), políticas y permisos (D-5) | Quita lo creado |
@@ -51,9 +51,9 @@ Cada archivo empieza con la guarda `do $$ begin if current_user <> 'postgres' th
 **REQ-053, REQ-054, CA-031 y CA-032**
 
 - Las protegidas (M04, M05) son una constante de `revertir.mjs` (L 8 la compara con los archivos que crean `public.auditoria` o `public.versiones_prompt`).
-- `revertir.mjs` y `aplicar-produccion.mjs` derivan el entorno de la referencia del proyecto en la cadena de conexión, con la lista cerrada de `entornos.mjs` (CI y `Nido`; producción, cuando exista), nunca de un argumento; si es desconocida, se niegan (L 14).
+- `revertir.mjs` y `aplicar-produccion.mjs` derivan el entorno de la referencia del proyecto en la cadena de conexión, con la lista cerrada de `entornos.mjs` (CI, `Nido` y, cuando exista, producción), nunca de un argumento; desconocida, se niegan (L 14).
 - En producción, una protegida no se revierte nunca (CA-032); las demás exigen una fila de `aprobaciones-produccion.md` con el commit actual (CA-026).
-- Las reversiones de M06 en adelante y las futuras no contienen `drop`, `delete`, `truncate`, `update` ni `alter` sobre `auditoria` o `versiones_prompt`, ni `cascade` sobre `privado.impedir_cambios`, `privado.auditar`, `privado.registrar_auditoria` o el esquema `privado`, ni `execute` (L 10). En CI, con filas en las dos tablas, `ciclo-migraciones.mjs` aplica, revierte y reaplica cada migración posterior y compara la huella del contenido (CA-031).
+- Las reversiones de M06 en adelante y las futuras no contienen `drop`, `delete`, `truncate`, `update` ni `alter` sobre `auditoria` o `versiones_prompt`, ni `cascade` sobre `privado.impedir_cambios`, `privado.auditar`, `privado.registrar_auditoria` o el esquema `privado`, ni `execute` (L 10). En CI, con filas en las dos tablas, `ciclo-migraciones.mjs` aplica, revierte y reaplica cada migración posterior y compara la huella de ambas (CA-031).
 
 ### D-2 · Cambios exactos al modelo de referencia
 
@@ -80,12 +80,12 @@ De la especificación o de este diseño:
 
 ### D-3 · Auditoría, autoría y baja
 
-**Regla para toda función de `privado`** (de apoyo, del conector y de disparador; B-1):
+**Regla para toda función de `privado` y toda `security definer` o de disparador de dueño `postgres` fuera de la plataforma** (B-1, N-1):
 
-- `set search_path = pg_catalog, pg_temp`. Con `''`, `pg_temp` se busca primero para relaciones y tipos, y un rol con `temporary` (el conector, por `PUBLIC`, D-9) podría crear un dominio `pg_temp.uuid` cuyo `check` corre como dueño. Con `pg_temp` el último no ocurre, y nunca se busca para funciones ni operadores.
-- Toda referencia fuera de `pg_catalog` va calificada (`public.`, `privado.`, `auth.`).
-- Los mensajes de `validar_*`, `impedir_*` y `al_dar_de_baja` llevan solo el código, nunca valores de la fila (A-15).
-- Pruebas: 01, 04, L 12 y 13. Contradice `.claude/rules/bd.md` y el punto 6 de ADR-0003 (`''`): enmienda de una persona (propuesta 29, P1-f).
+- `set search_path = pg_catalog, pg_temp`: con `''`, `pg_temp` iría primero para tipos y relaciones, y un dominio `pg_temp.uuid` del conector (`temporary` por `PUBLIC`, D-9) correría su `check` como dueño. Referencias fuera de `pg_catalog`, calificadas (`public.`, `privado.`, `auth.`).
+- Esquemas de la plataforma (lista cerrada, N-1): `pg_catalog`, `information_schema`, `pg_toast*`, `pg_temp*`, `auth`, `storage`, `realtime`, `_realtime`, `extensions`, `graphql`, `graphql_public`, `vault`, `pgsodium`, `pgsodium_masks`, `pgbouncer`, `net`, `cron`, `supabase_functions`, `supabase_migrations`. La primera ejecución de T-013 la confirma y el `auditor-seguridad` la acepta (T-011); un esquema no listado cae en la regla.
+- Errores: los `raise` propios (`validar_*`, `impedir_*`, `al_dar_de_baja`) llevan solo el código (A-15); los del motor (`DETAIL: Failing row contains …`) llevan valores de la fila a quien escribe y al registro (N-6, riesgo declarado): las `mcp_*` los capturan y devuelven solo un código; T-014 anota qué registra `Nido`.
+- Pruebas: 01 (toda la base), 04, L 12 y 13. Enmienda de `.claude/rules/bd.md`, ADR-0003 y los documentos de N-1: de una persona (propuesta 29, P1-f).
 
 **`privado.registrar_auditoria(p_accion text, p_objeto_tipo text, p_objeto_id text, p_cliente uuid)`**: `security definer`, sin `execute` para nadie; solo la llaman funciones y disparadores del dueño. El actor es siempre `(select auth.uid())`.
 
@@ -93,12 +93,12 @@ De la especificación o de este diseño:
 
 | Clase | Condición | Tablas y operaciones |
 | --- | --- | --- |
-| Cualquier rol salvo el dueño (REQ-017) | `WHEN (current_user <> 'postgres')`: `authenticated` hoy y cualquier escritor futuro (`service_role`, fases 4 a 6). Las funciones del conector corren como dueño y no se auditan (REQ-061, CA-038); tampoco el seed ni M10 | `clientes` (I, U), `usuarios_cliente` (I, D), `licencias` (I, U), `codigos_activacion` (I), `conexiones` (U), `publicaciones` (I), `reglas_cliente` (I, U), `ordenes` (I, U), `ajustes_globales` (U), `catalogo_problemas` (I, U), `alertas` (U) |
+| Cualquier rol salvo el dueño (REQ-017) | `WHEN (current_user <> 'postgres')`: `authenticated` y cualquier escritor futuro (`service_role`, fases 4 a 6). No ve a las `security definer` (regla N-2, abajo); sin auditoría, las `mcp_*` (REQ-061, CA-038), el seed y M10 | `clientes` (I, U), `usuarios_cliente` (I, D), `licencias` (I, U), `codigos_activacion` (I), `conexiones` (U), `publicaciones` (I), `reglas_cliente` (I, U), `ordenes` (I, U), `ajustes_globales` (U), `catalogo_problemas` (I, U), `alertas` (U) |
 | Siempre (REQ-060, REQ-061) | Ninguna | `administradores` (I, U, D), `versiones_prompt` (I) |
 
-Se usa `current_user` y no `auth.uid() is not null` porque `request.jwt.claims` lo fija cualquier rol con conexión directa. Toda migración que conceda un permiso de escritura añade su disparador de auditoría (01 lo comprueba).
+`current_user`, no `auth.uid()` (Alternativas). **Regla N-2 (opción a)**: toda `security definer` que escriba en una tabla auditada llama a `privado.registrar_auditoria()`, salvo las tres `mcp_*` y `al_dar_de_baja` (abajo); 01 lleva su lista cerrada (escribe, llama) y una fuera de ella falla; 06 lo prueba. Todo permiso de escritura nuevo trae su disparador de auditoría (01).
 
-**Inmutabilidad.** Los disparadores de solo inserción (`BEFORE UPDATE OR DELETE`, por fila) y sin vaciado (`BEFORE TRUNCATE`) de `auditoria`, `versiones_prompt` y `publicaciones` llevan `alter table … enable always trigger`, para correr también con `session_replication_role = replica` (01: `tgenabled = 'A'`; 05). Riesgo residual (P1-h): `postgres` y `supabase_admin` pueden, con DDL, desactivar o borrar disparadores y tablas, y en modo réplica no corren la auditoría, las claves ajenas ni los demás disparadores. Son credenciales de personas; detección por `log_statement = 'ddl'` (tarea 14) y por la 014. El modo réplica no se registra por defecto.
+**Inmutabilidad.** Los disparadores de solo inserción (`BEFORE UPDATE OR DELETE`, por fila) y sin vaciado (`BEFORE TRUNCATE`) de `auditoria`, `versiones_prompt` y `publicaciones` llevan `enable always trigger`, para correr también con `session_replication_role = replica` (01: `tgenabled = 'A'`; 05). Residual (P1-h): `postgres` y `supabase_admin` pueden con DDL quitar disparadores y tablas, y en modo réplica, que no se registra por defecto, saltar auditoría, claves ajenas y demás disparadores; son credenciales de personas, vigiladas con `log_statement = 'ddl'` (T-014) y la 014.
 
 **Baja de cliente.** `privado.al_dar_de_baja()` (`AFTER UPDATE OF estado ON clientes`, `WHEN (old.estado = 'activo' and new.estado = 'baja')`, `security definer`) revoca en la misma sentencia las conexiones no revocadas de sus licencias y escribe una fila `revocar_por_baja` por conexión con `registrar_auditoria`; la del cliente la escribe `auditar()`. Un error deshace la sentencia: el cliente no queda de baja (CA-036).
 
@@ -194,10 +194,10 @@ M01: `create role conector nologin noinherit nobypassrls nocreatedb nocreaterole
 - R-1: `connect` y `temporary` en la base; `temporary` lo neutraliza D-3.
 - R-2: `usage` en esquemas abiertos a `PUBLIC` por la plataforma (p. ej., `public`, `extensions`), sin permisos sobre sus tablas.
 - R-3: `execute` de `PUBLIC` en funciones de esquemas de la plataforma (`auth`, `extensions`…); sin acceso a datos, porque el conector no tiene permisos sobre tablas. Una `security definer` de la plataforma solo entra con aceptación nominal del `auditor-seguridad`.
-- R-4: funciones de `pg_catalog` de `PUBLIC`, incluidas las de objetos grandes (`lo_create`, `lo_open`…; no `lo_import` ni `lo_export` de servidor), limitadas por `statement_timeout` y `connection limit`.
-- Fuera: `net` (`pg_net`), que no se usa. Si el conector tiene `usage` en `net`, 04 falla y decide el responsable (desactivarla, P1-h).
+- R-4: funciones de `pg_catalog` de `PUBLIC`, incluidas las de objetos grandes (`lo_create`, `lo_open`…; no `lo_import` ni `lo_export` de servidor), limitadas por `statement_timeout` y `connection limit`; supervisión: 0 filas de `pg_largeobject_metadata` con `lomowner = 'conector'::regrole` (N-5, T-014).
+- Fuera: `net` (`pg_net`), sin uso. Si el conector tiene `usage` en `net`, 04 falla y decide el responsable (P1-h).
 
-Prueba (04): los privilegios efectivos de `conector` (`has_*_privilege`) sobre esquemas, tablas, vistas, secuencias y funciones de todo esquema salvo `pg_catalog`, `information_schema`, `pg_toast*` y `pg_temp*` son exactamente las tres `mcp_*`, `usage` en `privado` y R-2 y R-3 escritos literalmente. La tarea 11 fija esa enumeración con la primera ejecución en CI y la acepta el `auditor-seguridad`; un cambio de la plataforma hace fallar la prueba. CA-009 se lee con esta lista: «cada otra función» son las de `public` y `privado` (propuesta 30, P1-g).
+Prueba (04): los privilegios efectivos de `conector` (`has_*_privilege`) sobre esquemas, tablas, vistas, secuencias y funciones de todo esquema salvo `pg_catalog`, `information_schema`, `pg_toast*` y `pg_temp*` son exactamente las tres `mcp_*`, `usage` en `privado` y R-2 y R-3 escritos literalmente. T-011 fija la enumeración con la primera ejecución en CI y la acepta el `auditor-seguridad`; un cambio de la plataforma la hace fallar. CA-009 se lee con esta lista: «cada otra función» son las de `public` y `privado` (propuesta 30, P1-g).
 
 **Procedimiento de una persona** (`docs/operacion/rol-conector.md`): `alter role conector login;` y la contraseña con `\password conector` de `psql` (huella SCRAM calculada en el cliente), dentro de `begin; … commit;` con los `set local` de la [guía de Supabase](https://supabase.com/kb/troubleshooting/provisioning-credentials-without-log-exposure) (`log_statement`, `log_min_error_statement`, `log_min_messages`, `pg_stat_statements.track`, `pgaudit.log`). Nunca `alter role … password` ni el editor SQL del panel, que guarda historial. La tarea 14 VERIFICA `\password` dentro de la transacción. En Vercel: usuario `conector.<referencia>`, agrupador compartido, puerto 6543. Rotación, por el mismo camino.
 
@@ -207,7 +207,7 @@ La contraseña nunca está en el repositorio, las migraciones ni las pruebas (RE
 
 `supabase/seed.sql`:
 
-- Guarda: falla salvo que `current_setting('app.entorno', true) in ('ci', 'desarrollo')`; sin la variable, falla. La fija cada base de desarrollo con `alter database postgres set app.entorno = …` (el trabajo de CI en su base; una persona, una vez, en `Nido`); producción nunca. Por eso `config.toml` desactiva la carga automática y el seed se carga con `psql` (nunca `--include-seed` en producción, CA-003). La tarea 1 VERIFICA `[db.seed] enabled` y que `postgres` puede fijar el parámetro.
+- Guarda: falla salvo que `current_setting('app.entorno', true) in ('ci', 'desarrollo')`; sin la variable, falla. La fija cada base de desarrollo con `alter database postgres set app.entorno = …` (CI en su base; una persona, una vez, en `Nido`); producción nunca. Por eso `config.toml` desactiva la carga automática y el seed va con `psql` (nunca `--include-seed` en producción, CA-003). T-001 VERIFICA `[db.seed] enabled` y que `postgres` puede fijar el parámetro. Protege de accidentes, no de quien actúa a propósito con `postgres`, que puede fijarla (N-8).
 - «Cliente A ficticio», «Cliente B ficticio» y «Cliente C ficticio»; en `auth.users`, con correos `@example.com`, UA, UB, UAB, USV, AD1, AD2, AD1A (sin doble factor, vinculado a A, REQ-039) y AD3 (CA-037), sin contraseña (`encrypted_password` nulo) ni `auth.identities`.
 - Filas de A, B y C en cada tabla con cliente y filas en las demás (HMAC `a`, `b` o `c` × 64; huella calculada en SQL; `cus_ficticioA`…), con identificadores fijos.
 
@@ -215,17 +215,17 @@ La contraseña nunca está en el repositorio, las migraciones ni las pruebas (RE
 
 ## Flujo
 
-1. **Local**: `npm run aislamiento` aplica, revierte y reaplica en PGlite (SQL válido, no criterios); desde el 26/11, si se aprueba, también pgTAP.
-2. **CI** (`bd.yml`): `npx supabase start`; `app.entorno = 'ci'` y seed con `psql`; `npx supabase test db`, `ciclo-migraciones.mjs`, `concurrencia-licencia.sh` y el procedimiento de administradores; número comparado con `declaradas.json`. Base que no arranca, prueba que falta o número distinto: falla (REQ-051). La protección de rama, una persona (CA-022).
+1. **Local**: `npm run aislamiento` aplica, revierte y reaplica en PGlite (SQL válido, no criterios) y, si `pglite-pgtap` pasa su VERIFICAR (P1-b), pgTAP.
+2. **CI** (`bd.yml`): `npx supabase start`; `app.entorno = 'ci'` y seed con `psql`; `npx supabase test db`, `ciclo-migraciones.mjs`, `concurrencia-licencia.sh`, el procedimiento de administradores y el escáner de secretos; número comparado con `declaradas.json`. Base que no arranca, prueba que falta o número distinto: falla (REQ-051). La protección de rama, una persona (CA-022).
 3. **`Nido`**: una persona, con `npx supabase db push` (T-012), tras P1, CI en verde y el «sí» del responsable (D-025); después `app.entorno = 'desarrollo'`, seed y volumen con `psql`, y CA-027. No se toca `conector_prueba` de la 001.
 4. **Producción**: no existe en la fase 2; `--simulacion` sin aprobación no aplica nada (CA-026).
 5. **Fallos**: una migración fallida deja la base como estaba (CA-025); en desarrollo se revierte con `revertir.mjs` (M04 y M05, solo en CI); en producción, M04 y M05 se corrigen con una migración nueva (REQ-053).
 
 ## Pruebas
 
-Sin Docker aquí, pgTAP y lo que depende de Supabase solo se dan por superados en CI (REQ-028); lo demás figura como «no ejecutada en CI» (CA-023). De la 002 (R-1): T-007 pasa a las migraciones y al arnés; T-008, a 01 a 09; `npm run aislamiento` pasa al arnés con una línea de `package.json`, coordinado con la fase 1.
+Sin Docker aquí, pgTAP y lo que depende de Supabase solo se dan por superados en CI (REQ-028); lo demás, «no ejecutada en CI» (CA-023). De la 002 (R-1): su T-007 pasa a las migraciones y al arnés; su T-008, a 01 a 09; `npm run aislamiento`, al arnés (una línea de `package.json`, con la fase 1).
 
-**Número declarado (CA-023): 1.318 aserciones pgTAP + 33 comprobaciones de CI = 1.351** (`declaradas.json`), más 14 pruebas locales sin base de datos (evidencia local).
+**Número declarado (CA-023): 1.318 aserciones pgTAP + 33 comprobaciones de CI = 1.351** (`declaradas.json`), más 14 pruebas locales sin base de datos. Es la base: lo que añaden N-1 a N-4 y N-7 (T-008, T-011) va a `declaradas.json` con su origen, y el `arquitecto` actualiza este número y la tabla antes de T-015, que compara con el actualizado.
 
 | Archivo | Criterios | Aserciones |
 | --- | --- | --- |
@@ -241,9 +241,9 @@ Sin Docker aquí, pgTAP y lo que depende de Supabase solo se dan por superados e
 | `ciclo-migraciones.mjs` | CA-004, CA-024, CA-025, CA-031, REQ-053 | 30 = 10 × 2 (catálogo; RLS) + 2 (migración fallida) + 5 (huella de las protegidas) + 1 (M01 se niega con objetos) + 2 (M04 y M05 sin la marca de CI) |
 | `concurrencia-licencia.sh`; procedimiento de administradores | CA-021; CA-037 | 1; 2 |
 
-Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed (3 clientes, perfiles, correos `example.com`, usuarios sin contraseña ni identidades) y guarda con lista de permitidos en `seed.sql` y `volumen.sql`; L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero; L 12 `raise` con literal, sin `%` ni concatenación; L 13 `search_path` en todo `privado`; L 14 entorno derivado del destino, desconocido se niega.
+Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed y guarda de `seed.sql` y `volumen.sql` (D-10); L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero; L 12 `raise` con literal, sin `%` ni concatenación; L 13 `search_path` en todo `privado`; L 14 entorno derivado del destino, desconocido se niega.
 
-**Fuera de CI, evidencia de una persona**: CA-001, CA-020, CA-022, CA-027 (credencial en su entorno; el script no la guarda), CA-028, V-107 real; en `Nido`, `pg_default_acl`, `pg_net`, `log_statement` y `session_replication_role`; `\password`.
+**CA-020**: escáner de secretos (`node scripts/comprobar-specs.mjs`, paso de `bd.yml`) con 0 hallazgos, más dictamen del `auditor-seguridad` en T-015. **Fuera de CI, evidencia de una persona**: CA-001, CA-022, CA-027 (credencial en su entorno; el script no la guarda), CA-028, V-107 real; en `Nido`, `pg_default_acl`, `pg_net`, `log_statement` y `session_replication_role`; `\password`.
 
 ## Amenazas de esta función
 
@@ -337,4 +337,5 @@ Unas 15 tareas, una cada vez, todas ruta crítica (`revisor` + `auditor-segurida
 | M-6 | D-1; Flujo 5; `ciclo` (+3); L 14 |
 | M-7 | D-8; P1-i; propuesta 31 |
 | L-1 a L-6 | Amenazas (A-11); D-1 (M01, patrones, M05); D-3 (`auditar()`, mensajes); Pruebas 01, 05; L 10 a 12 |
-| Tamaño (D-023) | Compactados Piezas, D-2, D-6, D-7, Pruebas, Amenazas, Alternativas y plan, sin quitar controles |
+| Tamaño (D-023) | Compactado sin quitar controles |
+| Vuelta 2: N-1, N-2 (a), N-5, N-6, N-8 | D-3; D-9 R-4; D-1; D-10; Piezas; Pruebas. N-3, N-4, N-7: `tareas.md` |

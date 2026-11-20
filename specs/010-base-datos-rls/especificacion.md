@@ -1,6 +1,6 @@
 # 010 · Base de datos, RLS y pruebas de aislamiento
 
-Estado: PLANIFICADA
+Estado: EN CURSO
 Fase: 2 · Fecha: 12/11/2026 · Autor: `especificador`
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.
