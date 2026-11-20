@@ -145,6 +145,15 @@ export default defineConfig([
       "no-restricted-syntax": ["error", ...sintaxisEdge, ...sintaxisErrores],
     },
   },
+  {
+    // Excepción de la función 001 (T-105 h): único sitio, junto a `plataforma/entrada.ts`, donde se
+    // analiza el JSON del cuerpo recibido. `new URL` y `process.env` siguen prohibidos.
+    files: ["src/mcp/entrada.ts"],
+    rules: {
+      "no-restricted-properties": ["error", propiedadesEnv, propiedadesUrl],
+      "no-restricted-syntax": ["error", ...sintaxisEdge, ...sintaxisErrores, sintaxisUrl],
+    },
+  },
   globalIgnores([
     ".next/**",
     "node_modules/**",

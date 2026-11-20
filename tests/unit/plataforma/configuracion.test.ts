@@ -212,7 +212,9 @@ describe("/api/salud con configuración (PRUEBA-012 y 044, partes L)", () => {
   beforeEach(() => {
     salida = [];
     for (const m of ["log", "error"] as const) {
-      vi.spyOn(console, m).mockImplementation((...a: unknown[]) => void salida.push(String(a[0])));
+      vi.spyOn(console, m).mockImplementation(
+        (...a: unknown[]) => void salida.push(a.map(String).join(" ")),
+      );
     }
   });
   afterEach(() => {

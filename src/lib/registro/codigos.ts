@@ -11,6 +11,11 @@ export const CODIGOS = [
   "salida_no_estructurada",
   "almacen_no_disponible",
   "configuracion_conector_invalida",
+  "metodo_no_permitido",
+  "origen_no_permitido",
+  "cuerpo_demasiado_grande",
+  "sin_token",
+  "token_no_valido",
 ] as const;
 
 export type Codigo = (typeof CODIGOS)[number];

@@ -8,8 +8,17 @@ import { cargarConfiguracion, RE_DSN, type Configuracion } from "./configuracion
 // URL, cabecera ni valor recibido (art. 1). Un fallo del envío nunca bloquea ni cambia la
 // respuesta (art. 3): una sola vez, 2 s como mucho, sin reintento ni cola.
 
-// Códigos que pueden salir: la lista de codigos.ts menos los de la propia supervisión y la consola.
-const EXCLUIDOS: readonly Codigo[] = ["supervision_no_disponible", "salida_no_estructurada"];
+// Códigos que pueden salir: la lista de codigos.ts menos los de la propia supervisión, la consola y
+// los rechazos anónimos del punto MCP (solo consola: el tráfico anónimo no debe llenar Sentry).
+const EXCLUIDOS: readonly Codigo[] = [
+  "supervision_no_disponible",
+  "salida_no_estructurada",
+  "metodo_no_permitido",
+  "origen_no_permitido",
+  "cuerpo_demasiado_grande",
+  "sin_token",
+  "token_no_valido",
+];
 export const CODIGOS_SUPERVISADOS: readonly Codigo[] = CODIGOS.filter(
   (c) => !EXCLUIDOS.includes(c),
 );

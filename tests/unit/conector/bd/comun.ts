@@ -45,6 +45,9 @@ export async function sembrar(
   bd: BdApoyo,
   tipo: "A" | "B",
   asistente: "claude" | "chatgpt" | "otro" = "claude",
+  /** Fábrica con otra clave de HMAC (pruebas del punto MCP, que usa la clave del conector). */
+  fab: typeof fabrica = fabrica,
+  recurso: string = RECURSO,
 ): Promise<Sembrado> {
   const { id: licenciaId } = await una<{ id: string }>(
     bd,
@@ -56,11 +59,11 @@ export async function sembrar(
     `insert into ${ESQUEMA}.conexiones (licencia_id, asistente) values ($1, $2) returning id::text`,
     [licenciaId, asistente],
   );
-  const acceso = fabrica.token("acceso");
+  const acceso = fab.token("acceso");
   await bd.db.query(
     `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
      values ($1, 'acceso', $2, $3, now() + interval '300 seconds')`,
-    [conexionId, acceso.hmac, RECURSO],
+    [conexionId, acceso.hmac, recurso],
   );
   return { licenciaId, conexionId, acceso };
 }

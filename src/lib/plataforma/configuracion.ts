@@ -84,8 +84,8 @@ export const RE_DSN = /^https:\/\/([0-9a-f]{32})@(o[0-9]+\.ingest\.de\.sentry\.i
 
 // El entorno lo decide `ENTORNO`, que pone una persona; NO se confía en `NODE_ENV`: lo fija el
 // empaquetador o el ejecutor de pruebas (`next build`/`next start` lo fuerzan a `production`, Vitest
-// a `test`) y no distingue desarrollo, preproducción y producción. Un valor distinto de
-// `production` nunca basta para abrir `desarrollo`; solo puede cerrarlo (A-3).
+// a `test`) y no distingue desarrollo, preproducción y producción. NODE_ENV nunca basta
+// para abrir `desarrollo`; solo lo cierra cuando vale `production` (A-3).
 // Único predicado de «desarrollo» (validación y cierre en fallo): ENTORNO=desarrollo, NODE_ENV
 // distinto de production y ninguna variable VERCEL* con valor. Ausente o ilegible: no.
 function predicadoDesarrollo(fuente: Fuente): boolean {
@@ -171,7 +171,7 @@ export function validarConfiguracion(fuente: Fuente): Resultado {
   };
 }
 
-// Lee process.env (solo los ocho nombres) y lanza `configuracion_invalida` si no vale.
+// Lee process.env (los ocho nombres y, para el predicado, cualquier VERCEL*) y lanza `configuracion_invalida` si no vale.
 export function cargarConfiguracion(): Configuracion {
   const fuente: Record<string, string | undefined> = {};
   for (const nombre of NOMBRES_CONFIGURACION) fuente[nombre] = process.env[nombre];

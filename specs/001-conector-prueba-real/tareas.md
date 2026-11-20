@@ -55,7 +55,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 ## Bloque 2 · Las tres herramientas y el punto MCP
 
 ### T-105 · Almacén, herramientas y punto MCP (hito)
-`ingeniero-backend` · C, Res. · pendiente · Depende de: T-103, T-104, 002·T-004 · REQ-001, REQ-007, REQ-009, REQ-011, REQ-012, REQ-013, REQ-014, REQ-015 · CA-001, CA-006, CA-009, CA-011, CA-012, CA-013, CA-014, CA-015
+`ingeniero-backend` · C, Res. · hecha · Depende de: T-103, T-104, 002·T-004 · REQ-001, REQ-007, REQ-009, REQ-011, REQ-012, REQ-013, REQ-014, REQ-015 · CA-001, CA-006, CA-009, CA-011, CA-012, CA-013, CA-014, CA-015
 
 Las herramientas, una a una y en este orden: cada una, con su prueba en verde antes de empezar la siguiente. **Hito**: al cerrar, las tres responden por `/api/mcp` en local con tokens sembrados.
 

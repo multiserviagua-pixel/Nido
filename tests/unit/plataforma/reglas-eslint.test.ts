@@ -189,3 +189,20 @@ describe("reglas de Umbrales: lugares permitidos", () => {
     ).toEqual([]);
   });
 });
+
+describe("src/mcp/entrada.ts: excepción de la regla de JSON.parse (T-105 h)", () => {
+  it("JSON.parse sí en src/mcp/entrada.ts, y process.env y las demás reglas siguen vigentes", async () => {
+    expect(
+      await reglasQueSaltan("export const a = JSON.parse('{}');\n", "src/mcp/entrada.ts"),
+    ).toEqual([]);
+    expect(
+      (await reglasQueSaltan("export const a = process.env.X;\n", "src/mcp/entrada.ts")).length,
+    ).toBeGreaterThan(0);
+    expect(
+      (await reglasQueSaltan("export const a = JSON.parse('{}');\n", "src/mcp/servidor.ts")).length,
+    ).toBeGreaterThan(0);
+    expect(
+      (await reglasQueSaltan("export const a = JSON.parse('{}');\n", "src/mcp/salida.ts")).length,
+    ).toBeGreaterThan(0);
+  });
+});

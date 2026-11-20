@@ -7,9 +7,16 @@ type Funcion = (peticion: Request) => Response | Promise<Response>;
 
 const CABECERAS = { "Cache-Control": "no-store" } as const;
 
-function respuestaDeError(): Response {
+// Cierre en fallo (art. 3): sin configuración válida del conector o con el almacén caído, el servicio
+// no está disponible (503); el resto de errores, 500. Mismo cuerpo fijo en los dos casos.
+const NO_DISPONIBLES: readonly Codigo[] = [
+  "configuracion_conector_invalida",
+  "almacen_no_disponible",
+];
+
+function respuestaDeError(codigo: Codigo): Response {
   return new Response('{"estado":"error"}', {
-    status: 500,
+    status: NO_DISPONIBLES.includes(codigo) ? 503 : 500,
     headers: { ...CABECERAS, "Content-Type": "application/json" },
   });
 }
@@ -40,7 +47,7 @@ export function manejador(ruta: string, funcion: Funcion): Funcion {
       registrar("error", codigo, ruta);
       // Sin esperar: no retrasa ni cambia la respuesta. Nunca rechaza (supervision.ts).
       void enviarEvento({ ruta, codigo, metodo: metodoDe(peticion) });
-      return respuestaDeError();
+      return respuestaDeError(codigo);
     }
   };
 }
