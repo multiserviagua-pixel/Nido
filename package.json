@@ -15,7 +15,9 @@
     "test": "vitest run --config vitest.config.ts",
     "tipos": "next typegen && tsc --noEmit -p tsconfig.json",
     "estilo": "prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .",
-    "arnes": "node scripts/comprobar-specs.mjs"
+    "arnes": "node scripts/comprobar-specs.mjs",
+    "aislamiento": "node scripts/probar-modelo.mjs",
+    "verificar": "npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build"
   },
   "dependencies": {
     "next": "16.4.6",
@@ -23,6 +25,7 @@
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.17",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

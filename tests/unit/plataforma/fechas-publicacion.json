@@ -17,6 +17,7 @@
     "@babel/template@7.29.7": "2026-05-25T11:16:25.858Z",
     "@babel/traverse@7.29.14": "2026-11-11T19:57:01.470Z",
     "@babel/types@7.29.14": "2026-11-11T19:55:50.462Z",
+    "@electric-sql/pglite@0.5.17": "2026-11-19T11:17:03.254Z",
     "@emnapi/core@2.0.0-beta.2": "2026-10-15T03:34:44.251Z",
     "@emnapi/runtime@1.11.3": "2026-07-25T07:00:08.497Z",
     "@emnapi/runtime@2.0.0-beta.2": "2026-10-15T03:31:00.630Z",
@@ -509,6 +510,11 @@
       "paquete": "typescript-eslint@8.73.0",
       "motivo": "GHSA-g3hv-75wg-m249: versión previa vulnerable (typescript-eslint 8.72.2)",
       "revisarDespues": "2026-11-23"
+    },
+    {
+      "paquete": "@electric-sql/pglite@0.5.17",
+      "motivo": "Excepción por calendario, sin motivo de seguridad: pglite 0.5.17 exacta fijada por el diseño de la 002 (D-033)",
+      "revisarDespues": "2026-11-26"
     }
   ]
 }
