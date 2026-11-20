@@ -1,0 +1,1984 @@
+
+Running 86 tests using 1 worker
+
+  x   1 [chromium] › e2e\foco.spec.ts:103:7 › [radix] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (186ms)
+  x   2 [chromium] › e2e\foco.spec.ts:120:7 › [radix] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (184ms)
+  x   3 [chromium] › e2e\foco.spec.ts:151:9 › [radix] confirmacion › Intro nada más abrir no confirma: cancela (190ms)
+  x   4 [chromium] › e2e\foco.spec.ts:162:7 › [radix] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (206ms)
+  x   5 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (188ms)
+  x   6 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió (194ms)
+  x   7 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió (186ms)
+  x   8 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (188ms)
+  x   9 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió (199ms)
+  x  10 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió (188ms)
+  x  11 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (195ms)
+  x  12 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió (186ms)
+  x  13 [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió (202ms)
+  x  14 [chromium] › e2e\foco.spec.ts:208:7 › [radix] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos (190ms)
+  x  15 [chromium] › e2e\foco.spec.ts:103:7 › [radix] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (217ms)
+  x  16 [chromium] › e2e\foco.spec.ts:120:7 › [radix] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (204ms)
+  x  17 [chromium] › e2e\foco.spec.ts:162:7 › [radix] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (215ms)
+  x  18 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (220ms)
+  x  19 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (192ms)
+  x  20 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (201ms)
+  x  21 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (203ms)
+  x  22 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (185ms)
+  x  23 [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (186ms)
+  x  24 [chromium] › e2e\foco.spec.ts:208:7 › [radix] cajon › 0 infracciones de axe con la página y el diálogo abiertos (211ms)
+  x  25 [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (188ms)
+  x  26 [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (187ms)
+  x  27 [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (202ms)
+  x  28 [chromium] › e2e\foco.spec.ts:251:5 › [radix] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima (217ms)
+  x  29 [chromium] › e2e\foco.spec.ts:275:5 › [radix] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro (216ms)
+  x  30 [chromium] › e2e\foco.spec.ts:306:5 › [radix] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco (210ms)
+  x  31 [chromium] › e2e\foco.spec.ts:336:5 › [radix] aviso › 0 infracciones de axe con el aviso abierto (233ms)
+  x  32 [chromium] › e2e\foco.spec.ts:103:7 › [nativo] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (229ms)
+  x  33 [chromium] › e2e\foco.spec.ts:120:7 › [nativo] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (218ms)
+  x  34 [chromium] › e2e\foco.spec.ts:151:9 › [nativo] confirmacion › Intro nada más abrir no confirma: cancela (248ms)
+  x  35 [chromium] › e2e\foco.spec.ts:162:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (223ms)
+  x  36 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (203ms)
+  x  37 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió (190ms)
+  x  38 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió (186ms)
+  x  39 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (213ms)
+  x  40 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió (183ms)
+  x  41 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió (200ms)
+  x  42 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (203ms)
+  x  43 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió (220ms)
+  x  44 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió (206ms)
+  x  45 [chromium] › e2e\foco.spec.ts:208:7 › [nativo] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos (202ms)
+  x  46 [chromium] › e2e\foco.spec.ts:103:7 › [nativo] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (189ms)
+  x  47 [chromium] › e2e\foco.spec.ts:120:7 › [nativo] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (195ms)
+  x  48 [chromium] › e2e\foco.spec.ts:162:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (185ms)
+  x  49 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (200ms)
+  x  50 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (186ms)
+  x  51 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (208ms)
+  x  52 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (205ms)
+  x  53 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (189ms)
+  x  54 [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (199ms)
+  x  55 [chromium] › e2e\foco.spec.ts:208:7 › [nativo] cajon › 0 infracciones de axe con la página y el diálogo abiertos (196ms)
+  x  56 [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (183ms)
+  x  57 [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (191ms)
+  x  58 [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela (189ms)
+  x  59 [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (196ms)
+  x  60 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (194ms)
+  x  61 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió (188ms)
+  x  62 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió (189ms)
+  x  63 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (187ms)
+  x  64 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió (185ms)
+  x  65 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió (182ms)
+  x  66 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (184ms)
+  x  67 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió (184ms)
+  x  68 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió (220ms)
+  x  69 [chromium] › e2e\foco.spec.ts:208:7 › [roto] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos (190ms)
+  x  70 [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (186ms)
+  x  71 [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (193ms)
+  x  72 [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (201ms)
+  x  73 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (193ms)
+  x  74 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (213ms)
+  x  75 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (251ms)
+  x  76 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (215ms)
+  x  77 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (211ms)
+  x  78 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (206ms)
+  x  79 [chromium] › e2e\foco.spec.ts:208:7 › [roto] cajon › 0 infracciones de axe con la página y el diálogo abiertos (196ms)
+  x  80 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (186ms)
+  x  81 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (204ms)
+  x  82 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (205ms)
+  x  83 [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima (187ms)
+  x  84 [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro (232ms)
+  x  85 [chromium] › e2e\foco.spec.ts:306:5 › [roto] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco (223ms)
+  x  86 [chromium] › e2e\foco.spec.ts:336:5 › [roto] aviso › 0 infracciones de axe con el aviso abierto (190ms)
+
+
+  1) [chromium] › e2e\foco.spec.ts:103:7 › [radix] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--radix-confirmacion-s-d4b32--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  2) [chromium] › e2e\foco.spec.ts:120:7 › [radix] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--radix-confirmacion-e-be93e--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  3) [chromium] › e2e\foco.spec.ts:151:9 › [radix] confirmacion › Intro nada más abrir no confirma: cancela 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:152:24
+
+    Error Context: test-results\foco--radix-confirmacion-I-bc251-s-abrir-no-confirma-cancela-chromium\error-context.md
+
+  4) [chromium] › e2e\foco.spec.ts:162:7 › [radix] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--radix-confirmacion-5-58538-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  5) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-ad46c-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  6) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-bf3cc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  7) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-a69a4-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  8) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-51aa0-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  9) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-fff15-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  10) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-a24ec-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  11) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-fc4b3-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  12) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-a8924-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  13) [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-confirmacion-a-7ae2e-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  14) [chromium] › e2e\foco.spec.ts:208:7 › [radix] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--radix-confirmacion-0-76f84-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  15) [chromium] › e2e\foco.spec.ts:103:7 › [radix] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--radix-cajon-se-abre--a3907--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  16) [chromium] › e2e\foco.spec.ts:120:7 › [radix] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--radix-cajon-el-fondo-47034--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  17) [chromium] › e2e\foco.spec.ts:162:7 › [radix] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--radix-cajon-50-tabul-8c565-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  18) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-0e44f-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  19) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-91767-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  20) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-abed5-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  21) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-11f50-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  22) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-62f27-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  23) [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--radix-cajon-abre-con-d4a71-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  24) [chromium] › e2e\foco.spec.ts:208:7 › [radix] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--radix-cajon-0-infrac-88c02-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  25) [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--radix-aviso-aparece--efed8-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  26) [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--radix-aviso-aparece--6c831-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  27) [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--radix-aviso-aparece--d42c2-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  28) [chromium] › e2e\foco.spec.ts:251:5 › [radix] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:254:20
+
+    Error Context: test-results\foco--radix-aviso-desapare-9650e-tiene-con-el-puntero-encima-chromium\error-context.md
+
+  29) [chromium] › e2e\foco.spec.ts:275:5 › [radix] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:278:20
+
+    Error Context: test-results\foco--radix-aviso-«Cerrar--6e93f-e-cierra-con-el-foco-dentro-chromium\error-context.md
+
+  30) [chromium] › e2e\foco.spec.ts:306:5 › [radix] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:309:20
+
+    Error Context: test-results\foco--radix-aviso-50-tabul-4e210-trampa-y-sin-perder-el-foco-chromium\error-context.md
+
+  31) [chromium] › e2e\foco.spec.ts:336:5 › [radix] aviso › 0 infracciones de axe con el aviso abierto 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:337:20
+
+    Error Context: test-results\foco--radix-aviso-0-infracciones-de-axe-con-el-aviso-abierto-chromium\error-context.md
+
+  32) [chromium] › e2e\foco.spec.ts:103:7 › [nativo] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--nativo-confirmacion--3938b--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  33) [chromium] › e2e\foco.spec.ts:120:7 › [nativo] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--nativo-confirmacion--4b49f--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  34) [chromium] › e2e\foco.spec.ts:151:9 › [nativo] confirmacion › Intro nada más abrir no confirma: cancela 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:152:24
+
+    Error Context: test-results\foco--nativo-confirmacion--0be64-s-abrir-no-confirma-cancela-chromium\error-context.md
+
+  35) [chromium] › e2e\foco.spec.ts:162:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--nativo-confirmacion--7cc6c-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  36) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--6a741-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  37) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--0ba4f-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  38) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--8c030-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  39) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--d9c14-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  40) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--198c7-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  41) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--3ab8f-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  42) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--fb9cc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  43) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--f4d8d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  44) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-confirmacion--3174c-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  45) [chromium] › e2e\foco.spec.ts:208:7 › [nativo] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--nativo-confirmacion--ec182-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  46) [chromium] › e2e\foco.spec.ts:103:7 › [nativo] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--nativo-cajon-se-abre-1ba39--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  47) [chromium] › e2e\foco.spec.ts:120:7 › [nativo] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--nativo-cajon-el-fond-bfbe1--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  48) [chromium] › e2e\foco.spec.ts:162:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--nativo-cajon-50-tabu-66ba6-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  49) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-b7ba5-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  50) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-e08d5-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  51) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-c0e37-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  52) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-10d1a-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  53) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-3e47d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  54) [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--nativo-cajon-abre-co-f7fc2-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  55) [chromium] › e2e\foco.spec.ts:208:7 › [nativo] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--nativo-cajon-0-infra-320b0-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  56) [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--roto-confirmacion-se-0cf43--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  57) [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--roto-confirmacion-el-d40cd--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  58) [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:152:24
+
+    Error Context: test-results\foco--roto-confirmacion-In-daf1f-s-abrir-no-confirma-cancela-chromium\error-context.md
+
+  59) [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--roto-confirmacion-50-39a24-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  60) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-3d3ba-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  61) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-eae73-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  62) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-67789-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  63) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-af486-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  64) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-ae4cc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  65) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-c621d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  66) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-539e1-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  67) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-6878a-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  68) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-confirmacion-ab-56d4d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  69) [chromium] › e2e\foco.spec.ts:208:7 › [roto] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--roto-confirmacion-0--46e2c-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  70) [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:106:22
+
+    Error Context: test-results\foco--roto-cajon-se-abre-c-9b0ff--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  71) [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:123:22
+
+    Error Context: test-results\foco--roto-cajon-el-fondo--bc91d--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  72) [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:165:22
+
+    Error Context: test-results\foco--roto-cajon-50-tabula-086a5-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  73) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--5a482-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  74) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--5bbef-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  75) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--f5f74-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  76) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--22edc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  77) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--05268-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  78) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:191:26
+
+    Error Context: test-results\foco--roto-cajon-abre-con--bafa4-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  79) [chromium] › e2e\foco.spec.ts:208:7 › [roto] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:209:22
+
+    Error Context: test-results\foco--roto-cajon-0-infracc-2c97e-ágina-y-el-diálogo-abiertos-chromium\error-context.md
+
+  80) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-254f9-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  81) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-edb91-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  82) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:234:22
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-8499d-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  83) [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:254:20
+
+    Error Context: test-results\foco--roto-aviso-desaparec-0bbbf-tiene-con-el-puntero-encima-chromium\error-context.md
+
+  84) [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:278:20
+
+    Error Context: test-results\foco--roto-aviso-«Cerrar-a-fcb9d-e-cierra-con-el-foco-dentro-chromium\error-context.md
+
+  85) [chromium] › e2e\foco.spec.ts:306:5 › [roto] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:309:20
+
+    Error Context: test-results\foco--roto-aviso-50-tabula-9e9d6-trampa-y-sin-perder-el-foco-chromium\error-context.md
+
+  86) [chromium] › e2e\foco.spec.ts:336:5 › [roto] aviso › 0 infracciones de axe con el aviso abierto 
+
+    Error: la página de la prueba existe
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      58 |   const pagina = await contexto.newPage();
+      59 |   const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+    > 60 |   expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+         |                                                                ^
+      61 |   await pagina.waitForSelector("body[data-hidratado='1']");
+      62 |   return pagina;
+      63 | }
+        at nuevaPagina (<carpeta-temporal>\copia\e2e\foco.spec.ts:60:64)
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:337:20
+
+    Error Context: test-results\foco--roto-aviso-0-infracciones-de-axe-con-el-aviso-abierto-chromium\error-context.md
+
+  86 failed
+    [chromium] › e2e\foco.spec.ts:103:7 › [radix] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [radix] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:151:9 › [radix] confirmacion › Intro nada más abrir no confirma: cancela 
+    [chromium] › e2e\foco.spec.ts:162:7 › [radix] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [radix] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:103:7 › [radix] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [radix] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:162:7 › [radix] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [radix] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [radix] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:251:5 › [radix] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+    [chromium] › e2e\foco.spec.ts:275:5 › [radix] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+    [chromium] › e2e\foco.spec.ts:306:5 › [radix] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco 
+    [chromium] › e2e\foco.spec.ts:336:5 › [radix] aviso › 0 infracciones de axe con el aviso abierto 
+    [chromium] › e2e\foco.spec.ts:103:7 › [nativo] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [nativo] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:151:9 › [nativo] confirmacion › Intro nada más abrir no confirma: cancela 
+    [chromium] › e2e\foco.spec.ts:162:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [nativo] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:103:7 › [nativo] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [nativo] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:162:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [nativo] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [nativo] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela 
+    [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [roto] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:208:7 › [roto] cajon › 0 infracciones de axe con la página y el diálogo abiertos 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+    [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+    [chromium] › e2e\foco.spec.ts:306:5 › [roto] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco 
+    [chromium] › e2e\foco.spec.ts:336:5 › [roto] aviso › 0 infracciones de axe con el aviso abierto 

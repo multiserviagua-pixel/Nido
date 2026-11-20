@@ -1,0 +1,390 @@
+// PRUEBA-011 · T-001 (020). Guion desechable. Teclas reales con Playwright.
+//
+// CRITERIO DE PASO Y FALLO (escrito antes de la implementación)
+// Por pieza (diálogo de confirmación, cajón, aviso) y por motor (Chromium, Firefox, WebKit):
+//   - Cada prueba de abajo es una comprobación de «El foco no se da por hecho» (diseno.md, 211-226).
+//   - Una pieza SUPERA en un motor si pasan todas sus pruebas en ese motor.
+//   - Una pieza SUPERA en total si supera en los tres motores. Una sola prueba fallida en un motor
+//     la hace FALLIDA. No se ejecuta nada de lo que no se ha ejecutado: lo que no corre se anota.
+//   - La variante «roto» es una pieza hecha a mano sin gestión de foco: el guion DEBE fallar con ella.
+//     Si pasa, el guion no sirve y no prueba nada.
+//   - La variante «nativo» es la alternativa A (elemento dialog). Solo diálogo y cajón.
+import { test, expect, type Browser, type Page, type Locator } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+const VARIANTES = (process.env.VARIANTES ?? "radix,nativo,roto,robafoco").split(",");
+const ETIQUETAS_AXE = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+const VUELTAS = 50;
+
+type Via = "teclado" | "raton" | "tactil";
+const VIAS: Via[] = ["teclado", "raton", "tactil"];
+
+type Pieza = {
+  clave: "confirmacion" | "cajon";
+  abrir: string;
+  rol: "alertdialog" | "dialog";
+  nombre: RegExp;
+  descripcion: RegExp;
+  focoInicial?: string;
+  cierres: string[];
+};
+
+const PIEZAS: Pieza[] = [
+  {
+    clave: "confirmacion",
+    abrir: "#abrir-confirmacion",
+    rol: "alertdialog",
+    nombre: /Eliminar a Cliente Ficticio Uno/,
+    descripcion: /dato ficticio/,
+    focoInicial: "Cancelar",
+    cierres: ["Escape", "Cancelar", "Eliminar"],
+  },
+  {
+    clave: "cajon",
+    abrir: "#abrir-menu",
+    rol: "dialog",
+    nombre: /Menú de la muestra/,
+    descripcion: /Navegación ficticia/,
+    cierres: ["Escape", "Cerrar menú"],
+  },
+];
+
+const OBSERVADOR = `(() => {
+  window.__anuncios = [];
+  const ver = (n) => { const e = n.nodeType === 1 ? n : n.parentElement; const r = e && e.closest("[aria-live=polite]"); if (r) window.__anuncios.push(r.textContent || ""); };
+  new MutationObserver((ms) => ms.forEach((m) => { m.addedNodes.forEach(ver); if (m.type === "characterData") ver(m.target); })).observe(document, { childList: true, subtree: true, characterData: true });
+})();`;
+
+async function nuevaPagina(browser: Browser, via: Via, variante: string): Promise<Page> {
+  const contexto = await browser.newContext({
+    hasTouch: via === "tactil",
+    baseURL: process.env.URL_BASE ?? `http://127.0.0.1:${process.env.PUERTO_PRUEBA ?? 3411}`,
+    locale: "es-ES",
+  });
+  const pagina = await contexto.newPage();
+  await pagina.addInitScript(OBSERVADOR);
+  const respuesta = await pagina.goto(`/prueba-foco/${variante}`);
+  expect(respuesta?.status(), "la página de la prueba existe").toBe(200);
+  await pagina.waitForSelector("body[data-hidratado='1']");
+  return pagina;
+}
+
+async function abrir(page: Page, selector: string, via: Via) {
+  if (via === "teclado") {
+    await page.focus(selector);
+    await page.keyboard.press("Enter");
+  } else if (via === "raton") {
+    await page.click(selector);
+  } else {
+    await page.tap(selector);
+  }
+}
+
+async function cerrar(page: Page, como: string) {
+  if (como === "Escape") await page.keyboard.press("Escape");
+  else await page.getByRole("button", { name: como, exact: true }).click();
+}
+
+function dialogo(page: Page, p: Pieza): Locator {
+  return page.getByRole(p.rol, { name: p.nombre });
+}
+
+async function idEnfocado(page: Page) {
+  return page.evaluate(() => {
+    const a = document.activeElement;
+    return a && a !== document.body ? (a.id || a.tagName.toLowerCase()) : "cuerpo";
+  });
+}
+
+async function ubicacion(d: Locator) {
+  return d.evaluate((el) => {
+    const a = document.activeElement;
+    if (!a || a === document.body || a === document.documentElement) return "cuerpo";
+    return el.contains(a) ? "dentro" : "fuera";
+  });
+}
+
+for (const variante of VARIANTES) {
+  for (const p of PIEZAS) {
+    test.describe(`[${variante}] ${p.clave}`, () => {
+      test("se abre con teclado, tiene nombre y descripción accesibles y el foco entra", async ({
+        browser,
+      }) => {
+        const page = await nuevaPagina(browser, "teclado", variante);
+        await abrir(page, p.abrir, "teclado");
+        const d = dialogo(page, p);
+        await expect(d).toBeVisible();
+        await expect(d).toHaveAccessibleName(p.nombre);
+        await expect(d).toHaveAccessibleDescription(p.descripcion);
+        expect(await ubicacion(d), "el foco entra en el diálogo").toBe("dentro");
+        if (p.focoInicial) {
+          expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe(
+            p.focoInicial,
+          );
+        }
+      });
+
+      test("el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad", async ({
+        browser,
+      }) => {
+        const page = await nuevaPagina(browser, "teclado", variante);
+        await abrir(page, p.abrir, "teclado");
+        await expect(dialogo(page, p)).toBeVisible();
+        const fondo = ["#fuera-final", "#fila-1", "#campo-nombre", "#abrir-aviso"];
+        for (const s of fondo) {
+          let alcanzable = true;
+          try {
+            await page.locator(s).click({ trial: true, timeout: 1500 });
+          } catch {
+            alcanzable = false;
+          }
+          expect(alcanzable, `${s} no debe poder pulsarse con el diálogo abierto`).toBe(false);
+        }
+        const oculto = await page.evaluate((sels) => {
+          const dlg = document.querySelector("dialog[open]") as HTMLDialogElement | null;
+          const modalNativo = !!dlg && dlg.matches(":modal");
+          return sels.map((s) => {
+            const el = document.querySelector(s);
+            const marcado = !!el?.closest("[inert],[aria-hidden='true']");
+            return { s, fuera: marcado || modalNativo };
+          });
+        }, fondo);
+        for (const o of oculto) {
+          expect(o.fuera, `${o.s} fuera del árbol de accesibilidad`).toBe(true);
+        }
+      });
+
+      if (p.clave === "confirmacion") {
+        test("Intro nada más abrir no confirma: cancela", async ({ browser }) => {
+          const page = await nuevaPagina(browser, "teclado", variante);
+          await abrir(page, p.abrir, "teclado");
+          await expect(dialogo(page, p)).toBeVisible();
+          await page.keyboard.press("Enter");
+          await expect(dialogo(page, p)).toBeHidden();
+          await expect(page.getByTestId("confirmaciones")).toHaveText("0");
+          await expect.poll(() => idEnfocado(page), { timeout: 2000 }).toBe("abrir-confirmacion");
+        });
+      }
+
+      test(`${VUELTAS} tabulaciones y ${VUELTAS} con Mayúsculas no sacan el foco`, async ({
+        browser,
+      }) => {
+        const page = await nuevaPagina(browser, "teclado", variante);
+        await abrir(page, p.abrir, "teclado");
+        const d = dialogo(page, p);
+        await expect(d).toBeVisible();
+        const cuenta = { dentro: 0, fuera: 0, cuerpo: 0 };
+        for (let i = 0; i < VUELTAS; i++) {
+          await page.keyboard.press("Tab");
+          cuenta[(await ubicacion(d)) as keyof typeof cuenta]++;
+        }
+        for (let i = 0; i < VUELTAS; i++) {
+          await page.keyboard.press("Shift+Tab");
+          cuenta[(await ubicacion(d)) as keyof typeof cuenta]++;
+        }
+        test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+        expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          dentro: 2 * VUELTAS,
+          fuera: 0,
+          cuerpo: 0,
+        });
+      });
+
+      for (const via of VIAS) {
+        for (const cierre of p.cierres) {
+          test(`abre con ${via}; cierra con «${cierre}»; el foco vuelve al botón que abrió`, async ({
+            browser,
+          }) => {
+            const page = await nuevaPagina(browser, via, variante);
+            await abrir(page, p.abrir, via);
+            const d = dialogo(page, p);
+            await expect(d).toBeVisible();
+            expect(await ubicacion(d)).toBe("dentro");
+            await cerrar(page, cierre);
+            await expect(d).toBeHidden();
+            const idAbrir = p.abrir.slice(1);
+            // El foco puede volver un instante después de cerrar (Radix lo hace al desmontar): se espera hasta 2 s.
+            await expect.poll(() => idEnfocado(page), { message: "foco tras cerrar", timeout: 2000 }).toBe(idAbrir);
+            if (cierre === "Eliminar") {
+              await expect(page.getByTestId("confirmaciones")).toHaveText("1");
+            }
+            await page.context().close();
+          });
+        }
+      }
+
+      test("0 infracciones de axe con la página y el diálogo abiertos", async ({ browser }) => {
+        const page = await nuevaPagina(browser, "teclado", variante);
+        const antes = await new AxeBuilder({ page }).withTags(ETIQUETAS_AXE).analyze();
+        expect(
+          antes.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`),
+          "página sin diálogo (fondo de la prueba)",
+        ).toEqual([]);
+        await abrir(page, p.abrir, "teclado");
+        await expect(dialogo(page, p)).toBeVisible();
+        const r = await new AxeBuilder({ page }).withTags(ETIQUETAS_AXE).analyze();
+        expect(
+          r.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`),
+        ).toEqual([]);
+      });
+    });
+  }
+
+  if (variante === "nativo") continue; // El aviso no tiene alternativa nativa: se prueba Radix y la pieza rota.
+
+  test.describe(`[${variante}] aviso`, () => {
+    const TITULO = /Cambios guardados/;
+
+    for (const via of VIAS) {
+      test(`aparece al activarlo con ${via}, se anuncia por la región cortés y no roba el foco`, async ({
+        browser,
+      }) => {
+        const page = await nuevaPagina(browser, via, variante);
+        // Control del motor: con ratón o táctil, WebKit manda el foco al cuerpo en CUALQUIER pulsación de
+        // botón (también en uno que no abre nada). Se mide con «#fila-1» y se exige lo mismo al aviso.
+        let cuerpoTrasPulsar = false;
+        if (via !== "teclado") {
+          await page.focus("#fila-1");
+          await abrir(page, "#fila-1", via);
+          cuerpoTrasPulsar = await page.evaluate(() => document.activeElement === document.body);
+        }
+        // Foco antes de activar el aviso: se pone en el botón y se guarda el elemento.
+        await page.focus("#abrir-aviso");
+        await page.evaluate(() => {
+          (window as unknown as { __antes: Element | null }).__antes = document.activeElement;
+        });
+        await abrir(page, "#abrir-aviso", via);
+        const aviso = page.getByText(TITULO).first();
+        await expect(aviso).toBeVisible();
+        await page.waitForTimeout(1500);
+        const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+        expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          true,
+        );
+        const mismo = await page.evaluate(
+          (cuerpo) =>
+            document.activeElement ===
+            (cuerpo ? document.body : (window as unknown as { __antes: Element | null }).__antes),
+          cuerpoTrasPulsar,
+        );
+        expect(
+          mismo,
+          "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+        ).toBe(true);
+        // La página sigue operable: nada queda inerte.
+        await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+        await page.context().close();
+      });
+    }
+
+    test("desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima", async ({
+      browser,
+    }) => {
+      const page = await nuevaPagina(browser, "teclado", variante);
+      await abrir(page, "#abrir-aviso", "raton");
+      const aviso = page.getByText(TITULO).first();
+      await expect(aviso).toBeVisible();
+      const t0 = Date.now();
+      await expect(aviso).toBeHidden({ timeout: 11_000 });
+      const dur = Date.now() - t0;
+      test.info().annotations.push({ type: "duracion-ms", description: String(dur) });
+      expect(dur).toBeGreaterThanOrEqual(7000);
+      expect(dur).toBeLessThanOrEqual(10_000);
+
+      await abrir(page, "#abrir-aviso", "raton");
+      const aviso2 = page.getByText(TITULO).first();
+      await expect(aviso2).toBeVisible();
+      await aviso2.hover();
+      await page.waitForTimeout(10_000);
+      await expect(aviso2, "con el puntero encima sigue visible tras 10 s").toBeVisible();
+      await page.mouse.move(2, 2);
+      await expect(aviso2).toBeHidden({ timeout: 11_000 });
+    });
+
+    test("con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece", async ({ browser }) => {
+      const page = await nuevaPagina(browser, "teclado", variante);
+      await abrir(page, "#abrir-aviso", "teclado");
+      await expect(page.getByText(TITULO).first()).toBeVisible();
+      for (let i = 0; i < VUELTAS; i++) {
+        await page.keyboard.press("Tab");
+        if ((await page.evaluate(() => document.activeElement?.textContent?.trim())) === "Cerrar aviso") break;
+      }
+      expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe("Cerrar aviso");
+      await page.waitForTimeout(10_000);
+      await expect(page.getByText(TITULO).first(), "con el foco dentro sigue visible tras 10 s").toBeVisible();
+      await page.locator("#fuera-final").focus();
+      await expect(page.getByText(TITULO)).toHaveCount(0, { timeout: 11_000 });
+    });
+
+    test("«Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro", async ({
+      browser,
+    }) => {
+      const page = await nuevaPagina(browser, "teclado", variante);
+      await abrir(page, "#abrir-aviso", "teclado");
+      await expect(page.getByText(TITULO).first()).toBeVisible();
+      let alcanzado = -1;
+      for (let i = 1; i <= VUELTAS; i++) {
+        await page.keyboard.press("Tab");
+        const t = await page.evaluate(() => document.activeElement?.textContent?.trim());
+        if (t === "Cerrar aviso") {
+          alcanzado = i;
+          break;
+        }
+      }
+      expect(alcanzado, "tabulaciones hasta «Cerrar aviso»").toBeGreaterThan(0);
+      test.info().annotations.push({ type: "tabs-hasta-cerrar", description: String(alcanzado) });
+      await page.keyboard.press("Enter");
+      await expect(page.getByText(TITULO)).toHaveCount(0);
+      test.info().annotations.push({
+        type: "foco-tras-cerrar-aviso",
+        description: await idEnfocado(page),
+      });
+
+      await abrir(page, "#abrir-aviso", "teclado");
+      await expect(page.getByText(TITULO).first()).toBeVisible();
+      await page.getByRole("button", { name: "Cerrar aviso" }).focus();
+      await page.keyboard.press("Escape");
+      await expect(page.getByText(TITULO)).toHaveCount(0);
+    });
+
+    test(`${VUELTAS} tabulaciones y ${VUELTAS} con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco`, async ({
+      browser,
+    }) => {
+      const page = await nuevaPagina(browser, "teclado", variante);
+      await abrir(page, "#abrir-aviso", "teclado");
+      await expect(page.getByText(TITULO).first()).toBeVisible();
+      const vistos = new Set<string>();
+      let cuerpo = 0;
+      for (const tecla of ["Tab", "Shift+Tab"]) {
+        for (let i = 0; i < VUELTAS; i++) {
+          await page.keyboard.press(tecla);
+          const id = await page.evaluate(() => {
+            const a = document.activeElement;
+            if (!a || a === document.body) return "";
+            return a.id || (a.textContent ?? "").trim().slice(0, 30) || a.tagName;
+          });
+          if (id === "") cuerpo++;
+          else vistos.add(id);
+        }
+      }
+      test.info().annotations.push({
+        type: "elementos-distintos",
+        description: `${vistos.size}; foco en cuerpo ${cuerpo} veces`,
+      });
+      expect(vistos.size, "elementos distintos alcanzados: no hay trampa").toBeGreaterThan(8);
+      expect(vistos.has("Cerrar aviso"), "alcanza «Cerrar aviso»").toBe(true);
+      expect(vistos.has("fuera-final"), "alcanza el final de la página").toBe(true);
+      expect(vistos.has("abrir-confirmacion"), "alcanza el resto de la página").toBe(true);
+    });
+
+    test("0 infracciones de axe con el aviso abierto", async ({ browser }) => {
+      const page = await nuevaPagina(browser, "teclado", variante);
+      await abrir(page, "#abrir-aviso", "teclado");
+      await expect(page.getByText(TITULO).first()).toBeVisible();
+      const r = await new AxeBuilder({ page }).withTags(ETIQUETAS_AXE).analyze();
+      expect(
+        r.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`),
+      ).toEqual([]);
+    });
+  });
+}

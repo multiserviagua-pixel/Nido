@@ -1,0 +1,102 @@
+"use client";
+
+// Variante ROBAFOCO (Radix más un robo de foco por el aviso; prueba de la prueba). Antes: Variante Radix (diseño 020, «Diálogo, cajón y avisos»): tres paquetes, sin código de foco propio.
+import { useState } from "react";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as Toast from "@radix-ui/react-toast";
+import { Fondo } from "../fondo";
+
+export function Cliente() {
+  const [n, setN] = useState(0);
+  const [avisos, setAvisos] = useState<number[]>([]);
+  const [contador, setContador] = useState(0);
+
+  return (
+    <Toast.Provider duration={8000} label="Avisos" swipeDirection="right">
+      <Fondo
+        titulo="Prueba del foco: Radix"
+        confirmaciones={n}
+        acciones={
+          <>
+            <AlertDialog.Root>
+              <AlertDialog.Trigger asChild>
+                <button type="button" id="abrir-confirmacion">
+                  Eliminar cliente ficticio
+                </button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Portal>
+                <AlertDialog.Overlay className="capa" />
+                <AlertDialog.Content className="panel">
+                  <AlertDialog.Title>¿Eliminar a Cliente Ficticio Uno?</AlertDialog.Title>
+                  <AlertDialog.Description>
+                    Se borra un dato ficticio de la muestra en cuanto confirmes.
+                  </AlertDialog.Description>
+                  <AlertDialog.Cancel asChild>
+                    <button type="button">Cancelar</button>
+                  </AlertDialog.Cancel>
+                  <AlertDialog.Action asChild>
+                    <button type="button" onClick={() => setN((v) => v + 1)}>
+                      Eliminar
+                    </button>
+                  </AlertDialog.Action>
+                </AlertDialog.Content>
+              </AlertDialog.Portal>
+            </AlertDialog.Root>
+
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button type="button" id="abrir-menu">
+                  Abrir menú
+                </button>
+              </Dialog.Trigger>
+              <Dialog.Portal>
+                <Dialog.Overlay className="capa" />
+                <Dialog.Content className="cajon">
+                  <Dialog.Title>Menú de la muestra</Dialog.Title>
+                  <Dialog.Description>Navegación ficticia.</Dialog.Description>
+                  <nav aria-label="Menú ficticio">
+                    <a href="#uno">Uno</a> <a href="#dos">Dos</a>
+                  </nav>
+                  <Dialog.Close asChild>
+                    <button type="button">Cerrar menú</button>
+                  </Dialog.Close>
+                </Dialog.Content>
+              </Dialog.Portal>
+            </Dialog.Root>
+
+            <button
+              type="button"
+              id="abrir-aviso"
+              onClick={() => {
+                setAvisos((a) => [...a, contador]);
+                setContador((c) => c + 1);
+                // Variante ROBAFOCO: solo roba el foco del aviso, el resto es Radix intacto.
+                setTimeout(() => {
+                  document.querySelector<HTMLElement>(".aviso button")?.focus();
+                }, 150);
+              }}
+            >
+              Mostrar aviso
+            </button>
+          </>
+        }
+      />
+      {avisos.map((id) => (
+        <Toast.Root
+          key={id}
+          type="background"
+          className="aviso"
+          onOpenChange={(abierto) => {
+            if (!abierto) setAvisos((a) => a.filter((x) => x !== id));
+          }}
+        >
+          <Toast.Title>Cambios guardados</Toast.Title>
+          <Toast.Description>Aviso ficticio número {id + 1}.</Toast.Description>
+          <Toast.Close aria-label="Cerrar aviso">Cerrar aviso</Toast.Close>
+        </Toast.Root>
+      ))}
+      <Toast.Viewport className="avisos" />
+    </Toast.Provider>
+  );
+}

@@ -1,0 +1,40 @@
+// Depuración de la pausa del aviso por el foco (T-001, 020). Guion desechable.
+// Corregido tras el dictamen: antes de contar, comprueba que el foco llegó a «Cerrar aviso»;
+// si no llegó, la repetición se anota como «foco no llegó» y no cuenta ni a favor ni en contra.
+// Imprime una línea en bruto por repetición.
+import { webkit, chromium, firefox } from '@playwright/test';
+const motores = { webkit, chromium, firefox };
+const N = 6;
+for (const [nombre, motor] of Object.entries(motores)) {
+  const b = await motor.launch();
+  for (const demora of [0, 600]) {
+    let pausado = 0, valido = 0;
+    for (let k = 0; k < N; k++) {
+      const c = await b.newContext({ baseURL: 'http://127.0.0.1:3411' });
+      const p = await c.newPage();
+      await p.goto('/prueba-foco/radix');
+      await p.waitForSelector("body[data-hidratado='1']");
+      await p.focus('#abrir-aviso');
+      await p.keyboard.press('Enter');
+      await p.waitForTimeout(demora);
+      let pulsaciones = 0;
+      for (let i = 0; i < 50; i++) {
+        await p.keyboard.press('Tab');
+        pulsaciones++;
+        if ((await p.evaluate(() => document.activeElement?.textContent?.trim())) === 'Cerrar aviso') break;
+      }
+      const enfocado = await p.evaluate(() => document.activeElement?.textContent?.trim());
+      const llego = enfocado === 'Cerrar aviso';
+      await p.waitForTimeout(9500);
+      const sigue = await p.evaluate(() => document.querySelectorAll('li[data-state]').length);
+      console.log(`  ${nombre} demora ${demora} ms, repetición ${k + 1}: foco llegó a «Cerrar aviso» = ${llego} (tras ${pulsaciones} pulsaciones; foco en «${enfocado}»); avisos en el DOM a los 9,5 s = ${sigue}`);
+      if (llego) {
+        valido++;
+        if (sigue === 1) pausado++;
+      }
+      await c.close();
+    }
+    console.log(`${nombre} demora ${demora} ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en ${pausado} de ${valido} repeticiones válidas (${N - valido} sin que el foco llegara)`);
+  }
+  await b.close();
+}

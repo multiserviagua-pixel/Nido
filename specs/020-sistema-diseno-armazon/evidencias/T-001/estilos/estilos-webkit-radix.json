@@ -1,0 +1,407 @@
+{
+ "1 carga (con gráfico y tabla)": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "position:relative;cursor:default;width:4"
+   },
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "pointer-events:none"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events:none"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   }
+  ],
+  "elementos": []
+ },
+ "2 confirmación abierta": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "body",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events: none;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "data-radix-focus-guard",
+    "recharts": false,
+    "estilo": "outline: medium; opacity: 0; position: fixed; pointer-events: none;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events:none"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "capa",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events: auto;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "data-radix-focus-guard",
+    "recharts": false,
+    "estilo": "outline: medium; opacity: 0; position: fixed; pointer-events: none;"
+   }
+  ],
+  "elementos": [
+   {
+    "longitud": 775,
+    "atributos": "type",
+    "muestra": " .with-scroll-bars-hidden { overflow: hidden !important; padding-right: 0px !important; } body[data-scroll-loc"
+   }
+  ]
+ },
+ "3 cajón abierto": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "body",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events: none;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "data-radix-focus-guard",
+    "recharts": false,
+    "estilo": "outline: medium; opacity: 0; position: fixed; pointer-events: none;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events:none"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "capa",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events: auto;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "cajon",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events: auto;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "data-radix-focus-guard",
+    "recharts": false,
+    "estilo": "outline: medium; opacity: 0; position: fixed; pointer-events: none;"
+   }
+  ],
+  "elementos": [
+   {
+    "longitud": 775,
+    "atributos": "type",
+    "muestra": " .with-scroll-bars-hidden { overflow: hidden !important; padding-right: 0px !important; } body[data-scroll-loc"
+   }
+  ]
+ },
+ "4 aviso abierto": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "body",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": ""
+   },
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events:none"
+   },
+   {
+    "etiqueta": "li",
+    "clase": "aviso",
+    "radix": "data-radix-collection-item",
+    "recharts": false,
+    "estilo": "user-select: none; touch-action: none;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidd"
+   }
+  ],
+  "elementos": []
+ },
+ "5 final": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   },
+   {
+    "directiva": "style-src-elem",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "\n  .with-scroll-bars-hidden {\n   overflo"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "body",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": ""
+   },
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "div",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "pointer-events:none"
+   },
+   {
+    "etiqueta": "li",
+    "clase": "aviso",
+    "radix": "data-radix-collection-item",
+    "recharts": false,
+    "estilo": "user-select: none; touch-action: none;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidd"
+   }
+  ],
+  "elementos": []
+ }
+}

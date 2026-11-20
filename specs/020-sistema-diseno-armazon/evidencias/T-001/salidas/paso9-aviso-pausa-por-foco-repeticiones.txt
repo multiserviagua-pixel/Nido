@@ -1,0 +1,6 @@
+webkit demora 0 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 2 de 6
+webkit demora 600 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 6 de 6
+chromium demora 0 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 4 de 6
+chromium demora 600 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 6 de 6
+firefox demora 0 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 6 de 6
+firefox demora 600 ms antes de tabular: el aviso sigue con el foco dentro tras 9,5 s en 6 de 6

@@ -1,0 +1,126 @@
+
+Running 4 tests using 1 worker
+
+  x  1 [chromium] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (4.0s)
+  x  2 [chromium] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (3.7s)
+  x  3 [firefox] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (9.5s)
+  x  4 [firefox] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (9.1s)
+
+
+  1) [chromium] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    +   "cuerpo": 29,
+    +   "dentro": 71,
+        "fuera": 0,
+      }
+
+      184 |         }
+      185 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 186 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      187 |           dentro: 2 * VUELTAS,
+      188 |           fuera: 0,
+      189 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:186:57
+
+    Error Context: test-results\foco--nativo-confirmacion--7cc6c-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  2) [chromium] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    +   "cuerpo": 22,
+    +   "dentro": 78,
+        "fuera": 0,
+      }
+
+      184 |         }
+      185 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 186 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      187 |           dentro: 2 * VUELTAS,
+      188 |           fuera: 0,
+      189 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:186:57
+
+    Error Context: test-results\foco--nativo-cajon-50-tabu-66ba6-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  3) [firefox] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    +   "cuerpo": 24,
+    +   "dentro": 76,
+        "fuera": 0,
+      }
+
+      184 |         }
+      185 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 186 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      187 |           dentro: 2 * VUELTAS,
+      188 |           fuera: 0,
+      189 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:186:57
+
+    Error Context: test-results\foco--nativo-confirmacion--7cc6c-Mayúsculas-no-sacan-el-foco-firefox\error-context.md
+
+  4) [firefox] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    +   "cuerpo": 20,
+    +   "dentro": 80,
+        "fuera": 0,
+      }
+
+      184 |         }
+      185 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 186 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      187 |           dentro: 2 * VUELTAS,
+      188 |           fuera: 0,
+      189 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:186:57
+
+    Error Context: test-results\foco--nativo-cajon-50-tabu-66ba6-Mayúsculas-no-sacan-el-foco-firefox\error-context.md
+
+  4 failed
+    [chromium] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [firefox] › e2e\foco.spec.ts:169:7 › [nativo] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [firefox] › e2e\foco.spec.ts:169:7 › [nativo] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 

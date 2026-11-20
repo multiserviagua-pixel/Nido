@@ -1,0 +1,44 @@
+
+Running 6 tests using 1 worker
+
+[chromium/radix]
+1 carga (con gráfico y tabla): violaciones=2 (atributo 2, elemento 0); DOM: style=5, <style>=0
+2 confirmación abierta: violaciones=1 (atributo 0, elemento 1); DOM: style=10, <style>=1
+3 cajón abierto: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=1
+4 aviso abierto: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=0
+5 final: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=0
+  ok 1 [chromium] › e2e\estilos.spec.ts:38:3 › [radix] estilos en línea con política estricta en solo informe (1.4s)
+[chromium/nativo]
+1 carga (con gráfico y tabla): violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+2 confirmación abierta: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+3 cajón abierto: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+5 final: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+  ok 2 [chromium] › e2e\estilos.spec.ts:38:3 › [nativo] estilos en línea con política estricta en solo informe (612ms)
+[firefox/radix]
+1 carga (con gráfico y tabla): violaciones=2 (atributo 2, elemento 0); DOM: style=5, <style>=0
+2 confirmación abierta: violaciones=1 (atributo 0, elemento 1); DOM: style=10, <style>=1
+3 cajón abierto: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=1
+4 aviso abierto: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=0
+5 final: violaciones=2 (atributo 0, elemento 2); DOM: style=10, <style>=0
+  ok 3 [firefox] › e2e\estilos.spec.ts:38:3 › [radix] estilos en línea con política estricta en solo informe (3.3s)
+[firefox/nativo]
+1 carga (con gráfico y tabla): violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+2 confirmación abierta: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+3 cajón abierto: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+5 final: violaciones=0 (atributo 0, elemento 0); DOM: style=4, <style>=0
+  ok 4 [firefox] › e2e\estilos.spec.ts:38:3 › [nativo] estilos en línea con política estricta en solo informe (1.2s)
+[webkit/radix]
+1 carga (con gráfico y tabla): violaciones=2 (atributo 2, elemento 0); DOM: style=5, <style>=0
+2 confirmación abierta: violaciones=2 (atributo 1, elemento 1); DOM: style=9, <style>=1
+3 cajón abierto: violaciones=3 (atributo 1, elemento 2); DOM: style=10, <style>=1
+4 aviso abierto: violaciones=3 (atributo 1, elemento 2); DOM: style=8, <style>=0
+5 final: violaciones=3 (atributo 1, elemento 2); DOM: style=8, <style>=0
+  ok 5 [webkit] › e2e\estilos.spec.ts:38:3 › [radix] estilos en línea con política estricta en solo informe (1.3s)
+[webkit/nativo]
+1 carga (con gráfico y tabla): violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+2 confirmación abierta: violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+3 cajón abierto: violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+5 final: violaciones=1 (atributo 1, elemento 0); DOM: style=4, <style>=0
+  ok 6 [webkit] › e2e\estilos.spec.ts:38:3 › [nativo] estilos en línea con política estricta en solo informe (985ms)
+
+  6 passed (14.3s)

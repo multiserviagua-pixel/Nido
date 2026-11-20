@@ -1,0 +1,69 @@
+"use client";
+
+// Alternativa A: elemento nativo dialog con showModal(), sin librería.
+import { useRef, useState } from "react";
+import { Fondo } from "../fondo";
+
+export function Cliente() {
+  const [n, setN] = useState(0);
+  const confirmacion = useRef<HTMLDialogElement>(null);
+  const cajon = useRef<HTMLDialogElement>(null);
+  return (
+    <>
+      <Fondo
+        titulo="Prueba del foco: elemento dialog nativo"
+        confirmaciones={n}
+        acciones={
+          <>
+            <button
+              type="button"
+              id="abrir-confirmacion"
+              onClick={() => confirmacion.current?.showModal()}
+            >
+              Eliminar cliente ficticio
+            </button>
+            <button type="button" id="abrir-menu" onClick={() => cajon.current?.showModal()}>
+              Abrir menú
+            </button>
+          </>
+        }
+      />
+      <dialog
+        ref={confirmacion}
+        role="alertdialog"
+        className="panel-nativo"
+        aria-labelledby="n-t1"
+        aria-describedby="n-d1"
+      >
+        <h2 id="n-t1">¿Eliminar a Cliente Ficticio Uno?</h2>
+        <p id="n-d1">Se borra un dato ficticio de la muestra en cuanto confirmes.</p>
+        <button
+          type="button"
+          ref={(el) => el?.setAttribute("autofocus", "")}
+          onClick={() => confirmacion.current?.close()}
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setN((v) => v + 1);
+            confirmacion.current?.close();
+          }}
+        >
+          Eliminar
+        </button>
+      </dialog>
+      <dialog ref={cajon} className="cajon-nativo" aria-labelledby="n-t2" aria-describedby="n-d2">
+        <h2 id="n-t2">Menú de la muestra</h2>
+        <p id="n-d2">Navegación ficticia.</p>
+        <nav aria-label="Menú ficticio">
+          <a href="#uno">Uno</a> <a href="#dos">Dos</a>
+        </nav>
+        <button type="button" onClick={() => cajon.current?.close()}>
+          Cerrar menú
+        </button>
+      </dialog>
+    </>
+  );
+}

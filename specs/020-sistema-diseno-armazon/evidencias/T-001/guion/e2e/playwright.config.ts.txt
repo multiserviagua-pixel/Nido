@@ -1,0 +1,25 @@
+import { defineConfig } from "@playwright/test";
+
+// Configuración desechable de T-001 (020, PRUEBA-011). No entra en main.
+const puerto = Number(process.env.PUERTO_PRUEBA ?? 3411);
+
+export default defineConfig({
+  testDir: ".",
+  testMatch: /.*\.spec\.ts/,
+  timeout: 60_000,
+  expect: { timeout: 5_000 },
+  fullyParallel: false,
+  workers: 1,
+  retries: 0,
+  reporter: [["list"], ["json", { outputFile: "../resultados/informe.json" }]],
+  use: {
+    baseURL: `http://127.0.0.1:${puerto}`,
+    headless: process.env.CABEZA !== "1",
+    locale: "es-ES",
+  },
+  projects: [
+    { name: "chromium", use: { browserName: "chromium" } },
+    { name: "firefox", use: { browserName: "firefox" } },
+    { name: "webkit", use: { browserName: "webkit" } },
+  ],
+});

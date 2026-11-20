@@ -1,0 +1,21 @@
+// Sonda: qué elemento tiene el foco tras pulsar con ratón o táctil en WebKit, con y sin aviso.
+import { webkit, chromium, firefox } from '@playwright/test';
+const desc = (p) => p.evaluate(() => { const a = document.activeElement; return a === document.body ? 'body' : `${a.tagName.toLowerCase()}#${a.id}.${a.className} dentro-del-aviso=${!!a.closest('.aviso,[data-radix-toast-viewport]')}`; });
+for (const [n, m] of Object.entries({ chromium, firefox, webkit })) {
+  const b = await m.launch();
+  for (const via of ['raton', 'tactil']) {
+    for (const [pagina, boton] of [['radix', '#abrir-aviso'], ['radix', '#fila-1']]) {
+      const c = await b.newContext({ baseURL: 'http://127.0.0.1:3411', hasTouch: via === 'tactil' });
+      const p = await c.newPage();
+      await p.goto(`/prueba-foco/${pagina}`);
+      await p.waitForSelector("body[data-hidratado='1']");
+      await p.focus(boton);
+      const antes = await desc(p);
+      if (via === 'raton') await p.click(boton); else await p.tap(boton);
+      await p.waitForTimeout(1500);
+      console.log(`${n} ${via} ${boton}: antes=${antes} | después=${await desc(p)}`);
+      await c.close();
+    }
+  }
+  await b.close();
+}

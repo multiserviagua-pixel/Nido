@@ -1,0 +1,614 @@
+
+Running 31 tests using 1 worker
+
+  x   1 [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (427ms)
+  x   2 [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (382ms)
+  x   3 [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela (5.4s)
+  x   4 [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (1.0s)
+  x   5 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (349ms)
+  x   6 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió (403ms)
+  x   7 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió (468ms)
+  x   8 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (457ms)
+  x   9 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió (440ms)
+  x  10 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió (595ms)
+  x  11 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (633ms)
+  x  12 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió (482ms)
+  x  13 [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió (477ms)
+  ok 14 [chromium] › e2e\foco.spec.ts:208:7 › [roto] confirmacion › 0 infracciones de axe con la página y el diálogo abiertos (1.3s)
+  x  15 [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra (267ms)
+  x  16 [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad (1.9s)
+  x  17 [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco (1.0s)
+  x  18 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió (332ms)
+  x  19 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (333ms)
+  x  20 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió (390ms)
+  x  21 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (360ms)
+  x  22 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió (396ms)
+  x  23 [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió (532ms)
+  ok 24 [chromium] › e2e\foco.spec.ts:208:7 › [roto] cajon › 0 infracciones de axe con la página y el diálogo abiertos (1.2s)
+  x  25 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (221ms)
+  x  26 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (351ms)
+  x  27 [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (351ms)
+  x  28 [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima (11.4s)
+  x  29 [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro (5.4s)
+  ok 30 [chromium] › e2e\foco.spec.ts:306:5 › [roto] aviso › 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco (600ms)
+  ok 31 [chromium] › e2e\foco.spec.ts:336:5 › [roto] aviso › 0 infracciones de axe con el aviso abierto (692ms)
+
+
+  1) [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: el foco entra en el diálogo
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      110 |         await expect(d).toHaveAccessibleName(p.nombre);
+      111 |         await expect(d).toHaveAccessibleDescription(p.descripcion);
+    > 112 |         expect(await ubicacion(d), "el foco entra en el diálogo").toBe("dentro");
+          |                                                                   ^
+      113 |         if (p.focoInicial) {
+      114 |           expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe(
+      115 |             p.focoInicial,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:112:67
+
+    Error Context: test-results\foco--roto-confirmacion-se-0cf43--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  2) [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: #fuera-final no debe poder pulsarse con el diálogo abierto
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      132 |             alcanzable = false;
+      133 |           }
+    > 134 |           expect(alcanzable, `${s} no debe poder pulsarse con el diálogo abierto`).toBe(false);
+          |                                                                                    ^
+      135 |         }
+      136 |         const oculto = await page.evaluate((sels) => {
+      137 |           const dlg = document.querySelector("dialog[open]") as HTMLDialogElement | null;
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:134:84
+
+    Error Context: test-results\foco--roto-confirmacion-el-d40cd--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  3) [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  getByRole('alertdialog', { name: /Eliminar a Cliente Ficticio Uno/ })
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" getByRole('alertdialog', { name: /Eliminar a Cliente Ficticio Uno/ }) with timeout 5000ms
+      - waiting for getByRole('alertdialog', { name: /Eliminar a Cliente Ficticio Uno/ })
+        14 × locator resolved to <div class="panel" role="alertdialog" aria-labelledby="t1" aria-describedby="d1">…</div>
+           - unexpected value "visible"
+
+
+      154 |           await expect(dialogo(page, p)).toBeVisible();
+      155 |           await page.keyboard.press("Enter");
+    > 156 |           await expect(dialogo(page, p)).toBeHidden();
+          |                                          ^
+      157 |           await expect(page.getByTestId("confirmaciones")).toHaveText("0");
+      158 |           expect(await idEnfocado(page)).toBe("abrir-confirmacion");
+      159 |         });
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:156:42
+
+    Error Context: test-results\foco--roto-confirmacion-In-daf1f-s-abrir-no-confirma-cancela-chromium\error-context.md
+
+  4) [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    -   "fuera": 0,
+    +   "cuerpo": 6,
+    +   "dentro": 12,
+    +   "fuera": 82,
+      }
+
+      177 |         }
+      178 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 179 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      180 |           dentro: 2 * VUELTAS,
+      181 |           fuera: 0,
+      182 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:179:57
+
+    Error Context: test-results\foco--roto-confirmacion-50-39a24-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  5) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-3d3ba-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  6) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-eae73-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  7) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-67789-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  8) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-af486-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  9) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-ae4cc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  10) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-c621d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  11) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-539e1-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  12) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-6878a-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  13) [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-confirmacion-ab-56d4d-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  14) [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+
+    Error: el foco entra en el diálogo
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      110 |         await expect(d).toHaveAccessibleName(p.nombre);
+      111 |         await expect(d).toHaveAccessibleDescription(p.descripcion);
+    > 112 |         expect(await ubicacion(d), "el foco entra en el diálogo").toBe("dentro");
+          |                                                                   ^
+      113 |         if (p.focoInicial) {
+      114 |           expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe(
+      115 |             p.focoInicial,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:112:67
+
+    Error Context: test-results\foco--roto-cajon-se-abre-c-9b0ff--accesibles-y-el-foco-entra-chromium\error-context.md
+
+  15) [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+
+    Error: #fila-1 no debe poder pulsarse con el diálogo abierto
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      132 |             alcanzable = false;
+      133 |           }
+    > 134 |           expect(alcanzable, `${s} no debe poder pulsarse con el diálogo abierto`).toBe(false);
+          |                                                                                    ^
+      135 |         }
+      136 |         const oculto = await page.evaluate((sels) => {
+      137 |           const dlg = document.querySelector("dialog[open]") as HTMLDialogElement | null;
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:134:84
+
+    Error Context: test-results\foco--roto-cajon-el-fondo--bc91d--del-árbol-de-accesibilidad-chromium\error-context.md
+
+  16) [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+
+    Error: de 100 pulsaciones
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "cuerpo": 0,
+    -   "dentro": 100,
+    -   "fuera": 0,
+    +   "cuerpo": 6,
+    +   "dentro": 12,
+    +   "fuera": 82,
+      }
+
+      177 |         }
+      178 |         test.info().annotations.push({ type: "tabulaciones", description: JSON.stringify(cuenta) });
+    > 179 |         expect(cuenta, `de ${2 * VUELTAS} pulsaciones`).toEqual({
+          |                                                         ^
+      180 |           dentro: 2 * VUELTAS,
+      181 |           fuera: 0,
+      182 |           cuerpo: 0,
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:179:57
+
+    Error Context: test-results\foco--roto-cajon-50-tabula-086a5-Mayúsculas-no-sacan-el-foco-chromium\error-context.md
+
+  17) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--5a482-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  18) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--5bbef-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  19) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--f5f74-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  20) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--22edc-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  21) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--05268-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  22) [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "dentro"
+    Received: "fuera"
+
+      193 |             const d = dialogo(page, p);
+      194 |             await expect(d).toBeVisible();
+    > 195 |             expect(await ubicacion(d)).toBe("dentro");
+          |                                        ^
+      196 |             await cerrar(page, cierre);
+      197 |             await expect(d).toBeHidden();
+      198 |             const idAbrir = p.abrir.slice(1);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:195:40
+
+    Error Context: test-results\foco--roto-cajon-abre-con--bafa4-o-vuelve-al-botón-que-abrió-chromium\error-context.md
+
+  23) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      239 |           [...document.querySelectorAll("[aria-live='polite']")].map((e) => e.textContent ?? ""),
+      240 |         );
+    > 241 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      242 |           true,
+      243 |         );
+      244 |         expect(await idEnfocado(page), "el aviso no roba el foco").toBe("abrir-aviso");
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:241:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-254f9-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  24) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      239 |           [...document.querySelectorAll("[aria-live='polite']")].map((e) => e.textContent ?? ""),
+      240 |         );
+    > 241 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      242 |           true,
+      243 |         );
+      244 |         expect(await idEnfocado(page), "el aviso no roba el foco").toBe("abrir-aviso");
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:241:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-edb91-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  25) [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      239 |           [...document.querySelectorAll("[aria-live='polite']")].map((e) => e.textContent ?? ""),
+      240 |         );
+    > 241 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      242 |           true,
+      243 |         );
+      244 |         expect(await idEnfocado(page), "el aviso no roba el foco").toBe("abrir-aviso");
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:241:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-8499d-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  26) [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  getByText(/Cambios guardados/).first()
+    Expected: hidden
+    Received: visible
+    Timeout:  11000ms
+
+    Call log:
+      - Expect "toBeHidden" getByText(/Cambios guardados/).first() with timeout 11000ms
+      - waiting for getByText(/Cambios guardados/).first()
+        25 × locator resolved to <strong>Cambios guardados</strong>
+           - unexpected value "visible"
+
+
+      257 |       await expect(aviso).toBeVisible();
+      258 |       const t0 = Date.now();
+    > 259 |       await expect(aviso).toBeHidden({ timeout: 11_000 });
+          |                           ^
+      260 |       const dur = Date.now() - t0;
+      261 |       test.info().annotations.push({ type: "duracion-ms", description: String(dur) });
+      262 |       expect(dur).toBeGreaterThanOrEqual(7000);
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:259:27
+
+    Error Context: test-results\foco--roto-aviso-desaparec-0bbbf-tiene-con-el-puntero-encima-chromium\error-context.md
+
+  27) [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText(/Cambios guardados/)
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText(/Cambios guardados/) with timeout 5000ms
+      - waiting for getByText(/Cambios guardados/)
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      301 |       await page.getByRole("button", { name: "Cerrar aviso" }).focus();
+      302 |       await page.keyboard.press("Escape");
+    > 303 |       await expect(page.getByText(TITULO)).toHaveCount(0);
+          |                                            ^
+      304 |     });
+      305 |
+      306 |     test(`${VUELTAS} tabulaciones y ${VUELTAS} con Mayúsculas con un aviso abierto: sin trampa y sin perder el foco`, async ({
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:303:44
+
+    Error Context: test-results\foco--roto-aviso-«Cerrar-a-fcb9d-e-cierra-con-el-foco-dentro-chromium\error-context.md
+
+  27 failed
+    [chromium] › e2e\foco.spec.ts:103:7 › [roto] confirmacion › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [roto] confirmacion › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:151:9 › [roto] confirmacion › Intro nada más abrir no confirma: cancela 
+    [chromium] › e2e\foco.spec.ts:162:7 › [roto] confirmacion › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con teclado; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con raton; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Cancelar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] confirmacion › abre con tactil; cierra con «Eliminar»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:103:7 › [roto] cajon › se abre con teclado, tiene nombre y descripción accesibles y el foco entra 
+    [chromium] › e2e\foco.spec.ts:120:7 › [roto] cajon › el fondo queda inerte: no se puede pulsar, y está fuera del árbol de accesibilidad 
+    [chromium] › e2e\foco.spec.ts:162:7 › [roto] cajon › 50 tabulaciones y 50 con Mayúsculas no sacan el foco 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con teclado; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con raton; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Escape»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:188:11 › [roto] cajon › abre con tactil; cierra con «Cerrar menú»; el foco vuelve al botón que abrió 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:231:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:251:5 › [roto] aviso › desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con el puntero encima 
+    [chromium] › e2e\foco.spec.ts:275:5 › [roto] aviso › «Cerrar aviso» se alcanza con el tabulador y cierra con Intro; Escape cierra con el foco dentro 
+  4 passed (1.0m)

@@ -1,0 +1,166 @@
+{
+ "1 carga (con gráfico y tabla)": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "position:relative;cursor:default;width:4"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   }
+  ],
+  "elementos": []
+ },
+ "2 confirmación abierta": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   }
+  ],
+  "elementos": []
+ },
+ "3 cajón abierto": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   }
+  ],
+  "elementos": []
+ },
+ "5 final": {
+  "violaciones": [
+   {
+    "directiva": "style-src-attr",
+    "bloqueado": "inline",
+    "disposicion": "report",
+    "muestra": "color: red"
+   }
+  ],
+  "atributos": [
+   {
+    "etiqueta": "div",
+    "clase": "recharts-wrapper",
+    "radix": "",
+    "recharts": true,
+    "estilo": "position:relative;cursor:default;width:480px;height:200px"
+   },
+   {
+    "etiqueta": "svg",
+    "clase": "recharts-surface",
+    "radix": "",
+    "recharts": true,
+    "estilo": "width: 100%; height: 100%; display: block;"
+   },
+   {
+    "etiqueta": "next-route-announcer",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute;"
+   },
+   {
+    "etiqueta": "span",
+    "clase": "",
+    "radix": "",
+    "recharts": false,
+    "estilo": "position: absolute; top: -20000px; left: 0px; padding: 0px; margin: 0px; border: medium; white-space"
+   }
+  ],
+  "elementos": []
+ }
+}

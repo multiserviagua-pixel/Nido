@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const raiz = process.argv[2];
+function lista(d) {
+  const r = [];
+  for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+    const p = path.join(d, e.name);
+    if (e.isDirectory()) r.push(...lista(p));
+    else if (e.isFile()) r.push(p);
+  }
+  return r;
+}
+for (const nombre of fs.readdirSync(raiz).sort()) {
+  const d = path.join(raiz, nombre);
+  if (!fs.statSync(d).isDirectory()) continue;
+  const archivos = lista(d).map((p) => path.relative(d, p).split(path.sep).join('/')).sort();
+  const h = crypto.createHash('sha256');
+  for (const a of archivos) {
+    const s = crypto.createHash('sha256').update(fs.readFileSync(path.join(d, a))).digest('hex');
+    h.update(a + '\n' + s + '\n');
+  }
+  console.log(nombre, archivos.length + ' archivos', h.digest('hex'));
+}

@@ -1,0 +1,412 @@
+
+Running 27 tests using 1 worker
+
+  ok  1 [chromium] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (2.4s)
+  ok  2 [chromium] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.0s)
+  ok  3 [chromium] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.0s)
+  x   4 [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (1.8s)
+  x   5 [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.0s)
+  x   6 [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.0s)
+  x   7 [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (2.0s)
+  x   8 [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.0s)
+  x   9 [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.0s)
+  ok 10 [firefox] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (3.8s)
+  ok 11 [firefox] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.4s)
+  ok 12 [firefox] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.4s)
+  x  13 [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (2.3s)
+  x  14 [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (5.4s)
+  x  15 [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (5.2s)
+  x  16 [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (4.8s)
+  x  17 [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (5.9s)
+  x  18 [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (5.8s)
+  ok 19 [webkit] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (4.0s)
+  ok 20 [webkit] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.9s)
+  ok 21 [webkit] › e2e\foco.spec.ts:239:7 › [radix] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.9s)
+  x  22 [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (3.2s)
+  x  23 [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (3.1s)
+  x  24 [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.6s)
+  x  25 [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco (2.5s)
+  x  26 [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco (2.9s)
+  x  27 [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco (2.9s)
+
+
+  1) [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-ed9c5-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  2) [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-2c801-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  3) [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-6bb75-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  4) [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-254f9-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  5) [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-edb91-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  6) [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-8499d-ón-cortés-y-no-roba-el-foco-chromium\error-context.md
+
+  7) [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-ed9c5-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  8) [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-2c801-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  9) [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-6bb75-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  10) [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-254f9-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  11) [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-edb91-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  12) [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-8499d-ón-cortés-y-no-roba-el-foco-firefox\error-context.md
+
+  13) [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-ed9c5-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  14) [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-2c801-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  15) [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      271 |           mismo,
+      272 |           "el aviso no roba el foco: document.activeElement es el mismo que antes de activarlo (o el cuerpo, si el motor lo manda ahí con cualquier pulsación)",
+    > 273 |         ).toBe(true);
+          |           ^
+      274 |         // La página sigue operable: nada queda inerte.
+      275 |         await page.locator("#fuera-final").click({ trial: true, timeout: 1500 });
+      276 |         await page.context().close();
+        at <copia>\e2e\foco.spec.ts:273:11
+
+    Error Context: test-results\foco--robafoco-aviso-apare-6bb75-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  16) [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-254f9-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  17) [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-edb91-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  18) [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+
+    Error: texto en región aria-live=polite
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      259 |         await page.waitForTimeout(1500);
+      260 |         const cortes = await page.evaluate(() => (window as unknown as { __anuncios: string[] }).__anuncios);
+    > 261 |         expect(cortes.some((t) => /Cambios guardados/.test(t)), "texto en región aria-live=polite").toBe(
+          |                                                                                                     ^
+      262 |           true,
+      263 |         );
+      264 |         const mismo = await page.evaluate(
+        at <copia>\e2e\foco.spec.ts:261:101
+
+    Error Context: test-results\foco--roto-aviso-aparece-a-8499d-ón-cortés-y-no-roba-el-foco-webkit\error-context.md
+
+  18 failed
+    [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [chromium] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [firefox] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [robafoco] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con teclado, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con raton, se anuncia por la región cortés y no roba el foco 
+    [webkit] › e2e\foco.spec.ts:239:7 › [roto] aviso › aparece al activarlo con tactil, se anuncia por la región cortés y no roba el foco 
+  9 passed (2.0m)

@@ -1,0 +1,95 @@
+// PRUEBA-011, parte 3 · primera medida de estilos en línea (T-001, 020). Guion desechable.
+// La política es estricta en modo de solo informe: style-src 'self' 'report-sample' (sin 'unsafe-inline').
+// Mide, por estado de la página, (a) violaciones de la política registradas por el navegador
+// (evento securitypolicyviolation) y (b) lo que hay en el DOM: elementos style y atributos style.
+// Control: una inyección conocida debe aparecer en el registro; si no, el medidor no sirve.
+import { test, expect, type Page } from "@playwright/test";
+import fs from "node:fs";
+
+const VARIANTES = (process.env.VARIANTES_ESTILOS ?? "radix,nativo").split(",");
+
+const REGISTRO = `(() => {
+  window.__csp = [];
+  document.addEventListener("securitypolicyviolation", (e) => {
+    window.__csp.push({ directiva: e.effectiveDirective, bloqueado: e.blockedURI, disposicion: e.disposition, muestra: (e.sample || "").slice(0, 90) });
+  });
+})();`;
+
+async function foto(page: Page) {
+  return page.evaluate(() => {
+    const w = window as unknown as { __csp: { directiva: string; bloqueado: string; disposicion: string; muestra: string }[] };
+    const atributos = [...document.querySelectorAll("[style]")].map((e) => ({
+      etiqueta: e.tagName.toLowerCase(),
+      clase: (e.getAttribute("class") ?? "").slice(0, 30),
+      radix: [...e.attributes].filter((a) => a.name.startsWith("data-radix")).map((a) => a.name).join(","),
+      recharts: /recharts/.test(e.getAttribute("class") ?? "") || !!e.closest(".recharts-wrapper"),
+      estilo: (e.getAttribute("style") ?? "").slice(0, 100),
+    }));
+    const elementos = [...document.querySelectorAll("style")].map((e) => ({
+      longitud: (e.textContent ?? "").length,
+      atributos: [...e.attributes].map((a) => a.name).join(","),
+      muestra: (e.textContent ?? "").replace(/\s+/g, " ").slice(0, 110),
+    }));
+    return { violaciones: [...w.__csp], atributos, elementos };
+  });
+}
+
+for (const variante of VARIANTES) {
+  test(`[${variante}] estilos en línea con política estricta en solo informe`, async ({ page }, info) => {
+    await page.addInitScript(REGISTRO);
+    await page.goto(`/prueba-foco/${variante}`);
+    await page.waitForSelector("body[data-hidratado='1']");
+    await page.waitForSelector(".recharts-surface");
+    const estados: Record<string, Awaited<ReturnType<typeof foto>>> = {};
+
+    estados["1 carga (con gráfico y tabla)"] = await foto(page);
+
+    // Control del medidor: una inyección conocida debe quedar registrada.
+    await page.evaluate(() => {
+      const e = document.createElement("div");
+      e.setAttribute("style", "color: red");
+      e.id = "control-csp";
+      document.body.appendChild(e);
+    });
+    const control = await foto(page);
+    expect(
+      control.violaciones.some((v) => v.directiva.startsWith("style-src")),
+      "el medidor registra una inyección conocida",
+    ).toBe(true);
+    await page.evaluate(() => {
+      document.getElementById("control-csp")?.remove();
+      (window as unknown as { __csp: unknown[] }).__csp.length = 0;
+    });
+
+    await page.click("#abrir-confirmacion");
+    await page.getByRole("alertdialog").waitFor();
+    estados["2 confirmación abierta"] = await foto(page);
+    await page.keyboard.press("Escape");
+    await page.getByRole("alertdialog").waitFor({ state: "hidden" });
+
+    await page.click("#abrir-menu");
+    await page.getByRole("dialog").waitFor();
+    estados["3 cajón abierto"] = await foto(page);
+    await page.keyboard.press("Escape");
+    await page.getByRole("dialog").waitFor({ state: "hidden" });
+
+    if (variante === "radix") {
+      await page.click("#abrir-aviso");
+      await page.getByText("Cambios guardados").first().waitFor();
+      estados["4 aviso abierto"] = await foto(page);
+    }
+    estados["5 final"] = await foto(page);
+
+    fs.mkdirSync("resultados", { recursive: true });
+    fs.writeFileSync(
+      `resultados/estilos-${info.project.name}-${variante}.json`,
+      JSON.stringify(estados, null, 1),
+    );
+    const resumen = Object.entries(estados).map(
+      ([k, v]) =>
+        `${k}: violaciones=${v.violaciones.length} (atributo ${v.violaciones.filter((x) => x.directiva === "style-src-attr").length}, elemento ${v.violaciones.filter((x) => x.directiva === "style-src-elem").length}); DOM: style=${v.atributos.length}, <style>=${v.elementos.length}`,
+    );
+    info.annotations.push({ type: "estilos", description: resumen.join(" | ") });
+    console.log(`[${info.project.name}/${variante}]\n` + resumen.join("\n"));
+  });
+}

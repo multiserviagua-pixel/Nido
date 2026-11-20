@@ -1,0 +1,42 @@
+  webkit demora 0 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 0 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 0 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 0 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 0 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 0 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+webkit demora 0 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 6 de 6 repeticiones válidas (0 sin que el foco llegara)
+  webkit demora 600 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 600 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 600 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 600 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 600 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  webkit demora 600 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+webkit demora 600 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 6 de 6 repeticiones válidas (0 sin que el foco llegara)
+  chromium demora 0 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 0 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 0
+  chromium demora 0 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 0 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 0 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 0 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 0
+chromium demora 0 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 4 de 6 repeticiones válidas (0 sin que el foco llegara)
+  chromium demora 600 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 600 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 600 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 600 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 600 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  chromium demora 600 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+chromium demora 600 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 6 de 6 repeticiones válidas (0 sin que el foco llegara)
+  firefox demora 0 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 0 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 0 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 0 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 0 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 0 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+firefox demora 0 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 6 de 6 repeticiones válidas (0 sin que el foco llegara)
+  firefox demora 600 ms, repetición 1: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 600 ms, repetición 2: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 600 ms, repetición 3: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 600 ms, repetición 4: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 600 ms, repetición 5: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+  firefox demora 600 ms, repetición 6: foco llegó a «Cerrar aviso» = true (tras 11 pulsaciones; foco en «Cerrar aviso»); avisos en el DOM a los 9,5 s = 1
+firefox demora 600 ms antes de tabular: con el foco dentro, el aviso sigue a los 9,5 s en 6 de 6 repeticiones válidas (0 sin que el foco llegara)

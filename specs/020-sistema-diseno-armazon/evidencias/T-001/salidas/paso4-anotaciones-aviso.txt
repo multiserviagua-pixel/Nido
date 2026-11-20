@@ -1,0 +1,10 @@
+Anotaciones de las pruebas de Radix (aviso) extraídas de informe-paso4-foco.json (informe JSON de Playwright de la ejecución del paso 4, que no se guarda entero: 723 KB). Comando de extracción: node con JSON.parse sobre r.annotations.
+chromium | [radix] aviso | 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: si | elementos-distintos = 14; foco en cuerpo 6 veces
+chromium | [radix] aviso | desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con  | duracion-ms = 8000
+chromium | [radix] aviso | «Cerrar aviso» se alcanza con el tabulador y cierra con Intr | tabs-hasta-cerrar = 11
+firefox | [radix] aviso | 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: si | elementos-distintos = 14; foco en cuerpo 10 veces
+firefox | [radix] aviso | desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con  | duracion-ms = 8218
+firefox | [radix] aviso | «Cerrar aviso» se alcanza con el tabulador y cierra con Intr | tabs-hasta-cerrar = 11
+webkit | [radix] aviso | 50 tabulaciones y 50 con Mayúsculas con un aviso abierto: si | elementos-distintos = 14; foco en cuerpo 6 veces
+webkit | [radix] aviso | desaparece solo a los 8 s (entre 7 y 10 s) y se detiene con  | duracion-ms = 8049
+webkit | [radix] aviso | «Cerrar aviso» se alcanza con el tabulador y cierra con Intr | tabs-hasta-cerrar = 11

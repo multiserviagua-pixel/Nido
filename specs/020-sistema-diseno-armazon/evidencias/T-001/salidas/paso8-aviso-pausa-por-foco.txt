@@ -1,0 +1,38 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 [chromium] › e2e\foco.spec.ts:283:5 › [radix] aviso › con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece (18.4s)
+  ok 2 [firefox] › e2e\foco.spec.ts:283:5 › [radix] aviso › con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece (19.7s)
+  x  3 [webkit] › e2e\foco.spec.ts:283:5 › [radix] aviso › con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece (15.9s)
+
+
+  1) [webkit] › e2e\foco.spec.ts:283:5 › [radix] aviso › con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece 
+
+    Error: con el foco dentro sigue visible tras 10 s
+
+    expect(locator).toBeVisible() failed
+
+    Locator: getByText(/Cambios guardados/).first()
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - con el foco dentro sigue visible tras 10 s getByText(/Cambios guardados/).first() with timeout 5000ms
+      - waiting for getByText(/Cambios guardados/).first()
+
+
+      291 |       expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe("Cerrar aviso");
+      292 |       await page.waitForTimeout(10_000);
+    > 293 |       await expect(page.getByText(TITULO).first(), "con el foco dentro sigue visible tras 10 s").toBeVisible();
+          |                                                                                                  ^
+      294 |       await page.locator("#fuera-final").focus();
+      295 |       await expect(page.getByText(TITULO)).toHaveCount(0, { timeout: 11_000 });
+      296 |     });
+        at <carpeta-temporal>\copia\e2e\foco.spec.ts:293:98
+
+    Error Context: test-results\foco--radix-aviso-con-el-f-512b3-al-sacar-el-foco-desaparece-webkit\error-context.md
+
+  1 failed
+    [webkit] › e2e\foco.spec.ts:283:5 › [radix] aviso › con el foco dentro del aviso no desaparece (más de 10 s) y, al sacar el foco, desaparece 
+  2 passed (57.3s)

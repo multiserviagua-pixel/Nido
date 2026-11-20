@@ -1,0 +1,12 @@
+chromium raton #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=button#abrir-aviso. dentro-del-aviso=false
+chromium raton #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=button#fila-1. dentro-del-aviso=false
+chromium tactil #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=button#abrir-aviso. dentro-del-aviso=false
+chromium tactil #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=button#fila-1. dentro-del-aviso=false
+firefox raton #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=button#abrir-aviso. dentro-del-aviso=false
+firefox raton #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=button#fila-1. dentro-del-aviso=false
+firefox tactil #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=button#abrir-aviso. dentro-del-aviso=false
+firefox tactil #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=button#fila-1. dentro-del-aviso=false
+webkit raton #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=body
+webkit raton #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=body
+webkit tactil #abrir-aviso: antes=button#abrir-aviso. dentro-del-aviso=false | después=body
+webkit tactil #fila-1: antes=button#fila-1. dentro-del-aviso=false | después=body

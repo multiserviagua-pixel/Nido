@@ -1,0 +1,84 @@
+"use client";
+
+// Variante ROTA a propósito: sin trampa de foco, sin fondo inerte, sin Escape, sin devolver el foco,
+// aviso que roba el foco y que no se cierra solo. El guion de PRUEBA-011 debe fallar con ella.
+import { useRef, useState } from "react";
+import { Fondo } from "../fondo";
+
+export function Cliente() {
+  const [confirm, setConfirm] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [aviso, setAviso] = useState(false);
+  const [n, setN] = useState(0);
+  const botonAviso = useRef<HTMLButtonElement>(null);
+  return (
+    <>
+      <Fondo
+        titulo="Prueba del foco: variante rota"
+        confirmaciones={n}
+        acciones={
+          <>
+            <button type="button" id="abrir-confirmacion" onClick={() => setConfirm(true)}>
+              Eliminar cliente ficticio
+            </button>
+            <button type="button" id="abrir-menu" onClick={() => setMenu(true)}>
+              Abrir menú
+            </button>
+            <button
+              type="button"
+              id="abrir-aviso"
+              ref={botonAviso}
+              onClick={() => setAviso(true)}
+            >
+              Mostrar aviso
+            </button>
+          </>
+        }
+      />
+      {confirm && (
+        <div role="alertdialog" aria-labelledby="t1" aria-describedby="d1" className="panel">
+          <h2 id="t1">¿Eliminar a Cliente Ficticio Uno?</h2>
+          <p id="d1">Se borra un dato ficticio.</p>
+          <button type="button" onClick={() => setConfirm(false)}>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setN(n + 1);
+              setConfirm(false);
+            }}
+          >
+            Eliminar
+          </button>
+        </div>
+      )}
+      {menu && (
+        <div role="dialog" aria-labelledby="t2" aria-describedby="d2" className="cajon">
+          <h2 id="t2">Menú de la muestra</h2>
+          <p id="d2">Navegación ficticia.</p>
+          <a href="#uno">Uno</a>
+          <button type="button" onClick={() => setMenu(false)}>
+            Cerrar menú
+          </button>
+        </div>
+      )}
+      {aviso && (
+        <div className="avisos">
+          <div
+            className="aviso"
+            tabIndex={-1}
+            ref={(el) => {
+              el?.focus();
+            }}
+          >
+            <strong>Cambios guardados</strong>
+            <button type="button" onClick={() => setAviso(false)}>
+              Cerrar aviso
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
