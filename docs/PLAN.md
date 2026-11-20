@@ -42,7 +42,25 @@ Lo que una fase necesite de la otra se anota en su `propuestas.md`.
 - Las puertas P0, P1 y P7 las abre el responsable en el chat de cada fase.
 - Diseñar antes de que esté cerrada la fase de la que se depende tiene un riesgo: si esa fase cambia un contrato o el modelo de datos, el diseño se revisa. Cada `diseno.md` anota de qué supone que depende.
 - Las fases se cierran en orden, cuando se cumplen sus criterios.
-- Ahorro de uso (D-018): como mucho dos fases trabajando a la vez; chats cortos, uno por función, que se relevan con `specs/NNN/relevo.md`; los chats se abren con Sonnet. Detalle en `docs/EQUIPO.md`.
+- Ahorro de uso (D-018, ampliado por D-032): como mucho tres fases trabajando a la vez mientras la ventana de 5 horas esté por debajo del 60 %; si la supera, vuelven a ser dos. Un solo subagente `opus` a la vez por chat. Chats cortos, uno por función, que se relevan con `specs/NNN/relevo.md`; los chats se abren con Sonnet. Detalle en `docs/EQUIPO.md`.
+
+## Ruta de desarrollo (D-032, 20/11/2026)
+
+Grafo completo en FigJam: «Nido: plan de desarrollo completo». Manda sobre el orden de cada fase; las dependencias finas están en cada `tareas.md`.
+
+**Ruta crítica**
+- Prueba real (fase 1): 002·T-002 → T-003 → 001·T-102 → T-103 → T-105 (las tres herramientas) → T-106 → T-108 → T-109 → T-110 (OAuth) → T-111 → T-114 → T-117 (despliegue `arn1`) → T-119 (prueba real con Claude Max).
+- Producto (fases 2 a 6): 010 (diseño, después migración y RLS) → 011 → 021 → 040 → 042 → 050 → 051 (publicación).
+
+**Carriles en paralelo** (cada chat en su carril; el código, siempre en su propia copia de trabajo de git y su rama)
+
+| Carril | Chat | Qué hace ahora | Qué entra en paralelo |
+| --- | --- | --- | --- |
+| A | Fase 1 | 002·T-002 y T-003 | Tras T-003: 002·T-004, 001·T-101 y T-102 a la vez. Después, 001·T-107 con el bloque 2, T-112 con T-113, y T-115, T-116 y T-118 cuando haya decisión |
+| B | Fase 2 | P0 de la 010 | Tras R-1, la migración base (antes 002·T-007 y T-008) es de la 010. Después, 013 y 015 a la vez que 011 |
+| C | Fase 3 | Reagrupar la 020 (72 tareas, plan antiguo) según D-029 | Código de la 020 cuando 002·T-002 esté en `main`. 021 cuando exista la migración de la 010; 022 a 025 a la vez |
+
+Fases 4 a 6 esperan: 030 necesita 015 y 020; 032, 013; 033, la prueba real y 011; 040, 021; 050, 042. La 003 (CI) va tras la prueba real.
 
 ## Fase 0. Arnés, verificación y esqueleto
 
