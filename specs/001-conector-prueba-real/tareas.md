@@ -21,18 +21,18 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 ## Bloque 1 · Base del conector
 
 ### T-101 `[P]` · Dependencias y escáner
-`plataforma` · C, Res. · pendiente · Depende de: 002·T-003 · REQ-001, REQ-009, REQ-015 · CA-001, CA-009, CA-015
+`plataforma` · C, Res. · hecha · Depende de: 002·T-003 · REQ-001, REQ-009, REQ-015 · CA-001, CA-009, CA-015
 - (a) Dependencias exactas de diseño §Dependencias nuevas, con fecha (7 días o más) y licencia verificadas; detalle en `plan.md`, «T-101, dimensionada». Prueba: `tu/humo-sdk.test.ts` (V-1; PRUEBA-002, parte; V-4, parte); `npm audit` sin altas ni críticas.
 - (b) Escáner: `hia_a_`, `hia_r_` y `hia_op_` con 43 base64url; código de activación (12 Crockford en tres grupos). Prueba: `tp/patrones-conector.test.ts`, PRUEBA-019 (parte: cada forma detectada sin imprimir el valor); `arnes` en verde.
 - Archivos: `package.json`, `package-lock.json`, `scripts/patrones-secretos.mjs`, pruebas.
 
 ### T-102 `[P]` · Apoyo de la batería
-`qa` · C · pendiente · Depende de: 002·T-003 · REQ-010, REQ-015 · CA-010, CA-015
+`qa` · C · hecha · Depende de: 002·T-003 · REQ-010, REQ-015 · CA-010, CA-015
 - Fuera de `src/`: PGlite con `bd/*.sql` y roles de Supabase imitados como `probar-modelo.mjs`; reloj (también el de la base de datos); sumidero; doble de red; adaptador PGlite del almacén; fábrica de licencias, conexiones y tokens sembrados por HMAC (función inyectada). Prueba: `ta/apoyo.test.ts`: el sumidero halla un valor sembrado (PRUEBA-019, parte); roles imitados sin privilegios (PRUEBA-022, parte); el reloj mueve `now()`.
 - Archivos: `ta/apoyo/**`, `ta/apoyo.test.ts`.
 
 ### T-103 · Esquema, validación y funciones SQL de las tres herramientas
-`ingeniero-bd` · C · pendiente · Depende de: T-102 · REQ-007, REQ-010, REQ-011, REQ-013, REQ-014, REQ-015, REQ-019 · CA-006, CA-010, CA-011, CA-013, CA-014, CA-015, CA-024
+`ingeniero-bd` · C · hecha · Depende de: T-102 · REQ-007, REQ-010, REQ-011, REQ-013, REQ-014, REQ-015, REQ-019 · CA-006, CA-010, CA-011, CA-013, CA-014, CA-015, CA-024
 - (a) `001_estado.sql` base (diseño §Datos): esquema, dos roles, revocaciones M-4, 12 tablas con RLS sin políticas; reversión; `semilla.sql` (A y B); `LEEME.md` (aplicar, revertir, contraseñas, paso 13 de N-1). Prueba: `tu/bd/esquema.test.ts`, PRUEBA-022 (B: aplicar → revertir → aplicar; roles sin tablas; roles de Supabase sin nada); PRUEBA-019 (parte: ninguna columna de token, código, dirección ni texto libre).
 - (b) `raiz-supabase.crt` de la fuente oficial; URL, fecha y huella en `LEEME.md` (V-10). Prueba: `tu/bd/raiz.test.ts`: CA autofirmada, vigente, con la huella anotada (PRUEBA-018, parte).
 - (c) `validar_acceso` y `registrar_suceso` (20 000 al día y un `registro_saturado`). Prueba: `tu/bd/validar.test.ts`, PRUEBA-011 (parte BD, con reloj: 5 min 1 s, tipo, recurso, revocada → falso); PRUEBA-019 (parte: suceso cerrado).
@@ -177,7 +177,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 7 · Condiciones de plataforma (carril A)
 
 ### T-120 · Condiciones de la retirada de fechas
-`plataforma` · C, Res. · en revisión · Depende de: 002·T-003, T-101 integrada · sin REQ propio; D-030, D-034 y diseño 002 §Suministro
+`plataforma` · C, Res. · hecha · Depende de: 002·T-003, T-101 integrada · sin REQ propio; D-030, D-034 y diseño 002 §Suministro
 - (a) B-1: `.npmrc` con `ignore-scripts=true` y lista cerrada de paquetes con `hasInstallScript` (hoy solo `fsevents`). Prueba: `tp/npmrc.test.ts`.
 - (b) B-2: en `arnes.yml`, `npm ci`, `npm audit` y `npm audit signatures`, también en un diario programado sobre `main` (D-030), con `contents: read`. Prueba: `tp/ci-npm.test.ts` (estática; el CI no se ha ejecutado, sin remoto).
 - Archivos: `.npmrc`, `.github/workflows/arnes.yml`, `tp/npmrc.test.ts`, `tp/ci-npm.test.ts`.
