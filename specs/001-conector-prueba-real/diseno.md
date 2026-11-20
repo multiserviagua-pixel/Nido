@@ -110,7 +110,7 @@ Suceso: `momento`, `ruta` (del archivo), `herramienta`, `resultado` (`correcto`,
 
 ### Configuración
 
-Grupo «conector» (C-1), sin valores por defecto; si falta o no vale, 503 en todas sus rutas, metadatos incluidos (rutas dinámicas, nunca prerrenderizadas). `URL_PUBLICA` (origen `https`; en `desarrollo`, `http://localhost`), `CONECTOR_SECRETO` (≥ 32 bytes), `CONECTOR_BD_URL` y `AUTORIZACION_BD_URL` (agrupador, roles `conector_prueba_mcp` y `conector_prueba_gestion`; con consulta, no valen: postgres.js la enviaría al arrancar; `ssl` solo por código), `OPERACION_HUELLA`; en desarrollo y preproducción, nunca en producción. Solo en la máquina: `PRUEBAS_CONECTOR_BD_URL`, `PRUEBAS_AUTORIZACION_BD_URL`.
+Grupo «conector» (C-1), sin valores por defecto; si falta o no vale, 503 en todas sus rutas, metadatos incluidos (rutas dinámicas, nunca prerrenderizadas). `URL_PUBLICA` (origen `https`; en `desarrollo`, `http://localhost`), `CONECTOR_SECRETO` (43 a 128 caracteres base64url, ≥ 16 distintos; en preproducción, `VERCEL=1`, `VERCEL_ENV` `production` o `preview` y puerto 6543 en las URL de BD), `CONECTOR_BD_URL` y `AUTORIZACION_BD_URL` (agrupador, roles `conector_prueba_mcp` y `conector_prueba_gestion`; con consulta, no valen: postgres.js la enviaría al arrancar; `ssl` solo por código), `OPERACION_HUELLA`; en desarrollo y preproducción, nunca en producción. Solo en la máquina: `PRUEBAS_CONECTOR_BD_URL`, `PRUEBAS_AUTORIZACION_BD_URL`.
 
 ## Contratos
 

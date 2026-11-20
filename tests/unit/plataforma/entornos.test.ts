@@ -4,8 +4,11 @@ import { describe, expect, it } from "vitest";
 // @ts-expect-error: el módulo de scripts/ es JavaScript sin declaraciones y no se toca desde aquí.
 import { buscarSecretos as buscarSecretosJs } from "../../../scripts/patrones-secretos.mjs";
 import {
+  NOMBRES_CONECTOR,
   NOMBRES_CONFIGURACION,
+  NOMBRES_SOLO_MAQUINA,
   validarConfiguracion,
+  validarConfiguracionConector,
 } from "../../../src/lib/plataforma/configuracion";
 import { comprobarRegion } from "../../../src/lib/plataforma/region";
 
@@ -17,7 +20,9 @@ import { comprobarRegion } from "../../../src/lib/plataforma/region";
 // - Las que pone la plataforma (VERCEL*, NODE_ENV) o la orden de despliegue (COMMIT_DESPLEGADO)
 //   figuran en `entornos.md` pero no en `.env.example`, porque nadie las escribe a mano.
 // - Las variables de otras funciones las añade cada una con su configuración.
-// - `entornos.md` debe cubrir exactamente la lista exportada por `configuracion.ts`.
+// - `entornos.md` debe cubrir exactamente las listas exportadas por `configuracion.ts`: la de la
+//   plataforma, el grupo «conector» (T-104, validado aparte y cerrado en producción) y las que solo
+//   existen en la máquina de pruebas (la aplicación no las lee).
 
 const raiz = join(import.meta.dirname, "..", "..", "..");
 const leer = (nombre: string): string => readFileSync(join(raiz, nombre), "utf8");
@@ -128,6 +133,28 @@ export function analizarTabla(texto: string): FilaEntorno[] {
   return filas;
 }
 
+// Fuente de buen formato para el grupo «conector», compuesta en ejecución.
+function fuenteConector(entorno: EntornoTabla): Record<string, string> {
+  const url = (rol: string): string =>
+    ["postgres", "://", rol, ".ref1:", "pw".repeat(6), "@h.ejemplo.invalid:6543/postgres"].join("");
+  return {
+    ...fuenteValida(entorno),
+    URL_PUBLICA: entorno === "desarrollo" ? "http://localhost" : "https://pre.ejemplo.invalid",
+    CONECTOR_SECRETO: Buffer.from(Array.from({ length: 32 }, (_, i) => i * 7)).toString(
+      "base64url",
+    ),
+    CONECTOR_BD_URL: url("conector_prueba_mcp"),
+    AUTORIZACION_BD_URL: url("conector_prueba_gestion"),
+    OPERACION_HUELLA: "ab".repeat(32),
+  };
+}
+
+const TODAS: readonly string[] = [
+  ...NOMBRES_CONFIGURACION,
+  ...NOMBRES_CONECTOR,
+  ...NOMBRES_SOLO_MAQUINA,
+];
+
 const ordenados = (xs: readonly string[]): string[] => [...xs].sort();
 
 describe("entornos: nombres de variables (PRUEBA-028 L)", () => {
@@ -135,16 +162,14 @@ describe("entornos: nombres de variables (PRUEBA-028 L)", () => {
   const tabla = analizarTabla(leer("docs/operacion/entornos.md"));
   const dePersona = tabla.filter((f) => f.quien.toLowerCase().startsWith("persona"));
 
-  it("entornos.md cubre exactamente la lista de configuracion.ts, sin repetir", () => {
-    expect(ordenados(tabla.map((f) => f.variable))).toEqual(ordenados(NOMBRES_CONFIGURACION));
+  it("entornos.md cubre exactamente las listas de configuracion.ts, sin repetir", () => {
+    expect(ordenados(tabla.map((f) => f.variable))).toEqual(ordenados(TODAS));
   });
 
   it(".env.example contiene exactamente las variables que pone una persona", () => {
     expect(ordenados(ejemplo.nombres)).toEqual(ordenados(dePersona.map((f) => f.variable)));
     expect(dePersona.length).toBeGreaterThan(0);
-    for (const n of ejemplo.nombres) {
-      expect(NOMBRES_CONFIGURACION as readonly string[]).toContain(n);
-    }
+    for (const n of ejemplo.nombres) expect(TODAS).toContain(n);
   });
 
   it(".env.example no repite nombres ni trae valores", () => {
@@ -177,6 +202,7 @@ describe("entornos: nombres de variables (PRUEBA-028 L)", () => {
 
   it("cada celda de entorno de la tabla se comporta como dice (validarConfiguracion y comprobarRegion)", () => {
     for (const f of tabla) {
+      if ((NOMBRES_CONECTOR as readonly string[]).includes(f.variable)) continue;
       f.celdas.forEach((celda, i) => {
         const entorno = ENTORNOS_TABLA[i] as EntornoTabla;
         const etiqueta = `${f.variable} en ${entorno}`;
@@ -201,6 +227,33 @@ describe("entornos: nombres de variables (PRUEBA-028 L)", () => {
     }
   });
 
+  it("cada celda de las variables del grupo «conector» se comporta como dice (validarConfiguracionConector)", () => {
+    const filas = tabla.filter((f) => (NOMBRES_CONECTOR as readonly string[]).includes(f.variable));
+    expect(filas.map((f) => f.variable).sort()).toEqual([...NOMBRES_CONECTOR].sort());
+    for (const f of filas) {
+      f.celdas.forEach((celda, i) => {
+        const entorno = ENTORNOS_TABLA[i] as EntornoTabla;
+        const etiqueta = `${f.variable} en ${entorno}`;
+        const valida = fuenteConector(entorno);
+        if (entorno === "produccion") {
+          // Nunca se lee: cerrado con la variable y sin ella.
+          expect(celda, etiqueta).toBe("prohibida (cierra el conector)");
+          expect(validarConfiguracionConector(valida).ok, etiqueta).toBe(false);
+          const sin = { ...valida };
+          delete sin[f.variable];
+          expect(validarConfiguracionConector(sin).ok, `${etiqueta} sin ella`).toBe(false);
+          return;
+        }
+        expect(validarConfiguracionConector(valida).ok, `base de ${entorno}`).toBe(true);
+        expect(celda, etiqueta).toBe("obligatoria");
+        const sin = { ...valida };
+        delete sin[f.variable];
+        expect(validarConfiguracionConector(sin).ok, etiqueta).toBe(false);
+      });
+      expect(f.quien, f.variable).toBe("persona");
+    }
+  });
+
   it("las cuatro VERCEL* están prohibidas en desarrollo y dicen que en local no deben existir", () => {
     const vercel = tabla.filter((f) => f.variable.startsWith("VERCEL"));
     expect(vercel.map((f) => f.variable).sort()).toEqual(
@@ -215,9 +268,13 @@ describe("entornos: nombres de variables (PRUEBA-028 L)", () => {
   it("no queda nada de la fase 0 ni la región eu-central-1", () => {
     const todo = leer(".env.example") + leer("docs/operacion/entornos.md");
     expect(todo).not.toContain("eu-central-1");
-    for (const viejo of ["SUPABASE", "CONECTOR_", "STRIPE", "CRON_SECRETO"]) {
+    for (const viejo of ["SUPABASE", "STRIPE", "CRON_SECRETO"]) {
       expect(todo).not.toContain(viejo);
     }
+    // Del conector solo existen los nombres de la lista cerrada.
+    const mencionados =
+      todo.match(/[A-Z][A-Z0-9_]*(?:CONECTOR|OPERACION|AUTORIZACION)[A-Z0-9_]*/g) ?? [];
+    for (const n of mencionados) expect(TODAS, n).toContain(n);
   });
 });
 

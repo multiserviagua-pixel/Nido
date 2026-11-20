@@ -44,7 +44,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - Archivos: `sql`, `bd/{001_estado.reversion,semilla}.sql`, `bd/raiz-supabase.crt`, `bd/LEEME.md`, pruebas.
 
 ### T-104 `[P]` · Configuración, secretos, contratos y prompt
-`ingeniero-backend` · C, Res. · pendiente · Depende de: T-101, 002·T-006 · REQ-008, REQ-009, REQ-012, REQ-014, REQ-015, REQ-018, REQ-019 · CA-007, CA-009, CA-012, CA-014, CA-015, CA-018, CA-024
+`ingeniero-backend` · C, Res. · hecha · Depende de: T-101, 002·T-006 · REQ-008, REQ-009, REQ-012, REQ-014, REQ-015, REQ-018, REQ-019 · CA-007, CA-009, CA-012, CA-014, CA-015, CA-018, CA-024
 - (a) C-1 y C-2 (diseño §Configuración; N-3): grupo «conector» en `configuracion.ts`; dos códigos nuevos; nombres en `.env.example` y `entornos.md`. Prueba: PRUEBA-018 (parte: cada variable ausente o mal formada, `?sslmode=disable`, `?options=…`, secreto corto → su código, nunca su valor); PRUEBA-021 (parte); `/api/salud` igual con el grupo inválido.
 - (b) `secretos.ts` (diseño §Tokens: HKDF, HMAC con tipo, par derivado, origen, tiempo constante). Prueba: PRUEBA-012 (parte: mil pares sin parte común; misma sal, mismo par); PRUEBA-019 (parte: sal sin secreto → 0 tokens).
 - (c) `contratos.ts`: Ajv 2020-12 estricto, `uuid` propio; publicado sin `$schema`, `$id` ni `x-version-esquema`; tolera las `x-` vigentes. Prueba: PRUEBA-003 (parte: compilan; publicado = contrato).

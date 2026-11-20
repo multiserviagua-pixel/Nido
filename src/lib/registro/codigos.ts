@@ -9,6 +9,8 @@ export const CODIGOS = [
   "comprobacion_posterior_fallida",
   "supervision_no_disponible",
   "salida_no_estructurada",
+  "almacen_no_disponible",
+  "configuracion_conector_invalida",
 ] as const;
 
 export type Codigo = (typeof CODIGOS)[number];
