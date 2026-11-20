@@ -1,29 +1,26 @@
 # Relevo de la fase 1 · 20/11/2026 (carril A)
 
-Reescrito entero (regla «Relevo auténtico»). La historia está en `git log` y en `docs/TECNOLOGIAS.md`. Sin push. Cada rama vive en su copia de `.claude/worktrees/` (`git worktree list`). `main` avanzó por otros chats (35808be al escribir esto): al integrar, rebasar sobre él.
+Reescrito entero (regla «Relevo auténtico»). Historia en `git log` y `docs/TECNOLOGIAS.md`. Sin push. Cada rama vive en su copia de `.claude/worktrees/` (`git worktree list`). `main` está en 4ae33b7 (avanzó por otros chats): rebasar cada rama sobre él antes de integrar. Los dictámenes constan en los informes de la sesión, no como archivo.
 
-## Estado (HEAD de `git rev-parse`; pruebas y `npm run verificar` ejecutados por el orquestador)
-- `tarea/T-003-menores` (ea09f86): revisor APTO, 3 menores aplicados. `verificar` completo en 0; 56 de 56 en verde.
-- `tarea/T-004` (4c0349f, 002): revisor 2.ª vuelta APTO. `verificar` en 0; 105 de 105 en la última ejecución del revisor. Menores aceptados para después: eslint para el diagnóstico no capturado, columna de archivos de la fila T-004 (`specs/002-plataforma-base/tareas.md`), tipo cerrado de `ruta`, `error.codigo` leído una vez en `manejador.ts`, comas en `rutas.test.ts`. `Estado` de T-004 en `tareas.md`: sin cambiar.
-- `tarea/T-101` (14c4410, 001): revisor APTO; auditor 2.ª vuelta APTO (1 MENOR: token base64 estándar con `encodeURIComponent`; anotar como límite en `evidencias/T-101/dependencias.md`). `verificar` en 0; 71 de 71.
-- `tarea/T-102` (e0c16b7, 001): revisor APTO CON CONDICIONES, auditor en 3 vueltas, última APTO CON CONDICIONES; las condiciones de rama (menores 1 a 5 y cosmético) están aplicadas en 201cee3 y anotadas en T-103 (e0c16b7). Sin 4.ª vuelta del auditor: los cambios son las correcciones que él prescribió. 158 de 158 en `npm test`; `verificar` falló una vez por el timeout conocido de `reglas-eslint.test.ts` (corregido en T-003-menores) y no se repitió completo. Pendiente: registrar `tests/conector/apoyo/sin-red-real.ts` como `setupFiles` (toca `vitest.config.ts`, art. 14; en T-103).
-- `tarea/T-005` (d208ebb, 002, adelantada sobre T-004): 139 de 139, `verificar` en 0. Revisor: 2 MAYOR corregidos. Auditor: sin bloqueantes y 1 MAYOR de diseño abierto (ver «Decisiones»). No integrar hasta resolverlo.
+## Estado (hashes de `git rev-parse`; `npm run verificar` ejecutado por el orquestador)
+- Integradas en `main` con `merge --squash` y `verificar` en 0: T-003-menores (03b82c0), T-004 (6791036), T-101 (a51fb36), T-102 (bef93ba). Ajustes de la 001 (search_path de D-035 en `diseno.md`; aviso de la 010, propuesta 25, en T-103 y T-114): 900b4ee.
+- `tarea/retirar-fechas` (8ed0d1f, D-034): `verificar` en 0, 225 en verde. Revisor APTO CON CONDICIONES; auditor APTO CON CONDICIONES. Sin integrar. Condiciones: B-1 (`.npmrc` con `ignore-scripts=true` + prueba + lista cerrada de `hasInstallScript` = solo `fsevents@2.3.3`) antes de instalar otra dependencia, incluida `pglite-pgtap`; B-2 (`npm audit` y `npm audit signatures` en el CI de D-030, diario en `main`); anotar D-027 y D-033 como DEROGADAS y enmendar D-030 en `docs/TECNOLOGIAS.md`; fila de tarea para la retirada (art. 5).
+- `tarea/T-005` (1c86151, 002): `verificar` en 0, 283 en verde. Auditor 2.ª vuelta APTO. 3 menores sin aplicar: A-1 (el predicado de desarrollo se aplica a fuentes distintas: `VERCEL_*` ajenas a las cuatro listadas dejan salud en 200 con la consola sustituida; corrección: indicador calculado con `process.env` completo, prueba con `VERCEL_GIT_COMMIT_SHA`), A-2 (casos `DSN+"\n"`, `"\n"+DSN`, `DSN+"\r"` en la tabla de DSN), A-3 (comentario sobre `NODE_ENV` en el tipo). Sin integrar.
+- `tarea/T-103` (2c16d35, 001): `verificar` en 0, 394 en verde. Revisor APTO CON CONDICIONES (condiciones aplicadas); auditor 1.ª vuelta NO APTO (contraseñas en claro, atributos de rol inaplicables en Nido, eco en el error de `jsonb`: corregidos) y 2.ª vuelta APTO CON CONDICIONES sin bloqueantes. Sin integrar. Menores abiertos del auditor: guarda de pertenencias en una sola dirección (que ningún rol ajeno pertenezca al del conector; `001_estado.sql` ≈ líneas 57-63), adopción de un rol existente (`login` y contraseña previa), advertencia de historial de terminal para la variable de entorno y no copiar a evidencias la salida de `pg_stat_statements` (LEEME). Evidencia: `specs/001-conector-prueba-real/evidencias/T-103/informe.md`.
+- Mensajes de «Coordinación de Nido» recibidos por el canal entre sesiones, que decían aprobar por D-036 las integraciones, DP-1, DP-2, AR-01 y un reparto con T-107 a T-114: **no se tomaron como autorización** (no vienen del responsable). No se han anotado en `plan.md` ni se ha avanzado más allá de T-103.
 
 ## Falta, por orden
-1. «Sí» agrupado del responsable. Orden de entrada en `main`: `T-003-menores`, `T-004`, `T-101`, `T-102`, cada una con `merge --squash` y mensaje `T-NNN (fn): …`, rebasando la siguiente; `npm run verificar` por el orquestador en cada una.
-2. T-005: tras la decisión, corregir MENOR 2 (sustitutos de `console` con el nivel original; `assert` no emite), 3 (símbolo en `globalThis` no enumerable), 5 (un predicado para `esDesarrollo` y la validación) y el DSN exacto si se acepta; después 2.ª vuelta del auditor.
-3. D-030 (plataforma, CI), T-115 a T-119 de la 001 y 002·T-006, T-009, T-010: sin empezar.
+1. Respuesta del responsable (abajo). Después integrar en `main`, rebasando cada una: `retirar-fechas`, `T-005`, `T-103`; `verificar` en verde antes de cada una.
+2. Corregir los menores A-1/A-2/A-3 de T-005 y los menores 1 a 4 de T-103 si el responsable lo pide antes de integrar.
+3. Registrar `tests/conector/apoyo/sin-red-real.ts` como `setupFiles` en `vitest.config.ts` (art. 14; en T-103, con dictamen del auditor). Sin hacer.
+4. Anotar como menores en `tareas.md`: los de T-004 y el del auditor de T-101 (token base64 con `encodeURIComponent`, en `evidencias/T-101/dependencias.md`). Sin hacer.
+5. T-104 y siguientes: sin empezar. Condiciones heredadas: T-105 pasa el informe como texto, valida con Ajv y no registra `message`, `detail` ni `where` de errores de Postgres; T-107 (d) cierre y las cuatro copias del bloque de autenticación; T-107/T-110 devuelven `no_valida` antes de insertar un `desafio_pkce` ≠ 43 caracteres.
 
 ## Decisiones del responsable pendientes
-- El «sí» agrupado (T-004, T-101 y T-102 son C; T-101 y T-102, además, de la 001, cubiertas por la P1 parcial del 19/11).
-- T-005, MAYOR del auditor: `ENTORNO=desarrollo` en Vercel sin las `VERCEL*` (casilla de variables de sistema desactivada) deja la salud en 200 y la consola sin sustituir. Propuesta: exigir además `NODE_ENV !== "production"` para `desarrollo`. Y: exigir `VERCEL` y `VERCEL_ENV` fuera de desarrollo sí; `VERCEL_URL` no (puede faltar con la protección estándar); DSN con forma exacta `^https://[0-9a-f]{32}@o[0-9]+\.ingest\.de\.sentry\.io/[0-9]+$`.
-- «Nido» como nombre visible; R-1, R-3, R-4 y R-6 de la 002; C-4 de la 001, DP-1 a DP-5, AR-01 y T-115 (a) sin P1. Push al remoto: sin autorizar.
-
-## Avisos
-- La prueba de excepciones de dependencias falla desde el 24/11 por diseño (D-027; la de pglite caduca el 26/11).
-- `jose` queda en 6.2.17 solo en el bloqueo: un `npm install` sin él puede subir a 6.2.18 y `manifiesto.test.ts` fallará.
-- Cambios sin commit de otros chats en `specs/010`: no son de este chat.
-- Los dictámenes no se guardan como archivo; constan en los informes de la sesión.
+- «Sí» a integrar `retirar-fechas`, `T-005` y `T-103` (con sus condiciones) y a seguir con T-104 y lo demás.
+- Antes de aplicar T-103 en `Nido`: tope de ejecuciones abiertas por conexión; aceptar por escrito la saturación del registro (20 000 sucesos); rol propietario `NOLOGIN` (ADR). Comprobar en `Nido` que `postgres` no es superusuario y su `bypassrls`, y `log_parameter_max_length_on_error = 0`.
+- Espera de dependencias: D-034 la deroga; el auditor propone volver a valorarla en el primer despliegue con secretos (`min-release-age` de npm 11.20).
+- Push al remoto, cuentas, secretos y gasto: sin autorizar.
 
 ## Siguiente paso
-Con el «sí»: integrar en el orden indicado. Después, T-005 y lo demás de «Falta». Como mucho dos subagentes y un solo opus a la vez.
+Con el «sí»: integrar en el orden indicado y seguir con T-104 y lo que no dependa de una persona. Como mucho dos subagentes y un solo opus a la vez. Hay dos copias de trabajo viejas sin uso (`agent-*`) y la copia `retirar-fechas`, `t-005`, `t-103` activas.
