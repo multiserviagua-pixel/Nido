@@ -158,7 +158,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 6 · Prueba real con Claude Max (`qa` anota; ejecuta la persona)
 
 ### T-118 `[P]` · Guion y pasos 1 y 2
-`qa` · R · pendiente · Depende de: (a) nada; (b) AR-03, AR-04, AR-08 · REQ-016, REQ-018, REQ-019, REQ-020 · CA-016, CA-018, CA-024, CA-025
+`qa` · R · (a) hecha (revisor APTO, menores aplicados; 20/11/2026, por delegación D-036); (b) pendiente de AR-03, AR-04 y AR-08 · Depende de: (a) nada; (b) AR-03, AR-04, AR-08 · REQ-016, REQ-018, REQ-019, REQ-020 · CA-016, CA-018, CA-024, CA-025
 - (a) Guion fechado (pasos 1 a 13 con su CA; ChatGPT «no ejecutado»), `calendario.md` (documento normal; AR-08) y plantillas de resultados. Prueba: PRUEBA-053 (parte: fechado; 0 pasos sin CA).
 - (b) Preparación y pasos 1 y 2. Prueba: PRUEBA-049, PRUEBA-048 (inventario).
 - Archivos: `guion-prueba.md`, `calendario.md`, `resultados/`, `ev/T-118/`.
