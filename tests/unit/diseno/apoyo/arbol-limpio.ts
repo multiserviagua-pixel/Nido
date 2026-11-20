@@ -1,0 +1,28 @@
+// Árbol `src/` mínimo que cumple todas las fronteras (control positivo de PRUEBA-008). Cada
+// caso sembrado parte de él y cambia un archivo.
+export const ARBOL_LIMPIO: Record<string, string> = {
+  "src/lib/errores/referencia.ts": `export const crearReferencia = (): string => "REF-0";\n`,
+  "src/lib/errores/sin-acceso.ts": `export const sinAcceso = (): never => { throw new Error("x"); };\n`,
+  "src/lib/errores/fallo-servidor.ts": `export const registrarFallo = (): void => {};\n`,
+  "src/lib/registro/registro.ts": `export const registrar = (): void => {};\n`,
+  "src/lib/plataforma/configuracion.ts": `export const leerEntorno = (): string => "desarrollo";\n`,
+  "src/lib/supabase/cliente.ts": `export const clienteBd = 1;\n`,
+  "src/lib/oauth/token.ts": `export const token = 1;\n`,
+  "src/lib/licencias/licencia.ts": `export const licencia = 1;\n`,
+  "src/lib/stripe/pagos.ts": `export const pagos = 1;\n`,
+  "src/components/textos.ts": `import { crearReferencia } from "@/lib/errores/referencia";\nexport const textos = { referencia: crearReferencia };\n`,
+  "src/components/dialogo/Dialogo.tsx": `"use client";\nimport * as D from "@radix-ui/react-dialog";\nexport const Dialogo = D;\n`,
+  "src/components/armazon/CajonMenu.tsx": `"use client";\nimport * as D from "@radix-ui/react-dialog";\nexport const CajonMenu = D;\n`,
+  "src/components/graficos/Linea.tsx": `"use client";\nimport { LineChart } from "recharts";\nexport const Linea = LineChart;\n`,
+  "src/components/avisos/Aviso.tsx": `"use client";\nimport { useState } from "react";\nexport const Aviso = () => useState(0);\n`,
+  "src/components/cifras/Tarjeta.tsx": `import type { ReactNode } from "react";\nexport const Tarjeta = (p: { hijos: ReactNode }) => p.hijos;\n`,
+  "src/app/muestra/_datos/acceso-muestra.ts": `import { leerEntorno } from "../../../lib/plataforma/configuracion";\nexport async function comprobarAccesoMuestra(): Promise<void> { leerEntorno(); }\n`,
+  "src/app/muestra/layout.muestra.tsx": `import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";\nexport default async function Capa(p: { children: unknown }) {\n  await comprobarAccesoMuestra();\n  return p.children;\n}\n`,
+  "src/app/muestra/page.muestra.tsx": `import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";\nexport default async function Pagina() {\n  await comprobarAccesoMuestra();\n  return null;\n}\n`,
+  "src/app/muestra/acciones.ts": `"use server";\nimport { comprobarAccesoMuestra } from "./_datos/acceso-muestra";\nexport async function guardar() {\n  await comprobarAccesoMuestra();\n  return 1;\n}\n`,
+  "src/app/muestra/servidor/permitido/page.muestra.tsx": `import { comprobarAccesoMuestra } from "../../_datos/acceso-muestra";\nimport { sinAcceso } from "../../../../lib/errores/sin-acceso";\nexport default async function Pagina() {\n  await comprobarAccesoMuestra();\n  return sinAcceso;\n}\n`,
+  "src/app/admin/not-found.tsx": `export default function NoEncontrado() { return null; }\n`,
+  "src/app/admin/page.tsx": `export default function Pagina() { return null; }\n`,
+  "src/app/panel/not-found.tsx": `export default function NoEncontrado() { return null; }\n`,
+  "src/app/api/salud/route.ts": `export const GET = () => new Response("ok");\n`,
+};

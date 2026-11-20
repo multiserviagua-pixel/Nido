@@ -1,0 +1,220 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t003
+
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > importación de axe fuera de su módulo 15ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > prueba saltada 4ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > filtro sobre las infracciones 4ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > regla desactivada 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > sobre una carpeta: exactamente los cuatro sembrados fallan; el limpio y el exento, no 69ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > el mismo contenido de configuracion-interfaz.ts en otro archivo sí falla 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > testInfo.fail() dentro de la prueba 2ms
+stdout | tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > [NO APLICABLE AÚN: next.config.ts todavía no declara la muestra (T-004)] con desarrollo y preproduccion la muestra sí entra (control positivo)
+NO EJECUTADA (control 1 positivo): next.config.ts no menciona la muestra. No es una prueba superada.
+
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.info().fail() 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > desestructurar skip de test 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > expect.fail donde expect es un alias de test (m-a) 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > assert.fail donde assert es un alias de test (m-a) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > const expect = test y expect.fail (m-a) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > desestructurar fail de test (m-b) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > desestructurar fails de it (m-b) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > desestructurar anidado fail de test (m-b) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.describe.configure con retries 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.filter en un archivo .cts 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip en un archivo .cjs 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip en un archivo .jsx 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > importación dinámica de axe 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > require de axe-core 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > reexportación de axe 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > importación de axe-core con ruta interna 0ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.only 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fixme 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fixme dentro del cuerpo 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > describe.skip 0ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.describe.skip 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skipIf 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.runIf 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.todo 0ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.each(...).skip 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > acceso con corchetes 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > skip en el contexto de la prueba 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > xit 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > fdescribe 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fail 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.fails 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test con otro nombre local 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.filter 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.slice 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.pop 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > infracciones.filter 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > asignación a violations 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.length = 0 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > delete de violations 5ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > disableRules 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > exclude de un elemento 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > include de un elemento 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > options con reglas 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > enabled: false 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > "enabled": false con comillas 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > las extensiones .cjs, .cts y .jsx entran en el recorrido de carpetas 42ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > una prueba normal 3ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > expect.fail 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > assert.fail de chai/vitest importado con su nombre 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > const { fail } = expect (aserción real) 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > it.each 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > las palabras vetadas solo en cadenas y comentarios 3ms
+stdout | tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] si hay algo en la muestra, existe _datos/acceso-muestra.ts (no se puede esquivar)
+NO EJECUTADA (existencia de acceso-muestra.ts): no existe nada en src/app/muestra. No es una prueba superada.
+
+stdout | tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] control positivo: en local y en preproducción la muestra se ve
+NO EJECUTADA (control 2): no existe nada en src/app/muestra. No es una prueba superada.
+
+stdout | tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] Host fuera de la lista, ausente o con trucos, y X-Forwarded-Host falsificado: inexistente
+NO EJECUTADA (control 2): no existe nada en src/app/muestra. No es una prueba superada.
+
+stdout | tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] ENTORNO desconocido al servir, con el nombre correcto: inexistente
+NO EJECUTADA (control 2): no existe nada en src/app/muestra. No es una prueba superada.
+
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > con los cinco valores de la prueba y otros desconocidos, next.config.ts no abre la muestra 14ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > [NO APLICABLE AÚN: next.config.ts todavía no declara la muestra (T-004)] con desarrollo y preproduccion la muestra sí entra (control positivo) 2ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > ningún archivo de la muestra es ruta sin la extensión muestra.tsx 1ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > la configuración correcta no da fallos, con y sin control positivo 1ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > siempre abierta: se detecta 1ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > abierta salvo si empieza por «prod» en minúsculas: se detecta 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > abierta si el valor, sin mayúsculas ni espacios, es desarrollo: se detecta 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > abierta si no hay valor: se detecta 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > cerrada siempre: el control positivo lo detecta 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 1: la compilación solo incluye la muestra con ENTORNO válido > la comprobación puede fallar (configuraciones sembradas) > un archivo page.tsx o route.ts en la muestra se detecta como ruta de cualquier compilación 49ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] si hay algo en la muestra, existe _datos/acceso-muestra.ts (no se puede esquivar) 1ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] control positivo: en local y en preproducción la muestra se ve 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] Host fuera de la lista, ausente o con trucos, y X-Forwarded-Host falsificado: inexistente 0ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · control 2 sobre la muestra real, en cada punto de entrada > [NO APLICABLE AÚN: no existe src/app/muestra] ENTORNO desconocido al servir, con el nombre correcto: inexistente 0ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la lista declarada es la del grafo y el bloqueo > src/ de verdad: lo declarado coincide, sin más ni menos 73ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la lista declarada es la del grafo y el bloqueo > la lista declarada está ordenada y sin repetidos 0ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > un módulo de cliente que importa Recharts arrastra su árbol, tomado del bloqueo real 19ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > declarada igual a la calculada: coincide; con uno de más o de menos: no 21ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > descubre página, layout y acción en la muestra sembrada 75ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · src/ cumple las fronteras > no hay ningún hallazgo en src/ 6ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · src/ cumple las fronteras > el grafo es real: resuelve rutas relativas, tipos y paquetes de src/ (no está vacío) 1ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · src/ cumple las fronteras > el alias @/ del grafo es el de tsconfig.json 2ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · control positivo: el árbol sembrado limpio no da hallazgos > cumple todas las reglas, con las tres excepciones y todos los envoltorios 336ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > un paquete que solo importa un módulo de servidor no cuenta 36ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > una importación de solo tipo desde un módulo de cliente no cuenta 21ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > un paquete alcanzado por una importación dinámica o una reexportación sí cuenta 23ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > un paquete que no está en el bloqueo se señala 17ms
+ ✓ tests/unit/diseno/paquetes-de-cliente.test.ts > PRUEBA-037 · la prueba puede fallar > next, react y react-dom se listan pero no arrastran su árbol 59ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > violations solo para comprobar que está vacía 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > filter sobre otra lista 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > importación dinámica con texto no literal (límite conocido: no se evalúa) 2ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · lo legítimo no falla (control positivo) > enabled: true 1ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los archivos de pruebas de verdad > tests/e2e y tests/unit/diseno, fuera de los archivos exentos, no tienen ningún hallazgo 266ms
+ ✓ tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los archivos de pruebas de verdad > los exentos son solo tres de los cinco archivos protegidos que caen en estas carpetas 1ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · control positivo: el árbol sembrado limpio no da hallazgos > una página que llama a la comprobación con await, como primera instrucción, vale 306ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · control positivo: el árbol sembrado limpio no da hallazgos > una importación de solo tipo hacia sin-acceso desde un módulo de cliente no cuenta 287ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > alias @/ hacia supabase desde un compon… 247ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta relativa hacia oauth desde un comp… 281ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > importación dinámica hacia licencias de… 253ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > require hacia stripe desde la muestra 255ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > la forma mixta con default comprobado tampoco da fallos 1816ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > reexportación: el componente importa un… 305ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > puente con importación dinámica hasta s… 265ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > otro archivo de _datos/ (no acceso-mues… 243ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acceso-muestra.ts importa algo más que … 207ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > una página de la muestra fuera de servi… 222ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > la muestra sembrada correcta no da fallos con ninguno de los casos 1244ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > un componente importa fallo-servidor.ts 220ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > componente -> puente fuera de lib que r… 219ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > componente -> puente que reexporta fall… 219ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una página que no comprueba 991ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > muestra -> dos puentes encadenados -> s… 728ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > fetch directo en un componente 193ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > globalThis.fetch en un componente 203ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > window["fetch"] en un componente 204ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > XMLHttpRequest en un componente 204ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > WebSocket en un componente 213ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una acción que no comprueba y devuelve datos 1336ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > EventSource en un componente 212ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > sendBeacon en un componente 210ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > fetch en un archivo de la muestra 228ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > Radix en una tabla 222ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > el paquete único radix-ui en cualquier … 210ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un layout que no comprueba (con la página sí) 1126ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > Radix en el armazón fuera de CajonMenu 217ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > Recharts fuera de graficos/ 225ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > avisos/ importa Radix 255ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > avisos/ importa una librería cualquiera 244ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > módulo de cliente que reexporta sin-acc… 257ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación que también lee X-Forwarded-Host 1200ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > módulo de cliente que llega a fallo-ser… 248ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta de muestra/servidor importa fallo-… 318ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta de muestra/servidor llega a regist… 258ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > src importa web-vitals 360ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación que ignora ENTORNO al servir 1205ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > src importa @playwright/test 250ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > src importa playwright-core 217ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > src importa axe-core 230ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > src importa @axe-core/playwright 237ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > loading en admin 249ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación del nombre por subcadena 1201ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > loading anidado en panel 240ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > not-found anidado en admin 265ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > generateMetadata como función en panel 237ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > generateMetadata reexportado con otro n… 227ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo route bajo la muestra 235ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación de ENTORNO sin distinguir mayúsculas ni espacios 1244ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que hace algo antes de comprobar 227ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que no comprueba 231ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página de flecha por defecto, con cuerp… 250ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página con export default de un identif… 250ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página cuya comprobación es de otro mód… 284ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un archivo use server que reexporta una acción de otro archivo (no comprobable) 1181ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor sin comprobación 209ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > una segunda acción exportada sin compro… 229ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor en línea dentro de u… 237ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que llama a la comprobación sin … 218ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor en línea que llama a… 227ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un archivo use server con export * (no comprobable) 1212ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server que reexporta con no… 231ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server que reexporta todo c… 230ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server sin ninguna entrada … 222ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server cuya única exportaci… 257ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > M-6: use server mixto con export defaul… 220ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un archivo use server sin ninguna acción analizable 982ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > M-6: use server mixto con export { x as… 220ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > M-6: use server mixto con export defaul… 223ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > M-6: use server mixto con export defaul… 221ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-e: generateViewport en una página de … 236ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-e: generateImageMetadata en una págin… 226ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un archivo use server cuya exportación por defecto no es una función 1239ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-e: generateSitemaps en una página de … 233ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-e: generateViewport exportado con exp… 225ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-d: acceso-muestra.ts reexporta la con… 238ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-d: acceso-muestra.ts reexporta lo imp… 216ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-d: acceso-muestra.ts reexpone la conf… 226ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > m-d: muestra/servidor reexporta sin-acc… 232ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > forma mixta: acción comprobada y export default de un identificador sin comprobar 1418ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta opengraph-… 234ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta twitter-im… 252ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta icon.tsx e… 229ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta icon1.mues… 243ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta apple-icon… 243ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta sitemap.ts… 246ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > forma mixta: acción comprobada y export { x as default } sin comprobar 1430ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta robots.mue… 225ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta manifest.t… 225ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > generateMetadata en una página de la mu… 221ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > importación interna que no existe 261ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > importación dinámica con un texto que n… 212ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · las excepciones son las del diseño y solo esas > son exactamente tres, las escritas en el diseño 1ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · las excepciones son las del diseño y solo esas > sin ellas, el árbol limpio falla en exactamente los tres sitios que las usan 257ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > forma mixta: acción comprobada y export default async () => ... sin comprobar 1337ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación que no cierra nunca 1096ms
+ ✓ tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una comprobación que cierra siempre (rompe el control positivo) 1254ms
+ ✓ tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · las excepciones son las del diseño y solo esas > ninguna excepción cubre supabase, oauth, licencias ni stripe 1ms
+
+ Test Files  4 passed (4)
+      Tests  196 passed (196)
+   Start at  15:41:25
+   Duration  26.44s (tests 94%, import 5%, transform 1%)
+

@@ -1,0 +1,501 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t003
+
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts (58 tests | 48 failed) 304ms
+   ❯ PRUEBA-036 · los cuatro archivos sembrados fallan (6)
+     × importación de axe fuera de su módulo 19ms
+     × prueba saltada 3ms
+     × filtro sobre las infracciones 3ms
+     × regla desactivada 2ms
+     × sobre una carpeta: exactamente los cuatro sembrados fallan; el limpio y el exento, no 72ms
+     × el mismo contenido de configuracion-interfaz.ts en otro archivo sí falla 3ms
+   ❯ PRUEBA-036 · cada forma prohibida se detecta (42)
+     × testInfo.fail() dentro de la prueba 2ms
+     × test.info().fail() 1ms
+     × desestructurar skip de test 2ms
+     × test.describe.configure con retries 2ms
+     × violations.filter en un archivo .cts 1ms
+     × it.skip en un archivo .cjs 1ms
+     × it.skip en un archivo .jsx 1ms
+     × importación dinámica de axe 1ms
+     × require de axe-core 1ms
+     × reexportación de axe 1ms
+     × importación de axe-core con ruta interna 1ms
+     × it.skip 1ms
+     × test.only 1ms
+     × test.fixme 2ms
+     × test.fixme dentro del cuerpo 1ms
+     × describe.skip 1ms
+     × test.describe.skip 1ms
+     × it.skipIf 1ms
+     × it.runIf 1ms
+     × it.todo 1ms
+     × it.each(...).skip 1ms
+     × acceso con corchetes 1ms
+     × skip en el contexto de la prueba 1ms
+     × xit 1ms
+     × fdescribe 1ms
+     × test.fail 1ms
+     × it.fails 1ms
+     × test con otro nombre local 1ms
+     × violations.filter 1ms
+     × violations.slice 1ms
+     × violations.pop 1ms
+     × infracciones.filter 1ms
+     × asignación a violations 1ms
+     × violations.length = 0 1ms
+     × delete de violations 2ms
+     × disableRules 1ms
+     × exclude de un elemento 1ms
+     × include de un elemento 1ms
+     × options con reglas 1ms
+     × enabled: false 1ms
+     × "enabled": false con comillas 1ms
+     × las extensiones .cjs, .cts y .jsx entran en el recorrido de carpetas 33ms
+ ❯ tests/unit/diseno/fronteras.test.ts (75 tests | 41 failed) 19711ms
+   ❯ PRUEBA-008 · cada regla detecta su fallo sembrado (66)
+     × alias @/ hacia supabase desde un compon… 248ms
+     × ruta relativa hacia oauth desde un comp… 216ms
+     × importación dinámica hacia licencias de… 213ms
+     × require hacia stripe desde la muestra 220ms
+     × reexportación: el componente importa un… 220ms
+     × puente con importación dinámica hasta s… 215ms
+     × otro archivo de _datos/ (no acceso-mues… 262ms
+     × acceso-muestra.ts importa algo más que … 207ms
+     × una página de la muestra fuera de servi… 234ms
+     × un componente importa fallo-servidor.ts 220ms
+     × componente -> puente fuera de lib que r… 222ms
+     × componente -> puente que reexporta fall… 215ms
+     × muestra -> dos puentes encadenados -> s… 277ms
+     × módulo de cliente que reexporta sin-acc… 285ms
+     × módulo de cliente que llega a fallo-ser… 233ms
+     × ruta de muestra/servidor importa fallo-… 212ms
+     × ruta de muestra/servidor llega a regist… 298ms
+     × archivo route bajo la muestra 212ms
+     × página que hace algo antes de comprobar 205ms
+     × página que no comprueba 212ms
+     × página de flecha por defecto, con cuerp… 248ms
+     × página con export default de un identif… 202ms
+     × página cuya comprobación es de otro mód… 192ms
+     × acción de servidor sin comprobación 200ms
+     × una segunda acción exportada sin compro… 201ms
+     × acción de servidor en línea dentro de u… 205ms
+     × página que llama a la comprobación sin … 182ms
+     × acción de servidor en línea que llama a… 202ms
+     × archivo use server que reexporta con no… 227ms
+     × archivo use server que reexporta todo c… 215ms
+     × archivo use server sin ninguna entrada … 223ms
+     × archivo de metadatos de ruta opengraph-… 215ms
+     × archivo de metadatos de ruta twitter-im… 281ms
+     × archivo de metadatos de ruta icon.tsx e… 238ms
+     × archivo de metadatos de ruta icon1.mues… 226ms
+     × archivo de metadatos de ruta apple-icon… 230ms
+     × archivo de metadatos de ruta sitemap.ts… 209ms
+     × archivo de metadatos de ruta robots.mue… 223ms
+     × archivo de metadatos de ruta manifest.t… 235ms
+     × generateMetadata en una página de la mu… 276ms
+   ❯ PRUEBA-008 · las excepciones son las del diseño y solo esas (3)
+     × sin ellas, el árbol limpio falla en exactamente los tres sitios que las usan 226ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 89 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > importación de axe fuera de su módulo
+AssertionError: expected [] to include 'importación de axe'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:45:35
+     43|
+     44|   it.each(Object.entries(sembrados))("%s", (_nombre, { ruta, texto, re…
+     45|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+     46|   });
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > prueba saltada
+AssertionError: expected [] to include 'prueba saltada o aislada'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:45:35
+     43|
+     44|   it.each(Object.entries(sembrados))("%s", (_nombre, { ruta, texto, re…
+     45|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+     46|   });
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > filtro sobre las infracciones
+AssertionError: expected [] to include 'filtro sobre las infracciones'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:45:35
+     43|
+     44|   it.each(Object.entries(sembrados))("%s", (_nombre, { ruta, texto, re…
+     45|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+     46|   });
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > regla desactivada
+AssertionError: expected [] to include 'regla desactivada o elemento excluido'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:45:35
+     43|
+     44|   it.each(Object.entries(sembrados))("%s", (_nombre, { ruta, texto, re…
+     45|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+     46|   });
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > sobre una carpeta: exactamente los cuatro sembrados fallan; el limpio y el exento, no
+AssertionError: expected [] to deeply equal [ …(4) ]
+
+- Expected
++ Received
+
+- [
+-   "tests/e2e/muestra/estados.spec.ts",
+-   "tests/e2e/muestra/filtro.spec.ts",
+-   "tests/e2e/muestra/regla.spec.ts",
+-   "tests/unit/diseno/saltada.test.ts",
+- ]
++ []
+
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:59:66
+     57|     expect(vistos).not.toContain("tests/e2e/muestra/configuracion-inte…
+     58|     expect(vistos).toContain("tests/e2e/muestra/limpio.spec.ts");
+     59|     expect([...new Set(hallazgos.map((h) => h.archivo))].sort()).toEqu…
+       |                                                                  ^
+     60|       Object.values(sembrados)
+     61|         .map((s) => s.ruta)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · los cuatro archivos sembrados fallan > el mismo contenido de configuracion-interfaz.ts en otro archivo sí falla
+AssertionError: expected [] to include 'importación de axe'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:72:7
+     70|         `import AxeBuilder from "@axe-core/playwright";\nexport const …
+     71|       ),
+     72|     ).toContain("importación de axe");
+       |       ^
+     73|   });
+     74| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > testInfo.fail() dentro de la prueba
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.info().fail()
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fail
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.fails
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test con otro nombre local
+AssertionError: expected [] to include 'prueba marcada como fallo esperado'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > desestructurar skip de test
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip en un archivo .cjs
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip en un archivo .jsx
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skip
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.only
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fixme
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.fixme dentro del cuerpo
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > describe.skip
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.describe.skip
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.skipIf
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.runIf
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.todo
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > it.each(...).skip
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > acceso con corchetes
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > skip en el contexto de la prueba
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > xit
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > fdescribe
+AssertionError: expected [] to include 'prueba saltada o aislada'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > test.describe.configure con retries
+AssertionError: expected [] to include 'reintentos que enmascaran fallos'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.filter en un archivo .cts
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.filter
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.slice
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.pop
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > infracciones.filter
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > asignación a violations
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > violations.length = 0
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > delete de violations
+AssertionError: expected [] to include 'filtro sobre las infracciones'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > importación dinámica de axe
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > require de axe-core
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > reexportación de axe
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > importación de axe-core con ruta interna
+AssertionError: expected [] to include 'importación de axe'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > disableRules
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > exclude de un elemento
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > include de un elemento
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > options con reglas
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > enabled: false
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > "enabled": false con comillas
+AssertionError: expected [] to include 'regla desactivada o elemento excluido'
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:287:35
+    285|
+    286|   it.each(prohibidas)("%s", (_nombre, texto, regla, ruta = "tests/e2e/…
+    287|     expect(reglasDe(ruta, texto)).toContain(regla);
+       |                                   ^
+    288|   });
+    289|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/89]⎯
+
+ FAIL  tests/unit/diseno/estatica-pruebas.test.ts > PRUEBA-036 · cada forma prohibida se detecta > las extensiones .cjs, .cts y .jsx entran en el recorrido de carpetas
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/unit/diseno/estatica-pruebas.test.ts:308:59
+    306|       "tests/e2e/muestra/c.jsx",
+    307|     ]);
+    308|     expect(new Set(hallazgos.map((h) => h.archivo)).size).toBe(3);
+       |                                                           ^
+    309|   });
+    310| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > alias @/ hacia supabase desde un compon…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta relativa hacia oauth desde un comp…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > importación dinámica hacia licencias de…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > require hacia stripe desde la muestra
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > otro archivo de _datos/ (no acceso-mues…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acceso-muestra.ts importa algo más que …
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > una página de la muestra fuera de servi…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > un componente importa fallo-servidor.ts
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > componente -> puente fuera de lib que r…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > componente -> puente que reexporta fall…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > muestra -> dos puentes encadenados -> s…
+AssertionError: se esperaba «R1 importa src/lib»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > reexportación: el componente importa un…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > puente con importación dinámica hasta s…
+AssertionError: se esperaba «R1 llega a una carpeta prohibida de src/lib»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > módulo de cliente que reexporta sin-acc…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > módulo de cliente que llega a fallo-ser…
+AssertionError: se esperaba «R4 un módulo de cliente llega a código de servidor»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta de muestra/servidor importa fallo-…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > ruta de muestra/servidor llega a regist…
+AssertionError: se esperaba «R8 una ruta de muestra/servidor llega al registro o a la supervisión»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo route bajo la muestra
+AssertionError: se esperaba «R7 manejador de ruta en la muestra»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que hace algo antes de comprobar
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que no comprueba
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página de flecha por defecto, con cuerp…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página con export default de un identif…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor sin comprobación
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > una segunda acción exportada sin compro…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor en línea dentro de u…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página que llama a la comprobación sin …
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > acción de servidor en línea que llama a…
+AssertionError: se esperaba «R7 punto de entrada sin comprobarAccesoMuestra() como primera instrucción»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > página cuya comprobación es de otro mód…
+AssertionError: se esperaba «R7 comprobarAccesoMuestra no se importa de _datos/acceso-muestra.ts»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server que reexporta con no…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server que reexporta todo c…
+AssertionError: se esperaba «R7 reexportación en un archivo use server»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo use server sin ninguna entrada …
+AssertionError: se esperaba «R7 archivo use server sin entradas analizables»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta opengraph-…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta twitter-im…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta icon.tsx e…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta icon1.mues…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta apple-icon…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta sitemap.ts…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta robots.mue…
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > archivo de metadatos de ruta manifest.t…
+AssertionError: se esperaba «R7 archivo de metadatos de ruta en la muestra»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · cada regla detecta su fallo sembrado > generateMetadata en una página de la mu…
+AssertionError: se esperaba «R7 generateMetadata en la muestra»; hallazgos: []: expected 0 to be greater than 0
+ ❯ tests/unit/diseno/fronteras.test.ts:514:7
+    512|       coincide.length,
+    513|       `se esperaba «${regla}»; hallazgos: ${JSON.stringify(h)}`,
+    514|     ).toBeGreaterThan(0);
+       |       ^
+    515|   });
+    516| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/89]⎯
+
+ FAIL  tests/unit/diseno/fronteras.test.ts > PRUEBA-008 · las excepciones son las del diseño y solo esas > sin ellas, el árbol limpio falla en exactamente los tres sitios que las usan
+AssertionError: expected [] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+- [
+-   "src/app/muestra/_datos/acceso-muestra.ts",
+-   "src/app/muestra/servidor/permitido/page.muestra.tsx",
+-   "src/components/textos.ts",
+- ]
++ []
+
+ ❯ tests/unit/diseno/fronteras.test.ts:536:44
+    534|     const grafo = construirGrafo(crearArbol(ARBOL_LIMPIO));
+    535|     const h = comprobarFronteras(grafo, []).filter((x) => x.regla === …
+    536|     expect(h.map((x) => x.archivo).sort()).toEqual([
+       |                                            ^
+    537|       "src/app/muestra/_datos/acceso-muestra.ts",
+    538|       "src/app/muestra/servidor/permitido/page.muestra.tsx",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/89]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  89 failed | 81 passed (170)
+   Start at  15:24:51
+   Duration  21.29s (tests 93%, import 5%, transform 1%)
+
