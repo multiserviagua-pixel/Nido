@@ -42,11 +42,12 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - Dictamen (20/11/2026, 3.ª vuelta): revisor APTO (NO APTO en las dos primeras: 5 y 1 MAYOR); integrada por D-036. Evidencias: `evidencias/T-003/resultado.md`. 5 pruebas «NO APLICABLE AÚN» (esperan T-004/T-005). Pendiente, sin bloquear (menores): clave calculada `const {["fail"]: f} = test`; falsos positivos de alias de `expect` (`expect.extend`) y de `generate*` local; recuentos de evidencia (17 vs 18); T-005: forma del rechazo (`notFound()`) y alias `@/` en Vitest; el auditor-seguridad ve el control 2 al cerrar T-005.
 
 ### T-004 · Muestra fuera de producción al compilar
-`plataforma` · C, Res. · pendiente · Depende de: T-003, 002·T-005 (`ENTORNO`) · REQ-061 · CA-046
+`plataforma` · C, Res. · pendiente (desbloqueada el 20/11/2026 por D-036: 002·T-005 está en `main`, 0d8fd6d, con `configuracion.ts`) · Depende de: T-003, 002·T-005 (`ENTORNO`) · REQ-061 · CA-046
 - `next.config.ts`: `muestra.tsx` en `pageExtensions` solo con `ENTORNO` `desarrollo` o `preproduccion`, leído a través de `configuracion.ts`. Prueba: PRUEBA-024 (control 1).
 
 ### T-005 · Esqueleto de la muestra
 `ingeniero-frontend` · D · pendiente · Depende de: T-004; `<dominio>` no bloquea (`plan.md`) · REQ-061, REQ-084 · CA-024, CA-046, CA-056
+- Decisión (D-036, 20/11/2026): la forma del rechazo de `comprobarAccesoMuestra()` (`notFound()`) y el alias `@/` en Vitest los decide la coordinación, con la opción recomendada por el arquitecto que no relaje ningún control; queda constancia aquí. El auditor-seguridad ve el control 2 al cerrar T-005.
 - `m/_datos/acceso-muestra.ts` con `comprobarAccesoMuestra()` y su prueba unitaria; `m/layout.muestra.tsx`, índice e `m/inventario.ts` con la primera entrada. Prueba: PRUEBA-024 completa; PRUEBA-008.
 
 ## Bloque 2 · Base sin decisiones visuales
@@ -57,7 +58,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - (b) Iconos como componentes SVG en `c/iconos/` y `LICENCIAS.md`. Prueba: PRUEBA-008 (iconos).
 
 ### T-007 `[P]` · Formatos, texto de dato, dirección, textos, valores y contraste
-`ingeniero-frontend` · D (parte (c)); el resto, R · pendiente · Depende de: T-002; (f) y (g), además T-003 y T-006 · REQ-012, REQ-029, REQ-030, REQ-036, REQ-038, REQ-039, REQ-043, REQ-046 a REQ-050, REQ-053, REQ-055, REQ-056, REQ-059, REQ-071, REQ-075, REQ-076, REQ-079, REQ-080, REQ-083, REQ-085, REQ-086, REQ-088 · CA-008, CA-009, CA-013, CA-017, CA-022, CA-027, CA-036 a CA-041, CA-044, CA-051, CA-054 a CA-057
+`ingeniero-frontend` · D (parte (c)); el resto, R · en curso: (a) a (e) hechas e integradas (20/11/2026), faltan (f) y (g) · Depende de: T-002; (f) y (g), además T-003 y T-006 · REQ-012, REQ-029, REQ-030, REQ-036, REQ-038, REQ-039, REQ-043, REQ-046 a REQ-050, REQ-053, REQ-055, REQ-056, REQ-059, REQ-071, REQ-075, REQ-076, REQ-079, REQ-080, REQ-083, REQ-085, REQ-086, REQ-088 · CA-008, CA-009, CA-013, CA-017, CA-022, CA-027, CA-036 a CA-041, CA-044, CA-051, CA-054 a CA-057
 - (a) `formatearFechaHora`, hora repetida, `formatearFecha`, `formatearPeriodo`, `diaDeMadrid`, en tres zonas horarias. Prueba: PRUEBA-001 (fechas), PRUEBA-002.
 - (b) Números y porcentajes, `calcularVariacion`, `leerCifra`. Prueba: PRUEBA-001 (números), PRUEBA-003.
 - (c) `textoPlano`, `TextoDato`, `SoloLector`. Prueba: PRUEBA-004.
@@ -66,6 +67,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - (f) `valores.css`: tres capas y tres juegos (claro, oscuro, colores forzados), sin el tema de Tailwind, importado en `src/app/layout.tsx`. Prueba: PRUEBA-005.
 - (g) `combinaciones.ts` de los dos temas y `base.css` (foco, movimiento, texto). Prueba: PRUEBA-006, con el peor punto de cada degradado.
 - Archivos: `c/{formato,texto,direccion,estado,estilos}/**`, `c/textos.ts`, `src/app/layout.tsx`, `td/`.
+- Dictamen (20/11/2026, (a) a (e)): revisor APTO en 2.ª vuelta (cerró 2 MAYOR: `construirRuta` con `{esquema, estado}` y sin invisibles literales en pruebas); auditor-seguridad APTO sin bloqueantes; aprobado por delegación D-036, 20/11/2026. Evidencias: `evidencias/T-007/resultado.md` (tipos, estilo, aislamiento, arnés y build en 0 por separado; Vitest `--maxWorkers=3` 1136 en verde; regla D-036 punto 4). Pendiente, sin bloquear (menores del auditor): (1) `textoPlano` deja pasar invisibles fuera de Cf (U+3164, U+115F, U+FFA0, U+2800, U+034F, selectores de variación): aceptarlo en el diseño o ampliar la lista; PRUEBA-017 con dos nombres así en el diálogo; (2) antes de que la 030 cree vistas del panel: ignorar al leer todo campo `identificador` y impedir valores de lista que sean UUID; prueba con `{c:{tipo:"lista",valores:[uuid]}}`; (3) texto bidireccional sin `bdi` en nombres accesibles y SVG: aislar el dato al componer la etiqueta; PRUEBA-017; (4) surrogados sueltos: riesgo aceptado.
 
 ### T-008 `[P]` · Referencia, sin acceso y registro de fallos
 `ingeniero-backend` · C (parte (c)); (a) y (b), D · pendiente · Depende de: T-002; (c), además 002·T-004 y que la 002 acepte el campo · REQ-027, REQ-057, REQ-077 · CA-024, CA-042, CA-046, CA-056

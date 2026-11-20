@@ -9,7 +9,7 @@
 // logotipo en SVG y el inventario del diseño frente al de la muestra (T-006, T-007, T-005).
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import { excepcionesDeImportacion } from "./excepciones";
 import { borrarArboles, crearArbol } from "./apoyo/arbol";
 import { ARBOL_LIMPIO } from "./apoyo/arbol-limpio";
@@ -17,6 +17,10 @@ import { comprobarFronteras, type Hallazgo } from "./apoyo/fronteras";
 import { construirGrafo } from "./apoyo/grafo";
 
 const RAIZ = resolve(import.meta.dirname, "..", "..", "..");
+
+// Tiempo máximo explícito: siembra árboles y analiza el grafo; bajo la carga de la suite completa
+// supera los 5 s por defecto. No cambia lo que se comprueba.
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 
 afterAll(borrarArboles);
 

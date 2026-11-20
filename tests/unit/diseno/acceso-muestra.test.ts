@@ -45,6 +45,10 @@ import { construirGrafo, type Grafo } from "./apoyo/grafo";
 
 const RAIZ = resolve(import.meta.dirname, "..", "..", "..");
 
+// Tiempo máximo explícito: estas pruebas siembran árboles y analizan el grafo, y bajo la carga de
+// la suite completa superan los 5 s por defecto. No cambia lo que se comprueba.
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
+
 // Lo que `next/headers` devuelve en cada caso. Fuera de una petición real no existe.
 const estado = vi.hoisted(() => ({ cabeceras: new Headers() }));
 vi.mock("next/headers", () => ({ headers: async () => estado.cabeceras }));

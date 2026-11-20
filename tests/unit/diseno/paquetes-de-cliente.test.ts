@@ -5,11 +5,14 @@
 // No cubre, y figura como «no ejecutada» hasta que exista la 002: un navegador de prueba con un
 // archivo alterado en su carpeta hace fallar la comprobación «interfaz» antes de ejecutar nada.
 import { resolve } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import { borrarArboles, crearArbol } from "./apoyo/arbol";
 import { construirGrafo } from "./apoyo/grafo";
 import { comparar, leerBloqueo, paquetesDeClienteDelGrafo } from "./apoyo/paquetes";
 import { paquetesDeCliente } from "./paquetes-de-cliente";
+
+// Tiempo máximo explícito: analiza el grafo de módulos; bajo carga supera los 5 s por defecto.
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 
 const RAIZ = resolve(import.meta.dirname, "..", "..", "..");
 const bloqueo = leerBloqueo(RAIZ);
