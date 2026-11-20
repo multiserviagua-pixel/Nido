@@ -177,6 +177,17 @@ export function esDesarrollo(): boolean {
   return predicadoDesarrollo(process.env);
 }
 
+// Solo `ENTORNO`, sin validar el resto del grupo: lo usan la compilación (`next.config.ts`,
+// control 1 de la muestra, 020) y la comprobación de la muestra al servir (control 2). Valor exacto
+// de la lista; `desarrollo`, además, con el predicado único (A-1, A-3). Ausente, desconocido o
+// ilegible: `undefined`, y quien lo llama cierra.
+export function leerEntorno(): Entorno | undefined {
+  const valor = process.env.ENTORNO;
+  if (valor === "desarrollo") return predicadoDesarrollo(process.env) ? "desarrollo" : undefined;
+  if (valor === "preproduccion" || valor === "produccion") return valor;
+  return undefined;
+}
+
 // --- Grupo «conector» ------------------------------------------------------------------------
 
 const RE_ORIGEN_HTTPS = /^https:\/\/([a-z0-9.-]{1,253})$/;
