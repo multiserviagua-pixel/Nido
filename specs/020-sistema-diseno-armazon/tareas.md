@@ -34,11 +34,12 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - Dictamen (20/11/2026, 2.ª vuelta): revisor APTO, auditor-seguridad APTO; integrada por D-036. Pendiente, sin bloquear: la prueba del bloqueo no ata `resolved` al nombre del paquete ni exige sha512 (auditor, MENOR-1; tarea de CI, D-030); el `distDir` propio para pruebas en navegador va en T-003/T-004 (`ev/T-002/versiones.md`). El «7 días» de (a) quedó derogado por D-034.
 
 ### T-003 `[P]` · Fronteras, comprobación estática y muestra fuera de producción
-`qa` · R, Res. · pendiente · Depende de: T-002 · REQ-032, REQ-061, REQ-062, REQ-084 · CA-024, CA-025, CA-046, CA-056
+`qa` · R, Res. · hecha (20/11/2026, commit e9f7387) · Depende de: T-002 · REQ-032, REQ-061, REQ-062, REQ-084 · CA-024, CA-025, CA-046, CA-056
 - (a) Fronteras sobre el grafo de módulos (alias, importaciones dinámicas, reexportaciones) y `td/excepciones.ts`. Prueba: PRUEBA-008.
 - (b) Comprobación estática de los archivos de prueba y `td/paquetes-de-cliente.ts`. Prueba: PRUEBA-036 (parte estática, cuatro archivos sembrados), PRUEBA-037 (parte de la lista).
 - (c) Control 1 con los cinco valores de `ENTORNO`; control 2 en cada punto de entrada, con `Host` y con `X-Forwarded-Host` falsificado; control positivo; los casos que necesitan la muestra, cuando exista su `layout`. Prueba: PRUEBA-024 escrita.
 - Archivos: `td/**`.
+- Dictamen (20/11/2026, 3.ª vuelta): revisor APTO (NO APTO en las dos primeras: 5 y 1 MAYOR); integrada por D-036. Evidencias: `evidencias/T-003/resultado.md`. 5 pruebas «NO APLICABLE AÚN» (esperan T-004/T-005). Pendiente, sin bloquear (menores): clave calculada `const {["fail"]: f} = test`; falsos positivos de alias de `expect` (`expect.extend`) y de `generate*` local; recuentos de evidencia (17 vs 18); T-005: forma del rechazo (`notFound()`) y alias `@/` en Vitest; el auditor-seguridad ve el control 2 al cerrar T-005.
 
 ### T-004 · Muestra fuera de producción al compilar
 `plataforma` · C, Res. · pendiente · Depende de: T-003, 002·T-005 (`ENTORNO`) · REQ-061 · CA-046
