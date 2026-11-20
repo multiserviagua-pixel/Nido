@@ -230,7 +230,9 @@ describe("manifiesto (package.json)", () => {
     const excepcion = datos.excepciones.find((e) => e.paquete === "@electric-sql/pglite@0.5.17");
     expect(excepcion).toBeDefined();
     if (excepcion) excepcion.revisarDespues = "2026-12-07";
-    expect(() => comprobarFechasYExcepciones(datos)).toThrow();
+    expect(() => comprobarFechasYExcepciones(datos)).toThrow(
+      /@electric-sql\/pglite@0\.5\.17: la fecha no coincide con la del registro fijada en la prueba/,
+    );
   });
 
   it("negativa: un motivo cruzado entre paquetes hace fallar la comprobación", () => {
@@ -244,11 +246,15 @@ describe("manifiesto (package.json)", () => {
     const conPglite = structuredClone(original);
     const a = conPglite.excepciones.find((e) => e.paquete.includes("pglite"));
     if (a && motivoGhsa) a.motivo = motivoGhsa;
-    expect(() => comprobarFechasYExcepciones(conPglite)).toThrow();
+    expect(() => comprobarFechasYExcepciones(conPglite)).toThrow(
+      /@electric-sql\/pglite@0\.5\.17: motivo ligado a su paquete/,
+    );
     const conTse = structuredClone(original);
     const b = conTse.excepciones.find((e) => e.paquete === "typescript-eslint@8.73.0");
     if (b && motivoPglite) b.motivo = motivoPglite;
-    expect(() => comprobarFechasYExcepciones(conTse)).toThrow();
+    expect(() => comprobarFechasYExcepciones(conTse)).toThrow(
+      /typescript-eslint@8\.73\.0: motivo ligado a su paquete/,
+    );
   });
 
   it("fija Node 26 y los saltos de línea", () => {

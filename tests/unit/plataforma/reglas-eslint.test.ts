@@ -1,5 +1,5 @@
 import { ESLint } from "eslint";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const eslint = new ESLint({ overrideConfigFile: "eslint.config.mjs" });
 
@@ -9,6 +9,12 @@ async function reglasQueSaltan(codigo: string, archivo: string): Promise<string[
 }
 
 const dentro = "src/lib/otro/uso.ts";
+
+// El primer lintText carga el programa de tipos y el complemento de TypeScript, y con la máquina cargada
+// supera los 5000 ms por defecto. Se calienta aquí, con plazo propio, y no se toca el plazo global.
+beforeAll(async () => {
+  await eslint.lintText("export const calentar = 1;\n", { filePath: dentro });
+}, 60_000);
 
 describe("reglas de Umbrales en eslint.config.mjs (negativas)", () => {
   it("1. process.env fuera de configuracion.ts", async () => {
@@ -67,31 +73,37 @@ describe("reglas de Umbrales: negativas de cierre de huecos", () => {
     ],
     ["11. runtime = plantilla", ["export const runtime = `edge`;"], ruta, "no-restricted-syntax"],
     [
-      "12. runtime exportado aparte",
+      "12. runtime = 'edge' satisfies string",
+      ['export const runtime = "edge" satisfies string;'],
+      ruta,
+      "no-restricted-syntax",
+    ],
+    [
+      "13. runtime exportado aparte",
       ['const runtime = "edge";', "export { runtime };"],
       ruta,
       "no-restricted-syntax",
     ],
     [
-      "13. import { env } de node:process",
+      "14. import { env } de node:process",
       ['import { env } from "node:process";', "export const a = env.X;"],
       dentro,
       "no-restricted-imports",
     ],
     [
-      "14. globalThis.JSON.parse",
+      "15. globalThis.JSON.parse",
       ["export const a = globalThis.JSON.parse('{}');"],
       dentro,
       "no-restricted-syntax",
     ],
     [
-      "15. URL.parse",
+      "16. URL.parse",
       ["export const a = URL.parse('http://a');"],
       dentro,
       "no-restricted-properties",
     ],
     [
-      "16. process.env en proxy.ts de la raíz",
+      "17. process.env en proxy.ts de la raíz",
       ["export const a = process.env.X;"],
       "proxy.ts",
       "no-restricted-properties",
@@ -140,7 +152,19 @@ describe("reglas de Umbrales: conjunto efectivo en src/**", () => {
       expect(nivel(r), r).toBe(2);
     }
     expect(config.linterOptions?.noInlineConfig).toBe(true);
-    expect(config.linterOptions?.reportUnusedDisableDirectives).toBeDefined();
+    expect(config.linterOptions?.reportUnusedDisableDirectives).toBe(2); // ESLint normaliza "error" a 2
+  });
+  it("con noInlineConfig una directiva eslint-disable se reporta como aviso (falla con --max-warnings 0)", async () => {
+    const [resultado] = await eslint.lintText(
+      "/* eslint-disable no-console */\nexport const a = 1;\n",
+      { filePath: dentro },
+    );
+    const avisos = (resultado?.messages ?? []).filter((m) => m.ruleId === null);
+    expect(avisos).toHaveLength(1);
+    expect(avisos[0]?.message).toContain("has no effect");
+    // No comprueba reportUnusedDisableDirectives (eso lo fija el toBe(2) de la prueba anterior): comprueba que, con
+    // noInlineConfig, la directiva se reporta como aviso (severidad 1) y `npm run estilo` usa --max-warnings 0.
+    expect(resultado?.warningCount).toBe(1);
   });
 });
 
