@@ -33,7 +33,7 @@ Sin cambios. `contratos/informe.schema.json` manda sobre `informes` (D-2, 5 y 7)
 
 ### D-1 · Migraciones: orden, contenido y vuelta atrás
 
-Cada archivo empieza con la guarda `do $$ begin if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if; end $$;` (L 11); el resto va en un único bloque `do` que repite la guarda como primera instrucción, lee la ruta previa, fija `set_config('search_path', 'pg_catalog, pg_temp', true)` y la restaura como última instrucción (L 13). Forma (L 14): tras la guarda, solo bloques `do` con comillas de dólar que empiezan por ella; tipos de `declare` como `pg_catalog.<tipo>`, sin inicializadores; sin `begin; … commit;` ni `on commit drop` (propuesta 34, D-036, 20/11/2026; `evidencias/T-001/comprobaciones-cli.md`). Un bloque es una sentencia: aun en autocommit o con `psql` sin `ON_ERROR_STOP`, falla entero o no cambia nada (REQ-030). Sin sentencias que no admitan transacción.
+Cada archivo empieza con la guarda `do $$ begin if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if; end $$;` (L 11); el resto va en un único bloque `do` que repite la guarda como primera instrucción, lee la ruta previa, fija `set_config('search_path', 'pg_catalog, pg_temp', true)` y la restaura como última instrucción (L 13). Forma (L 14): tras la guarda, solo bloques `do` con comillas de dólar que empiezan por ella; tipos de `declare` como `pg_catalog.<tipo>`, sin inicializadores, en toda sección `declare`, también en bloques anidados y cuerpos de función (D-11); sin `begin; … commit;` ni `on commit drop` (propuesta 34, D-036, 20/11/2026; `evidencias/T-001/comprobaciones-cli.md`). Un bloque es una sentencia: aun en autocommit o con `psql` sin `ON_ERROR_STOP`, falla entero o no cambia nada (REQ-030). Sin sentencias que no admitan transacción.
 
 | N.º | Nombre | Crea | Reversión |
 | --- | --- | --- | --- |
@@ -173,9 +173,13 @@ Texto: `text`, `varchar`, `char`, `citext`, `json`, `jsonb` y sus listas. 26 col
 | `suscripciones.stripe_customer_id`, `suscripciones.stripe_subscription_id`, `eventos_stripe.id` | ★ `^cus_`, `^sub_`, `^evt_` + `[A-Za-z0-9]{1,250}$` | Stripe |
 | `eventos_stripe.tipo` | `^[a-z_.]{3,80}$` | Tipo de evento |
 | `versiones_prompt.commit_sha` | `^[0-9a-f]{7,40}$` | Commit |
-| `clientes.nombre` | 1–120 | Nombre comercial; dato personal si es autónomo (cuestión 13) |
-| `catalogo_problemas.descripcion` | ★ 1–200 | Texto de HumanaIA, del superadmin |
+| `clientes.nombre` | 1–120; ★ texto de personas (TP) | Nombre comercial; dato personal si es autónomo (cuestión 13) |
+| `catalogo_problemas.descripcion` | ★ 1–200; ★ texto de personas (TP) | Texto de HumanaIA, del superadmin |
 | `versiones_prompt.contenido`, `versiones_prompt.notas` | 1–100.000; ≤ 500 | Del repositorio, por el despliegue; nunca datos de clientes |
+
+Escritura en SQL (20/11/2026): `^[!-~]{1,300}$` se implementa como `char_length(x) <= 300 and x ~ '^[!-~]+$'`, el mismo conjunto, porque el motor no admite repeticiones de más de 255; en `redirect_uris`, por elemento, con la racha `[!-~]{151}[!-~]{150}` (M03).
+
+**(TP) Texto de personas** (MENOR 2 del auditor en T-002; 20/11/2026, por delegación D-036): `x !~ '[\u0001-\u001f\u007f-\u009f؜᠎​-‏ -‮⁠-⁯﻿￹-￻\U000e0000-\U000e007f]'`, en literal normal (no `E'…'`). Rechaza controles C0 y C1 (tabulador y saltos incluidos), marcas, incrustaciones, anulaciones y aislamientos bidireccionales, anchura cero, separadores de línea y párrafo, BOM, anotaciones y etiquetas; admite letras y signos de cualquier escritura. Escapes explícitos y no `[[:cntrl:]]`, que fuera de ASCII depende de `LC_CTYPE`; con una codificación que no sea UTF-8 los escapes no casan nunca ([PostgreSQL, «Pattern Matching»](https://www.postgresql.org/docs/current/functions-matching.html), consultado el 20/11/2026), así que M02 falla con `migracion_codificacion_no_utf8` si `server_encoding` no es `UTF8`. Se corrige **en M02**, no en M04 ni en una migración nueva: M02 no está aplicada en ningún entorno persistente (`Nido` la recibe en T-014; producción no existe), y M04, protegida, no debe llevar restricciones de otras tablas que luego no se puedan revertir. Desde T-014, todo cambio de formato va en una migración nueva (skill `migracion-bd`).
 
 `reglas_cliente` no tiene texto. Token o código (REQ-024, CA-019): las tres `*_hmac`; ninguna otra se llama `token`, `codigo`, `secreto` ni `clave`, salvo `catalogo_problemas.codigo`, que no es secreto. Toda columna de texto nueva entra aquí con su migración; la 024 y la 014 usan el formato de `accion`.
 
@@ -213,6 +217,20 @@ La contraseña nunca está en el repositorio, las migraciones ni las pruebas (RE
 
 `supabase/datos/volumen.sql`: la misma guarda; con `generate_series`, 10 clientes con licencia, conexión y 365 ejecuciones e informes diarios. Sin datos reales ni secretos.
 
+### D-11 · Secciones `declare` en migraciones y reversiones (condición MENOR A)
+
+20/11/2026, por delegación D-036. **Opción (a)**: toda sección `declare`, esté donde esté (la primera del `do`, un bloque anidado o etiquetado, el cuerpo de una función con cualquier comilla), cumple la regla de D-1: tipos `pg_catalog.<tipo>` y sin inicializadores. Listas, `pg_catalog._<tipo>` (p. ej., `_text`); filas, `pg_catalog.record`; un valor de un tipo de `public` se guarda como `pg_catalog.text` y se convierte con `::public.<tipo>` en la instrucción. Motivo: un bloque anidado se compila con el `do`, con la ruta de la sesión y antes de la guarda; un cuerpo de función se compila con su `set search_path`. La opción (b) obliga al detector a distinguir ámbitos y a casar cada cuerpo con su cláusula `set`, que es analizar SQL; si se equivoca, deja pasar un `public.<tipo>` en un bloque anidado. La (a) es una sola regla y M04, M07 y M08 no necesitan más.
+
+Regla de `esDoConGuarda` (L 14), sobre el texto normalizado de cada sentencia tras la guarda:
+
+1. Cada `\bdeclare\b` abre una sección que acaba en el primer `\bbegin\b` posterior. Sin `begin` posterior, se rechaza.
+2. La sección se parte por `;` y cada parte no vacía casa con `^[a-z_][a-z0-9_]* pg_catalog\.[a-z_][a-z0-9_]*$`. Lo demás se rechaza: sin calificar, otro esquema, comillas dobles, `%type`, `%rowtype`, `[]`, `constant`, `not null`, `collate`, `:=`, `=`, `default`, `alias for` y `cursor`.
+3. La primera sección, si abre el cuerpo, va seguida de `begin` y de la guarda (sin cambios).
+4. **Cuerpo opaco**: si la normalización vació algún cuerpo entre comillas de dólar (no se lee como código cerrado, p. ej., por un identificador `"a'b"`), se rechaza la sentencia. Hoy ese cuerpo escondería su `declare`.
+5. Ningún literal entre comillas simples contiene las palabras `declare`, `function` ni `procedure`: funciones, procedimientos y disparadores se crean con SQL estático; `execute` queda para `grant`, `revoke` y `alter default privileges` con `format` (D-4).
+
+Residual: el SQL dinámico troceado (`'func' || 'tion'`) no lo ve el detector; lo comprueba el `revisor`.
+
 ## Flujo
 
 1. **Local**: `npm run aislamiento` aplica, revierte y reaplica en PGlite (SQL válido, no criterios) y, si `pglite-pgtap` pasa su VERIFICAR (P1-b), pgTAP.
@@ -241,7 +259,7 @@ Sin Docker aquí, pgTAP y lo que depende de Supabase solo se dan por superados e
 | `ciclo-migraciones.mjs` | CA-004, CA-024, CA-025, CA-031, REQ-053 | 30 = 10 × 2 (catálogo; RLS) + 2 (migración fallida) + 5 (huella de las protegidas) + 1 (M01 se niega con objetos) + 2 (M04 y M05 sin la marca de CI) |
 | `concurrencia-licencia.sh`; procedimiento de administradores | CA-021; CA-037 | 1; 2 |
 
-Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed y guarda de `seed.sql` y `volumen.sql` (D-10); L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero y al principio de cada `do`, con `operator(pg_catalog.<>)`; L 12 `raise` con literal, sin `%` ni concatenación; L 13 ruta leída, fijada y restaurada en cada `do`, y `search_path` en todo `privado`; L 14 forma de las sentencias (D-1); L 15 entorno derivado del destino, desconocido se niega.
+Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed y guarda de `seed.sql` y `volumen.sql` (D-10); L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero y al principio de cada `do`, con `operator(pg_catalog.<>)`; L 12 `raise` con literal, sin `%` ni concatenación; L 13 ruta leída, fijada y restaurada en cada `do`, y `search_path` en todo `privado`; L 14 forma de las sentencias (D-1, D-11); L 15 entorno derivado del destino, desconocido se niega.
 
 **CA-020**: escáner de secretos (`node scripts/comprobar-specs.mjs`, paso de `bd.yml`) con 0 hallazgos, más dictamen del `auditor-seguridad` en T-015. **Fuera de CI, evidencia de una persona**: CA-001, CA-022, CA-027 (credencial en su entorno; el script no la guarda), CA-028, V-107 real; en `Nido`, `pg_default_acl`, `pg_net`, `log_statement` y `session_replication_role`; `\password`.
 
@@ -339,3 +357,4 @@ Solo en `propuestas.md` (el encargo limita la escritura a esta carpeta): n.º 21
 | L-1 a L-6 | Amenazas (A-11); D-1 (M01, patrones, M05); D-3 (`auditar()`, mensajes); Pruebas 01, 05; L 10 a 12 |
 | Tamaño (D-023) | Compactado sin quitar controles |
 | Vuelta 2: N-1, N-2 (a), N-5, N-6, N-8 | D-3; D-9 R-4; D-1; D-10; Piezas; Pruebas. N-3, N-4, N-7: `tareas.md`. Propuesta 34 (D-036): D-1, D-9 R-4 |
+| T-001, MENOR A (`declare` en funciones) · T-002, MENOR 2 del auditor | D-11; D-1; L 14 · D-7 (TP y escritura en SQL); T-003 |
