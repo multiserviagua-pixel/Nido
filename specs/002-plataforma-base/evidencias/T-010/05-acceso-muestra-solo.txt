@@ -1,0 +1,10 @@
+
+ RUN  v5.1.0 C:/dev/qa-t010/clon
+
+
+ Test Files  1 passed (1)
+      Tests  33 passed (33)
+   Start at  19:53:21
+   Duration  8.60s (tests 94%, import 4%, transform 2%)
+
+salida=0 duracion_s=12

@@ -1,0 +1,9 @@
+caso=1 tipos salida=2 duracion_s=103
+caso=2 process-env salida=1 duracion_s=111
+caso=3 prueba-fallida salida=1 duracion_s=18
+caso=4 only salida=1 duracion_s=16
+caso=5 ninguna-prueba salida=1 duracion_s=38
+caso=6 politica-rls salida=1 duracion_s=344
+caso=7 canario salida=1 duracion_s=319
+caso=8 compilacion salida=1 duracion_s=43
+FIN

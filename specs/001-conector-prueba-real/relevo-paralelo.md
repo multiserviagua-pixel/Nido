@@ -28,3 +28,11 @@ Alcance: 002·T-006, 001·T-104, T-115, T-116, T-118 (a), 002·T-009 y T-010. Si
 
 ## Siguiente paso
 Resultado de 002·T-010; después, con las personas, T-118 (b).
+
+## 002·T-010 (qa, 20/11/2026): NO superada, `Estado` sigue «pendiente»
+Evidencias en `specs/002-plataforma-base/evidencias/T-010/` (resumen en `informe.md`). Comprobado por el orquestador: `main` no tiene ninguna carpeta `evidencias/` de la 002; la guía no menciona `npm run start`.
+1. **PRUEBA-059 falla**: los commits `(002)` T-001 a T-009 no llevan `evidencias/T-NNN/` con `verificar.md`, `revision.md`, `aprobacion.md` y `dictamen.md`; T-002 y T-003 comparten commit; la constancia D-036 solo está en T-005, T-006 y T-009. Decisión de coordinación: reformular el criterio (evidencias desde T-005) o rellenarlas a posteriori con lo que consta, sin inventar.
+2. **PRUEBA-024 falla en 2 de 7**: `/api/salud` da 503 tras `npm run start` con `ENTORNO=desarrollo` (`next start` fija `NODE_ENV=production`; cierra en fallo, coherente con el diseño). Con entorno no-desarrollo ficticio pasan 7 de 7. Reformular el criterio o la guía (`docs/operacion/**` es reservada: tarea aparte).
+3. **`acceso-muestra.test.ts` (función 020) agota 30 s bajo carga** (5 de 7 pasadas completas); solo, 8,6 s. `verificar` es inestable en esta máquina: un rojo puede ser falso. Dueño: función 020.
+4. PRUEBA-055: 8 de 8 defectos dan salida distinta de 0 (los pasos `aislamiento`, `arnes` y `build` se ejecutaron por separado). `verificar` verde en 310 s (Vitest 250 s); `npm ci` 118 s. T-008 sigue bloqueada (R-1).
+Los clones de qa en `C:\dev\qa-t010\` se pueden borrar.

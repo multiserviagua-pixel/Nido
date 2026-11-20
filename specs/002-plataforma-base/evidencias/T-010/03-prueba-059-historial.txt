@@ -1,0 +1,48 @@
+PRUEBA-059 parte 1: commits first-parent de main con (002) y carpeta de evidencias
+== d852217 T-009 (002): guía de operación, apartado Trabajo local (revisor APTO; verificar 
+  ficheros de evidencias/T-009 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== 50b01c3 T-006 (002): variables por entorno sin valores, .env.example y entornos.md (reviso
+  ficheros de evidencias/T-006 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== 0d8fd6d T-005 (002): salud, consola sustituida en desarrollo y arranque de entorno (reviso
+  ficheros de evidencias/T-005 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== 6791036 T-004 (002): errores, manejador, entrada, registro, /api/salud y regla ESLint de e
+  ficheros de evidencias/T-004 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== 03b82c0 T-003 (002): menores del revisor (pruebas del manifiesto, ESLint y D-027)
+  ficheros de evidencias/T-003 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== 12044a1 T-002 y T-003 (002): páginas base y npm run verificar con reglas ESLint de umbral
+  ficheros de evidencias/T-002 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+== f9f0494 T-001 (002): esqueleto de la aplicación
+  ficheros de evidencias/T-001 en ese arbol del 002:
+  verificar: NO
+  revision: NO
+  aprobacion: NO
+  dictamen: NO
+
+Busqueda en todo el arbol de main de evidencias/T-00x de la 002:
+ninguna
+mensaje de T-009 incluye aprobado por delegacion: 
+1

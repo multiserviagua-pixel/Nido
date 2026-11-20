@@ -1,0 +1,23 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+C:\dev\qa-t010\neg\src\app\qa-rota\page.tsx
+  2:9  error  throw solo de new ErrorDeAplicacion(codigo)  no-restricted-syntax
+
+✖ 1 problem (1 error, 0 warnings)
+
+caso=8 compilacion salida=1 duracion_s=43

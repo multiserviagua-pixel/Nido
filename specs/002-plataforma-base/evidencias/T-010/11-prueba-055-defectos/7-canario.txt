@@ -1,0 +1,49 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010/neg
+
+ ❯ tests/unit/diseno/acceso-muestra.test.ts (33 tests | 1 failed) 106981ms
+   ❯ PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) (19)
+     × un archivo use server cuya exportación por defecto no es una función 30040ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > un archivo use server cuya exportación por defecto no es una función
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/diseno/acceso-muestra.test.ts:524:20
+    522|   ];
+    523|
+    524|   it.each(defectos)("%s", async (_nombre, cambios, pista) => {
+       |                    ^
+    525|     const fallos = await recorrer(muestraSembrada(cambios), CASOS_DE_A…
+    526|     expect(fallos.length, "el recorrido no vio el defecto").toBeGreate…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 39 passed (40)
+      Tests  1 failed | 960 passed (961)
+   Start at  20:17:09
+   Duration  285.91s (tests 96%, setup 2%, import 1%, transform 1%)
+
+caso=7 canario salida=1 duracion_s=319

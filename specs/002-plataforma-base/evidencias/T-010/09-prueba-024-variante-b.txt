@@ -1,0 +1,10 @@
+Variante B: entorno no-desarrollo con valores FICTICIOS (start fija NODE_ENV=production)
+### preproduccion-ficticia
+OK  GET / 200: 200
+OK  GET / lang=es: lang es
+OK  ruta inexistente 404: 404
+OK  POST / sin 2xx: 405
+OK  GET /api/salud 200: 200
+OK  cuerpo exacto: {"estado":"ok"}
+OK  POST /api/salud 405: 405
+salida=0

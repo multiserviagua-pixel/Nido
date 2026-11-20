@@ -1,0 +1,97 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010/clon
+
+[vitest-pool]: Timeout terminating forks worker for test files C:/dev/qa-t010/clon/tests/unit/conector/secretos.test.ts.
+[vitest-pool]: Timeout terminating forks worker for test files C:/dev/qa-t010/clon/tests/unit/conector/guion.test.ts.
+ ❯ tests/unit/diseno/acceso-muestra.test.ts (33 tests | 3 failed) 127257ms
+   ❯ PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) (19)
+     × la forma mixta con default comprobado tampoco da fallos 42694ms
+     × la muestra sembrada correcta no da fallos con ninguno de los casos 12604ms
+     × una página que no comprueba 30018ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > la forma mixta con default comprobado tampoco da fallos
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/diseno/acceso-muestra.test.ts:339:3
+    337|   });
+    338|
+    339|   it("la forma mixta con default comprobado tampoco da fallos", async …
+       |   ^
+    340|     const acciones = `"use server";
+    341| import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > la muestra sembrada correcta no da fallos con ninguno de los casos
+AssertionError: expected [ …(11) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "comprobarAccesoMuestra() · localhost con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "src/app/muestra/layout.muestra.tsx (capa default) · localhost con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "src/app/muestra/page.muestra.tsx (pagina default) · localhost con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "comprobarAccesoMuestra() · 127.0.0.1 con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "src/app/muestra/layout.muestra.tsx (capa default) · 127.0.0.1 con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "src/app/muestra/page.muestra.tsx (pagina default) · 127.0.0.1 con puerto, desarrollo: se esperaba abierta y fue cerrada",
++   "comprobarAccesoMuestra() · localhost sin puerto, preproduccion: se esperaba abierta y fue cerrada",
++   "comprobarAccesoMuestra() · 127.0.0.1 sin puerto, preproduccion: se esperaba abierta y fue cerrada",
++   "src/app/muestra/layout.muestra.tsx (capa default) · 127.0.0.1 sin puerto, preproduccion: se esperaba abierta y fue cerrada",
++   "src/app/muestra/page.muestra.tsx (pagina default) · 127.0.0.1 sin puerto, preproduccion: se esperaba abierta y fue cerrada",
++   "src/app/muestra/layout.muestra.tsx (capa default) · X-Forwarded-Host no se lee: Host de la lista y reenviado de producción: se esperaba abierta y fue cerrada",
++ ]
+
+ ❯ tests/unit/diseno/acceso-muestra.test.ts:356:64
+    354|
+    355|   it("la muestra sembrada correcta no da fallos con ninguno de los cas…
+    356|     expect(await recorrer(muestraSembrada(), CASOS_DE_ACCESO)).toEqual…
+       |                                                                ^
+    357|   });
+    358|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/unit/diseno/acceso-muestra.test.ts > PRUEBA-024 · el recorrido de control 2 puede fallar (muestra sembrada) > una página que no comprueba
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/diseno/acceso-muestra.test.ts:524:20
+    522|   ];
+    523|
+    524|   it.each(defectos)("%s", async (_nombre, cambios, pista) => {
+       |                    ^
+    525|     const fallos = await recorrer(muestraSembrada(cambios), CASOS_DE_A…
+    526|     expect(fallos.length, "el recorrido no vio el defecto").toBeGreate…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 39 passed (40)
+      Tests  3 failed | 958 passed (961)
+   Start at  19:49:18
+   Duration  231.22s (tests 92%, transform 6%, import 2%, setup 1%)
+
+salida=1 duracion_s=292

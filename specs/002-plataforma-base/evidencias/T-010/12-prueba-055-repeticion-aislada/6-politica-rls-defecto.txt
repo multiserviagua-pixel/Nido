@@ -1,0 +1,3 @@
+politica quitada: create policy clientes_admin on public.clientes for all to authenticated usi
+ docs/MODELO-DATOS.sql | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)

@@ -1,0 +1,51 @@
+#!/bin/bash
+cd /c/dev/qa-t010/neg
+S=/c/Users/HumanaIA/AppData/Local/Temp/claude/e9fedb315d94a3e9/c313e173-439b-4a40-937b-762279442247/scratchpad
+E=/c/dev/agentes-correo-humanaia/specs/002-plataforma-base/evidencias/T-010/12-prueba-055-repeticion-aislada
+mkdir -p $E
+reset(){ git checkout -q -- . ; git clean -fdq -e node_modules -e .next ; git reset -q --hard d852217; }
+corre(){ # n nombre orden...
+  n=$1; nombre=$2; shift 2
+  s=$(date +%s); "$@" > $E/$n-$nombre.txt 2>&1; rc=$?
+  echo "caso=$n $nombre orden='$*' salida=$rc duracion_s=$(( $(date +%s)-s ))" | tee -a $E/$n-$nombre.txt >> $E/resumen.txt
+}
+reset
+cat > tests/unit/qa_falla.test.ts <<'T'
+import { expect, it } from "vitest";
+
+it("qa falla a proposito", () => {
+  expect(1).toBe(2);
+});
+T
+corre 3 prueba-fallida npm run verificar
+reset
+cat > tests/unit/qa_only.test.ts <<'T'
+import { expect, it } from "vitest";
+
+it.only("qa only", () => {
+  expect(1).toBe(1);
+});
+T
+corre 4 only npm run verificar
+reset
+node -e '
+const fs=require("fs");let t=fs.readFileSync("docs/MODELO-DATOS.sql","utf8");const i=t.search(/create policy/i);const j=t.indexOf(";",i);fs.writeFileSync("docs/MODELO-DATOS.sql",t.slice(0,i)+t.slice(j+1));console.log("politica quitada: "+t.slice(i,i+80).replace(/\s+/g," "))' > $E/6-politica-rls-defecto.txt
+git diff --stat >> $E/6-politica-rls-defecto.txt
+corre 6 politica-rls npm run aislamiento
+reset
+node -e '
+const fs=require("fs");const s="gh"+"p_"+"Ab1Cd2Ef3Gh4".repeat(3);fs.writeFileSync("src/lib/qa_canario.txt",s+"\n");fs.writeFileSync(process.argv[1],s)' $S/canario.valor
+corre 7 canario npm run arnes
+reset
+mkdir -p src/app/qa-rota
+cat > src/app/qa-rota/page.tsx <<'T'
+import { ErrorDeAplicacion } from "../../lib/plataforma/errores";
+
+export default function Pagina() {
+  throw new ErrorDeAplicacion("entrada_invalida");
+}
+T
+corre 8 compilacion npm run verificar
+corre 8b compilacion-solo-build npm run build
+reset
+echo FIN >> $E/resumen.txt

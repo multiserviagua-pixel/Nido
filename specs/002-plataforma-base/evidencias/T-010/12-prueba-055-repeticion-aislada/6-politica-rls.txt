@@ -1,0 +1,52 @@
+
+> nido@0.1.0 aislamiento
+> node scripts/probar-modelo.mjs
+
+SUPERADA  Preámbulo de Supabase simulado
+SUPERADA  MODELO-DATOS.sql se ejecuta sin errores
+SUPERADA  Conector: licencia activa recibe estado activa y prompt  -> {"estado":"activa","tienePrompt":true}
+SUPERADA  Conector: token desconocido no queda autorizado
+SUPERADA  Conector: no puede leer tablas directamente
+SUPERADA  Conector: no puede leer tokens
+SUPERADA  Conector: el token de B no puede cerrar la ejecución de A  -> {"motivo":"ejecucion_desconocida","guardado":false,"autorizado":true}
+SUPERADA  Conector: informe con campos de más se guarda y los cuenta  -> {"guardado":true,"repetido":false,"autorizado":true,"campos_descartados":3}
+SUPERADA  Conector: repetir el informe no lo duplica  -> {"guardado":true,"repetido":true,"autorizado":true,"campos_descartados":3}
+SUPERADA  Conector: informe de B guardado
+SUPERADA  Conector: informe con tipo inválido se rechaza sin devolver el valor  -> {"motivo":"informe_invalido","guardado":false,"autorizado":true}
+SUPERADA  Conector: cifra fuera de rango se rechaza  -> {"motivo":"informe_invalido","guardado":false,"autorizado":true}
+SUPERADA  Informe guardado: sin asunto ni remitente, problemas solo del catálogo, enumerados en minúsculas  -> {"problemas":["error_borrador"],"descartados":3}
+SUPERADA  Latido: la ejecución con informe queda cerrada
+SUPERADA  Latido: la ejecución sin informe válido queda abierta
+SUPERADA  Orden pausar: estado pausada, orden entregada y sin prompt  -> {"estado":"pausada","orden":{"id":"6b6cbd19-8985-40fc-b3c8-8d3f352fd1dd","tipo":"pausar"},"instrucciones":null}
+SUPERADA  Orden: el token de B no puede confirmar la orden de A  -> {"repetida":false,"autorizado":true,"confirmada":false}
+SUPERADA  Orden: A confirma su orden  -> {"repetida":false,"autorizado":true,"confirmada":true}
+SUPERADA  Orden: confirmar dos veces no falla  -> {"repetida":true,"autorizado":true,"confirmada":true}
+SUPERADA  Orden: quedó entregada y confirmada
+SUPERADA  Licencia suspendida: estado suspendida y nada más  -> {"estado":"suspendida","instrucciones":null}
+SUPERADA  Usuario de A: solo ve informes de A  -> ["10000000-0000-4000-8000-00000000000a"]
+SUPERADA  Usuario de A: solo ve su cliente
+SUPERADA  Usuario de A: la vista de resumen solo muestra A  -> ["10000000-0000-4000-8000-00000000000a"]
+SUPERADA  Usuario de A: la vista de métricas solo agrega lo suyo  -> [{"clientes":1}]
+SUPERADA  Usuario de A: no ve el texto de las versiones
+SUPERADA  Usuario de A: no ve conexiones
+SUPERADA  Usuario de A: no ve auditoría
+SUPERADA  Usuario de A: no puede leer tokens
+SUPERADA  Usuario de A: no puede llamar a las funciones del conector
+SUPERADA  Usuario de A: no puede crear órdenes
+SUPERADA  Usuario de A: no puede cambiar el cliente B
+SUPERADA  Usuario de B: solo ve informes de B  -> ["10000000-0000-4000-8000-00000000000b"]
+SUPERADA  Usuario de B: no ve órdenes de A
+SUPERADA  Superadmin sin doble factor: no ve clientes
+SUPERADA  Superadmin sin doble factor: no puede crear órdenes
+FALLIDA   Superadmin con doble factor: ve todos los clientes
+SUPERADA  Superadmin con doble factor: ve informes de todos
+SUPERADA  Superadmin con doble factor: crea una orden y queda auditada con su usuario
+SUPERADA  Superadmin: no puede cambiar el texto de una versión
+SUPERADA  Superadmin: no puede borrar auditoría
+SUPERADA  Anónimo: no puede leer clientes
+SUPERADA  Anónimo: no puede llamar a las funciones del conector
+SUPERADA  Versiones del prompt: inmutables incluso para el propietario
+SUPERADA  Auditoría: no se puede borrar ni siendo propietario
+
+44 de 45 comprobaciones superadas
+caso=6 politica-rls orden='npm run aislamiento' salida=1 duracion_s=8

@@ -1,0 +1,25 @@
+#!/bin/bash
+cd /c/dev/qa-t010/neg
+E=/c/dev/agentes-correo-humanaia/specs/002-plataforma-base/evidencias/T-010/11-prueba-055-defectos
+mkdir -p $E
+reset(){ git checkout -q -- . ; git clean -fdq -e node_modules -e .next ; git reset -q --hard d852217; }
+caso(){ # n nombre
+  n=$1; nombre=$2; reset; aplicar_$n
+  s=$(date +%s); npm run verificar > $E/$n-$nombre.txt 2>&1; rc=$?
+  echo "caso=$n $nombre salida=$rc duracion_s=$(( $(date +%s)-s ))" | tee -a $E/$n-$nombre.txt >> $E/resumen.txt
+}
+aplicar_1(){ printf 'export const x: number = "no es un numero";\n' > src/lib/qa_tipos.ts; }
+aplicar_2(){ printf 'export const v = process.env.QA_VARIABLE;\n' > src/lib/qa_env.ts; }
+aplicar_3(){ printf 'import { it, expect } from "vitest";\nit("qa falla a proposito", () => { expect(1).toBe(2); });\n' > tests/unit/qa_falla.test.ts; }
+aplicar_4(){ printf 'import { it, expect } from "vitest";\nit.only("qa only", () => { expect(1).toBe(1); });\n' > tests/unit/qa_only.test.ts; }
+aplicar_5(){ git rm -rq tests supabase/tests/pglite; }
+aplicar_6(){ python - <<'PY' 2>/dev/null || node -e '
+const fs=require("fs");let t=fs.readFileSync("docs/MODELO-DATOS.sql","utf8");const i=t.search(/create policy/i);const j=t.indexOf(";",i);fs.writeFileSync("docs/MODELO-DATOS.sql",t.slice(0,i)+t.slice(j+1));console.log("quitada 1 politica en pos",i)'
+PY
+}
+aplicar_7(){ node -e '
+const fs=require("fs");const s="gh"+"p_"+"Ab1Cd2Ef3Gh4".repeat(3);fs.writeFileSync("src/lib/qa_canario.txt",s+"\n");fs.writeFileSync("/tmp/qa_canario_valor",s)'; }
+aplicar_8(){ mkdir -p src/app/qa-rota && printf 'export default function Pagina() {\n  throw new Error("qa compilacion rota");\n}\n' > src/app/qa-rota/page.tsx; }
+for c in "1 tipos" "2 process-env" "3 prueba-fallida" "4 only" "5 ninguna-prueba" "6 politica-rls" "7 canario" "8 compilacion"; do caso $c; done
+reset
+echo FIN >> $E/resumen.txt

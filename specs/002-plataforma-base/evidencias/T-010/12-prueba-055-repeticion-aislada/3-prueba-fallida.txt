@@ -1,0 +1,54 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010/neg
+
+ ❯ tests/unit/qa_falla.test.ts (1 test | 1 failed) 17ms
+   × qa falla a proposito 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/qa_falla.test.ts > qa falla a proposito
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/unit/qa_falla.test.ts:4:13
+      2|
+      3| it("qa falla a proposito", () => {
+      4|   expect(1).toBe(2);
+       |             ^
+      5| });
+      6|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 40 passed (41)
+      Tests  1 failed | 961 passed (962)
+   Start at  20:23:36
+   Duration  297.05s (tests 96%, setup 2%, import 1%, transform 1%)
+
+caso=3 prueba-fallida orden='npm run verificar' salida=1 duracion_s=324

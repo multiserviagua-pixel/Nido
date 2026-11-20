@@ -1,0 +1,10 @@
+
+> nido@0.1.0 start
+> next start
+
+▲ Next.js 16.4.6
+- Local:         http://localhost:3000
+- Network:       http://<ip-local>:3000
+✓ Ready in 523ms
+✓ Running next.config.ts took 87ms
+{"nivel":"error","codigo":"configuracion_invalida","ruta":"/api/salud","momento":"2026-11-20T18:58:58.946Z"}

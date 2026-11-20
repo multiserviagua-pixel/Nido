@@ -1,0 +1,8 @@
+[sin aprobacion.md]
+FALLA HEAD: falta aprobacion.md
+[completo, control positivo]
+OK HEAD
+[T-009 real, d852217]
+FALLA d852217: falta verificar.md
+FALLA d852217: falta revision.md
+FALLA d852217: falta aprobacion.md
