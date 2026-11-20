@@ -79,7 +79,8 @@ const RE_COMMIT = /^[0-9a-f]{7,40}$/i;
 const RE_REGION = /^[a-z]{3}[0-9]$/;
 const RE_HOST = /^[a-z0-9.-]{1,253}$/i;
 // Forma exacta de un DSN de Sentry en la UE: clave pública de 32 hex, organización y proyecto.
-const RE_DSN = /^https:\/\/[0-9a-f]{32}@o[0-9]+\.ingest\.de\.sentry\.io\/[0-9]+$/;
+// Grupos: clave, host, proyecto (los usa supervision.ts; una sola copia).
+export const RE_DSN = /^https:\/\/([0-9a-f]{32})@(o[0-9]+\.ingest\.de\.sentry\.io)\/([0-9]+)$/;
 
 // Único predicado de «desarrollo» (validación y cierre en fallo): ENTORNO=desarrollo, NODE_ENV
 // distinto de production y ninguna variable VERCEL* con valor. Ausente o ilegible: no.

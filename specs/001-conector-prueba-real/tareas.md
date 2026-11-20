@@ -145,9 +145,9 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `contratos/{obtener-instrucciones,informe}.schema.json`, `docs/adr/`.
 
 ### T-116 `[P]` · Supervisión
-`ingeniero-backend` · C · **bloqueada** · Depende de: T-104, **DP-2** · REQ-014, REQ-015 · CA-014, CA-015
-- `supervision.ts` (002 diseño §Supervisión) con los códigos de C-2. Prueba: PRUEBA-046 de la 002 (evento cerrado con valores marcados; fallo sin bloqueo), con doble de red.
-- Archivos: `src/lib/plataforma/supervision.ts`, prueba.
+`ingeniero-backend` · C · hecha · Depende de: T-104 · REQ-014, REQ-015 · CA-014, CA-015
+- `supervision.ts` (002 diseño §Supervisión) con los códigos de C-2. Prueba: PRUEBA-046 de la 002 (evento cerrado con valores marcados; fallo sin bloqueo), con doble de red. (b) conectar `enviarEvento` en `manejador.ts`, `/api/salud` e `instrumentation.ts`.
+- Archivos: `src/lib/plataforma/supervision.ts`, `src/lib/plataforma/manejador.ts`, `src/app/api/salud/route.ts`, `src/instrumentation.ts`, pruebas.
 
 ### T-117 · Despliegue en `pre-nido`
 `plataforma` · C, Res. · **bloqueada** · Depende de: (a) T-106, **DP-1**; (b) T-113, T-114, T-115, T-116, AR-02, AR-06, AR-07 · REQ-001, REQ-002, REQ-019 · CA-001, CA-002, CA-024

@@ -2,6 +2,7 @@ import { cargarConfiguracion } from "../../../lib/plataforma/configuracion";
 import { ErrorDeAplicacion } from "../../../lib/plataforma/errores";
 import { manejador, noPermitido } from "../../../lib/plataforma/manejador";
 import { comprobarRegion } from "../../../lib/plataforma/region";
+import { enviarEvento } from "../../../lib/plataforma/supervision";
 import { registrar } from "../../../lib/registro/registro";
 
 const RUTA = "/api/salud";
@@ -10,7 +11,7 @@ const CABECERAS = { "Cache-Control": "no-store", "Content-Type": "application/js
 
 // No lee la petición: valida la configuración y la región; el cuerpo es fijo y de un solo campo.
 // Cierre en fallo: cualquier problema de configuración o región da 503 y deja solo el código.
-function respuesta(conCuerpo: boolean): Response {
+function respuesta(conCuerpo: boolean, metodo: string): Response {
   try {
     comprobarRegion(cargarConfiguracion());
   } catch (error) {
@@ -19,6 +20,7 @@ function respuesta(conCuerpo: boolean): Response {
         ? "region_no_permitida"
         : "configuracion_invalida";
     registrar("error", codigo, RUTA);
+    void enviarEvento({ ruta: RUTA, codigo, metodo });
     return new Response(conCuerpo ? '{"estado":"error"}' : null, {
       status: 503,
       headers: CABECERAS,
@@ -27,8 +29,8 @@ function respuesta(conCuerpo: boolean): Response {
   return new Response(conCuerpo ? '{"estado":"ok"}' : null, { status: 200, headers: CABECERAS });
 }
 
-export const GET = manejador(RUTA, () => respuesta(true));
-export const HEAD = manejador(RUTA, () => respuesta(false));
+export const GET = manejador(RUTA, () => respuesta(true, "GET"));
+export const HEAD = manejador(RUTA, () => respuesta(false, "HEAD"));
 export const POST = noPermitido(RUTA, PERMITIDOS);
 export const PUT = noPermitido(RUTA, PERMITIDOS);
 export const PATCH = noPermitido(RUTA, PERMITIDOS);

@@ -1,6 +1,7 @@
 import { CODIGOS, type Codigo } from "../registro/codigos";
 import { registrar } from "../registro/registro";
 import { ErrorDeAplicacion } from "./errores";
+import { enviarEvento } from "./supervision";
 
 type Funcion = (peticion: Request) => Response | Promise<Response>;
 
@@ -13,6 +14,21 @@ function respuestaDeError(): Response {
   });
 }
 
+// El código se comprueba en ejecución: solo vale si está en la lista cerrada.
+export function codigoDeError(error: unknown): Codigo {
+  return error instanceof ErrorDeAplicacion && CODIGOS.includes(error.codigo)
+    ? error.codigo
+    : "error_no_controlado";
+}
+
+function metodoDe(peticion: Request | undefined): string | undefined {
+  try {
+    return peticion?.method;
+  } catch {
+    return undefined;
+  }
+}
+
 // Envuelve un manejador de ruta: captura todo, registra solo el código y la plantilla de ruta
 // (la fija quien escribe la ruta, nunca la pedida) y responde 500 genérico.
 export function manejador(ruta: string, funcion: Funcion): Funcion {
@@ -20,12 +36,10 @@ export function manejador(ruta: string, funcion: Funcion): Funcion {
     try {
       return await funcion(peticion);
     } catch (error) {
-      // El código se comprueba en ejecución: solo se registra si está en la lista cerrada.
-      const codigo: Codigo =
-        error instanceof ErrorDeAplicacion && CODIGOS.includes(error.codigo)
-          ? error.codigo
-          : "error_no_controlado";
+      const codigo = codigoDeError(error);
       registrar("error", codigo, ruta);
+      // Sin esperar: no retrasa ni cambia la respuesta. Nunca rechaza (supervision.ts).
+      void enviarEvento({ ruta, codigo, metodo: metodoDe(peticion) });
       return respuestaDeError();
     }
   };
