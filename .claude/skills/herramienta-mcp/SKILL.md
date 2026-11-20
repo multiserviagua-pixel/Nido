@@ -39,7 +39,7 @@ Ruta, herramienta, resultado, código de error y duración. Nunca argumentos, ca
 
 ## Anotaciones
 
-Las de `contratos/`. Solo `obtener_instrucciones` es de solo lectura. No se cambia una anotación para evitar una confirmación del asistente.
+Las de `contratos/`. Ninguna herramienta es de solo lectura (`readOnlyHint: false` en las tres; AR-01 por D-036, 20/11/2026; ADR-0007, punto 11): `obtener_instrucciones` también escribe (ejecución y orden entregada). No se cambia una anotación para evitar una confirmación del asistente.
 
 ## Pruebas obligatorias por herramienta
 
