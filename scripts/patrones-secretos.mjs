@@ -14,6 +14,15 @@ export const PATRONES = [
   { nombre: 'cadena de conexión con contraseña', patron: /\bpostgres(?:ql)?:\/\/[^\s:@/]+:[^\s@/]{6,}@/ },
   { nombre: 'token de GitHub', patron: /\bgh[pousr]_[A-Za-z0-9]{30,}/ },
   { nombre: 'clave de un proveedor de IA', patron: /\bsk-(?:ant|proj)-[A-Za-z0-9_-]{20,}/ },
+  // Formas propias del conector (001, T-101): prefijo + 256 bits en base64url (43 caracteres) o en base64 estándar; sin exclusión por la izquierda (se ve dentro de URL, JSON y registros).
+  { nombre: 'token de acceso del conector', patron: /hia_a_[A-Za-z0-9_+/=-]{43,}/ },
+  { nombre: 'token de renovación del conector', patron: /hia_r_[A-Za-z0-9_+/=-]{43,}/ },
+  { nombre: 'credencial de operación del conector', patron: /hia_op_[A-Za-z0-9_+/=-]{43,}/ },
+  // Código de activación: 12 caracteres Crockford base32 (sin I, L, O, U) en tres grupos de cuatro.
+  {
+    nombre: 'código de activación del conector',
+    patron: /(?<![0-9A-Z-])[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}(?![0-9A-Z-])/,
+  },
   {
     nombre: 'variable con valor secreto',
     patron: /\b[A-Z][A-Z0-9_]*(?:SECRET|SECRETO|TOKEN|PASSWORD|CONTRASENA|API_KEY|PRIVATE_KEY)[A-Z0-9_]*\s*[=:]\s*["']?[A-Za-z0-9+/_-]{24,}/,
