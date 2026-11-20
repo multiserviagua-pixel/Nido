@@ -12,10 +12,12 @@ La especificación exige metadatos de recurso protegido. Para registrar clientes
 
 1. Servidor de autorización propio y mínimo dentro de la app: solo los flujos de código de autorización y de renovación, PKCE S256, clientes públicos, coincidencia exacta del callback.
 2. Callbacks en lista cerrada: el de Claude y los dos de ChatGPT (T-010).
+   Precisado para la 001 por ADR-0007: lista de dos callbacks exactos (Claude y el estable de ChatGPT); el de ChatGPT con parte variable no se admite.
 3. Registro de clientes por CIMD solo desde hosts conocidos, y por DCR con límite y purga.
 4. La pantalla de autorización pide un **código de activación de un solo uso**, generado en el panel y con caducidad de minutos. No existe una clave de licencia permanente que el cliente teclee.
 5. Cada activación crea una **conexión** ligada a la licencia, visible en el panel y revocable por separado. Una conexión nueva genera alerta.
 6. Tokens opacos, guardados como HMAC con un secreto que no está en la base de datos. Acceso de vida corta. Renovación con rotación atómica, ventana de gracia de unos 60 segundos que devuelve el mismo par, y caducidad deslizante. La reutilización fuera de la ventana revoca esa conexión y genera alerta.
+   Precisado para la 001 por ADR-0007 (par derivado en la ventana de gracia; lista de dos callbacks).
 7. El formulario de activación va por POST, con protección contra envíos cruzados, sin posibilidad de incrustarse en otra página y con límite de intentos.
 
 ## Alternativas

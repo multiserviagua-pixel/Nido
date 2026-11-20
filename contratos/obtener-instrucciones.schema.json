@@ -2,14 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:humanaia:agentes-correo:contratos:obtener-instrucciones:1",
   "title": "obtener_instrucciones",
-  "description": "Primera llamada de cada revisión. Devuelve siempre un estado explícito. Solo con estado «activa» entrega la versión, el prompt, las reglas del cliente y la orden vigente. Abre una ejecución, que se cierra con enviar_informe. El cliente se deriva del token: no hay parámetros.",
+  "description": "Primera llamada de cada revisión. Devuelve siempre un estado explícito. Solo con estado «activa» entrega la versión, el prompt y las reglas del cliente. La orden pendiente llega salvo con estado «suspendida», en el que no se entrega y sigue pendiente. Abre una ejecución, que se cierra con enviar_informe. El cliente se deriva del token: no hay parámetros.",
   "x-anotaciones": {
-    "readOnlyHint": true,
+    "readOnlyHint": false,
     "destructiveHint": false,
     "idempotentHint": false,
     "openWorldHint": false
   },
-  "x-cuestion-abierta": "La herramienta anota la ejecución y marca la orden como entregada. Hay que decidir en el diseño de la función 001 si eso es compatible con declararla de solo lectura.",
   "type": "object",
   "additionalProperties": false,
   "required": ["entrada", "salida"],

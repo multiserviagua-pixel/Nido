@@ -139,7 +139,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 5 · Contratos, supervisión y despliegue en Vercel (`arn1`)
 
 ### T-115 `[P]` · Contratos y ADR de autorización
-`arquitecto` · C · **bloqueada** · Depende de: (a) **AR-01**; (b) nada · REQ-003, REQ-008, REQ-009, REQ-011 · CA-003, CA-007, CA-009
+`arquitecto` · C · hecha (revisor y auditor APTO CON CONDICIONES, aplicadas; 20/11/2026, integrada por delegación D-036) · Depende de: (a) AR-01 resuelta (delegación D-036, 20/11/2026); (b) nada · REQ-003, REQ-008, REQ-009, REQ-011 · CA-003, CA-007, CA-009
 - (a) Contratos (diseño §Contratos): `readOnlyHint: false`, fuera `x-cuestion-abierta`, dos `description`. Prueba: PRUEBA-003 en verde con los nuevos; `comprobar-specs`.
 - (b) ADR desde `propuestas-diseno/adr-borrador-autorizacion-del-conector.md`. Prueba: `comprobar-specs` sin errores; revisión. Puede hacerse ya; la tarea cierra con (a).
 - Archivos: `contratos/{obtener-instrucciones,informe}.schema.json`, `docs/adr/`.

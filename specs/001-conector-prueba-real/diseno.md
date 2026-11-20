@@ -116,7 +116,7 @@ Grupo «conector» (C-1), sin valores por defecto; si falta o no vale, 503 en to
 
 Forma sin cambios. Primera tarea del plan, con dictamen y P1:
 
-- `obtener-instrucciones.schema.json`: `readOnlyHint: false` (las demás, igual) y fuera `x-cuestion-abierta`. Escribe (ejecución, orden entregada): «solo lectura» no es veraz y en Cowork automático relajaría al anfitrión (art. 8). **P1 recoge la respuesta expresa del responsable (RD-016); no se da por delegación.** Si ChatGPT pide confirmar en cada ejecución, se anota como resultado y nunca se vuelve a `true`. En el mismo cambio, la `description` dice que la orden llega salvo con `suspendida` (REQ-011), no «solo con `activa`».
+- `obtener-instrucciones.schema.json`: `readOnlyHint: false` (las demás, igual) y fuera `x-cuestion-abierta`. Escribe (ejecución, orden entregada): «solo lectura» no es veraz y en Cowork automático relajaría al anfitrión (art. 8). **P1 recogía la respuesta expresa del responsable (RD-016); AR-01 decidida por delegación D-036, 20/11/2026 (ADR-0007), revocable.** Si ChatGPT pide confirmar en cada ejecución, se anota como resultado y nunca se vuelve a `true`. En el mismo cambio, la `description` dice que la orden llega salvo con `suspendida` (REQ-011), no «solo con `activa`».
 - `informe.schema.json`, `description`: `additionalProperties: false` describe lo publicado y lo guardado; el servidor descarta y cuenta lo ajeno antes (propuesta 6 de `propuestas.md`).
 
 Formas internas cerradas y probadas (respuesta de las funciones, suceso, operación).
@@ -129,7 +129,7 @@ Conexión: `postgres` por el agrupador en modo transacción (6543), `prepare: fa
 
 Roles sin permisos sobre tablas, contraseñas por una persona: `conector_prueba_mcp` ejecuta `validar_acceso`, `mcp_*` y `registrar_suceso`; `conector_prueba_gestion`, autorización, `operar_*` y `registrar_suceso`. Lo que recibe entradas de un modelo no emite ni opera. Límite (m-3): todas las funciones ven las mismas variables; la separación protege de errores de lógica, no de un proceso comprometido.
 
-`001_estado.sql` (M-4): `revoke all on schema conector_prueba from public`; `revoke execute` de todas sus funciones a `public`, `anon`, `authenticated` y `service_role`, también con `alter default privileges`; roles `NOINHERIT NOBYPASSRLS`, `CONNECTION LIMIT 10` y `statement_timeout '5s'`. Lo concedido a `PUBLIC` fuera del esquema no se toca: si PRUEBA-022 lo halla, decide el responsable.
+`001_estado.sql` (M-4): `revoke all on schema conector_prueba from public`; `revoke execute` de todas sus funciones a `public`, `anon`, `authenticated` y `service_role`, también con `alter default privileges`; roles `NOINHERIT NOBYPASSRLS`, `CONNECTION LIMIT 10` y `statement_timeout '5s'`. Lo concedido a `PUBLIC` fuera del esquema no se toca: si PRUEBA-022 lo halla, la prueba falla y se revocan, con el alcance del ADR-0007 punto 12 (AR-01 decidida por delegación D-036, 20/11/2026; ADR-0007).
 
 Tablas con RLS sin políticas y enumerados de `docs/MODELO-DATOS.sql`: `licencias` (A, B), `codigos_activacion`, `clientes_oauth` (callbacks restringidos a la lista), `solicitudes_autorizacion` (HMAC de `state`), `conexiones` (asistente por callback, `revocada_en`, motivo `operador`/`reutilizacion`/`cierre`), `codigos_autorizacion`, `tokens` (HMAC, `sal`, sustitución), `ordenes` (`pendiente`, `entregada`, `confirmada`, `anulada`), `ejecuciones`, `informes` (`ejecucion_id` único, rangos del contrato, `campos_descartados`), `limites_origen` (HMAC, ámbito), `sucesos`. Ninguna columna con token, código, dirección ni texto libre. Purga a 24 h, en las funciones que escriben, de solicitudes caducadas y `limites_origen` vencidos; ejecuciones, informes y sucesos, hasta la reversión tras el cierre (C-6).
 
@@ -328,7 +328,7 @@ No delegables (lo delegado, en `aclaraciones.md`):
 - **R-6** Cuentas de ChatGPT y Claude Pro para V-102 y RD-078.
 - **R-7** Antes del paso 6: si algo de la cuenta Max no se puede desactivar para la tarea, ¿se prueba igual? (M-2).
 - **R-8** Con plan de pago, CAD-046 pide metadatos de CAD-002 tras el cierre y N-1 todo en 503: enmendar CAD-046 o conservar el grupo sin `OPERACION_HUELLA`.
-- **P1** Respuesta expresa a `readOnlyHint: false` (RD-016); y si PRUEBA-022 halla concesiones ajenas a `PUBLIC`.
+- **P1** Respuesta expresa a `readOnlyHint: false` (RD-016); y si PRUEBA-022 halla concesiones ajenas a `PUBLIC` (AR-01 decidida por delegación D-036, 20/11/2026; ADR-0007).
 
 **E-1** (la aplica el orquestador), RD-023: «…ruta, herramienta, resultado, código de error y, como valores de listas cerradas, duración en milisegundos, versión del protocolo y asistente».
 

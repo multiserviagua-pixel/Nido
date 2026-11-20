@@ -12,6 +12,7 @@ El aislamiento entre clientes es un requisito del producto (artículo 2). En Sup
 2. **Dashboards con la sesión del usuario**: clave publicable y RLS. Las políticas se apoyan en `usuarios_cliente` y `administradores`, nunca en datos editables por el usuario. Las de superadmin exigen además doble factor.
 3. **Vistas con `security_invoker`**, para que apliquen el RLS de quien consulta.
 4. **El conector no consulta tablas.** Se conecta con un rol de Postgres propio cuyo único permiso es ejecutar tres funciones `security definer` en un esquema no expuesto. Cada función recibe el HMAC del token y deriva el cliente dentro de la base de datos. El identificador del cliente nunca es un parámetro.
+   Precisado para la 001 por ADR-0007 (cinco funciones y un segundo rol de gestión).
 5. **Clave secreta confinada** a `src/lib/supabase/admin.ts`, para lo que no tiene alternativa. Ninguna lectura o escritura de datos de clientes en los dashboards pasa por ella.
 6. Las funciones `security definer` llevan `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema; D-035) y sus permisos se revocan a todos y se conceden solo al rol que las necesita.
 7. **Pruebas pgTAP bloqueantes** en CI: acceso cruzado en tablas y vistas, funciones del conector no invocables por la API pública, tablas internas ilegibles.

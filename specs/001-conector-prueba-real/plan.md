@@ -25,7 +25,7 @@ Las herramientas van **una a una** y en ese orden dentro de T-103 (funciones SQL
 
 **`[P]`** (archivos disjuntos, dependencias cumplidas; como mucho dos subagentes a la vez, D-024, y las revisiones `opus` cuentan): T-101, T-102, T-104, T-107, T-109, T-112, T-113, T-115, T-116, T-118. Parejas útiles: T-101 ∥ T-102; T-104 ∥ T-103; T-107 ∥ T-105; T-112 ∥ T-111; T-113 con T-111 o T-112; T-115, T-116 y T-118 con cualquiera.
 
-**Sin la respuesta de AR-01.** Ninguna tarea de código lee el valor de `readOnlyHint` ni la `description`: el filtro copia el contrato vigente y PRUEBA-003 compara con él. Solo T-115 (a) espera a AR-01, y solo T-117 (b) espera a T-115 (CA-009 pide las mismas anotaciones desde el paso 5 hasta el final).
+**Sin la respuesta de AR-01 (resuelta por delegación D-036, 20/11/2026; ADR-0007).** Ninguna tarea de código lee el valor de `readOnlyHint` ni la `description`: el filtro copia el contrato vigente y PRUEBA-003 compara con él. Solo T-115 (a) espera a AR-01, y solo T-117 (b) espera a T-115 (CA-009 pide las mismas anotaciones desde el paso 5 hasta el final).
 
 ## Frontera con la 002
 
@@ -137,7 +137,7 @@ No se asignan a ningún agente ni se delegan (D-019: cuentas, proyectos, secreto
 
 | ID | Acción | Cuándo | Desbloquea |
 | --- | --- | --- | --- |
-| AR-01 | P1: respuesta expresa a `readOnlyHint: false` (RD-016); qué hacer si PRUEBA-022 halla concesiones ajenas a `PUBLIC`; aceptar el límite m-3 | Con P1; no por delegación | T-115 → T-117 |
+| AR-01 | P1: respuesta expresa a `readOnlyHint: false` (RD-016); qué hacer si PRUEBA-022 halla concesiones ajenas a `PUBLIC`; aceptar el límite m-3 | Resuelta por delegación D-036, 20/11/2026 (ADR-0007), revocable | T-115 → T-117 |
 | AR-02 | R-1: `<dominio>` para `URL_PUBLICA` y el CNAME de `pre-nido` (la alternativa `vercel.app` está en VERIFICAR) | Ya | T-117 |
 | AR-03 | R-3: en Claude Max, pasos 1 y 2 del guion (Gmail con sus 7 herramientas y el resto «Blocked»; declaración sin la dirección; inventario fechado; arranque instalado) | Antes del día D | T-118 (b) |
 | AR-04 | Buzón de pruebas: mensajes `HIA-PRUEBA-NN`, etiquetas, `prueba-revisado` vacía, mensaje con órdenes, dirección de control (fuera del repositorio), inventario fechado | Antes del día D | T-118 (b) |
@@ -164,12 +164,13 @@ Este plan no las decide.
 - **DP-3. Versión de PGlite.** 002 diseño fija 0.5.17 (publicada el 19/11/2026); el diseño de la 001 exige 7 días de enfriamiento. Una sola versión para las dos funciones, fijada antes de 002·T-003.
 - **DP-4. Destino de lo que este plan toma de la 002** (`vercel.json`, `supervision.ts`, despliegue): confirmar que la 002 lo da por asignado aquí (002 plan, R-3).
 - **DP-5. Calendario.** Con este tamaño, empezar antes del 22/11 no es realista y el 23/11 a las 08:00 está en riesgo: decidir pronto R-5 (cerrar con lo probado o contratar Pro un mes) y `decision-pago` (26/11).
-- **Del diseño**, siguen abiertas: P1 (AR-01), R-1 (AR-02), R-7 (AR-09), R-8 (AR-10), R-2, R-3, R-6; E-1 y C-6, del orquestador.
+- **Del diseño**, siguen abiertas: R-1 (AR-02), R-7 (AR-09), R-8 (AR-10), R-2, R-3, R-6; E-1 y C-6, del orquestador.
 
 ## Aprobación
 
-Puerta P1. La abre el responsable, con fecha. La parte del contrato (T-115 (a)) exige su respuesta expresa a RD-016; no vale por delegación.
+Puerta P1. La abre el responsable, con fecha. La parte del contrato (T-115 (a)) exigía su respuesta expresa a RD-016; AR-01 decidida por delegación D-036, 20/11/2026 (ADR-0007), revocable.
 
 | Fecha | Quién | Resultado |
 | --- | --- | --- |
 | 19/11/2026 | Orquestador, por delegación (D-019) | P1 **parcial**: abierta para T-101 a T-149 y T-151 (depende de la 002). **Sin abrir**: T-150 y lo que dependa de AR-01 (RD-016), que no se delega; ni DP-1, DP-2 ni DP-4. Estado de la 001 sigue DISEÑADA hasta la respuesta del responsable. Alerta: 64 tareas; el calendario del 23/11 está en riesgo (DP-5) |
+| 20/11/2026 | Coordinación, por delegación (D-036), en nombre del responsable | AR-01 aprobada por delegación D-036, 20/11/2026, revocable: `readOnlyHint: false` en las tres herramientas; si PRUEBA-022 halla concesiones ajenas a `PUBLIC`, la prueba falla y se revocan (ADR-0007 punto 12); se acepta el límite m-3, vigente solo hasta el cierre de la 001. Dictamen del auditor: condición de RD-016 levantada |

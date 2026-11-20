@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:humanaia:agentes-correo:contratos:informe:1",
   "title": "Informe de una revisión",
-  "description": "Cifras y estado de una revisión del agente de correo. Solo admite enteros acotados, booleanos y valores de listas cerradas. Antes de validar, el servidor descarta cualquier campo que no figure aquí y solo cuenta cuántos eran; no guarda ni su nombre ni su valor. Está prohibido añadir campos de texto libre (constitución, artículo 1).",
+  "description": "Cifras y estado de una revisión del agente de correo. Solo admite enteros acotados, booleanos y valores de listas cerradas. additionalProperties: false describe lo que se publica al asistente y lo que se guarda. Antes de validar, el servidor descarta cualquier campo que no figure aquí y solo cuenta cuántos eran; no guarda ni su nombre ni su valor. Está prohibido añadir campos de texto libre (constitución, artículo 1).",
   "x-version-esquema": 1,
   "type": "object",
   "additionalProperties": false,

@@ -281,4 +281,4 @@ Asuntos abiertos del diseño anterior (A-n) y nuevos, resueltos por el `arquitec
 Sin respuesta todavía; detalle en `diseno.md`, «Asuntos para el responsable».
 
 - **R-7** (M-2 del dictamen): si en la cuenta Max algún conector, complemento o capacidad distinto de Gmail de pruebas y HumanaIA no se puede desactivar para la tarea, ¿se hace igual la prueba? Hace falta la respuesta antes del paso 6 del guion.
-- **A-3, revisada:** `readOnlyHint: false` deja de ser decisión por delegación. La respuesta expresa del responsable se recoge en P1 (RD-016).
+- **A-3, revisada:** `readOnlyHint: false` deja de ser decisión por delegación. La respuesta expresa del responsable se recoge en P1 (RD-016); AR-01 decidida por delegación D-036, 20/11/2026 (ADR-0007), revocable.
