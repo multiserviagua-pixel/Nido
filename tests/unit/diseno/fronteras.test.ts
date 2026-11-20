@@ -646,6 +646,40 @@ export default async function Pagina() {
     },
     regla: "R7 generateMetadata en la muestra",
   },
+  // R9: nada fuera de src/app/muestra/ importa la muestra (020 T-005, condición (3) del
+  // auditor-seguridad en T-004): así su código no puede llegar a otra ruta ni a producción.
+  {
+    nombre: "una página fuera de la muestra importa la comprobación de la muestra",
+    cambios: {
+      "src/app/otra/page.tsx": `import { comprobarAccesoMuestra } from "../muestra/_datos/acceso-muestra";\nexport default async function P() {\n  await comprobarAccesoMuestra();\n  return null;\n}\n`,
+    },
+    regla: "R9 importa la muestra desde fuera",
+    archivo: "src/app/otra/page.tsx",
+  },
+  {
+    nombre: "un componente importa la muestra por el alias @/, aunque sea solo de tipo",
+    cambios: {
+      "src/components/cifras/Tarjeta.tsx": `import type { comprobarAccesoMuestra } from "@/app/muestra/_datos/acceso-muestra";\nexport type T = typeof comprobarAccesoMuestra;\n`,
+    },
+    regla: "R9 importa la muestra desde fuera",
+    archivo: "src/components/cifras/Tarjeta.tsx",
+  },
+  {
+    nombre: "un archivo de src/lib importa una página de la muestra con import() dinámico",
+    cambios: {
+      "src/lib/errores/referencia.ts": `export const crearReferencia = (): string => "REF-0";\nexport const cargar = () => import("../../app/muestra/page.muestra");\n`,
+    },
+    regla: "R9 importa la muestra desde fuera",
+    archivo: "src/lib/errores/referencia.ts",
+  },
+  {
+    nombre: "un archivo fuera reexporta algo de la muestra",
+    cambios: {
+      "src/app/puente.ts": `export { comprobarAccesoMuestra } from "./muestra/_datos/acceso-muestra";\n`,
+    },
+    regla: "R9 importa la muestra desde fuera",
+    archivo: "src/app/puente.ts",
+  },
   // R0: lo que no se puede resolver
   {
     nombre: "importación interna que no existe",

@@ -150,6 +150,19 @@ describe("PRUEBA-024 · control 1: la compilación solo incluye la muestra con E
         "src/app/muestra/page.tsx",
       ]);
     });
+    // 020 T-005, condición (3) del auditor-seguridad en T-004: `forbidden` y `unauthorized`
+    // también son archivos especiales de Next y serían ruta en cualquier compilación.
+    it("un archivo forbidden.tsx o unauthorized.tsx en la muestra también se detecta", () => {
+      const raiz = crearArbol({
+        "src/app/muestra/forbidden.tsx": "export default function F() { return null; }\n",
+        "src/app/muestra/zona/unauthorized.tsx": "export default function U() { return null; }\n",
+        "src/app/muestra/layout.muestra.tsx": "export default function L() { return null; }\n",
+      });
+      expect(archivosDeRutaSinExtensionDeLaMuestra(raiz)).toEqual([
+        "src/app/muestra/forbidden.tsx",
+        "src/app/muestra/zona/unauthorized.tsx",
+      ]);
+    });
   });
 });
 
@@ -215,8 +228,11 @@ async function invocarComprobacion(raiz: string): Promise<unknown> {
 }
 
 function preparar(caso: CasoDeAcceso): void {
+  // Cada caso parte de cero: las variables VERCEL* de un caso no pasan al siguiente.
+  vi.unstubAllEnvs();
   estado.cabeceras = cabecerasDe(caso);
   vi.stubEnv("ENTORNO", caso.entorno);
+  for (const [nombre, valor] of Object.entries(caso.plataforma ?? {})) vi.stubEnv(nombre, valor);
 }
 
 /** Recorre los casos sobre cada punto de entrada y devuelve lo que no coincide con lo esperado. */
@@ -277,7 +293,7 @@ async function recorrer(
 const BLOQUES: ReadonlyArray<readonly [string, (c: CasoDeAcceso) => boolean]> = [
   ["control positivo: en local y en preproducción la muestra se ve", (c) => c.abierta],
   [
-    "Host fuera de la lista, ausente o con trucos, y X-Forwarded-Host falsificado: inexistente",
+    "Host fuera de la lista, ausente o con trucos, X-Forwarded-Host falsificado y localhost en la plataforma: inexistente",
     (c) => !c.abierta && !c.nombre.includes("ENTORNO="),
   ],
   [
@@ -315,6 +331,8 @@ const ENTORNOS = ["desarrollo", "preproduccion"];
 export async function comprobarAccesoMuestra(): Promise<void> {
   const host = (await headers()).get("host") ?? "";
   const nombre = host.replace(/:\\d+$/, "");
+  const enPlataforma = Object.keys(process.env).some((n) => n.startsWith("VERCEL") && process.env[n]);
+  if (enPlataforma) notFound();
   if (!NOMBRES.includes(nombre) || !ENTORNOS.includes(process.env.ENTORNO ?? "")) notFound();
 }
 `;
@@ -401,6 +419,16 @@ export default async () => {
         ),
       },
       "ENTORNO=",
+    ],
+    [
+      "una comprobación que admite localhost en la plataforma (Host lo pone el cliente)",
+      {
+        "src/app/muestra/_datos/acceso-muestra.ts": ACCESO_CORRECTO.replace(
+          "  if (enPlataforma) notFound();\n",
+          "",
+        ),
+      },
+      "en la plataforma",
     ],
     [
       "una comprobación del nombre por subcadena",

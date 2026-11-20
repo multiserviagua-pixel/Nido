@@ -52,7 +52,7 @@ export async function evaluarControl1(
 }
 
 const ESPECIALES =
-  /^(page|layout|route|template|default|loading|error|not-found|global-error)\.(tsx|ts|jsx|js|mjs)$/;
+  /^(page|layout|route|template|default|loading|error|not-found|global-error|forbidden|unauthorized)\.(tsx|ts|jsx|js|mjs)$/;
 
 /** Archivos de la muestra que serían ruta en cualquier compilación (sin la extensión `muestra.tsx`). */
 export function archivosDeRutaSinExtensionDeLaMuestra(raiz: string): string[] {
@@ -77,6 +77,8 @@ export type CasoDeAcceso = {
   host?: string;
   reenviado?: string;
   entorno: string | undefined;
+  /** Variables `VERCEL*` del caso: con cualquiera, se está en la plataforma (MAYOR de T-005). */
+  plataforma?: Readonly<Record<string, string>>;
   abierta: boolean;
 };
 
@@ -177,6 +179,25 @@ export const CASOS_DE_ACCESO: readonly CasoDeAcceso[] = [
     entorno: "desarrollo",
     abierta: false,
   },
+  // En la plataforma, `localhost` y `127.0.0.1` no valen: `Host` lo pone el cliente (MAYOR del
+  // auditor-seguridad en T-005, art. 3, A-3).
+  ...(
+    [
+      ["VERCEL=1", { VERCEL: "1" }],
+      ["VERCEL_ENV=preview", { VERCEL_ENV: "preview" }],
+      ["solo VERCEL_URL", { VERCEL_URL: "algo.vercel.app" }],
+    ] as const
+  ).flatMap(([nombre, plataforma]) =>
+    ["localhost", "127.0.0.1:3000"].flatMap((host) =>
+      ["preproduccion", "desarrollo"].map((entorno): CasoDeAcceso => ({
+        nombre: `${host} en la plataforma (${nombre}), ${entorno}`,
+        host,
+        entorno,
+        plataforma,
+        abierta: false,
+      })),
+    ),
+  ),
   // ENTORNO desconocido al servir, con el nombre correcto.
   ...[...ENTORNOS_QUE_CIERRAN, ...ENTORNOS_EXTRA_QUE_CIERRAN].map((entorno): CasoDeAcceso => ({
     nombre: `localhost con ENTORNO=${JSON.stringify(entorno)} al servir`,

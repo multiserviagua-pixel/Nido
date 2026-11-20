@@ -639,6 +639,27 @@ function reglaPuntosDeEntrada(grafo: Grafo, salida: Hallazgo[]): void {
   }
 }
 
+// ---------------------------------------------------------------- R9: la muestra no sale de su carpeta
+
+const CARPETA_DE_LA_MUESTRA = "src/app/muestra/";
+
+/** Nada fuera de `src/app/muestra/` importa la muestra, de ninguna forma (estática, dinámica,
+ * reexportación o solo de tipo): su código no puede llegar a otra ruta (020 T-005). */
+function reglaMuestraEncerrada(grafo: Grafo, salida: Hallazgo[]): void {
+  for (const m of grafo.modulos.values()) {
+    if (m.ruta.startsWith(CARPETA_DE_LA_MUESTRA)) continue;
+    for (const a of m.aristas) {
+      if (a.hacia?.startsWith(CARPETA_DE_LA_MUESTRA)) {
+        salida.push({
+          regla: "R9 importa la muestra desde fuera",
+          archivo: m.ruta,
+          detalle: `${a.hacia} (${a.tipo})`,
+        });
+      }
+    }
+  }
+}
+
 // ---------------------------------------------------------------- conjunto
 
 export function comprobarFronteras(
@@ -654,5 +675,6 @@ export function comprobarFronteras(
   reglaHerramientas(grafo, salida);
   reglaArbolesDePanel(grafo, salida);
   reglaPuntosDeEntrada(grafo, salida);
+  reglaMuestraEncerrada(grafo, salida);
   return salida;
 }

@@ -70,11 +70,63 @@ describe("configuracion: leerEntorno", () => {
     },
   );
 
+  // 020 T-005, condición (1) del auditor-seguridad en T-004 (art. 3): en el entorno de producción
+  // de la plataforma no se devuelve ningún entorno, ni siquiera el que diga `ENTORNO`.
+  it.each(["preproduccion", "produccion", "desarrollo"])(
+    "ENTORNO=%s con VERCEL_ENV=production: undefined",
+    async (valor) => {
+      vi.stubEnv("ENTORNO", valor);
+      vi.stubEnv("VERCEL_ENV", "production");
+      expect(await leerEntorno()).toBeUndefined();
+    },
+  );
+
+  it("ENTORNO=preproduccion con VERCEL_ENV=preview sigue siendo preproduccion", async () => {
+    vi.stubEnv("ENTORNO", "preproduccion");
+    vi.stubEnv("VERCEL_ENV", "preview");
+    expect(await leerEntorno()).toBe("preproduccion");
+  });
+
   it("no exige el resto de variables: preproduccion sin DSN ni VERCEL sigue siendo preproduccion", async () => {
     vi.stubEnv("ENTORNO", "preproduccion");
     vi.stubEnv("SUPERVISION_DSN", undefined);
     vi.stubEnv("VERCEL", undefined);
     expect(await leerEntorno()).toBe("preproduccion");
+  });
+});
+
+// 020 T-005, MAYOR del auditor-seguridad (art. 3, A-3): `localhost` y `127.0.0.1` solo valen
+// fuera de la plataforma. Mismo criterio de «VERCEL*» que el predicado de desarrollo.
+async function fueraDeLaPlataforma(): Promise<boolean> {
+  vi.resetModules();
+  const modulo = await import("../../../src/lib/plataforma/configuracion");
+  return modulo.fueraDeLaPlataforma();
+}
+
+describe("configuracion: fueraDeLaPlataforma", () => {
+  it("sin ninguna variable VERCEL*: true", async () => {
+    expect(await fueraDeLaPlataforma()).toBe(true);
+  });
+
+  it.each([
+    ["VERCEL", "1"],
+    ["VERCEL_ENV", "preview"],
+    ["VERCEL_ENV", "production"],
+    ["VERCEL_ENV", "development"],
+    ["VERCEL_URL", "algo.vercel.app"],
+    ["VERCEL_REGION", "fra1"],
+    ["VERCEL_GIT_COMMIT_SHA", "abc1234"],
+  ])("con %s=%s: false", async (nombre, valor) => {
+    vi.stubEnv(nombre, valor);
+    expect(await fueraDeLaPlataforma()).toBe(false);
+  });
+
+  it("no depende de ENTORNO ni de NODE_ENV", async () => {
+    vi.stubEnv("ENTORNO", "preproduccion");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(await fueraDeLaPlataforma()).toBe(true);
+    vi.stubEnv("VERCEL", "1");
+    expect(await fueraDeLaPlataforma()).toBe(false);
   });
 });
 
@@ -97,6 +149,12 @@ describe("next.config.ts: pageExtensions según ENTORNO (control 1)", () => {
       expect(await extensiones()).toEqual(POR_DEFECTO);
     },
   );
+
+  it("preproduccion con VERCEL_ENV=production (compilación del proyecto de producción): sin la muestra", async () => {
+    vi.stubEnv("ENTORNO", "preproduccion");
+    vi.stubEnv("VERCEL_ENV", "production");
+    expect(await extensiones()).toEqual(POR_DEFECTO);
+  });
 
   it("desarrollo en una compilación (NODE_ENV=production): sin la muestra", async () => {
     vi.stubEnv("ENTORNO", "desarrollo");

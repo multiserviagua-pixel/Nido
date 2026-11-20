@@ -91,9 +91,24 @@ export const RE_DSN = /^https:\/\/([0-9a-f]{32})@(o[0-9]+\.ingest\.de\.sentry\.i
 function predicadoDesarrollo(fuente: Fuente): boolean {
   if (fuente.ENTORNO !== "desarrollo") return false;
   if (fuente.NODE_ENV === "production") return false;
-  return !Object.keys(fuente).some(
+  return !hayVariablesDePlataforma(fuente);
+}
+
+// Único criterio de «estoy en la plataforma»: alguna variable VERCEL* con valor (también las que
+// no están en la lista cerrada, como VERCEL_GIT_COMMIT_SHA). Lo usan el predicado de desarrollo y
+// `fueraDeLaPlataforma()`.
+function hayVariablesDePlataforma(fuente: Fuente): boolean {
+  return Object.keys(fuente).some(
     (n) => n.startsWith("VERCEL") && fuente[n] !== undefined && fuente[n] !== "",
   );
+}
+
+// Sin ninguna variable VERCEL* con valor: el proceso no corre en la plataforma. No mira `ENTORNO`
+// ni `NODE_ENV` (`next start` en local fuerza `production`). Lo usa solo
+// `comprobarAccesoMuestra()` (020 T-005): `localhost` y `127.0.0.1` los pone el cliente en `Host`,
+// así que solo valen fuera de la plataforma (MAYOR del auditor-seguridad, art. 3, A-3).
+export function fueraDeLaPlataforma(): boolean {
+  return !hayVariablesDePlataforma(process.env);
 }
 
 // Valida la fuente que se le pasa (no lee process.env; el llamador la construye). Solo mira
@@ -177,11 +192,16 @@ export function esDesarrollo(): boolean {
   return predicadoDesarrollo(process.env);
 }
 
-// Solo `ENTORNO`, sin validar el resto del grupo: lo usan la compilación (`next.config.ts`,
-// control 1 de la muestra, 020) y la comprobación de la muestra al servir (control 2). Valor exacto
-// de la lista; `desarrollo`, además, con el predicado único (A-1, A-3). Ausente, desconocido o
-// ilegible: `undefined`, y quien lo llama cierra.
+// Solo `ENTORNO`, sin validar el resto del grupo. Lo usan la compilación (`next.config.ts`,
+// control 1 de la muestra, 020 T-004) y `comprobarAccesoMuestra()` al servir
+// (`src/app/muestra/_datos/acceso-muestra.ts`, control 2, 020 T-005, que además pide
+// `fueraDeLaPlataforma()` para los nombres locales); nadie más. Valor exacto de
+// la lista; `desarrollo`, además, con el predicado único (A-1, A-3). En el entorno de producción
+// de la plataforma (`VERCEL_ENV=production`) no devuelve ninguno, diga lo que diga `ENTORNO`
+// (condición del auditor-seguridad en 020 T-004; art. 3). Ausente, desconocido o ilegible:
+// `undefined`, y quien lo llama cierra.
 export function leerEntorno(): Entorno | undefined {
+  if (process.env.VERCEL_ENV === "production") return undefined;
   const valor = process.env.ENTORNO;
   if (valor === "desarrollo") return predicadoDesarrollo(process.env) ? "desarrollo" : undefined;
   if (valor === "preproduccion" || valor === "produccion") return valor;
