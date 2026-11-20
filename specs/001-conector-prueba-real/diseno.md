@@ -133,7 +133,7 @@ Roles sin permisos sobre tablas, contraseñas por una persona: `conector_prueba_
 
 Tablas con RLS sin políticas y enumerados de `docs/MODELO-DATOS.sql`: `licencias` (A, B), `codigos_activacion`, `clientes_oauth` (callbacks restringidos a la lista), `solicitudes_autorizacion` (HMAC de `state`), `conexiones` (asistente por callback, `revocada_en`, motivo `operador`/`reutilizacion`/`cierre`), `codigos_autorizacion`, `tokens` (HMAC, `sal`, sustitución), `ordenes` (`pendiente`, `entregada`, `confirmada`, `anulada`), `ejecuciones`, `informes` (`ejecucion_id` único, rangos del contrato, `campos_descartados`), `limites_origen` (HMAC, ámbito), `sucesos`. Ninguna columna con token, código, dirección ni texto libre. Purga a 24 h, en las funciones que escriben, de solicitudes caducadas y `limites_origen` vencidos; ejecuciones, informes y sucesos, hasta la reversión tras el cierre (C-6).
 
-Funciones `security definer`, `search_path = ''`, `execute` solo al rol, `jsonb` con `resultado` cerrado, reloj de la base de datos. La fase 2 conserva su forma cambiando solo `almacen.ts`:
+Funciones `security definer`, `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema: `conector_prueba.licencias`; D-035, 20/11/2026), `execute` solo al rol, `jsonb` con `resultado` cerrado, reloj de la base de datos. La fase 2 conserva su forma cambiando solo `almacen.ts`:
 
 | Función | Resultados |
 | --- | --- |

@@ -40,6 +40,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - (e) `mcp_enviar_informe`. Prueba: `tu/bd/informe.test.ts`, PRUEBA-017 (parte BD), PRUEBA-007 (parte: 10 → 1 informe), PRUEBA-014 (parte).
 - (f) `mcp_confirmar_orden`. Prueba: `tu/bd/confirmar.test.ts`, PRUEBA-007 (parte: 10 → 1 `confirmada`), PRUEBA-015 (parte), PRUEBA-014 (parte).
 - Condiciones del dictamen de T-102 (apoyo `tests/conector/apoyo/bd.ts`): la hora en el SQL solo con `now()` o `current_timestamp` (sin `pg_catalog.now()`, sin `age()` de un argumento, sin `clock_timestamp()` para caducidades); cuerpos de función entre `$$`, no entre comillas simples; caducidad acotada por los dos lados. PRUEBA-007 parte B no demuestra carreras (una sola conexión): queda para la 008 (L) y así se anota en su evidencia.
+- Aviso de la 010 (propuesta 25): su M01 revoca de forma global los permisos por defecto de `postgres` (`revoke all on tables, sequences, functions from public, anon, authenticated, service_role, conector`); toda tabla, secuencia o función creada después en `conector_prueba` lleva su `grant` explícito (ya previsto en M-4).
 - Archivos: `sql`, `bd/{001_estado.reversion,semilla}.sql`, `bd/raiz-supabase.crt`, `bd/LEEME.md`, pruebas.
 
 ### T-104 `[P]` · Configuración, secretos, contratos y prompt
@@ -132,6 +133,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - (a) `npm run pruebas-bd`. Prueba: PRUEBA-022 (L; ajenas a `PUBLIC` → AR-14), PRUEBA-008 (6543, 10 a la vez), PRUEBA-018 (L), PRUEBA-047 (parte: `eu-north-1`); V-5, V-10, V-107.
 - (b) Ciclo con el cliente oficial contra `Nido`. Prueba: PRUEBA-004 (L).
 - (c) Tras AR-06, la contraseña local ya no conecta tras revertir y reaplicar. Prueba: PRUEBA-022 (L, parte).
+- Aviso de la 010 (propuesta 25): M01 revoca de forma global los permisos por defecto de `postgres`; las pruebas de privilegios no dan por supuesto ningún permiso por defecto y comprueban el `grant` explícito de cada tabla, secuencia y función de `conector_prueba`.
 - Archivos: `ev/T-114/`.
 
 ## Bloque 5 · Contratos, supervisión y despliegue en Vercel (`arn1`)
