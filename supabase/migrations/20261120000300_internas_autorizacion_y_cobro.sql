@@ -111,9 +111,8 @@ begin
     from public, anon, authenticated, service_role, conector;
 
   for v_fila in
-    select distinct pg_catalog.format('%I.%I', n.nspname, c.relname) as tabla,
-           case when a.grantee = 0 then 'PUBLIC'
-                else pg_catalog.quote_ident(r.rolname) end as destino
+    select distinct n.nspname as esquema, c.relname as objeto,
+           r.rolname as destino
       from pg_catalog.pg_class c
       join pg_catalog.pg_namespace n on n.oid = c.relnamespace
       cross join lateral pg_catalog.aclexplode(c.relacl) a
@@ -122,7 +121,12 @@ begin
        and c.relname in ('clientes_oauth', 'codigos_autorizacion', 'tokens', 'eventos_stripe')
        and a.grantee <> c.relowner
   loop
-    execute pg_catalog.format('revoke all on table %s from %s', v_fila.tabla, v_fila.destino);
+    if v_fila.destino is null then
+      execute pg_catalog.format('revoke all on table %I.%I from public', v_fila.esquema, v_fila.objeto);
+    else
+      execute pg_catalog.format('revoke all on table %I.%I from %I',
+        v_fila.esquema, v_fila.objeto, v_fila.destino);
+    end if;
   end loop;
 
   if exists (

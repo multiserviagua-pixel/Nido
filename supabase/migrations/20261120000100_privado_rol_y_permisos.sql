@@ -70,26 +70,33 @@ begin
   -- solo de su dueño: se retira lo que tenga cualquier otro destinatario. Si
   -- no se pudiera retirar, el bloque entero falla y no cambia nada.
   for v_destino in
-    select distinct case when a.grantee = 0 then 'PUBLIC'
-                         else pg_catalog.quote_ident(r.rolname) end
+    select distinct r.rolname
       from pg_catalog.pg_namespace n
       cross join lateral pg_catalog.aclexplode(n.nspacl) a
       left join pg_catalog.pg_roles r on r.oid = a.grantee
      where n.nspname = 'privado' and a.grantee <> n.nspowner
   loop
-    execute pg_catalog.format('revoke all on schema privado from %s', v_destino);
+    -- Sin nombre de rol (grantee = 0) es PUBLIC. Solo marcadores %I (D-11, regla 5).
+    if v_destino is null then
+      execute pg_catalog.format('revoke all on schema privado from public');
+    else
+      execute pg_catalog.format('revoke all on schema privado from %I', v_destino);
+    end if;
   end loop;
   for v_destino in
-    select distinct case when a.grantee = 0 then 'PUBLIC'
-                         else pg_catalog.quote_ident(r.rolname) end
+    select distinct r.rolname
       from pg_catalog.pg_class c
       cross join lateral pg_catalog.aclexplode(c.relacl) a
       left join pg_catalog.pg_roles r on r.oid = a.grantee
      where c.oid = 'privado.permisos_por_defecto_previos'::pg_catalog.regclass
        and a.grantee <> c.relowner
   loop
-    execute pg_catalog.format(
-      'revoke all on table privado.permisos_por_defecto_previos from %s', v_destino);
+    if v_destino is null then
+      execute pg_catalog.format('revoke all on table privado.permisos_por_defecto_previos from public');
+    else
+      execute pg_catalog.format(
+        'revoke all on table privado.permisos_por_defecto_previos from %I', v_destino);
+    end if;
   end loop;
 
   -- Un revoke que no retira nada no da error (p. ej., una concesión con otro

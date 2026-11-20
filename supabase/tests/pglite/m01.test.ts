@@ -999,3 +999,98 @@ describe("K (mayor 1): los tipos de declare no se resuelven con la ruta de la se
     ).toBe(0);
   });
 });
+
+describe("J (vuelta 4): permisos por defecto concedidos con grant option vuelven con grant option", () => {
+  const CON_OPCION = `
+    alter default privileges for role postgres grant select on tables to anon with grant option;
+    alter default privileges for role postgres in schema public grant update on tables to authenticated with grant option;
+    alter default privileges for role postgres grant usage on sequences to service_role with grant option;
+    alter default privileges for role postgres in schema public grant execute on functions to authenticated with grant option;`;
+
+  async function listas(): Promise<string[]> {
+    const r = await db.query<{ fila: string }>(
+      `select coalesce(n.nspname, '*') || ':' || d.defaclobjtype::text || ':' || d.defaclacl::text as fila
+         from pg_default_acl d left join pg_namespace n on n.oid = d.defaclnamespace
+        where d.defaclrole = 'postgres'::regrole and d.defaclobjtype in ('r', 'S', 'f')
+        order by 1`,
+    );
+    return r.rows.map((f) => f.fila);
+  }
+
+  // Las listas de serie ya dan todo; con la opción aparece un asterisco tras la letra.
+  const CON_ASTERISCO = [
+    /anon=[a-zA-Z]*r\*/,
+    /authenticated=[a-zA-Z]*w\*/,
+    /service_role=[a-zA-Z]*U\*/,
+    /authenticated=X\*/,
+  ];
+
+  it("la reversión restaura las listas exactas, también el with grant option", async () => {
+    await db.exec(CON_OPCION);
+    const antes = (await listas()).join("\n");
+    for (const re of CON_ASTERISCO) expect(antes, "precondición: " + re).toMatch(re);
+    await aplicar(db, M01());
+    await revertir(db, M01());
+    expect((await listas()).join("\n")).toEqual(antes);
+  });
+});
+
+describe("J (vuelta 5, art. 11): las 48 ramas de la restauración, de ida y vuelta exacta", () => {
+  // 12 privilegios (8 de tablas, 3 de secuencias, 1 de funciones) por 4 combinaciones
+  // de ámbito (global o de un esquema) y opción (con o sin with grant option): son las
+  // 48 ramas de supabase/reversiones/20261120000100_privado_rol_y_permisos.sql.
+  const PRIVILEGIOS: [string, string][] = [
+    ...[
+      "select",
+      "insert",
+      "update",
+      "delete",
+      "truncate",
+      "references",
+      "trigger",
+      "maintain",
+    ].map((p): [string, string] => [p, "tables"]),
+    ...["usage", "select", "update"].map((p): [string, string] => [p, "sequences"]),
+    ["execute", "functions"],
+  ];
+
+  async function listas(base: Base): Promise<string[]> {
+    const r = await base.query<{ fila: string }>(
+      `select coalesce(n.nspname, '*') || ':' || d.defaclobjtype::text || ':' || d.defaclacl::text as fila
+         from pg_default_acl d left join pg_namespace n on n.oid = d.defaclnamespace
+        where d.defaclrole = 'postgres'::regrole and d.defaclobjtype in ('r', 'S', 'f')
+        order by 1`,
+    );
+    return r.rows.map((f) => f.fila);
+  }
+
+  for (const ambito of ["global", "de esquema"]) {
+    for (const opcion of ["sin opción", "con grant option"]) {
+      it(`12 privilegios, ámbito ${ambito}, ${opcion}`, async () => {
+        await db.exec("create schema esq_j");
+        // Se parte de cero para los cuatro destinatarios, y solo se concede lo probado.
+        await db.exec(
+          `alter default privileges for role postgres revoke all on tables from anon;
+           alter default privileges for role postgres revoke all on sequences from anon;
+           alter default privileges for role postgres revoke all on functions from anon;`,
+        );
+        const donde = ambito === "global" ? "" : "in schema esq_j";
+        const con = opcion === "sin opción" ? "" : "with grant option";
+        for (const [p, objetos] of PRIVILEGIOS) {
+          await db.exec(
+            `alter default privileges for role postgres ${donde} grant ${p} on ${objetos} to anon ${con}`,
+          );
+        }
+        const antes = await listas(db);
+        // Precondición: de verdad hay doce letras (o doce con asterisco) para anon.
+        const mias = antes.filter((f) =>
+          ambito === "global" ? f.startsWith("*:") : f.startsWith("esq_j:"),
+        );
+        expect(mias.join("\n")).toMatch(opcion === "sin opción" ? /anon=/ : /anon=[a-zA-Z]*\*/);
+        await aplicar(db, M01());
+        await revertir(db, M01());
+        expect(await listas(db)).toEqual(antes);
+      });
+    }
+  }
+});

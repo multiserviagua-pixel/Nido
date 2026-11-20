@@ -42,8 +42,7 @@ declare
   v_ruta_previa pg_catalog.text;
   v_fila pg_catalog.record;
   v_permiso pg_catalog.record;
-  v_clase pg_catalog.text;
-  v_ambito pg_catalog.text;
+  v_destino pg_catalog.text;
 begin
   if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if;
   v_ruta_previa := pg_catalog.current_setting('search_path');
@@ -100,12 +99,26 @@ begin
        and not exists (select 1 from pg_catalog.pg_namespace n where n.nspname = v_fila.esquema) then
       continue;
     end if;
-    v_clase := case v_fila.tipo when 'r' then 'tables' when 'S' then 'sequences' else 'functions' end;
-    v_ambito := case when v_fila.esquema is null then ''
-                     else pg_catalog.format(' in schema %I', v_fila.esquema) end;
-    execute pg_catalog.format(
-      'alter default privileges for role postgres%s revoke all on %s from public, anon, authenticated, service_role, conector',
-      v_ambito, v_clase);
+    -- D-11, regla 5: cada sentencia es un literal fijo; solo los nombres (esquema,
+    -- rol) entran como %I. Por eso el ambito, la opcion y el privilegio se
+    -- resuelven con ramas y no con texto. Un privilegio no previsto falla todo.
+    if v_fila.esquema is null then
+      if v_fila.tipo = 'r' then
+        execute pg_catalog.format('alter default privileges for role postgres revoke all on tables from public, anon, authenticated, service_role, conector');
+      elsif v_fila.tipo = 'S' then
+        execute pg_catalog.format('alter default privileges for role postgres revoke all on sequences from public, anon, authenticated, service_role, conector');
+      else
+        execute pg_catalog.format('alter default privileges for role postgres revoke all on functions from public, anon, authenticated, service_role, conector');
+      end if;
+    else
+      if v_fila.tipo = 'r' then
+        execute pg_catalog.format('alter default privileges for role postgres in schema %I revoke all on tables from public, anon, authenticated, service_role, conector', v_fila.esquema);
+      elsif v_fila.tipo = 'S' then
+        execute pg_catalog.format('alter default privileges for role postgres in schema %I revoke all on sequences from public, anon, authenticated, service_role, conector', v_fila.esquema);
+      else
+        execute pg_catalog.format('alter default privileges for role postgres in schema %I revoke all on functions from public, anon, authenticated, service_role, conector', v_fila.esquema);
+      end if;
+    end if;
     for v_permiso in
       select a.privilege_type, a.is_grantable, a.grantee
         from pg_catalog.aclexplode(v_fila.acl) a
@@ -114,12 +127,122 @@ begin
                select r.oid from pg_catalog.pg_roles r
                 where r.rolname in ('anon', 'authenticated', 'service_role', 'conector'))
     loop
-      execute pg_catalog.format(
-        'alter default privileges for role postgres%s grant %s on %s to %s%s',
-        v_ambito, v_permiso.privilege_type, v_clase,
-        case when v_permiso.grantee = 0 then 'public'
-             else v_permiso.grantee::pg_catalog.regrole::text end,
-        case when v_permiso.is_grantable then ' with grant option' else '' end);
+      -- Sin nombre de rol (grantee = 0) es PUBLIC: el nombre 'public' en un grant lo es.
+      v_destino := case when v_permiso.grantee = 0 then 'public'
+                        else (select r.rolname from pg_catalog.pg_roles r where r.oid = v_permiso.grantee) end;
+      if v_fila.esquema is null and not v_permiso.is_grantable then
+        if v_fila.tipo = 'r' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant select on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'INSERT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant insert on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant update on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'DELETE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant delete on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRUNCATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant truncate on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'REFERENCES' then
+          execute pg_catalog.format('alter default privileges for role postgres grant references on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRIGGER' then
+          execute pg_catalog.format('alter default privileges for role postgres grant trigger on tables to %I', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'MAINTAIN' then
+          execute pg_catalog.format('alter default privileges for role postgres grant maintain on tables to %I', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'USAGE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant usage on sequences to %I', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant select on sequences to %I', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant update on sequences to %I', v_destino);
+        elsif v_fila.tipo = 'f' and v_permiso.privilege_type = 'EXECUTE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant execute on functions to %I', v_destino);
+        else
+          raise exception 'permiso_por_defecto_no_previsto';
+        end if;
+      elsif v_fila.esquema is null and v_permiso.is_grantable then
+        if v_fila.tipo = 'r' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant select on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'INSERT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant insert on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant update on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'DELETE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant delete on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRUNCATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant truncate on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'REFERENCES' then
+          execute pg_catalog.format('alter default privileges for role postgres grant references on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRIGGER' then
+          execute pg_catalog.format('alter default privileges for role postgres grant trigger on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'MAINTAIN' then
+          execute pg_catalog.format('alter default privileges for role postgres grant maintain on tables to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'USAGE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant usage on sequences to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres grant select on sequences to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant update on sequences to %I with grant option', v_destino);
+        elsif v_fila.tipo = 'f' and v_permiso.privilege_type = 'EXECUTE' then
+          execute pg_catalog.format('alter default privileges for role postgres grant execute on functions to %I with grant option', v_destino);
+        else
+          raise exception 'permiso_por_defecto_no_previsto';
+        end if;
+      elsif v_fila.esquema is not null and not v_permiso.is_grantable then
+        if v_fila.tipo = 'r' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant select on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'INSERT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant insert on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant update on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'DELETE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant delete on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRUNCATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant truncate on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'REFERENCES' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant references on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRIGGER' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant trigger on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'MAINTAIN' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant maintain on tables to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'USAGE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant usage on sequences to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant select on sequences to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant update on sequences to %I', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'f' and v_permiso.privilege_type = 'EXECUTE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant execute on functions to %I', v_fila.esquema, v_destino);
+        else
+          raise exception 'permiso_por_defecto_no_previsto';
+        end if;
+      elsif v_fila.esquema is not null and v_permiso.is_grantable then
+        if v_fila.tipo = 'r' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant select on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'INSERT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant insert on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant update on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'DELETE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant delete on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRUNCATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant truncate on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'REFERENCES' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant references on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'TRIGGER' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant trigger on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'r' and v_permiso.privilege_type = 'MAINTAIN' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant maintain on tables to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'USAGE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant usage on sequences to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'SELECT' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant select on sequences to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'S' and v_permiso.privilege_type = 'UPDATE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant update on sequences to %I with grant option', v_fila.esquema, v_destino);
+        elsif v_fila.tipo = 'f' and v_permiso.privilege_type = 'EXECUTE' then
+          execute pg_catalog.format('alter default privileges for role postgres in schema %I grant execute on functions to %I with grant option', v_fila.esquema, v_destino);
+        else
+          raise exception 'permiso_por_defecto_no_previsto';
+        end if;
+      end if;
     end loop;
   end loop;
 

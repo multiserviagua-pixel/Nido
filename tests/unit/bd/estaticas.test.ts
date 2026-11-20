@@ -2,6 +2,7 @@
 // sobre supabase/migrations/ y supabase/reversiones/. No necesitan base de datos.
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { escapesProhibidos, normalizar, sinComentarios } from "./apoyo/texto";
 
 const DIR_MIGRACIONES = new URL("../../../supabase/migrations/", import.meta.url);
 const DIR_REVERSIONES = new URL("../../../supabase/reversiones/", import.meta.url);
@@ -10,87 +11,6 @@ const DIR_REVERSIONES = new URL("../../../supabase/reversiones/", import.meta.ur
 // sesión, y un `<>` ajeno puesto delante de pg_catalog anularía la guarda.
 const GUARDA =
   "do $$ begin if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if; end $$;";
-
-interface Limpieza {
-  texto: string;
-  /** Falso si queda un literal o un comentario sin cerrar. */
-  cerrado: boolean;
-}
-
-function limpiar(sql: string): Limpieza {
-  let salida = "";
-  let cerrado = true;
-  let i = 0;
-  while (i < sql.length) {
-    const c = sql[i];
-    const d = sql[i + 1];
-    if (c === "-" && d === "-") {
-      while (i < sql.length && sql[i] !== "\n") i++;
-    } else if (c === "/" && d === "*") {
-      // Los comentarios de bloque de PostgreSQL se anidan.
-      let nivel = 1;
-      i += 2;
-      while (i < sql.length && nivel > 0) {
-        if (sql[i] === "/" && sql[i + 1] === "*") {
-          nivel++;
-          i += 2;
-        } else if (sql[i] === "*" && sql[i + 1] === "/") {
-          nivel--;
-          i += 2;
-        } else i++;
-      }
-      if (nivel > 0) cerrado = false;
-      salida += " ";
-    } else if (c === "'") {
-      // E'…' admite \' como escape.
-      const conEscapes = /^[eE]$/.test(sql[i - 1] ?? "") && !/\w/.test(sql[i - 2] ?? "");
-      let j = i + 1;
-      let fin = false;
-      while (j < sql.length) {
-        if (conEscapes && sql[j] === "\\") j += 2;
-        else if (sql[j] === "'" && sql[j + 1] === "'") j += 2;
-        else if (sql[j] === "'") {
-          fin = true;
-          break;
-        } else j++;
-      }
-      if (!fin) cerrado = false;
-      salida += sql.slice(i, j + 1);
-      i = j + 1;
-    } else if (c === "$" && !/[\w$]/.test(sql[i - 1] ?? "")) {
-      const m = /^\$([A-Za-z_][A-Za-z0-9_]*)?\$/.exec(sql.slice(i, i + 80));
-      const fin = m === null ? -1 : sql.indexOf(m[0], i + m[0].length);
-      if (m === null || fin === -1) {
-        salida += c;
-        i++;
-      } else {
-        // El cuerpo es código (do, funciones) o texto. Si se lee como código sin
-        // dejar nada abierto, se conserva limpio; si no, es texto opaco y se vacía.
-        const cuerpo = limpiar(sql.slice(i + m[0].length, fin));
-        salida += m[0] + (cuerpo.cerrado ? cuerpo.texto : " ") + m[0];
-        i = fin + m[0].length;
-      }
-    } else {
-      salida += c;
-      i++;
-    }
-  }
-  return { texto: salida, cerrado };
-}
-
-/**
- * Quita comentarios de línea y de bloque (anidados), respetando los literales
- * entre comillas simples (con E'…') y entre comillas de dólar con o sin
- * etiqueta: un «--» dentro de `$e$ … $e$` no es un comentario.
- */
-export function sinComentarios(sql: string): string {
-  return limpiar(sql).texto;
-}
-
-/** Texto normalizado: sin comentarios, espacios colapsados y en minúsculas. */
-export function normalizar(sql: string): string {
-  return sinComentarios(sql).replace(/\s+/g, " ").trim().toLowerCase();
-}
 
 /** L 11: la primera sentencia es la guarda de rol. */
 export function empiezaPorLaGuarda(sql: string): boolean {
@@ -190,27 +110,111 @@ function esDoConGuarda(sentencia: string): boolean {
   const m = /^do (?:language plpgsql )?(\$[a-z_0-9]*\$)([\s\S]*)\1$/.exec(sentencia);
   if (m === null) return false;
   const cuerpo = (m[2] as string).trim();
-  let resto = cuerpo;
+  // Regla 4: un cuerpo vaciado por la normalización no se lee como código.
+  if (/(\$[a-z_0-9]*\$) \1/.test(cuerpo)) return false;
+  // Regla 5: SQL estático; execute solo para grant, revoke y alter default privileges.
+  for (const lit of literalesSimples(cuerpo)) {
+    if (/\b(?:declare|function|procedure)\b/.test(lit)) return false;
+  }
+  if (!executeSoloFormatDePermisos(cuerpo)) return false;
+  // Reglas 1 y 2: todas las secciones declare.
+  if (!seccionesDeclareValidas(cuerpo)) return false;
+  // Regla 3: la guarda es la primera instrucción.
   const d = /^declare ([\s\S]*?) begin /.exec(cuerpo);
-  if (d !== null) {
-    const declaraciones = (d[1] as string)
+  const resto = d === null ? cuerpo : cuerpo.slice(d[0].length - "begin ".length);
+  return resto.startsWith(`begin ${GUARDA_INTERNA}`);
+}
+
+/**
+ * Regla 5 (MENOR del auditor, vuelta 2): fuera de literales, `execute` solo
+ * aparece como `execute function` (disparadores) o como `execute
+ * pg_catalog.format('<grant|revoke|alter default privileges> …' [, args])`, con
+ * un único literal de formato sin `;` ni concatenación. Así no cabe
+ * `execute 'create func' || 'tion …'`, `execute convert_from(decode(…))`, `execute
+ * 'alter table … disable trigger all'` ni `execute <variable>`.
+ */
+function executeSoloFormatDePermisos(cuerpo: string): boolean {
+  // Mismo largo, con el interior de los literales tapado: los índices coinciden.
+  let tapado = "";
+  let i = 0;
+  while (i < cuerpo.length) {
+    if (cuerpo[i] !== "'") {
+      tapado += cuerpo[i];
+      i++;
+      continue;
+    }
+    let j = i + 1;
+    while (j < cuerpo.length && !(cuerpo[j] === "'" && cuerpo[j + 1] !== "'")) {
+      j += cuerpo[j] === "'" ? 2 : 1;
+    }
+    const fin = Math.min(j, cuerpo.length - 1);
+    tapado += "'" + "x".repeat(Math.max(0, fin - i - 1)) + "'";
+    i = fin + 1;
+  }
+  const buscar = /\bexecute\b/g;
+  let m: RegExpExecArray | null;
+  while ((m = buscar.exec(tapado)) !== null) {
+    if (/^execute function /.test(tapado.slice(m.index))) continue;
+    // Lista blanca: un solo literal estatico (sin ;, $, \ ni E'), sin concatenar, y
+    // como argumentos solo nombres de variable (o campos de una variable), y nada tras el cierre.
+    const resto = cuerpo.slice(m.index);
+    const f =
+      /^execute pg_catalog\.format\(\s*'((?:grant|revoke|alter default privileges)(?:[a-z0-9_ ,.]|%[il])*)'(?:\s*,\s*[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?)*\s*\)\s*;/.exec(
+        resto,
+      );
+    if (f === null) return false;
+    // Vuelta 5: lista blanca de caracteres del literal ([a-z0-9_ ,.] y %I, %L): ni comillas dobles,
+    // ni /*, ni --, ni dos comillas simples pueden cambiar el estado del analizador.
+    // Regla estructural (vuelta 4): el literal solo lleva marcadores %I o %L, nunca
+    // %s (ni %1$s, ya excluido por el $; el texto llega en minúsculas: %i, %l): ningún valor puede introducir una sentencia.
+    if (/%/.test((f[1] ?? "").replace(/%[ILil]/g, ""))) return false;
+  }
+  return true;
+}
+
+const TIPO_DECLARE = /^[a-z_][a-z0-9_]* pg_catalog\.[a-z_][a-z0-9_]*$/;
+
+/**
+ * D-11, reglas 1 y 2: cada `declare` (la primera sección del `do`, un bloque
+ * anidado o el cuerpo de una función, con cualquier comilla) abre una sección que
+ * acaba en el primer `begin` posterior, y cada declaración es `nombre
+ * pg_catalog.<tipo>`, sin inicializadores. Sin `begin` posterior, se rechaza. Se
+ * examinan todas las secciones, sin límite.
+ */
+function seccionesDeclareValidas(texto: string): boolean {
+  const abre = /\bdeclare\b/g;
+  let m: RegExpExecArray | null;
+  while ((m = abre.exec(texto)) !== null) {
+    const desde = m.index + m[0].length;
+    const b = /\bbegin\b/.exec(texto.slice(desde));
+    if (b === null) return false;
+    const partes = texto
+      .slice(desde, desde + b.index)
       .split(";")
       .map((x) => x.trim())
       .filter((x) => x !== "");
-    for (const x of declaraciones) {
-      if (/:=|=|\bdefault\b/.test(x)) return false;
-      // Tipo calificado con pg_catalog (mayor 1, quinta vuelta): los tipos de
-      // declare se resuelven al compilar, con la ruta de la sesión.
-      if (!/^[a-z_][a-z0-9_]* pg_catalog\.[a-z_][a-z0-9_]*$/.test(x)) return false;
-    }
-    resto = cuerpo.slice(d[0].length - "begin ".length);
+    for (const parte of partes) if (!TIPO_DECLARE.test(parte)) return false;
   }
-  // Condición MENOR A (vuelta 5 del auditor, T-002): solo se valida el primer
-  // declare; cualquier otro (bloque anidado o cuerpo de función, con o sin
-  // etiqueta) se rechaza. Si una función necesitara declare, se consulta antes
-  // y se valida cada sección con la regla de pg_catalog (tareas.md, Convenciones).
-  if (/\bdeclare\b/.test(resto)) return false;
-  return resto.startsWith(`begin ${GUARDA_INTERNA}`);
+  return true;
+}
+
+/** Literales entre comillas simples del texto normalizado (con '' como comilla). */
+function literalesSimples(texto: string): string[] {
+  const salida: string[] = [];
+  let i = 0;
+  while (i < texto.length) {
+    if (texto[i] !== "'") {
+      i++;
+      continue;
+    }
+    let j = i + 1;
+    while (j < texto.length && !(texto[j] === "'" && texto[j + 1] !== "'")) {
+      j += texto[j] === "'" ? 2 : 1;
+    }
+    salida.push(texto.slice(i + 1, j));
+    i = j + 1;
+  }
+  return salida;
 }
 
 /**
@@ -225,6 +229,15 @@ export function sentenciasFueraDeForma(sql: string): string[] {
   if (lista[0] !== GUARDA.slice(0, -1)) malas.push((lista[0] ?? "(vacío)").slice(0, 80));
   if (lista.length < 2) malas.push("(sin bloque do tras la guarda)");
   for (const s of lista.slice(1)) if (!esDoConGuarda(s)) malas.push(s.slice(0, 80));
+  // Vuelta 5: la normalización colapsa tabuladores y saltos de línea; se mira el literal
+  // de format en el texto sin colapsar (solo [A-Za-z0-9_ ,.] y los marcadores %I y %L).
+  const crudo = sinComentarios(sql);
+  // Vuelta 6: SQL estático, sin escapes E'…' ni U&'…' (ni identificadores U&"…").
+  for (const e of escapesProhibidos(sql)) if (malas.length === 0) malas.push(e);
+  for (const m of crudo.matchAll(/\bexecute\s+pg_catalog\.format\s*\(\s*'([^']*)/gi)) {
+    if (malas.length === 0 && /[^A-Za-z0-9_ ,.%]|%(?![ILil])/.test(m[1] ?? ""))
+      malas.push((m[1] ?? "").slice(0, 80));
+  }
   return malas;
 }
 
@@ -459,8 +472,6 @@ describe("detectores (sin archivos)", () => {
       `do $$ ${D} begin ${G} ${A} declare w public.dominio; begin null; end; ${F} end $$;`,
       // Con etiqueta de bloque delante.
       `do $$ ${D} begin ${G} ${A} <<interno>> declare w text; begin null; end; ${F} end $$;`,
-      // Aun calificado: la opción elegida es rechazar todo declare posterior.
-      `do $$ ${D} begin ${G} ${A} declare w pg_catalog.text; begin null; end; ${F} end $$;`,
       // En el cuerpo de una función creada dentro del do, con otra etiqueta.
       `do $$ ${D} begin ${G} ${A} create function privado.f() returns pg_catalog.int4 language plpgsql as $f$ declare w text; begin return 1; end $f$; ${F} end $$;`,
       // En mayúsculas y con comentarios por medio.
@@ -478,6 +489,138 @@ describe("detectores (sin archivos)", () => {
         `${GUARDA}\ndo $$ ${D} begin ${G} ${A} create table public.declarada (id pg_catalog.int4); ${F} end $$;`,
       ),
     ).toEqual([]);
+  });
+
+  const FN = (decl: string) =>
+    `${GUARDA}\ndo $$ ${D} begin ${G} ${A} create function privado.f() returns pg_catalog.int4 language plpgsql as $f$ ${decl} begin return 1; end $f$; ${F} end $$;`;
+  const ANIDADO = (decl: string) =>
+    `${GUARDA}\ndo $$ ${D} begin ${G} ${A} ${decl} begin null; end; ${F} end $$;`;
+  const EN_DO = (cuerpo: string) => `${GUARDA}\ndo $$ ${D} begin ${G} ${A} ${cuerpo} ${F} end $$;`;
+
+  it("L 14, D-11: se aceptan las secciones declare con tipos pg_catalog, anidadas o de una función", () => {
+    // Se aceptan (en rojo antes del cambio de D-11).
+    const aceptados = [
+      ANIDADO("declare w pg_catalog.text;"),
+      FN("declare w pg_catalog.int4; v pg_catalog.record;"),
+      FN("declare w pg_catalog._text;"),
+      FN("DECLARE w pg_catalog.int4; /* c */ v pg_catalog.record;"),
+      ANIDADO("-- c\nDECLARE W PG_CATALOG.TEXT;"),
+    ];
+    for (const caso of aceptados) expect(sentenciasFueraDeForma(caso), caso).toEqual([]);
+  });
+
+  it("L 14, D-11: se rechaza toda sección declare con otro tipo, y el SQL dinámico que crea funciones", () => {
+    // Los de «hoy aceptados» (★) estaban en verde antes del cambio y deben pasar a rechazo.
+    const rechazados = [
+      // ★ cuerpo con declare sin calificar, escondido tras un identificador opaco.
+      FN(`declare w text; x "a'b";`),
+      FN("declare w text;"),
+      FN("declare w public.dominio;"),
+      FN("declare w public.clientes%rowtype;"),
+      FN("declare w public.clientes.estado%type;"),
+      FN("declare w pg_catalog.text[];"),
+      FN("declare w pg_catalog.text := 'x';"),
+      FN("declare w pg_catalog.text; x text;"),
+      FN("declare c cursor for select 1;"),
+      FN("declare a alias for $1;"),
+      FN("declare w pg_catalog.text not null;"),
+      FN("declare w constant pg_catalog.text;"),
+      FN('declare w pg_catalog."text";'),
+      // declare sin begin posterior.
+      EN_DO(
+        "create function privado.f() returns pg_catalog.int4 language plpgsql as $f$ declare w pg_catalog.text; $f$;",
+      ),
+      // Cuerpo entre comillas simples con declare.
+      EN_DO(
+        "create function privado.f() returns pg_catalog.int4 language plpgsql as 'declare w pg_catalog.int4; begin return 1; end';",
+      ),
+      // ★ SQL dinámico que crea una función, un procedimiento o un disparador.
+      EN_DO(
+        "execute 'create function privado.f() returns pg_catalog.int4 language sql as ''select 1''';",
+      ),
+      EN_DO("execute 'create procedure privado.p() language sql as ''select 1''';"),
+      EN_DO(
+        "execute pg_catalog.format('create trigger t after insert on public.a for each row execute function privado.auditar()', 1);",
+      ),
+      // MENOR del auditor (vuelta 2): execute solo como pg_catalog.format de
+      // grant, revoke o alter default privileges.
+      EN_DO(
+        "execute 'create func' || 'tion privado.f() returns pg_catalog.int4 language sql security definer as ''select 1''';",
+      ),
+      EN_DO("execute pg_catalog.convert_from(pg_catalog.decode('63726561746520', 'hex'), 'UTF8');"),
+      EN_DO("execute 'alter table public.auditoria disable trigger all';"),
+      EN_DO("execute pg_catalog.format('alter table public.auditoria disable trigger all');"),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public' || 'x', a);"),
+      // Vuelta 4 (MENOR del auditor): el valor no puede introducir una sentencia.
+      EN_DO(
+        "v := 'all on table a from public; drop table b'; execute pg_catalog.format('revoke %s', v);",
+      ),
+      EN_DO(
+        "v := 'all on table a from public' || chr(59) || 'drop table b'; execute pg_catalog.format('revoke %s', v);",
+      ),
+      EN_DO(
+        "v := pg_catalog.decode('3b', 'hex'); execute pg_catalog.format('revoke all on table a from public%s', v);",
+      ),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %1$s from public', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %I from public %%', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %I from %', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table a from public; select 1');"),
+      EN_DO("execute v_sql;"),
+      // Vuelta 6 (MENOR del auditor): E'…' y U&'…' no se admiten; el escape \' desincroniza los lectores.
+      EN_DO("v := 'drop table public.a'; perform e'\\''; execute v; perform '';"),
+      EN_DO("v := 'drop table public.a'; perform E'\\''; execute v; perform '';"),
+      EN_DO("v := 'drop table public.a'; perform U&'\\0027'; execute v; perform '';"),
+      EN_DO("perform u&'x'; perform e'x';"),
+      // Vuelta 5 (MENOR del auditor): el literal solo admite [a-z0-9_ ,.] y %I o %L.
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from \"anon%I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from anon /* %I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from anon --%I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from anon --\n%I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from ''anon%I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a\tfrom anon%I', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table public.a from anon%I $', v);"),
+      // Vuelta 3 (MENOR de regla 5): lista blanca de execute.
+      EN_DO("execute pg_catalog.format('revoke all on table a from public') || '; drop table v';"),
+      EN_DO("execute pg_catalog.format('revoke all on table a from public') || v;"),
+      EN_DO("execute pg_catalog.format('revoke %s', '…; drop table w');"),
+      EN_DO("execute pg_catalog.format('revoke %s', v || 'x');"),
+      EN_DO("execute pg_catalog.format('revoke %s', pg_catalog.decode('41', 'hex'));"),
+      EN_DO("execute pg_catalog.format('revoke %s', 'a');"),
+      EN_DO("execute pg_catalog.format(E'revoke all on table %s from public', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public', v) using x;"),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public', v) into x;"),
+      EN_DO("execute pg_catalog.format($q$revoke all on table %s from public$q$, v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table a from public\\073 drop table v', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table a from public', v)::pg_catalog.text;"),
+      EN_DO("execute format('revoke all on table %s from public', v);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public', v.x.y);"),
+      EN_DO("execute pg_catalog.format('revoke all on table %s from public', v), 'drop table a';"),
+      EN_DO("execute  pg_catalog.format ('drop table a');"),
+      EN_DO("execute pg_catalog.format('grant all on table a to public'); execute v;"),
+      // Tres secciones: la del do, una función buena y otra con w text.
+      EN_DO(
+        "create function privado.f() returns pg_catalog.int4 language plpgsql as $f$ declare w pg_catalog.int4; begin return 1; end $f$; create function privado.g() returns pg_catalog.int4 language plpgsql as $g$ declare w text; begin return 1; end $g$;",
+      ),
+    ];
+    for (const caso of rechazados) expect(sentenciasFueraDeForma(caso), caso).toHaveLength(1);
+    // Los de MENOR A sin calificar siguen rechazados.
+    expect(sentenciasFueraDeForma(ANIDADO("declare w text;"))).toHaveLength(1);
+    expect(sentenciasFueraDeForma(ANIDADO("declare w public.dominio;"))).toHaveLength(1);
+    // Un literal sin esas palabras sigue siendo válido (revoke con format).
+    expect(
+      sentenciasFueraDeForma(
+        EN_DO("execute pg_catalog.format('revoke all on table %I from public', a);"),
+      ),
+    ).toEqual([]);
+    for (const ok of [
+      "execute pg_catalog.format('grant usage on schema privado to %I', a);",
+      "execute pg_catalog.format('alter default privileges for role postgres in schema %I revoke all on tables from public', v);",
+      "execute pg_catalog.format('revoke all on table %I from public', a); execute pg_catalog.format('revoke all on table %L from anon', v.b);",
+      "execute pg_catalog.format('revoke all on table public.a from %I', v_destino);",
+    ]) {
+      expect(sentenciasFueraDeForma(EN_DO(ok)), ok).toEqual([]);
+    }
   });
 
   it("L 12: acepta un literal y rechaza % y concatenación", () => {
@@ -532,6 +675,46 @@ describe("detectores (sin archivos)", () => {
     expect(raiseIncorrectos("assert f(a, b) > 0, 'ok';")).toEqual([]);
     expect(raiseIncorrectos("assert f(a, b) > 0, m;")).toHaveLength(1);
     expect(raiseIncorrectos("-- assert x, y;\nselect 1;")).toEqual([]);
+  });
+});
+
+describe("escapes E'…' y U&'…' (vuelta 6)", () => {
+  it("escapesProhibidos detecta E'…', U&'…' y U&\"…\" en cualquier combinación de mayúsculas", () => {
+    for (const t of [
+      "e'x'",
+      "E'x'",
+      "perform e'\\''",
+      "u&'x'",
+      "U&'x'",
+      'u&"x"',
+      'U&"audit\\006Fria"',
+    ]) {
+      expect(escapesProhibidos(`select ${t};`), t).toHaveLength(1);
+    }
+    for (const t of [
+      "'x'",
+      "'se'",
+      "'e'",
+      "x in ('e', 'd')",
+      "tipo 'x'",
+      "else'x'",
+      "'a''b'",
+      '"e"',
+    ]) {
+      expect(escapesProhibidos(`select ${t};`), t).toEqual([]);
+    }
+    expect(escapesProhibidos("-- e'x'\nselect 1;")).toEqual([]);
+  });
+
+  it("ninguna migración ni reversión los usa", () => {
+    for (const [dir, lista] of [
+      [DIR_MIGRACIONES, migraciones],
+      [DIR_REVERSIONES, reversiones],
+    ] as const) {
+      for (const n of lista) {
+        expect(escapesProhibidos(readFileSync(new URL(n, dir), "utf8")), n).toEqual([]);
+      }
+    }
   });
 });
 

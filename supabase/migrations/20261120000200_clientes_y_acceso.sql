@@ -19,7 +19,13 @@ do $$ begin if current_user operator(pg_catalog.<>) 'postgres' then raise except
 -- (calificado), nunca a un objeto homónimo de la sesión. Sin begin/commit: un
 -- bloque es una sola sentencia y falla entero o no cambia nada (REQ-030).
 -- Los tipos de declare van calificados con pg_catalog y sin inicializadores.
--- El formato de texto visible de D-7 está en M03, que es donde se usa.
+-- El formato de texto visible de D-7 está en M03, que es donde se usa. El de
+-- texto de personas (TP) de clientes.nombre y catalogo_problemas.descripcion
+-- está aquí (T-003, MENOR 2 del auditor; A-12 en la vuelta 3): LISTA BLANCA de
+-- caracteres (ASCII imprimible, U+00A1-U+017F salvo U+00AD, comillas, rayas,
+-- puntos suspensivos y euro), sin salto de línea ni tabulador (D-7), con
+-- escapes explícitos en un literal normal, y la guarda
+-- migracion_codificacion_no_utf8.
 --
 -- Tipos: de serie dan USAGE a PUBLIC (typacl nulo). Se revoca a PUBLIC y a
 -- los cinco roles, se retira cualquier otro destinatario (permisos por
@@ -39,6 +45,12 @@ begin
   if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if;
   v_ruta_previa := pg_catalog.current_setting('search_path');
   perform pg_catalog.set_config('search_path', 'pg_catalog, pg_temp', true);
+
+  -- Los escapes del formato TP (D-7) solo casan con una base UTF8: con otra
+  -- codificación no casarían nunca y la restricción no protegería nada.
+  if pg_catalog.current_setting('server_encoding') operator(pg_catalog.<>) 'UTF8' then
+    raise exception 'migracion_codificacion_no_utf8';
+  end if;
 
   -- -------------------------------------------------------------------
   -- Tipos enumerados (§2): listas cerradas
@@ -79,9 +91,8 @@ begin
 
   -- Otros destinatarios (permisos por defecto de postgres en tipos): fuera.
   for v_fila in
-    select distinct pg_catalog.format('%I.%I', n.nspname, t.typname) as tipo,
-           case when a.grantee = 0 then 'PUBLIC'
-                else pg_catalog.quote_ident(r.rolname) end as destino
+    select distinct n.nspname as esquema, t.typname as objeto,
+           r.rolname as destino
       from pg_catalog.pg_type t
       join pg_catalog.pg_namespace n on n.oid = t.typnamespace
       cross join lateral pg_catalog.aclexplode(t.typacl) a
@@ -94,7 +105,13 @@ begin
                          'estado_suscripcion')
        and a.grantee <> t.typowner
   loop
-    execute pg_catalog.format('revoke all on type %s from %s', v_fila.tipo, v_fila.destino);
+    -- Sin nombre de rol (grantee = 0) es PUBLIC. Solo marcadores %I (D-11, regla 5).
+    if v_fila.destino is null then
+      execute pg_catalog.format('revoke all on type %I.%I from public', v_fila.esquema, v_fila.objeto);
+    else
+      execute pg_catalog.format('revoke all on type %I.%I from %I',
+        v_fila.esquema, v_fila.objeto, v_fila.destino);
+    end if;
   end loop;
 
   -- -------------------------------------------------------------------
@@ -104,7 +121,8 @@ begin
   -- Clientes instalados. El nombre es el nombre comercial (D-7).
   create table public.clientes (
     id                        uuid primary key default gen_random_uuid(),
-    nombre                    text not null check (char_length(nombre) between 1 and 120),
+    nombre                    text not null check (char_length(nombre) between 1 and 120
+                                      and nombre ~ '^[\u0020-\u007e\u00a1-\u00ac\u00ae-\u017f\u2013\u2014\u2018\u2019\u201a\u201c\u201d\u201e\u20ac\u2026]+$'),
     estado                    public.estado_cliente not null default 'activo',
     canal                     public.canal not null default 'estable',
     frecuencia_esperada_horas smallint not null default 24
@@ -201,7 +219,8 @@ begin
 
   create table public.catalogo_problemas (
     codigo      text primary key check (codigo ~ '^[a-z_]{3,40}$'),
-    descripcion text not null check (char_length(descripcion) between 1 and 200),
+    descripcion text not null check (char_length(descripcion) between 1 and 200
+                                      and descripcion ~ '^[\u0020-\u007e\u00a1-\u00ac\u00ae-\u017f\u2013\u2014\u2018\u2019\u201a\u201c\u201d\u201e\u20ac\u2026]+$'),
     activo      boolean not null default true
   );
 
@@ -242,9 +261,8 @@ begin
   -- Los permisos por defecto de postgres pueden haber dado algo a otro
   -- destinatario (p. ej., uno que no es de los cinco de M01): se retira.
   for v_fila in
-    select distinct pg_catalog.format('%I.%I', n.nspname, c.relname) as tabla,
-           case when a.grantee = 0 then 'PUBLIC'
-                else pg_catalog.quote_ident(r.rolname) end as destino
+    select distinct n.nspname as esquema, c.relname as objeto,
+           r.rolname as destino
       from pg_catalog.pg_class c
       join pg_catalog.pg_namespace n on n.oid = c.relnamespace
       cross join lateral pg_catalog.aclexplode(c.relacl) a
@@ -255,7 +273,12 @@ begin
                          'ajustes_globales', 'catalogo_problemas', 'suscripciones')
        and a.grantee <> c.relowner
   loop
-    execute pg_catalog.format('revoke all on table %s from %s', v_fila.tabla, v_fila.destino);
+    if v_fila.destino is null then
+      execute pg_catalog.format('revoke all on table %I.%I from public', v_fila.esquema, v_fila.objeto);
+    else
+      execute pg_catalog.format('revoke all on table %I.%I from %I',
+        v_fila.esquema, v_fila.objeto, v_fila.destino);
+    end if;
   end loop;
 
   -- Un revoke que no retira nada no da error (p. ej., otra concesión con otro

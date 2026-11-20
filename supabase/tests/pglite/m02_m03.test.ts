@@ -8,7 +8,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   aplicar,
-  aplicarTodas,
   ciclo,
   como,
   crearBase,
@@ -309,7 +308,7 @@ const FORMATOS: [string, string, unknown[], unknown[]][] = [
 
 describe("REQ-056, CA-034: tablas y tipos", () => {
   it("tras M01, M02 y M03, public tiene exactamente las 15 tablas de D-1 para estas migraciones", async () => {
-    await aplicarTodas(db);
+    await aplicarHastaM03(db);
     const r = await db.query<{ relname: string }>(
       `select c.relname from pg_class c where c.relnamespace = 'public'::regnamespace
         and c.relkind in ('r', 'p') order by 1`,
@@ -882,5 +881,81 @@ describe("search_path fijado dentro de cada do", () => {
     expect(
       await probarFila(db, "tokens", { ...(VALIDAS.tokens as Fila), token_hmac: "no" }),
     ).toMatch(/violates check constraint/);
+  });
+});
+
+// D-7 (TP), MENOR 2 del auditor en T-002: texto de personas sin controles ni
+// marcas bidireccionales, de anchura cero ni etiquetas, en insert y en update.
+const TP_RECHAZADOS = [
+  0x0001, 0x0009, 0x000a, 0x000d, 0x001f, 0x007f, 0x0085, 0x009f, 0x00a0, 0x00ad, 0x034f, 0x0600,
+  0x061c, 0x06dd, 0x115f, 0x1160, 0x17b4, 0x17b5, 0x180b, 0x180c, 0x180d, 0x180e, 0x200b, 0x200e,
+  0x200f, 0x2027, 0x2028, 0x202a, 0x202e, 0x202f, 0x205f, 0x2060, 0x2066, 0x2069, 0x206f, 0x2070,
+  0x3000, 0x3164, 0xe000, 0xf8ff, 0xfdd0, 0xfdef, 0xfe00, 0xfe0f, 0xfeff, 0xffa0, 0xfff9, 0xfffb,
+  0xfffe, 0xffff, 0xe0001, 0xe007f, 0xe0100, 0xe01ef, 0xf0000, 0x10fffe, 0x10ffff, 0x0627, 0x4e2d,
+  0x1f600,
+];
+// Lista blanca (A-12): ASCII imprimible, U+00A1-U+017F salvo U+00AD, y puntuacion habitual.
+const TP_ACEPTADOS = [
+  "Café Núñez & Cía., S.L.",
+  "Ñandú — 2ª «x» “y” ‘z’ … 5 € ¿Qué? ¡Sí!",
+  "Łódź Čapek Ő",
+];
+
+describe("D-7 (TP): texto de personas en clientes.nombre y catalogo_problemas.descripcion", () => {
+  const COLUMNAS: [string, string][] = [
+    ["clientes", "nombre"],
+    ["catalogo_problemas", "descripcion"],
+  ];
+
+  for (const [tabla, columna] of COLUMNAS) {
+    it(`${tabla}.${columna}: insert y update rechazan los caracteres de D-7 y aceptan el resto`, async () => {
+      await aplicarHastaM03(db);
+      const base = VALIDAS[tabla] as Fila;
+      for (const c of TP_RECHAZADOS) {
+        const hex = `U+${c.toString(16).toUpperCase().padStart(4, "0")}`;
+        const car = String.fromCodePoint(c);
+        // En medio, sola y al principio.
+        for (const t of [`x${car}y`, car, `${car}z`]) {
+          expect(await probarFila(db, tabla, { ...base, [columna]: t }), `insert ${hex}`).toMatch(
+            /violates check constraint/,
+          );
+        }
+      }
+      for (const texto of TP_ACEPTADOS) {
+        expect(await probarFila(db, tabla, { ...base, [columna]: texto }), texto).toBeNull();
+      }
+      // update: sobre una fila existente, en una transacción que se deshace.
+      const columnas = Object.keys(base);
+      await db.query(
+        `insert into public.${tabla} (${columnas.join(", ")}) values (${columnas.map((_, i) => `$${i + 1}`).join(", ")})`,
+        Object.values(base),
+      );
+      const actualizar = async (texto: string): Promise<string | null> => {
+        await db.exec("begin");
+        try {
+          return await errorDe(() =>
+            db.query(`update public.${tabla} set ${columna} = $1`, [texto]),
+          );
+        } finally {
+          await db.exec("rollback");
+        }
+      };
+      for (const c of TP_RECHAZADOS) {
+        expect(
+          await actualizar(`x${String.fromCodePoint(c)}y`),
+          `update U+${c.toString(16)}`,
+        ).toMatch(/violates check constraint/);
+      }
+      for (const texto of TP_ACEPTADOS) expect(await actualizar(texto), texto).toBeNull();
+    });
+  }
+
+  it("M02 falla con migracion_codificacion_no_utf8 si el servidor no usa UTF8, y no deja nada", async () => {
+    await aplicar(db, M01());
+    const antes = await instantanea(db);
+    const otra = leerMigracion(M02()).replace("'UTF8'", "'LATIN1'");
+    expect(otra).not.toBe(leerMigracion(M02()));
+    expect(await errorDe(() => db.exec(otra))).toContain("migracion_codificacion_no_utf8");
+    expect(await instantanea(db)).toEqual(antes);
   });
 });
