@@ -85,7 +85,7 @@ El límite de uso es de la cuenta y lo comparten todos los chats (`docs/EQUIPO.m
 - **Tope de contexto.** Al pasar de unos 150.000 tokens de contexto, o tras dos pasos del ciclo, escribe el relevo y termina. No sigas en el mismo chat.
 - **Un solo orquestador por fase.** Si ves en el relevo o en disco que otro chat trabaja la misma función, para y dilo.
 - **Lee por tramos.** Para comprobar un documento grande, usa Grep y lee el tramo; no lo leas entero. No vigiles archivos con bucles de `sleep`: espera el aviso del subagente.
-- **Tamaños** (D-023): `diseno.md` ≤ 40 KB; especificación, plan y tareas ≤ 25 KB. Si el comprobador avisa, el siguiente encargo sobre ese documento empieza por recortarlo.
+- **Tamaños** (D-023): `diseno.md` ≤ 40 KB; especificación, plan y tareas ≤ 25 KB. Son límites para documentos nuevos o que se reescriben. Un documento ya aprobado que se pasa no se recorta por el aviso: solo se recorta cuando se vaya a reescribir de todos modos (D-031). Un cambio pequeño en él se hace por apartado, sin añadir volumen.
 - **Correcciones por apartado.** Tras un dictamen, el arquitecto cambia solo los apartados afectados, y la segunda vuelta revisa solo lo cambiado.
 
 ## Lo que nunca haces

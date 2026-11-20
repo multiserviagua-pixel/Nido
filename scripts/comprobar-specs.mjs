@@ -565,7 +565,7 @@ for (const s of secciones) {
 }
 
 if (avisos.length > 0) {
-  console.log(`\n${avisos.length} ${avisos.length === 1 ? 'aviso' : 'avisos'} de tamaño (D-023, recortar en el siguiente paso):`);
+  console.log(`\n${avisos.length} ${avisos.length === 1 ? 'aviso' : 'avisos'} de tamaño (D-023; se recortan solo al reescribirlos, D-031):`);
   for (const a of avisos) console.log(`  - ${a}`);
 }
 

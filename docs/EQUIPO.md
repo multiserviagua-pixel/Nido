@@ -97,7 +97,7 @@ Medido el 14/11/2026: el gasto no venía del trabajo útil, sino de chats muy la
 
 Del 12 al 14/11 el gasto fue de unos 117 millones de unidades ponderadas: el 77 % con Fable y el 21 % con Opus. Los chats de orquestación, abiertos con Fable y de hasta 850.000 tokens, se llevaron cerca del 60 %. Los diseños llegaron a 100–275 KB por función, y cada arquitecto, auditor y revisor los releía enteros. Hubo 35 encargos al especificador y trabajo repetido por tener dos chats en la misma fase. Las reglas de arriba existían, pero solo como texto. Desde D-023 se hacen cumplir:
 
-7. **Tamaños con aviso automático.** `diseno.md` ≤ 40 KB; `especificacion.md`, `plan.md` y `tareas.md` ≤ 25 KB. `node scripts/comprobar-specs.mjs` lista los que se pasan. Un documento que se pasa se recorta en su siguiente paso, y no se le añade nada sin recortarlo antes.
+7. **Tamaños con aviso automático.** `diseno.md` ≤ 40 KB; `especificacion.md`, `plan.md` y `tareas.md` ≤ 25 KB. `node scripts/comprobar-specs.mjs` lista los que se pasan. Los límites rigen para documentos nuevos o que se reescriben; un documento aprobado que se pasa solo se recorta cuando se vaya a reescribir de todos modos (D-031).
 8. **Correcciones por apartado.** Tras un dictamen se cambian solo los apartados afectados, y la segunda vuelta revisa solo lo cambiado.
 9. **Un solo orquestador por fase.** Antes de abrir uno, se cierra el anterior. Nunca dos chats sobre la misma función.
 10. **Sin esperas que gastan.** El orquestador no lanza bucles con `sleep` para vigilar archivos: espera el aviso del subagente.
