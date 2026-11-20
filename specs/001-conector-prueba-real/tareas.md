@@ -39,6 +39,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - (d) `mcp_obtener_instrucciones` (diseño §Datos, «Reglas»). Prueba: `tu/bd/obtener.test.ts`, PRUEBA-015 (parte BD), PRUEBA-014 (parte: A no ve nada de B; B idéntico).
 - (e) `mcp_enviar_informe`. Prueba: `tu/bd/informe.test.ts`, PRUEBA-017 (parte BD), PRUEBA-007 (parte: 10 → 1 informe), PRUEBA-014 (parte).
 - (f) `mcp_confirmar_orden`. Prueba: `tu/bd/confirmar.test.ts`, PRUEBA-007 (parte: 10 → 1 `confirmada`), PRUEBA-015 (parte), PRUEBA-014 (parte).
+- Condiciones del dictamen de T-102 (apoyo `tests/conector/apoyo/bd.ts`): la hora en el SQL solo con `now()` o `current_timestamp` (sin `pg_catalog.now()`, sin `age()` de un argumento, sin `clock_timestamp()` para caducidades); cuerpos de función entre `$$`, no entre comillas simples; caducidad acotada por los dos lados. PRUEBA-007 parte B no demuestra carreras (una sola conexión): queda para la 008 (L) y así se anota en su evidencia.
 - Archivos: `sql`, `bd/{001_estado.reversion,semilla}.sql`, `bd/raiz-supabase.crt`, `bd/LEEME.md`, pruebas.
 
 ### T-104 `[P]` · Configuración, secretos, contratos y prompt
