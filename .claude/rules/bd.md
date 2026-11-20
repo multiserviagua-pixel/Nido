@@ -10,7 +10,7 @@ Ruta crítica: todo cambio pasa por el `revisor` y el `auditor-seguridad`. Sigue
 
 - RLS activado en la misma migración que crea la tabla. Nunca se desactiva.
 - Ninguna columna de texto libre en informes ni reglas.
-- Funciones `security definer`: esquema `privado`, `search_path = ''`, permisos revocados a todos y concedidos solo al rol que las necesita.
+- Funciones `security definer`: esquema `privado`, `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema; D-035), permisos revocados a todos y concedidos solo al rol que las necesita.
 - Las funciones del conector reciben el HMAC del token. Ningún `cliente_id` ni `licencia_id` de entrada.
 - Vistas con `security_invoker = true`.
 - `versiones_prompt` y `auditoria` son de solo inserción.

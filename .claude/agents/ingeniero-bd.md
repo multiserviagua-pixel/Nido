@@ -20,7 +20,7 @@ Sigue la skill `migracion-bd`. Lo esencial:
 
 - Una migración por cambio, numerada, con su vuelta atrás.
 - Tabla nueva: RLS activado y políticas en la misma migración, con índice en las columnas que usan las políticas.
-- Funciones `security definer`: en el esquema `privado`, con `search_path = ''`, permisos revocados a todos y concedidos solo al rol que las necesita.
+- Funciones `security definer`: en el esquema `privado`, con `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema; D-035), permisos revocados a todos y concedidos solo al rol que las necesita.
 - Vistas con `security_invoker = true`.
 - Ninguna columna de texto libre en informes ni reglas. Los enumerados son tipos o restricciones `check`.
 - El identificador del cliente se deriva dentro de la base de datos; ninguna función del conector lo recibe.

@@ -23,7 +23,7 @@ Toda migración es ruta crítica: pasa por el `revisor` y el `auditor-seguridad`
    - `revoke all` y después solo los permisos necesarios. El permiso limita la operación; la política, las filas.
    - Si nadie debe llegar por la API: RLS activado y ninguna política.
 4. **Columnas**: sin texto libre en informes ni reglas (artículo 1). Lo enumerado es un tipo `enum` o un `check`. Los rangos llevan `check`.
-5. **Funciones `security definer`**: en el esquema `privado`, `set search_path = ''`, nombres calificados con su esquema, `revoke all … from public, anon, authenticated` y `grant execute` solo al rol que la necesita.
+5. **Funciones `security definer`**: en el esquema `privado`, `set search_path = pg_catalog, pg_temp` (`pg_temp` el último, D-035), nombres calificados con su esquema, `revoke all … from public, anon, authenticated` y `grant execute` solo al rol que la necesita.
 6. **Funciones del conector**: reciben el HMAC del token y derivan el cliente dentro. Ningún parámetro `cliente_id` ni `licencia_id`.
 7. **Vistas**: `with (security_invoker = true)`.
 8. **Secretos**: tokens y códigos, solo como HMAC en hexadecimal. Ningún secreto en SQL.

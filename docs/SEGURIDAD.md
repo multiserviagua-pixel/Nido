@@ -64,7 +64,7 @@ Cualquier cambio en estas rutas necesita dictamen del `auditor-seguridad` ademá
 2. Comparar secretos y tokens en tiempo constante.
 3. No registrar valores recibidos, cabeceras de autorización ni cargas de eventos.
 4. No construir SQL con texto concatenado.
-5. Cada función `security definer`: `search_path = ''`, esquema no expuesto, permisos revocados a todos y concedidos solo al rol que la necesita.
+5. Cada función `security definer`: `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema; D-035), esquema no expuesto, permisos revocados a todos y concedidos solo al rol que la necesita.
 6. Cada tabla nueva: RLS activado en la misma migración, con su prueba.
 7. Cada dependencia nueva: justificada en el diseño, con versión comprobada.
 8. Ningún modelo es el único árbitro de seguridad: las pruebas y los escáneres deciden.
