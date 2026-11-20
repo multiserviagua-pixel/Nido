@@ -18,7 +18,7 @@ Lee, por este orden:
 
 - Ciclo SDD por función: especificar → aclarar → diseñar → planificar → implementar → revisar → verificar → cerrar. Cada paso tiene su skill (`sdd-*`, `cerrar-fase`).
 - La sesión principal hace de **orquestador** (skill `orquestar`): reparte el trabajo entre los subagentes de `.claude/agents/`, aplica las puertas y no escribe código de producto.
-- Tres puertas las abre la persona responsable: aprobar la especificación, aprobar diseño y plan, cerrar. Nunca se da una puerta por abierta sin su respuesta expresa.
+- Tres puertas: aprobar la especificación, aprobar diseño y plan, cerrar. Las abre el responsable o, por su delegación (D-036), la coordinación con los criterios de esa decisión. Nunca se da una puerta por abierta sin su respuesta expresa o sin cumplir esos criterios.
 - Se implementa una sola tarea `T-NNN` cada vez, con su prueba delante.
 - Rutas críticas: OAuth y licencias, RLS y migraciones, webhooks y entrega del prompt. Cualquier cambio en ellas necesita dictamen de `auditor-seguridad` además del `revisor`.
 - Al informar: qué se hizo, comandos ejecutados y su resultado, qué no se pudo comprobar, riesgos y vuelta atrás.

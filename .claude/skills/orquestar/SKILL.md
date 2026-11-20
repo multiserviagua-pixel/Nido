@@ -57,7 +57,8 @@ El informe de un subagente es un informe, no una prueba. Antes de dar un paso po
 
 ## 4. Puertas
 
-- **P0, P1 y P7 las abre el responsable.** Presenta un resumen corto y pregunta. No avances sin respuesta expresa; el silencio no es aprobación. Anota fecha y resultado en la tabla de aprobación del documento.
+- **Delegación D-036.** P0, P1, P7, la integración en `main` (merge --squash) y las decisiones técnicas con opción recomendada se aprueban por delegación cuando: el comprobador da SUPERADO; `npm run verificar` está en verde si hay código; el `revisor`, y el `auditor-seguridad` en rutas críticas, no dejan bloqueantes; y la opción elegida es la recomendada y nadie la contradice. Anota «aprobado por delegación D-036» con fecha en la tabla de aprobación o en el mensaje del commit, y sigue sin preguntar. Si falta un criterio, hay desacuerdo entre revisores o la decisión no tiene opción recomendada, escribe el relevo con la duda y para. Nunca por delegación: push, cuentas, secretos, gasto, producción ni pasos que hace una persona (validación visual, prueba real, revisión manual).
+- **Sin delegación aplicable, P0, P1 y P7 las abre el responsable.** Presenta un resumen corto y pregunta. No avances sin respuesta expresa; el silencio no es aprobación. Anota fecha y resultado en la tabla de aprobación del documento.
 - Las demás puertas se superan con evidencia, según `docs/CALIDAD.md`.
 - Un hallazgo BLOQUEANTE detiene la función hasta que se corrige y se vuelve a revisar.
 

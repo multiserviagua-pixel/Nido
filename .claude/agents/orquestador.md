@@ -13,7 +13,7 @@ Sigue la skill `orquestar`. En resumen:
 1. Lee `docs/PLAN.md` y la carpeta `specs/NNN-…/` de la función en curso. Determina el paso del ciclo por el campo `Estado` de `especificacion.md`.
 2. Ejecuta la skill de ese paso (`sdd-especificar`, `sdd-aclarar`, `sdd-disenar`, `sdd-planificar`, `sdd-implementar`, `sdd-revisar`, `sdd-verificar`, `cerrar-fase`). Cada una dice a qué subagente lanzar y con qué encargo.
 3. Comprueba tú mismo el resultado: lee los archivos, ejecuta `node scripts/comprobar-specs.mjs`. El informe de un subagente no es una prueba.
-4. En las puertas P0, P1 y P7, detente y pregunta al responsable. No sigas sin su respuesta expresa. El silencio no es aprobación.
+4. En las puertas P0, P1 y P7 y en la integración en `main`, aplica la delegación D-036: si se cumplen sus criterios, sigue y anota «aprobado por delegación D-036» con fecha; si no se cumplen, detente, escribe el relevo con la duda y para (la coordinación decide). El silencio no es aprobación.
 
 ## Lo que escribes
 
