@@ -9,9 +9,11 @@ Chat de la fase 2, función 010. Empieza por este archivo. `Estado: EN CURSO`. L
 - **Decisiones de diseño tomadas en T-003** (en `diseno.md`): D-11 (secciones `declare` solo con `pg_catalog`; regla 5: `execute` solo como `execute function` o `execute pg_catalog.format` con literal de `[A-Za-z0-9_ ,.]` y marcadores `%I`/`%L`; regla 6: sin `E'…'`, `U&'…'` ni `U&"…"`); formato TP de D-7 como lista blanca de rangos Unicode explícitos en `contenido`, `notas`, `clientes.nombre` y `catalogo_problemas.descripcion`; L 10 solo en reversiones.
 - **`npm run verificar`**: en la rama rebasada sobre `main`, `tipos`, `estilo`, `vitest --maxWorkers=3` (1527 pruebas en 56 archivos), `aislamiento`, `arnes` y `build`, todo con exit 0. Sin `--maxWorkers=3`, `apoyo.test.ts` y `acceso-muestra.test.ts` agotan sus 5 s por carga (pasan solos y con `--testTimeout=60000`).
 
+- **T-004 integrada en `main`** (M06 `ejecuciones_informes_alertas`; revisor y auditor-seguridad APTO, 5 MENOR cerrados, dictámenes en `evidencias/T-004/`; aprobada por delegación D-036, 20/11/2026). Cadena de `verificar` en la rama: `tipos`, `estilo`, `vitest --maxWorkers=3` (1563 en 57 archivos), `aislamiento` y `arnes` con exit 0; el `build` no se pudo comprobar en el worktree (junction a `node_modules`) ni en la carpeta principal (faltan `@electric-sql/pglite`, `ajv` y `@modelcontextprotocol/server` en su `node_modules`): fallo de entorno, no del cambio; en T-003 sí pasó con el entorno completo.
+
 ## Falta (en orden)
 
-1. **T-004 (M06 `ejecuciones_informes_alertas`)** y siguientes según `tareas.md`, con `ingeniero-bd`, un solo subagente opus a la vez (dos como máximo). Las reglas de pruebas L 10, L 13 y L 14 de T-003 se aplican a todas las migraciones nuevas; M07 y M09 pueden nombrar las tablas protegidas (L 10 solo vigila las reversiones).
+1. **T-005 (M07) y siguientes** según `tareas.md`, con `ingeniero-bd`, un solo subagente opus a la vez (dos como máximo). Las reglas de pruebas L 10, L 13 y L 14 de T-003 se aplican a todas las migraciones nuevas; M07 y M09 pueden nombrar las tablas protegidas (L 10 solo vigila las reversiones).
 2. Pendientes anotados:
    - M07 debe conceder `USAGE` explícito en los tipos que cada rol necesite.
    - MENOR 3 de T-002 (registro dinámico OAuth) a la fase 3; `tokens.sustituido_por` para M08; `docs/MODELO-DATOS.sql` desalineado (propuesta 20: cierre o T-015).
@@ -24,4 +26,4 @@ Chat de la fase 2, función 010. Empieza por este archivo. `Estado: EN CURSO`. L
 
 ## Siguiente paso
 
-Chat nuevo que empiece por este archivo: T-004 con `ingeniero-bd` (prueba delante; revisor y `auditor-seguridad` por ser ruta crítica). Al integrar en `main`: `verificar` en verde (usa `--maxWorkers=3` si la máquina está cargada), dictámenes en `evidencias/T-NNN/`, `merge --squash` con mensaje `T-NNN (010): ...`. Las condiciones de los detectores de texto llevaron seis vueltas en T-003: al encargar M06 en adelante, pide al auditor solo huecos reales y explotables, y deja el control definitivo al ciclo de CI.
+Chat nuevo que empiece por este archivo: T-005 con `ingeniero-bd` (prueba delante; revisor y `auditor-seguridad` por ser ruta crítica). Al integrar en `main`: `verificar` en verde (usa `--maxWorkers=3` si la máquina está cargada), dictámenes en `evidencias/T-NNN/`, `merge --squash` con mensaje `T-NNN (010): ...`. Las condiciones de los detectores de texto llevaron seis vueltas en T-003: al encargar M06 en adelante, pide al auditor solo huecos reales y explotables, y deja el control definitivo al ciclo de CI.
