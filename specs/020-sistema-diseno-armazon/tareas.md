@@ -27,10 +27,11 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 - Archivos: `ev/T-001/`.
 
 ### T-002 · Dependencias, Tailwind y Playwright
-`plataforma` · C, Res. · pendiente · Depende de: T-001 · REQ-032, REQ-062, REQ-086, REQ-089 · CA: ninguno propio (base de T-009 y T-020)
+`plataforma` · C, Res. · hecha (20/11/2026, commit 3c0df33) · Depende de: T-001 · REQ-032, REQ-062, REQ-086, REQ-089 · CA: ninguno propio (base de T-009 y T-020)
 - (a) Dependencias de diseño §Dependencias nuevas con la primitiva de T-001 (Radix solo `react-alert-dialog` y `react-dialog`; no se instala `@radix-ui/react-toast`, enmienda 1): versión releída en el registro, con fuente y fecha, 7 días o más (D-027) y licencia; lo «no verificado, al instalar»; `postcss.config.mjs`. Prueba: `verificar` en verde con Tailwind compilando; versiones en `ev/T-002/`; el bloqueo sin `@radix-ui/react-toast`, `@radix-ui/react-collection` ni `@radix-ui/react-visually-hidden`.
 - (b) `playwright.config.ts` (sin reintentos) y orden de pruebas en navegador en `scripts` de `package.json`, sobre la compilación servida en local con `ENTORNO=preproduccion`. Prueba: la orden en verde, salida en `ev/T-002/`. Carpeta y suma de los navegadores: T-020.
-- Archivos: `package.json`, `package-lock.json`, `postcss.config.mjs`, `playwright.config.ts`.
+- Archivos: `package.json`, `package-lock.json`, `postcss.config.mjs`, `playwright.config.ts`; además, por D-034 y la prueba de (b): `docs/TECNOLOGIAS.md`, `tests/e2e/arranque.spec.ts`, `tests/unit/plataforma/manifiesto.test.ts` y retirada de `scripts/generar-fechas-bloqueo.mjs` y `tests/unit/plataforma/fechas-publicacion.json` (D-034 la preveía en la fase 1; aviso a la 002).
+- Dictamen (20/11/2026, 2.ª vuelta): revisor APTO, auditor-seguridad APTO; integrada por D-036. Pendiente, sin bloquear: la prueba del bloqueo no ata `resolved` al nombre del paquete ni exige sha512 (auditor, MENOR-1; tarea de CI, D-030); el `distDir` propio para pruebas en navegador va en T-003/T-004 (`ev/T-002/versiones.md`). El «7 días» de (a) quedó derogado por D-034.
 
 ### T-003 `[P]` · Fronteras, comprobación estática y muestra fuera de producción
 `qa` · R, Res. · pendiente · Depende de: T-002 · REQ-032, REQ-061, REQ-062, REQ-084 · CA-024, CA-025, CA-046, CA-056
