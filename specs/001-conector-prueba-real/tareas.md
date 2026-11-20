@@ -174,6 +174,16 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - (g) Resultados y conclusiones (RD-028, RD-067, RD-073, V-101 a V-104). Prueba: PRUEBA-051, PRUEBA-053.
 - Archivos: `ev/T-119/` (una carpeta por parte), `resultados/`.
 
+## Bloque 7 · Condiciones de plataforma (carril A)
+
+### T-120 · Condiciones de la retirada de fechas
+`plataforma` · C, Res. · en revisión · Depende de: 002·T-003, T-101 integrada · sin REQ propio; D-030, D-034 y diseño 002 §Suministro
+- (a) B-1: `.npmrc` con `ignore-scripts=true` y lista cerrada de paquetes con `hasInstallScript` (hoy solo `fsevents`). Prueba: `tp/npmrc.test.ts`.
+- (b) B-2: en `arnes.yml`, `npm ci`, `npm audit` y `npm audit signatures`, también en un diario programado sobre `main` (D-030), con `contents: read`. Prueba: `tp/ci-npm.test.ts` (estática; el CI no se ha ejecutado, sin remoto).
+- Archivos: `.npmrc`, `.github/workflows/arnes.yml`, `tp/npmrc.test.ts`, `tp/ci-npm.test.ts`.
+- D-030: Vitest en el CI solo para la carpeta `tests/unit/plataforma` (`npx vitest run tests/unit/plataforma`, sin red real ni secretos), donde viven `npmrc.test.ts` y `ci-npm.test.ts`; el resto de las pruebas en el CI queda pendiente de la tarea de CI completo, aún sin identificador. El CI no se ha ejecutado (sin remoto).
+- Pendientes antes del primer push (dictamen del auditor-seguridad): fijar por SHA las acciones de `arnes.yml` (V-115) y definir el canal de aviso del diario sobre `main` (función 003).
+
 ## Equivalencias (numeración del 19/11 → actual)
 
 | Actual | Antiguas | Actual | Antiguas |

@@ -2,6 +2,10 @@
 # y se vean sus resultados. El CI completo (tipos, estilo, pruebas, pgTAP,
 # escáneres) se monta en la fase 1.
 #
+# Pendientes antes del primer push (dictamen del auditor-seguridad, T-120):
+#  - fijar las acciones por huella SHA completa (checkout, setup-node);
+#  - canal de aviso para los fallos del diario sobre main (función 003).
+#
 # V-115: comprobar las versiones vigentes de estas acciones y fijarlas por
 # huella antes de usarlas.
 
@@ -11,18 +15,31 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Diario sobre main (D-030): una vulnerabilidad nueva o una firma revocada aparece sin esperar a un cambio.
+  schedule:
+    - cron: "17 5 * * *"
 
 permissions:
   contents: read
 
 jobs:
   comprobar:
-    name: Comprobador documental
+    name: Comprobador documental y de suministro
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 26
       - name: Comprobar trazabilidad, cabeceras y secretos
         run: node scripts/comprobar-specs.mjs
+      - name: Instalar dependencias del bloqueo (sin scripts, explícito y por .npmrc)
+        run: npm ci --ignore-scripts
+      - name: Auditar vulnerabilidades
+        run: npm audit
+      - name: Verificar firmas y procedencia del registro
+        run: npm audit signatures
+      - name: Pruebas de plataforma (Vitest, sin red real ni secretos)
+        run: npx vitest run tests/unit/plataforma
