@@ -1,0 +1,12 @@
+Clon limpio de la punta de la rama tarea/020-T-002 (fb45d63), 20/11/2026, tras npm ci --ignore-scripts
+
+> nido@0.1.0 navegador
+> playwright test --config playwright.config.ts
+
+
+Running 1 test using 1 worker
+
+  ok 1 tests\e2e\arranque.spec.ts:4:1 › la página de inicio responde con el servicio en funcionamiento (565ms)
+
+  1 passed (12.7s)
+EXIT 0

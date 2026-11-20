@@ -1,0 +1,155 @@
+HISTÓRICA (20/11/2026): árbol anterior a 4969041 y orden `navegador` antigua; sustituida por verificar-correccion.txt, navegador-correccion.txt y bloqueo-npm-ls.txt (clon limpio). No es prueba del árbol actual.
+
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/agent-a3ff736ec0acc9de2
+
+
+ Test Files  5 passed (5)
+      Tests  52 passed (52)
+   Start at  12:23:41
+   Duration  5.08s (tests 83%, import 12%, transform 4%, worker 1%)
+
+
+> nido@0.1.0 aislamiento
+> node scripts/probar-modelo.mjs
+
+SUPERADA  Preámbulo de Supabase simulado
+SUPERADA  MODELO-DATOS.sql se ejecuta sin errores
+SUPERADA  Conector: licencia activa recibe estado activa y prompt  -> {"estado":"activa","tienePrompt":true}
+SUPERADA  Conector: token desconocido no queda autorizado
+SUPERADA  Conector: no puede leer tablas directamente
+SUPERADA  Conector: no puede leer tokens
+SUPERADA  Conector: el token de B no puede cerrar la ejecución de A  -> {"motivo":"ejecucion_desconocida","guardado":false,"autorizado":true}
+SUPERADA  Conector: informe con campos de más se guarda y los cuenta  -> {"guardado":true,"repetido":false,"autorizado":true,"campos_descartados":3}
+SUPERADA  Conector: repetir el informe no lo duplica  -> {"guardado":true,"repetido":true,"autorizado":true,"campos_descartados":3}
+SUPERADA  Conector: informe de B guardado
+SUPERADA  Conector: informe con tipo inválido se rechaza sin devolver el valor  -> {"motivo":"informe_invalido","guardado":false,"autorizado":true}
+SUPERADA  Conector: cifra fuera de rango se rechaza  -> {"motivo":"informe_invalido","guardado":false,"autorizado":true}
+SUPERADA  Informe guardado: sin asunto ni remitente, problemas solo del catálogo, enumerados en minúsculas  -> {"problemas":["error_borrador"],"descartados":3}
+SUPERADA  Latido: la ejecución con informe queda cerrada
+SUPERADA  Latido: la ejecución sin informe válido queda abierta
+SUPERADA  Orden pausar: estado pausada, orden entregada y sin prompt  -> {"estado":"pausada","orden":{"id":"08d27bb5-fb31-423f-9df1-d950cded4aad","tipo":"pausar"},"instrucciones":null}
+SUPERADA  Orden: el token de B no puede confirmar la orden de A  -> {"repetida":false,"autorizado":true,"confirmada":false}
+SUPERADA  Orden: A confirma su orden  -> {"repetida":false,"autorizado":true,"confirmada":true}
+SUPERADA  Orden: confirmar dos veces no falla  -> {"repetida":true,"autorizado":true,"confirmada":true}
+SUPERADA  Orden: quedó entregada y confirmada
+SUPERADA  Licencia suspendida: estado suspendida y nada más  -> {"estado":"suspendida","instrucciones":null}
+SUPERADA  Usuario de A: solo ve informes de A  -> ["10000000-0000-4000-8000-00000000000a"]
+SUPERADA  Usuario de A: solo ve su cliente
+SUPERADA  Usuario de A: la vista de resumen solo muestra A  -> ["10000000-0000-4000-8000-00000000000a"]
+SUPERADA  Usuario de A: la vista de métricas solo agrega lo suyo  -> [{"clientes":1}]
+SUPERADA  Usuario de A: no ve el texto de las versiones
+SUPERADA  Usuario de A: no ve conexiones
+SUPERADA  Usuario de A: no ve auditoría
+SUPERADA  Usuario de A: no puede leer tokens
+SUPERADA  Usuario de A: no puede llamar a las funciones del conector
+SUPERADA  Usuario de A: no puede crear órdenes
+SUPERADA  Usuario de A: no puede cambiar el cliente B
+SUPERADA  Usuario de B: solo ve informes de B  -> ["10000000-0000-4000-8000-00000000000b"]
+SUPERADA  Usuario de B: no ve órdenes de A
+SUPERADA  Superadmin sin doble factor: no ve clientes
+SUPERADA  Superadmin sin doble factor: no puede crear órdenes
+SUPERADA  Superadmin con doble factor: ve todos los clientes
+SUPERADA  Superadmin con doble factor: ve informes de todos
+SUPERADA  Superadmin con doble factor: crea una orden y queda auditada con su usuario
+SUPERADA  Superadmin: no puede cambiar el texto de una versión
+SUPERADA  Superadmin: no puede borrar auditoría
+SUPERADA  Anónimo: no puede leer clientes
+SUPERADA  Anónimo: no puede llamar a las funciones del conector
+SUPERADA  Versiones del prompt: inmutables incluso para el propietario
+SUPERADA  Auditoría: no se puede borrar ni siendo propietario
+
+45 de 45 comprobaciones superadas
+
+> nido@0.1.0 arnes
+> node scripts/comprobar-specs.mjs
+
+Comprobador del arnés
+
+  OK     Archivos obligatorios (30 archivos)
+  OK     Contratos (4 esquemas; informe sin texto libre)
+  OK     Contrato del informe y modelo de datos coinciden (12 códigos de problema)
+  OK     Trazabilidad de las funciones (26 funciones)
+  OK     Agentes (12 agentes)
+  OK     Enrutado: docs/EQUIPO.md coincide con los agentes (12 roles comparados)
+  OK     Skills (14 skills)
+  OK     Ajustes de Claude Code (sin permisos ampliados)
+  OK     Registro de decisiones (57 decisiones con estado)
+  OK     Plan de fases (fases 0 a 6 con criterios)
+  OK     .env.example sin valores (9 variables)
+  OK     Sin secretos en el repositorio (279 archivos revisados)
+
+27 avisos de tamaño (D-023; se recortan solo al reescribirlos, D-031):
+  - specs/003-repositorio-remoto-ci/especificacion.md: 26 KB (límite 25 KB)
+  - specs/010-base-datos-rls/especificacion.md: 35 KB (límite 25 KB)
+  - specs/011-conector-sobre-bd/especificacion.md: 35 KB (límite 25 KB)
+  - specs/012-prompt-1-3-arranque/especificacion.md: 36 KB (límite 25 KB)
+  - specs/013-latido-alertas/especificacion.md: 33 KB (límite 25 KB)
+  - specs/014-autorizacion-definitiva/especificacion.md: 49 KB (límite 25 KB)
+  - specs/015-registro-versiones-prompt/especificacion.md: 41 KB (límite 25 KB)
+  - specs/020-sistema-diseno-armazon/diseno.md: 139 KB (límite 40 KB)
+  - specs/020-sistema-diseno-armazon/especificacion.md: 50 KB (límite 25 KB)
+  - specs/021-acceso-superadmin/especificacion.md: 52 KB (límite 25 KB)
+  - specs/022-clientes-licencias-conexiones/diseno.md: 109 KB (límite 40 KB)
+  - specs/022-clientes-licencias-conexiones/especificacion.md: 54 KB (límite 25 KB)
+  - specs/023-informes-ordenes/diseno.md: 123 KB (límite 40 KB)
+  - specs/023-informes-ordenes/especificacion.md: 57 KB (límite 25 KB)
+  - specs/024-auditoria/especificacion.md: 62 KB (límite 25 KB)
+  - specs/025-reglas-por-cliente/especificacion.md: 41 KB (límite 25 KB)
+  - specs/030-versiones-prompt-y-canales/especificacion.md: 34 KB (límite 25 KB)
+  - specs/031-metricas-por-version/especificacion.md: 34 KB (límite 25 KB)
+  - specs/032-alertas-y-pausa-global/especificacion.md: 34 KB (límite 25 KB)
+  - specs/033-cliente-piloto-en-paralelo/especificacion.md: 45 KB (límite 25 KB)
+  - specs/040-acceso-cliente/especificacion.md: 33 KB (límite 25 KB)
+  - specs/041-resumen-actividad-cliente/especificacion.md: 47 KB (límite 25 KB)
+  - specs/042-suscripcion-cliente/especificacion.md: 43 KB (límite 25 KB)
+  - specs/050-cobro-stripe/especificacion.md: 33 KB (límite 25 KB)
+  - specs/051-publicacion-operacion/especificacion.md: 41 KB (límite 25 KB)
+  - specs/052-legal-rgpd/especificacion.md: 36 KB (límite 25 KB)
+  - specs/053-migracion-clientes-panel/especificacion.md: 40 KB (límite 25 KB)
+
+RESULTADO: SUPERADO
+Es una comprobación documental. No prueba seguridad ni comportamiento.
+
+> nido@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 56ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 576ms
+  Running TypeScript ...
+  Finished TypeScript in 4.3s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 963ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+
+○  (Static)  prerendered as static content
+

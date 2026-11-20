@@ -1,0 +1,4 @@
+Clon limpio de la punta de la rama tarea/020-T-002 (fb45d63), 20/11/2026, tras npm ci --ignore-scripts
+plugins en postcss.config.mjs: @tailwindcss/postcss
+bytes CSS: 10437 | .flex: true | .p-4: true
+(entrada: @import "tailwindcss"; @source ./x.html con <div class="flex p-4">)

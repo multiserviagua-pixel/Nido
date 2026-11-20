@@ -1,0 +1,14 @@
+# Clon desechable de la punta 42b3e76, 20/11/2026
+## npm ci --ignore-scripts
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 470 packages, and audited 477 packages in 2m
+
+160 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+salida: 0
+## npm audit
+found 0 vulnerabilities
+salida: 0

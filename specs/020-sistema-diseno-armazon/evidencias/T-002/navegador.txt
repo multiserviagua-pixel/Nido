@@ -1,0 +1,31 @@
+HISTÓRICA (20/11/2026): árbol anterior a 4969041 y orden `navegador` antigua; sustituida por verificar-correccion.txt, navegador-correccion.txt y bloqueo-npm-ls.txt (clon limpio). No es prueba del árbol actual.
+
+
+> nido@0.1.0 navegador
+> next build && playwright test --config playwright.config.ts
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 61ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 755ms
+  Running TypeScript ...
+  Finished TypeScript in 3.7s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 834ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+└ ○ /_not-found
+
+
+○  (Static)  prerendered as static content
+
+
+Running 1 test using 1 worker
+
+  ok 1 tests\e2e\arranque.spec.ts:4:1 › la página de inicio responde con el servicio en funcionamiento (592ms)
+
+  1 passed (5.7s)

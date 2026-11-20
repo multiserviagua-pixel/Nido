@@ -1,0 +1,391 @@
+HISTÓRICA (20/11/2026): árbol anterior a 4969041 y orden `navegador` antigua; sustituida por verificar-correccion.txt, navegador-correccion.txt y bloqueo-npm-ls.txt (clon limpio). No es prueba del árbol actual.
+
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/agent-a3ff736ec0acc9de2
+
+ ❯ tests/unit/plataforma/manifiesto.test.ts (14 tests | 2 failed) 412ms
+   ❯ manifiesto (package.json) (11)
+     × existe el bloqueo con registro oficial e integridad en cada paquete 23ms
+     × todo paquete posterior al límite está en la lista cerrada de excepciones, y solo esos 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/plataforma/manifiesto.test.ts > manifiesto (package.json) > existe el bloqueo con registro oficial e integridad en cada paquete
+TypeError: .toMatch() expects to receive a string, but got undefined
+ ❯ tests/unit/plataforma/manifiesto.test.ts:204:36
+    202|       if (ruta === "") continue;
+    203|       expect(datos.link, ruta).not.toBe(true);
+    204|       expect(datos.resolved, ruta).toMatch(/^https:\/\/registry\.npmjs…
+       |                                    ^
+    205|       expect(datos.integrity, ruta).toBeTruthy();
+    206|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/plataforma/manifiesto.test.ts > manifiesto (package.json) > todo paquete posterior al límite está en la lista cerrada de excepciones, y solo esos
+AssertionError: expected [ '@babel/code-frame@7.29.7', …(452) ] to deeply equal [ '@alloc/quick-lru@5.3.0', …(547) ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,6 @@
+  [
+-   "@alloc/quick-lru@5.3.0",
+-   "@axe-core/playwright@4.14.0",
+    "@babel/code-frame@7.29.7",
+    "@babel/compat-data@7.29.7",
+    "@babel/core@7.29.13",
+    "@babel/generator@7.29.14",
+    "@babel/helper-compilation-targets@7.29.13",
+@@ -16,15 +14,13 @@
+    "@babel/parser@7.29.14",
+    "@babel/template@7.29.7",
+    "@babel/traverse@7.29.14",
+    "@babel/types@7.29.14",
+    "@electric-sql/pglite@0.5.17",
+-   "@emnapi/core@1.11.3",
+    "@emnapi/core@2.0.0-beta.2",
+    "@emnapi/runtime@1.11.3",
+    "@emnapi/runtime@2.0.0-beta.2",
+-   "@emnapi/wasi-threads@1.2.3",
+    "@emnapi/wasi-threads@2.2.0",
+    "@eslint-community/eslint-utils@4.10.1",
+    "@eslint-community/eslint-utils@4.9.1",
+    "@eslint-community/regexpp@4.12.3",
+    "@eslint/config-array@0.21.2",
+@@ -70,11 +66,10 @@
+    "@jridgewell/gen-mapping@0.3.13",
+    "@jridgewell/remapping@2.3.5",
+    "@jridgewell/resolve-uri@3.1.2",
+    "@jridgewell/sourcemap-codec@1.6.0",
+    "@jridgewell/trace-mapping@0.3.31",
+-   "@napi-rs/wasm-runtime@1.2.2",
+    "@napi-rs/wasm-runtime@1.2.6",
+    "@next/env@16.4.6",
+    "@next/eslint-plugin-next@16.4.6",
+    "@next/swc-darwin-arm64@16.4.6",
+    "@next/swc-darwin-x64@16.4.6",
+@@ -87,29 +82,10 @@
+    "@nodelib/fs.scandir@2.1.5",
+    "@nodelib/fs.stat@2.0.5",
+    "@nodelib/fs.walk@1.2.8",
+    "@nolyfill/is-core-module@1.0.39",
+    "@oxc-project/types@0.156.0",
+-   "@playwright/test@1.65.1",
+-   "@radix-ui/primitive@1.2.0",
+-   "@radix-ui/react-alert-dialog@1.2.1",
+-   "@radix-ui/react-compose-refs@1.1.5",
+-   "@radix-ui/react-context@1.3.0",
+-   "@radix-ui/react-dialog@1.3.1",
+-   "@radix-ui/react-dismissable-layer@1.2.1",
+-   "@radix-ui/react-focus-guards@1.2.0",
+-   "@radix-ui/react-focus-scope@1.3.1",
+-   "@radix-ui/react-id@1.1.4",
+-   "@radix-ui/react-portal@1.2.0",
+-   "@radix-ui/react-presence@1.1.11",
+-   "@radix-ui/react-primitive@2.2.0",
+-   "@radix-ui/react-slot@1.5.0",
+-   "@radix-ui/react-use-callback-ref@1.1.5",
+-   "@radix-ui/react-use-controllable-state@1.3.0",
+-   "@radix-ui/react-use-effect-event@0.0.5",
+-   "@radix-ui/react-use-layout-effect@1.1.4",
+-   "@reduxjs/toolkit@2.15.0",
+    "@rolldown/binding-android-arm-eabi@1.2.19",
+    "@rolldown/binding-android-arm64@1.2.19",
+    "@rolldown/binding-darwin-arm64@1.2.19",
+    "@rolldown/binding-darwin-x64@1.2.19",
+    "@rolldown/binding-freebsd-x64@1.2.19",
+@@ -124,48 +100,20 @@
+    "@rolldown/binding-wasm32-wasi@1.2.19",
+    "@rolldown/binding-win32-arm64-msvc@1.2.19",
+    "@rolldown/binding-win32-x64-msvc@1.2.19",
+    "@rolldown/pluginutils@1.1.0",
+    "@rtsao/scc@1.1.0",
+-   "@standard-schema/spec@1.1.0",
+-   "@standard-schema/utils@0.3.0",
+    "@swc/helpers@0.5.23",
+-   "@tailwindcss/node@4.3.5",
+-   "@tailwindcss/oxide-android-arm64@4.3.5",
+-   "@tailwindcss/oxide-darwin-arm64@4.3.5",
+-   "@tailwindcss/oxide-darwin-x64@4.3.5",
+-   "@tailwindcss/oxide-freebsd-x64@4.3.5",
+-   "@tailwindcss/oxide-linux-arm-gnueabihf@4.3.5",
+-   "@tailwindcss/oxide-linux-arm64-gnu@4.3.5",
+-   "@tailwindcss/oxide-linux-arm64-musl@4.3.5",
+-   "@tailwindcss/oxide-linux-x64-gnu@4.3.5",
+-   "@tailwindcss/oxide-linux-x64-musl@4.3.5",
+-   "@tailwindcss/oxide-wasm32-wasi@4.3.5",
+-   "@tailwindcss/oxide-win32-arm64-msvc@4.3.5",
+-   "@tailwindcss/oxide-win32-x64-msvc@4.3.5",
+-   "@tailwindcss/oxide@4.3.5",
+-   "@tailwindcss/postcss@4.3.5",
+-   "@tybys/wasm-util@0.10.3",
+    "@tybys/wasm-util@0.10.4",
+    "@types/chai@5.2.3",
+-   "@types/d3-array@3.2.2",
+-   "@types/d3-color@3.1.3",
+-   "@types/d3-ease@3.0.2",
+-   "@types/d3-interpolate@3.0.4",
+-   "@types/d3-path@3.1.1",
+-   "@types/d3-scale@4.0.9",
+-   "@types/d3-shape@3.2.0",
+-   "@types/d3-time@3.0.4",
+-   "@types/d3-timer@3.0.2",
+    "@types/deep-eql@4.0.2",
+    "@types/estree@1.0.10",
+    "@types/json-schema@7.0.15",
+    "@types/json5@0.0.29",
+    "@types/node@26.6.6",
+    "@types/react-dom@19.3.0",
+    "@types/react@19.3.0",
+-   "@types/use-sync-external-store@0.0.6",
+    "@typescript-eslint/eslint-plugin@8.73.0",
+    "@typescript-eslint/parser@8.73.0",
+    "@typescript-eslint/project-service@8.73.0",
+    "@typescript-eslint/scope-manager@8.73.0",
+    "@typescript-eslint/tsconfig-utils@8.73.0",
+@@ -200,11 +148,10 @@
+    "acorn-jsx@5.3.2",
+    "acorn@8.19.0",
+    "ajv@6.15.0",
+    "ansi-styles@4.3.0",
+    "argparse@2.0.1",
+-   "aria-hidden@1.2.6",
+    "aria-query@5.3.2",
+    "array-buffer-byte-length@1.0.2",
+    "array-includes@3.2.0",
+    "array.prototype.findlast@1.2.5",
+    "array.prototype.findlastindex@1.2.6",
+@@ -231,56 +178,40 @@
+    "callsites@3.1.0",
+    "caniuse-lite@1.0.30001826",
+    "chai@6.3.0",
+    "chalk@4.1.2",
+    "client-only@0.0.1",
+-   "clsx@2.1.1",
+    "color-convert@2.0.1",
+    "color-name@1.1.4",
+    "concat-map@0.0.1",
+    "convert-source-map@2.0.0",
+    "cross-spawn@7.0.6",
+    "csstype@3.2.3",
+-   "d3-array@3.2.5",
+-   "d3-color@3.1.1",
+-   "d3-ease@3.0.2",
+-   "d3-format@3.1.3",
+-   "d3-interpolate@3.0.2",
+-   "d3-path@3.1.1",
+-   "d3-scale@4.0.3",
+-   "d3-shape@3.2.1",
+-   "d3-time-format@4.1.1",
+-   "d3-time@3.1.1",
+-   "d3-timer@3.0.2",
+    "damerau-levenshtein@1.0.8",
+    "data-view-buffer@1.0.2",
+    "data-view-byte-length@1.0.2",
+    "data-view-byte-offset@1.0.1",
+    "debug@3.2.7",
+    "debug@4.4.3",
+-   "decimal.js-light@2.5.1",
+    "deep-is@0.1.4",
+    "define-data-property@1.1.4",
+    "define-properties@1.2.1",
+    "detect-libc@2.1.2",
+-   "detect-node-es@1.1.0",
+    "doctrine@2.1.0",
+    "dunder-proto@1.0.1",
+    "electron-to-chromium@1.5.484",
+    "emoji-regex@9.2.2",
+-   "enhanced-resolve@5.27.0",
+    "es-abstract-get@1.0.0",
+    "es-abstract@1.24.2",
+    "es-define-property@1.0.1",
+    "es-errors@1.3.0",
+    "es-iterator-helpers@1.4.0",
+    "es-module-lexer@2.3.2",
+    "es-object-atoms@1.1.2",
+    "es-set-tostringtag@2.1.0",
+    "es-shim-unscopables@1.1.0",
+    "es-to-primitive@1.3.4",
+-   "es-toolkit@1.53.2",
+    "escalade@3.2.0",
+    "escape-string-regexp@4.0.0",
+    "eslint-config-next@16.4.6",
+    "eslint-import-resolver-node@0.3.10",
+    "eslint-import-resolver-typescript@3.10.1",
+@@ -299,11 +230,10 @@
+    "esquery@1.7.0",
+    "esrecurse@4.3.0",
+    "estraverse@5.3.0",
+    "estree-walker@3.0.3",
+    "esutils@2.0.3",
+-   "eventemitter3@5.0.4",
+    "expect-type@1.4.0",
+    "fast-deep-equal@3.1.3",
+    "fast-glob@3.3.1",
+    "fast-json-stable-stringify@2.1.0",
+    "fast-levenshtein@2.0.6",
+@@ -320,21 +250,19 @@
+    "function.prototype.name@1.2.0",
+    "functions-have-names@1.2.3",
+    "generator-function@2.0.1",
+    "gensync@1.0.0-beta.2",
+    "get-intrinsic@1.3.0",
+-   "get-nonce@1.0.1",
+    "get-proto@1.0.1",
+    "get-symbol-description@1.1.0",
+    "get-tsconfig@4.14.3",
+    "glob-parent@5.1.2",
+    "glob-parent@6.0.2",
+    "globals@14.0.0",
+    "globals@16.4.0",
+    "globalthis@1.0.4",
+    "gopd@1.2.0",
+-   "graceful-fs@4.2.12",
+    "has-bigints@1.1.0",
+    "has-flag@4.0.0",
+    "has-property-descriptors@1.0.2",
+    "has-proto@1.2.0",
+    "has-symbols@1.1.0",
+@@ -342,15 +270,13 @@
+    "hasown@2.0.4",
+    "hermes-estree@0.25.1",
+    "hermes-parser@0.25.1",
+    "ignore@5.3.2",
+    "ignore@7.0.14",
+-   "immer@11.2.10",
+    "import-fresh@3.3.1",
+    "imurmurhash@0.1.4",
+    "internal-slot@1.1.0",
+-   "internmap@2.0.3",
+    "is-array-buffer@3.0.5",
+    "is-async-function@2.1.1",
+    "is-bigint@1.1.0",
+    "is-boolean-object@1.2.2",
+    "is-bun-module@2.0.0",
+@@ -377,11 +303,10 @@
+    "is-weakref@1.1.1",
+    "is-weakset@2.0.4",
+    "isarray@2.0.5",
+    "isexe@2.0.0",
+    "iterator.prototype@1.1.5",
+-   "jiti@2.7.0",
+    "js-tokens@4.0.0",
+    "js-yaml@4.3.2",
+    "jsesc@3.1.0",
+    "json-buffer@3.0.1",
+    "json-schema-traverse@0.4.1",
+@@ -441,35 +366,24 @@
+    "path-key@3.1.1",
+    "path-parse@1.0.7",
+    "picocolors@1.1.1",
+    "picomatch@2.3.2",
+    "picomatch@4.0.7",
+-   "playwright-core@1.65.1",
+-   "playwright@1.65.1",
+    "possible-typed-array-names@1.1.0",
+    "postcss@8.5.23",
+-   "postcss@8.5.33",
++   "postcss@8.5.32",
+    "prelude-ls@1.2.1",
+    "prettier@3.10.1",
+    "prop-types@15.8.1",
+    "punycode@2.3.1",
+    "queue-microtask@1.2.3",
+    "react-dom@19.3.1",
+    "react-is@16.13.1",
+-   "react-is@19.3.1",
+-   "react-redux@9.3.1",
+-   "react-remove-scroll-bar@2.3.8",
+-   "react-remove-scroll@2.7.2",
+-   "react-style-singleton@2.2.3",
+    "react@19.3.1",
+-   "recharts@3.11.0",
+-   "redux-thunk@3.1.0",
+-   "redux@5.0.1",
+    "reflect.getprototypeof@1.0.10",
+    "regexp-tree@0.1.27",
+    "regexp.prototype.flags@1.5.4",
+-   "reselect@5.2.0",
+    "resolve-from@4.0.0",
+    "resolve-pkg-maps@1.0.0",
+    "resolve@2.0.0-next.7",
+    "reusify@1.1.0",
+    "rolldown@1.2.19",
+@@ -504,20 +418,16 @@
+    "strip-bom@3.0.0",
+    "strip-json-comments@3.1.1",
+    "styled-jsx@5.1.6",
+    "supports-color@7.2.0",
+    "supports-preserve-symlinks-flag@1.0.0",
+-   "tailwindcss@4.3.5",
+-   "tapable@2.3.4",
+-   "tiny-invariant@1.3.3",
+    "tinybench@6.2.3",
+    "tinyexec@1.3.1",
+    "tinyglobby@0.2.17",
+    "to-regex-range@5.0.1",
+    "ts-api-utils@2.5.0",
+    "tsconfig-paths@3.15.0",
+-   "tslib@2.8.1",
+    "tslib@2.9.1",
+    "type-check@0.4.0",
+    "typed-array-buffer@1.0.3",
+    "typed-array-byte-length@1.0.3",
+    "typed-array-byte-offset@1.0.5",
+@@ -527,17 +437,12 @@
+    "unbox-primitive@1.1.0",
+    "undici-types@8.9.0",
+    "unrs-resolver@1.13.0",
+    "update-browserslist-db@1.3.4",
+    "uri-js@4.4.1",
+-   "use-callback-ref@1.3.3",
+-   "use-sidecar@1.1.3",
+-   "use-sync-external-store@1.7.0",
+-   "victory-vendor@37.4.1",
+    "vite@8.3.8",
+    "vitest@5.1.0",
+-   "web-vitals@6.2.3",
+    "which-boxed-primitive@1.1.1",
+    "which-builtin-type@1.2.1",
+    "which-collection@1.0.2",
+    "which-typed-array@1.1.24",
+    "which@2.0.2",
+
+ ❯ comprobarFechasYExcepciones tests/unit/plataforma/manifiesto.test.ts:38:44
+     36|   }
+     37|   expect(esperadas.size).toBeGreaterThan(0);
+     38|   expect(Object.keys(datos.fechas).sort()).toEqual([...esperadas].sort…
+       |                                            ^
+     39|
+     40|   const motivoGhsa = "GHSA-g3hv-75wg-m249: versión previa vulnerable (…
+ ❯ tests/unit/plataforma/manifiesto.test.ts:222:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 52 passed (54)
+   Start at  12:18:22
+   Duration  5.46s (tests 74%, import 14%, transform 12%, worker 1%)
+
