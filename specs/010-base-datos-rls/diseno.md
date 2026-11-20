@@ -33,11 +33,11 @@ Sin cambios. `contratos/informe.schema.json` manda sobre `informes` (D-2, 5 y 7)
 
 ### D-1 · Migraciones: orden, contenido y vuelta atrás
 
-Cada archivo empieza con la guarda `do $$ begin if current_user <> 'postgres' then raise exception 'migracion_rol_no_permitido'; end if; end $$;` (L 11) y no usa sentencias que no admitan transacción. Si la CLI no envuelve cada archivo en una transacción (tarea 1), lleva `begin; … commit;` (REQ-030); cada reversión, siempre.
+Cada archivo empieza con la guarda `do $$ begin if current_user operator(pg_catalog.<>) 'postgres' then raise exception 'migracion_rol_no_permitido'; end if; end $$;` (L 11); el resto va en un único bloque `do` que repite la guarda como primera instrucción, lee la ruta previa, fija `set_config('search_path', 'pg_catalog, pg_temp', true)` y la restaura como última instrucción (L 13). Forma (L 14): tras la guarda, solo bloques `do` con comillas de dólar que empiezan por ella; tipos de `declare` como `pg_catalog.<tipo>`, sin inicializadores; sin `begin; … commit;` ni `on commit drop` (propuesta 34, D-036, 20/11/2026; `evidencias/T-001/comprobaciones-cli.md`). Un bloque es una sentencia: aun en autocommit o con `psql` sin `ON_ERROR_STOP`, falla entero o no cambia nada (REQ-030). Sin sentencias que no admitan transacción.
 
 | N.º | Nombre | Crea | Reversión |
 | --- | --- | --- | --- |
-| M01 | `privado_rol_y_permisos` | `privado` (`revoke all … from public`); `conector` (D-9); copia de `pg_default_acl` de `postgres` a una temporal (`on commit drop`); cierre (D-4); después, `privado.permisos_por_defecto_previos` con RLS, `revoke all` y esas filas | Falla si queda otro objeto en `public` o `privado`; si no, restaura los permisos por defecto y borra tabla, rol y esquema, sin `cascade` |
+| M01 | `privado_rol_y_permisos` | `privado` (`revoke all … from public`); `conector` (D-9); `privado.permisos_por_defecto_previos` (RLS, `revoke all`) con la copia de `pg_default_acl` de `postgres`; cierre (D-4) | Falla si queda otro objeto en `public` o `privado`; si no, restaura los permisos por defecto y borra tabla, rol y esquema, sin `cascade` |
 | M02 | `clientes_y_acceso` | Tipos de §2; `clientes`, `administradores`, `usuarios_cliente`, `licencias`, `codigos_activacion`, `conexiones`, `reglas_cliente`, `ordenes`, `ajustes_globales`, `catalogo_problemas`, `suscripciones`, con RLS y `revoke all`, sin políticas ni permisos | Borra tablas y tipos |
 | M03 | `internas_autorizacion_y_cobro` | `clientes_oauth`, `codigos_autorizacion`, `tokens`, `eventos_stripe`, igual (REQ-008) | Borra las tablas |
 | M04 | `auditoria` · **PROTEGIDA** | `auditoria`; `privado.impedir_cambios()`, `privado.registrar_auditoria()`, `privado.auditar()` (D-3); inmutabilidad (`enable always`) y auditoría de las tablas de M02 | Solo en CI, ni en `Nido`: guarda SQL que exige `current_setting('app.reversion_protegida', true) = 'ci'`, que solo fija `ciclo-migraciones.mjs`. Variable de sesión: guarda contra accidentes, no contra quien actúa a propósito con `postgres` (N-8; P1-h) |
@@ -51,7 +51,7 @@ Cada archivo empieza con la guarda `do $$ begin if current_user <> 'postgres' th
 **REQ-053, REQ-054, CA-031 y CA-032**
 
 - Las protegidas (M04, M05) son una constante de `revertir.mjs` (L 8 la compara con los archivos que crean `public.auditoria` o `public.versiones_prompt`).
-- `revertir.mjs` y `aplicar-produccion.mjs` derivan el entorno de la referencia del proyecto en la cadena de conexión, con la lista cerrada de `entornos.mjs` (CI, `Nido` y, cuando exista, producción), nunca de un argumento; desconocida, se niegan (L 14).
+- `revertir.mjs` y `aplicar-produccion.mjs` derivan el entorno de la referencia del proyecto en la cadena de conexión, con la lista cerrada de `entornos.mjs` (CI, `Nido` y, cuando exista, producción), nunca de un argumento; desconocida, se niegan (L 15).
 - En producción, una protegida no se revierte nunca (CA-032); las demás exigen una fila de `aprobaciones-produccion.md` con el commit actual (CA-026).
 - Las reversiones de M06 en adelante y las futuras no contienen `drop`, `delete`, `truncate`, `update` ni `alter` sobre `auditoria` o `versiones_prompt`, ni `cascade` sobre `privado.impedir_cambios`, `privado.auditar`, `privado.registrar_auditoria` o el esquema `privado`, ni `execute` (L 10). En CI, con filas en las dos tablas, `ciclo-migraciones.mjs` aplica, revierte y reaplica cada migración posterior y compara la huella de ambas (CA-031).
 
@@ -194,7 +194,7 @@ M01: `create role conector nologin noinherit nobypassrls nocreatedb nocreaterole
 - R-1: `connect` y `temporary` en la base; `temporary` lo neutraliza D-3.
 - R-2: `usage` en esquemas abiertos a `PUBLIC` por la plataforma (p. ej., `public`, `extensions`), sin permisos sobre sus tablas.
 - R-3: `execute` de `PUBLIC` en funciones de esquemas de la plataforma (`auth`, `extensions`…); sin acceso a datos, porque el conector no tiene permisos sobre tablas. Una `security definer` de la plataforma solo entra con aceptación nominal del `auditor-seguridad`.
-- R-4: funciones de `pg_catalog` de `PUBLIC`, incluidas las de objetos grandes (`lo_create`, `lo_open`…; no `lo_import` ni `lo_export` de servidor), limitadas por `statement_timeout` y `connection limit`; supervisión: 0 filas de `pg_largeobject_metadata` con `lomowner = 'conector'::regrole` (N-5, T-014).
+- R-4: funciones de `pg_catalog` de `PUBLIC`, incluidas las de objetos grandes (`lo_create`, `lo_open`…; no `lo_import` ni `lo_export` de servidor), limitadas por `connection limit` (`statement_timeout` es solo un valor por defecto: el conector lo anula y `set role` no lo aplica); supervisión: 0 filas de `pg_largeobject_metadata` con `lomowner = 'conector'::regrole` (N-5, T-014).
 - Fuera: `net` (`pg_net`), sin uso. Si el conector tiene `usage` en `net`, 04 falla y decide el responsable (P1-h).
 
 Prueba (04): los privilegios efectivos de `conector` (`has_*_privilege`) sobre esquemas, tablas, vistas, secuencias y funciones de todo esquema salvo `pg_catalog`, `information_schema`, `pg_toast*` y `pg_temp*` son exactamente las tres `mcp_*`, `usage` en `privado` y R-2 y R-3 escritos literalmente. T-011 fija la enumeración con la primera ejecución en CI y la acepta el `auditor-seguridad`; un cambio de la plataforma la hace fallar. CA-009 se lee con esta lista: «cada otra función» son las de `public` y `privado` (propuesta 30, P1-g).
@@ -241,7 +241,7 @@ Sin Docker aquí, pgTAP y lo que depende de Supabase solo se dan por superados e
 | `ciclo-migraciones.mjs` | CA-004, CA-024, CA-025, CA-031, REQ-053 | 30 = 10 × 2 (catálogo; RLS) + 2 (migración fallida) + 5 (huella de las protegidas) + 1 (M01 se niega con objetos) + 2 (M04 y M05 sin la marca de CI) |
 | `concurrencia-licencia.sh`; procedimiento de administradores | CA-021; CA-037 | 1; 2 |
 
-Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed y guarda de `seed.sql` y `volumen.sql` (D-10); L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero; L 12 `raise` con literal, sin `%` ni concatenación; L 13 `search_path` en todo `privado`; L 14 entorno derivado del destino, desconocido se niega.
+Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción de 07; L 3 `config.toml` solo con `public`; L 4 y 5 CA-026 sin aprobación y con la de otro commit; L 6 y 7 CA-032 en M04 y M05; L 8 lista de protegidas; L 9 seed y guarda de `seed.sql` y `volumen.sql` (D-10); L 10 reversiones sin los patrones prohibidos; L 11 guarda de rol primero y al principio de cada `do`, con `operator(pg_catalog.<>)`; L 12 `raise` con literal, sin `%` ni concatenación; L 13 ruta leída, fijada y restaurada en cada `do`, y `search_path` en todo `privado`; L 14 forma de las sentencias (D-1); L 15 entorno derivado del destino, desconocido se niega.
 
 **CA-020**: escáner de secretos (`node scripts/comprobar-specs.mjs`, paso de `bd.yml`) con 0 hallazgos, más dictamen del `auditor-seguridad` en T-015. **Fuera de CI, evidencia de una persona**: CA-001, CA-022, CA-027 (credencial en su entorno; el script no la guarda), CA-028, V-107 real; en `Nido`, `pg_default_acl`, `pg_net`, `log_statement` y `session_replication_role`; `\password`.
 
@@ -268,7 +268,7 @@ Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción d
 | Migración o reversión a medias | Transacción; guarda | `ciclo`, L 11 |
 | Contraseña del conector en registros; valores de fila en errores (A-15) | `\password` sin registro (D-9); solo el código (D-3) | Tarea 14, L 12 |
 | Seed fuera de desarrollo | Lista de permitidos; sin contraseñas | L 9 |
-| Vuelta atrás de protegidas fuera de CI, o de M01 con datos | D-1 | L 6, 7, 10, 14; `ciclo` |
+| Vuelta atrás de protegidas fuera de CI, o de M01 con datos | D-1 | L 6, 7, 10, 15; `ciclo` |
 
 ## Comprobación de la constitución
 
@@ -296,11 +296,11 @@ Locales (`tests/unit/bd/`): L 1 matriz D-6 = 02; L 2 contrato = transcripción d
 | `@electric-sql/pglite-pgtap` (desarrollo, opcional) | pgTAP en PGlite antes de CI | 0.0.18, Apache-2.0, exige `@electric-sql/pglite` 0.5.17 ([registro](https://registry.npmjs.org/@electric-sql/pglite-pgtap), 20/11/2026) | Aprobada en P1 (20/11/2026), sin esperar al 26/11 (D-034); VERIFICAR README y Node 26 antes de instalar. Sin ella, arnés en JavaScript |
 | `supabase` (CLI) | `start`, `test db`, `db push` | Decidida (T-013) | Sin cambio |
 
-`psql` viene en el ejecutor de CI; la persona de la tarea 14 lo necesita en su equipo.
+`psql`: en el ejecutor de CI y en el equipo de quien haga T-014.
 
 ## Alternativas descartadas
 
-Migración única (su vuelta atrás borraría auditoría y versiones, REQ-053); una por tabla (más de 21 archivos con dependencias cruzadas); políticas `for all` (un permiso de más abriría filas); auditar si `auth.uid()` no es nulo (`request.jwt.claims` se fija en conexión directa); huella en columna generada (impide probar el rechazo de CA-033); `informes_problemas` normalizada (cambia contrato, conector y métricas sin más garantía); disparador en lugar de clave ajena compuesta (la clave es declarativa y visible); `session_id` en `es_admin()` (sin verificar; a la 021, propuesta 22); disparador de eventos que revoque permisos (privilegio sin verificar; D-4 basta); rol de acceso aparte del conector (más piezas); PGlite como evidencia (REQ-028, artículo 13); exponer `graphql_public` (no se usa); `search_path = ''` (`pg_temp` va primero para tipos y relaciones, B-1); `enable always` en todos los disparadores (correrían auditoría y validaciones al restaurar en modo réplica; solo la inmutabilidad lo necesita).
+Migración única (su vuelta atrás borraría auditoría y versiones, REQ-053); una por tabla (dependencias cruzadas); políticas `for all` (un permiso de más abriría filas); auditar si `auth.uid()` no es nulo (`request.jwt.claims` se fija en conexión directa); huella en columna generada (impide probar el rechazo de CA-033); `informes_problemas` normalizada (cambia el contrato sin más garantía); disparador en lugar de clave ajena compuesta (la clave es declarativa y visible); `session_id` en `es_admin()` (sin verificar; a la 021, propuesta 22); disparador de eventos que revoque permisos (privilegio sin verificar; D-4 basta); rol de acceso aparte del conector (más piezas); PGlite como evidencia (REQ-028, artículo 13); exponer `graphql_public` (no se usa); `search_path = ''` (`pg_temp` va primero para tipos y relaciones, B-1); `enable always` en todos los disparadores (correrían auditoría y validaciones al restaurar en modo réplica; solo la inmutabilidad lo necesita).
 
 ## Decisiones que requieren ADR
 
@@ -308,7 +308,7 @@ Solo en `propuestas.md` (el encargo limita la escritura a esta carpeta): n.º 21
 
 ## Lo que queda para el plan
 
-Unas 15 tareas, una cada vez, todas ruta crítica (`revisor` + `auditor-seguridad`, D-029): 1, comprobaciones de la CLI (las de D-1 y D-10), arnés PGlite y M01; 2, M02 y M03; 3, M04 y M05; 4, M06; 5, M07; 6, M08 a M10; 7, seed, volumen y `config.toml`; 8, pgTAP 01 y 07; 9, 02; 10, 03 y 08; 11, 04, 05, 06 y 09, con la lista residual y su dictamen; 12, `scripts/bd/`; 13, `bd.yml` y CA-022 (`plataforma` + persona); 14, `Nido` y lo de «Fuera de CI» (persona + `qa`); 15, verificación final (`qa`, CA-023). Las tareas 1 a 12 avanzan con PGlite; ninguna se cierra contra los criterios hasta la 13, que exige aprobar el CI (artículo 14; la 003 está aplazada, D-024).
+`plan.md` y `tareas.md` (T-001 a T-015), todas ruta crítica (D-029). Ninguna se cierra contra los criterios hasta T-013, que exige aprobar el CI (artículo 14; D-024).
 
 ## Dudas para el responsable (puerta P1)
 
@@ -334,8 +334,8 @@ Unas 15 tareas, una cada vez, todas ruta crítica (`revisor` + `auditor-segurida
 | M-3 | D-9; tarea 14 |
 | M-4 | D-10; Piezas; Flujo; L 9 |
 | M-5 | D-5; Pruebas 01, 02 (+15) |
-| M-6 | D-1; Flujo 5; `ciclo` (+3); L 14 |
+| M-6 | D-1; Flujo 5; `ciclo` (+3); L 15 |
 | M-7 | D-8; P1-i; propuesta 31 |
 | L-1 a L-6 | Amenazas (A-11); D-1 (M01, patrones, M05); D-3 (`auditar()`, mensajes); Pruebas 01, 05; L 10 a 12 |
 | Tamaño (D-023) | Compactado sin quitar controles |
-| Vuelta 2: N-1, N-2 (a), N-5, N-6, N-8 | D-3; D-9 R-4; D-1; D-10; Piezas; Pruebas. N-3, N-4, N-7: `tareas.md` |
+| Vuelta 2: N-1, N-2 (a), N-5, N-6, N-8 | D-3; D-9 R-4; D-1; D-10; Piezas; Pruebas. N-3, N-4, N-7: `tareas.md`. Propuesta 34 (D-036): D-1, D-9 R-4 |

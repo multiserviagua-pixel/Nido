@@ -46,3 +46,14 @@ Cerrado el MAYOR (guarda dentro de cada `do`; P1, P3 y P7b repetidas). Abiertos,
 | 5 | Informativo: la reversión no valida el contenido de la copia; anotarlo en su límite | — |
 
 Sin comprobar por el auditor: nada contra Supabase real ni la CLI; sigue pendiente de confirmación del responsable la sustitución de `begin/commit` de D-1 por la guarda más un `do` único.
+
+## Vueltas 4 y 5 (rama `tarea/010-T-001-v3`)
+
+| Vuelta | Dictamen (`auditor-seguridad`) | Hallazgos | Cerrado en |
+| --- | --- | --- | --- |
+| 4 | NO APTO | MAYOR 1: tipos de `declare` sin calificar (se resuelven al compilar, antes de la guarda). MENOR 2: prueba J. MENOR 3: regla L 14 | Hallazgos 1, 2 y 4 de la vuelta 3 y la regla L 14: 381d45d (pruebas) y 4c545bc |
+| 5 (20/11/2026) | APTO, 0 bloqueantes, 0 mayores | MENOR A abierto: `esDoConGuarda` solo examina el primer `declare` (condición de T-002, `tareas.md`, Convenciones) | MAYOR 1: 58651bb (pruebas) y 5b7d908 |
+
+No se ejecutó pgTAP ni nada contra Supabase real: solo el arnés PGlite y las pruebas L locales.
+
+Integración de T-001 por delegación (D-036), 20/11/2026, con el dictamen APTO de la vuelta 5. El responsable puede revocarla.
