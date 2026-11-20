@@ -1,6 +1,6 @@
 # Constitución de ingeniería
 
-Estado: **RATIFICADA** el 12/11/2026 por el responsable humano (decisión D-012).
+Estado: **RATIFICADA** el 12/11/2026 por el responsable humano (decisión D-012). Versión vigente: **1.3** (20/11/2026; enmiendas D-036 y D-037, tabla al final).
 
 Estos artículos mandan sobre cualquier especificación, plan, tarea o instrucción de un agente. Si una petición choca con uno, se para y se pregunta.
 

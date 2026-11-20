@@ -1,12 +1,8 @@
 # Propuesta de enmienda del artículo 8: envío por regla
 
-Estado: **RATIFICADA la opción B** el 20/11/2026 (D-037, constitución 1.2), por instrucción del responsable: «hay que modificar esto para que trabaje como lo pedí». Aplicado en `docs/CONSTITUCION.md`, `docs/TECNOLOGIAS.md` y el ADR-0004. El resto de la tabla «Qué habría que cambiar» sigue pendiente.
+Estado: **RATIFICADA, versión 1.3** el 20/11/2026 (D-037). El responsable eligió la opción B («B, compuerta de código»), la ratificó («hay que modificar esto para que trabaje como lo pedí»; versión 1.2), adoptó la redacción del `auditor-seguridad` que cierra sus dos hallazgos bloqueantes («Sí, texto del auditor»; versión 1.3) y aprobó el commit en el chat de coordinación («apruebo esa emienda haz commit»). Aplicado en `docs/CONSTITUCION.md`, `docs/TECNOLOGIAS.md` y el ADR-0004. Las condiciones C1 a C9 del dictamen y el resto de la tabla «Qué habría que cambiar» van a la función 016. Hasta que exista, el agente no envía nada.
 
-**El dictamen del `auditor-seguridad` llegó después de la ratificación: APTO CON CONDICIONES**, con dos hallazgos bloqueantes sobre el texto que se ratificó. Está en el apartado «Dictamen del auditor-seguridad», al final. Sustituir el texto del artículo 8 por la redacción del auditor queda a decisión expresa del responsable.
-
-**Opción elegida por el responsable el 20/11/2026: B, compuerta de código.** Respuesta expresa en el chat de la campaña a la pregunta «¿Qué opción eliges para el envío por regla?». Elegir la opción no ratifica la enmienda: faltan el dictamen del `auditor-seguridad` y la ratificación expresa del texto del artículo.
-
-Redactada en el chat de la campaña de marketing a petición del responsable («Quiero que envíe», «Sí, como allí»). No cambia nada por sí sola: la constitución, los ADR, las especificaciones y los contratos siguen como estaban. Solo el responsable puede enmendar la constitución (artículo 14), y este cambio toca una ruta crítica, así que necesita dictamen del `auditor-seguridad` antes de ratificarse.
+Redactada en el chat de la campaña de marketing a petición del responsable («Quiero que envíe», «Sí, como allí»). Los apartados de abajo conservan la propuesta original tal como se presentó; el texto vigente del artículo 8 es el del dictamen del auditor, al final.
 
 ## Qué se pide
 
@@ -158,4 +154,4 @@ Emitido el 20/11/2026 por el subagente `auditor-seguridad`, solo lectura, sobre 
 - Las fuentes de NestAdmin 2, que no leyó.
 - Qué permisos tiene el «agente de Apps Script» que la versión 1.2 ya prevé en la cuenta del cliente.
 
-**Decisión pendiente del responsable:** sustituir el texto ratificado del artículo 8 por esta redacción. Sería la versión 1.3 de la constitución. El dictamen responde además a dos cuestiones abiertas: una regla es una dirección exacta (cuestión 2) y las reglas solo las crea el dueño (cuestión 6).
+**Decidido por el responsable el 20/11/2026:** esta redacción sustituye a la ratificada y es la versión 1.3 de la constitución («Sí, texto del auditor»). El dictamen responde además a dos cuestiones abiertas: una regla es una dirección exacta (cuestión 2) y las reglas solo las crea el dueño (cuestión 6).
