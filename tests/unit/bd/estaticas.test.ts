@@ -205,6 +205,11 @@ function esDoConGuarda(sentencia: string): boolean {
     }
     resto = cuerpo.slice(d[0].length - "begin ".length);
   }
+  // Condición MENOR A (vuelta 5 del auditor, T-002): solo se valida el primer
+  // declare; cualquier otro (bloque anidado o cuerpo de función, con o sin
+  // etiqueta) se rechaza. Si una función necesitara declare, se consulta antes
+  // y se valida cada sección con la regla de pg_catalog (tareas.md, Convenciones).
+  if (/\bdeclare\b/.test(resto)) return false;
   return resto.startsWith(`begin ${GUARDA_INTERNA}`);
 }
 
@@ -441,6 +446,38 @@ describe("detectores (sin archivos)", () => {
     expect(sentenciasFueraDeForma(BUENO)).not.toEqual([]);
     expect(sentenciasFueraDeForma(GUARDA)).toHaveLength(1);
     expect(sentenciasFueraDeForma("")).not.toEqual([]);
+  });
+
+  it("L 14, condición MENOR A (T-002): se rechaza todo declare posterior al primero", () => {
+    // Un declare de un bloque anidado o del cuerpo de una función se compila con
+    // la ruta de la sesión; el detector solo validaba el primero. Se rechaza
+    // cualquiera que venga después, con su tipo calificado o no.
+    const casos = [
+      // Bloque anidado sin pg_catalog, con y sin declare inicial.
+      `do $$ ${D} begin ${G} ${A} begin declare w text; begin null; end; end; ${F} end $$;`,
+      `do $$ begin ${G} ${A} declare w text; begin null; end; ${F} end $$;`,
+      `do $$ ${D} begin ${G} ${A} declare w public.dominio; begin null; end; ${F} end $$;`,
+      // Con etiqueta de bloque delante.
+      `do $$ ${D} begin ${G} ${A} <<interno>> declare w text; begin null; end; ${F} end $$;`,
+      // Aun calificado: la opción elegida es rechazar todo declare posterior.
+      `do $$ ${D} begin ${G} ${A} declare w pg_catalog.text; begin null; end; ${F} end $$;`,
+      // En el cuerpo de una función creada dentro del do, con otra etiqueta.
+      `do $$ ${D} begin ${G} ${A} create function privado.f() returns pg_catalog.int4 language plpgsql as $f$ declare w text; begin return 1; end $f$; ${F} end $$;`,
+      // En mayúsculas y con comentarios por medio.
+      `do $$ ${D} begin ${G} ${A} /* c */ DECLARE w text; BEGIN null; END; ${F} end $$;`,
+    ];
+    for (const caso of casos) {
+      expect(sentenciasFueraDeForma(`${GUARDA}\n${caso}`), caso).toHaveLength(1);
+    }
+    // Sin declare posterior, la forma sigue aceptándose (con y sin el primero).
+    expect(sentenciasFueraDeForma(`${GUARDA}\ndo $$ ${D} begin ${G} ${A} ${F} end $$;`)).toEqual(
+      [],
+    );
+    expect(
+      sentenciasFueraDeForma(
+        `${GUARDA}\ndo $$ ${D} begin ${G} ${A} create table public.declarada (id pg_catalog.int4); ${F} end $$;`,
+      ),
+    ).toEqual([]);
   });
 
   it("L 12: acepta un literal y rechaza % y concatenación", () => {

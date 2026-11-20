@@ -204,7 +204,7 @@ const CONSULTAS: Record<string, string> = {
       p.prosecdef, p.proconfig::text as config, p.proacl::text as acl, md5(p.prosrc) as huella
     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
     where ${SIN_SISTEMA} order by 1, 2`,
-  tipos: `select n.nspname, t.typname, t.typtype::text as clase
+  tipos: `select n.nspname, t.typname, t.typtype::text as clase, t.typacl::text as acl
     from pg_type t join pg_namespace n on n.oid = t.typnamespace
     where ${SIN_SISTEMA} order by 1, 2`,
   restricciones: `select conrelid::regclass::text as tabla, conname, pg_get_constraintdef(oid) as definicion
