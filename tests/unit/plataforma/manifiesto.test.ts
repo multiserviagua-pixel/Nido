@@ -301,4 +301,17 @@ describe("vitest.config.ts", () => {
     expect(incluye.some((p) => p.startsWith("tests/**"))).toBe(true);
     expect(incluye.some((p) => p.startsWith("supabase/tests/pglite/**"))).toBe(true);
   });
+
+  it("registra sin-red-real.ts como setupFiles y deja un tiempo límite holgado", async () => {
+    const modulo = (await import("../../../vitest.config")) as {
+      default: { test?: Record<string, unknown> };
+    };
+    const prueba = modulo.default.test ?? {};
+    expect(prueba["setupFiles"]).toEqual(["tests/conector/apoyo/sin-red-real.ts"]);
+    for (const clave of ["testTimeout", "hookTimeout"]) {
+      const valor = Number(prueba[clave]);
+      expect(valor).toBeGreaterThanOrEqual(30000);
+      expect(valor).toBeLessThanOrEqual(60000);
+    }
+  });
 });

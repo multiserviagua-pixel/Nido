@@ -1,7 +1,10 @@
 // T-102 (001): pruebas del apoyo de la batería. Todos los valores sembrados se componen en
 // ejecución; no hay secretos literales ni credenciales reales (arts. 1 y 4).
 import { createHmac, randomBytes } from "node:crypto";
-import { afterAll, afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+
+// Arrancar PGlite cuesta CPU; con las pruebas de supabase/conector-prueba en paralelo supera los 5 s.
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 import {
   capturarConsola,
   crearAlmacenPglite,
@@ -33,16 +36,20 @@ grant usage on schema conector_prueba to llamante_prueba;
 grant execute on all functions in schema conector_prueba to llamante_prueba;
 `;
 
+// Estas pruebas son del apoyo y no dependen del SQL real del conector (supabase/conector-prueba):
+// se cargan sobre una carpeta sin SQL, con el esquema mínimo de cada prueba.
+const SIN_SQL = "tests/conector/apoyo/no-existe";
+
 const abiertas: BdApoyo[] = [];
 async function abrir(sql: string[] = []) {
-  const bd = await crearBd({ sqlExtra: sql });
+  const bd = await crearBd({ directorioSql: SIN_SQL, sqlExtra: sql });
   abiertas.push(bd);
   return bd;
 }
 // Una base compartida por las pruebas que no la dañan (arrancar PGlite cuesta CPU y la batería
 // comparte máquina con pruebas sensibles al tiempo); la del reloj se libera tras cada prueba.
 let unica: Promise<BdApoyo> | null = null;
-const compartida = () => (unica ??= crearBd({ sqlExtra: [SQL_MINIMO] }));
+const compartida = () => (unica ??= crearBd({ directorioSql: SIN_SQL, sqlExtra: [SQL_MINIMO] }));
 afterAll(async () => {
   if (unica) await (await unica).cerrar();
 });
@@ -287,7 +294,9 @@ describe("reloj: el SQL de prueba falla a la vista ante horas no controladas", (
   ];
   for (const sql of prohibidas) {
     it(`rechaza: ${sql}`, async () => {
-      await expect(crearBd({ sqlExtra: [sql] })).rejects.toThrow(/reloj: hora no controlada/);
+      await expect(crearBd({ directorioSql: SIN_SQL, sqlExtra: [sql] })).rejects.toThrow(
+        /reloj: hora no controlada/,
+      );
     });
   }
 
@@ -567,7 +576,9 @@ describe("base de datos de apoyo: no hay vía en bruto hacia la base", () => {
       "select pg_catalog /* x */ . now()",
       ...NUEVAS_PROHIBIDAS,
     ]) {
-      await expect(crearBd({ sqlExtra: [sql] }), sql).rejects.toThrow(/reloj: hora no controlada/);
+      await expect(crearBd({ directorioSql: SIN_SQL, sqlExtra: [sql] }), sql).rejects.toThrow(
+        /reloj: hora no controlada/,
+      );
     }
   });
 });
@@ -634,6 +645,7 @@ describe("fábrica: longitud del token", () => {
 describe("4.ª vuelta: ahoraBd no depende del search_path de la sesión", () => {
   it("con search_path vacío en la sesión, ahoraBd sigue dando la hora de la prueba", async () => {
     const bd = await crearBd({
+      directorioSql: SIN_SQL,
       sqlExtra: ["select pg_catalog.set_config('search_path', '', false)"],
     });
     try {

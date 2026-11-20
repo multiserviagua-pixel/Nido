@@ -6,5 +6,9 @@ export default defineConfig({
     passWithNoTests: false,
     allowOnly: false,
     environment: "node",
+    setupFiles: ["tests/conector/apoyo/sin-red-real.ts"],
+    // Holgura para la contención de CPU con todos los archivos a la vez (T-103).
+    testTimeout: 30000,
+    hookTimeout: 30000,
   },
 });
