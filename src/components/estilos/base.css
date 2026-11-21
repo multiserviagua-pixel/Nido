@@ -1,0 +1,81 @@
+/*
+ * Base (020 T-007 (g); diseño «Armazón»): foco único, objetivos de pulsación, movimiento
+ * reducido y texto. Solo lee papeles de `valores.css`, nunca valores de la escala.
+ *
+ * Capas: `valores.css` importa Tailwind, que declara sus capas (theme, base, components,
+ * utilities). Lo que es un punto de partida (cuerpo, objetivos de 24 px, cifras, nombres largos)
+ * va en `@layer base`, para que una utilidad (`min-h-10`, `min-w-0`) pueda superarlo. El foco y
+ * el movimiento reducido van sin capa a propósito: no son un punto de partida sino una garantía
+ * (REQ-036, REQ-039) y ninguna utilidad debe poder quitarlos.
+ */
+
+/* Los controles nativos y las barras de desplazamiento siguen el tema del sistema (REQ-088). */
+:root {
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@layer base {
+  /* Texto. 1rem y 1,5 son el paso «cuerpo» de la escala (16 px y 24 px); los tamaños no son papeles. */
+  body {
+    background-color: var(--fondo-pagina);
+    color: var(--texto);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* Un nombre no se recorta: se parte en varias líneas (REQ-065; diseño, «Nombres largos»).
+     TextoDato pinta todo dato dentro de un `bdi`. No se aplica al cuerpo entero: el resto del
+     texto sale de textos.ts y no lleva palabras sin espacios; la ausencia de desplazamiento
+     horizontal de página (REQ-044) la comprueban PRUEBA-013 y PRUEBA-021 en navegador. */
+  bdi {
+    overflow-wrap: anywhere;
+  }
+
+  /* Cifras alineadas en columna. */
+  table,
+  [data-cifra] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Objetivos de pulsación de al menos 24 por 24 px (REQ-037). Los enlaces dentro de un párrafo
+     quedan fuera: son en línea y la norma los exime. Los enlaces sueltos (menú, saltar al
+     contenido, paginación) garantizan sus 24 px en su componente (docs/DISENO.md). */
+  button,
+  select,
+  textarea,
+  summary,
+  input:not([type="hidden"]),
+  [role="button"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="switch"],
+  [type="checkbox"],
+  [type="radio"] {
+    min-block-size: var(--objetivo-minimo);
+    min-inline-size: var(--objetivo-minimo);
+  }
+}
+
+/* Foco: un único estilo, con el papel --foco, en todo elemento (REQ-036). Sin capa a propósito
+   (ver arriba). Va separado del control: nunca se pinta pegado al botón primario (el par
+   foco/acento está prohibido). */
+*:focus-visible {
+  outline: var(--foco-grosor) solid var(--foco);
+  outline-offset: var(--foco-separacion);
+}
+
+/* Movimiento reducido: sin animación de esqueleto, de transición ni de desplazamiento (REQ-039).
+   Las duraciones de `valores.css` valen 0 en este caso; esta regla alcanza también a lo que no
+   las use. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

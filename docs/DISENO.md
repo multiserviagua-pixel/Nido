@@ -25,7 +25,7 @@ Estado: PROPUESTA de referencia. La escala y los papeles de «Escala y papeles»
 
 Tres capas en `src/components/estilos/valores.css` (diseño de la 020): la **escala** (lista cerrada de valores), los **papeles** (para qué sirve cada valor, en tema claro, tema oscuro y colores forzados) y las utilidades de Tailwind, una por papel. Los componentes solo usan papeles, nunca un valor de la escala. Todo valor de `valores.css` figura aquí con el mismo valor, y al revés (PRUEBA-005).
 
-Formato: colores en hexadecimal sRGB opaco; sin transparencia en texto, fondos ni bordes (solo las sombras la llevan). Degradados lineales entre dos colores de la misma rampa, interpolados en sRGB.
+Formato: colores en hexadecimal sRGB opaco; sin transparencia en texto, fondos ni bordes (solo las sombras la llevan). Degradados lineales entre dos colores de la escala (del acento, de la gama del menú o del acento al neutro), interpolados en sRGB. Las sombras son la única excepción a «hexadecimal opaco»: llevan alfa porque son un halo y no el color de un texto, un fondo ni un borde; su color es siempre el de un valor de la escala (neutro 900 en claro, neutro 950 en oscuro) y PRUEBA-005 lo comprueba.
 
 ### Escala de color
 
@@ -81,7 +81,8 @@ Columnas: valor inicial (tabla de esta sección antes de la 020), valor en tema 
 | `--texto-secundario` | Etiquetas, ayudas, periodos | `#64748B` | `#475569` | `#A3B0C2` | `CanvasText` |
 | `--borde-decorativo` | Separación de tarjetas y filas; no informa | `#E5E7EB` | `#E5E7EB` | `#273449` | `CanvasText` |
 | `--borde-control` | Borde de campos, casillas y selectores | — | `#64748B` | `#7D8BA0` | `CanvasText` |
-| `--acento` | Botón primario, enlaces, selección | `#6C3CE9` | `#6C3CE9` | `#A78BFA` | `Highlight` |
+| `--acento` | Botón primario y selección | `#6C3CE9` | `#6C3CE9` | `#A78BFA` | `Highlight` |
+| `--enlace` | Texto de los enlaces | — | `#6C3CE9` | `#A78BFA` | `LinkText` |
 | `--texto-sobre-acento` | Texto del botón primario | — | `#FFFFFF` | `#0F172A` | `HighlightText` |
 | `--acento-suave` | Fondo de selección y de iconos | `#EFE9FF` | `#EFE9FF` | `#2A2152` | `Canvas` |
 | `--foco` | Contorno de foco, en todo control | — | `#8B5CF6` | `#A78BFA` | `Highlight` |
@@ -112,7 +113,7 @@ Un degradado nunca es el único medio de transmitir una información (REQ-085). 
 
 ### Contraste calculado
 
-Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, también el grande; 3:1 en bordes de controles, foco, estados, iconos con significado y series. Sobre un degradado se miden 33 puntos interpolados en sRGB y se da el peor. Cálculo del `disenador-ui` con un script propio el 20/11/2026; lo sustituye el informe de PRUEBA-006 cuando exista `combinaciones.ts`.
+Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, también el grande; 3:1 en bordes de controles, foco, estados, iconos con significado y series. Sobre un degradado se miden 33 puntos interpolados en sRGB y se da el peor. Cálculo del `disenador-ui` con un script propio el 20/11/2026. El informe de PRUEBA-006 (`tests/unit/diseno/contraste.test.ts`, con los pares de `combinaciones.ts` y los valores de `valores.css`) lo repite y comprueba cada cifra de las dos tablas, la de pares declarados y la de combinaciones prohibidas.
 
 | Delante | Detrás | Tipo | Claro | Oscuro |
 | --- | --- | --- | --- | --- |
@@ -122,8 +123,9 @@ Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, tamb
 | `--texto-secundario` | `--fondo-pagina` | Texto | 7,24 | 8,56 |
 | `--texto-secundario` | `--superficie` | Texto | 7,58 | 7,59 |
 | `--texto-secundario` | `--acento-suave` | Texto | 6,41 | 6,64 |
-| `--acento` | `--fondo-pagina` | Texto (enlace) | 5,80 | 6,92 |
-| `--acento` | `--superficie` | Texto (enlace) | 6,07 | 6,14 |
+| `--enlace` | `--fondo-pagina` | Texto (enlace) | 5,80 | 6,92 |
+| `--enlace` | `--superficie` | Texto (enlace) | 6,07 | 6,14 |
+| `--enlace` | `--acento-suave` | Texto | 5,13 | 5,37 |
 | `--acento` | `--acento-suave` | Texto | 5,13 | 5,37 |
 | `--texto-sobre-acento` | `--acento` | Texto | 6,07 | 6,56 |
 | `--texto-sobre-acento` | `--degradado-acento` (peor punto) | Texto | 5,51 | 5,27 |
@@ -148,17 +150,19 @@ Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, tamb
 
 **Combinaciones prohibidas.** No llegan al umbral y no se declaran en `combinaciones.ts`:
 
-| Delante | Detrás | Claro | Motivo |
-| --- | --- | --- | --- |
-| `--correcto` | `--acento-suave` | 4,24 | Texto por debajo de 4,5:1. Una etiqueta de estado no va sobre fondo de selección |
-| `--aviso` | `--acento-suave` | 4,25 | Ídem |
-| `--borde-decorativo` | cualquier fondo | 1,24 sobre `--superficie` | No sirve para delimitar un control; para eso está `--borde-control` |
-| `--foco` | `--acento` | 1,43 | El contorno de foco nunca se pinta pegado al botón primario: va separado 2 px, sobre el fondo |
-| `--texto-sobre-acento` | `--foco` | 4,23 | `--foco` no es un fondo |
+| Delante | Detrás | Claro | Oscuro | Motivo |
+| --- | --- | --- | --- | --- |
+| `--correcto` | `--acento-suave` | 4,24 | 8,38 | Texto por debajo de 4,5:1 en claro. Una etiqueta de estado no va sobre fondo de selección; se prohíbe en los dos temas para que la regla sea una sola |
+| `--aviso` | `--acento-suave` | 4,25 | 8,75 | Ídem |
+| `--correcto` | `--degradado-grafico` (peor punto) | 4,24 | 8,38 | El extremo de arriba del degradado es `--acento-suave`: mismo fallo. Una etiqueta de estado no va sobre el relleno de un gráfico |
+| `--aviso` | `--degradado-grafico` (peor punto) | 4,25 | 8,75 | Ídem |
+| `--borde-decorativo` | cualquier fondo | 1,24 sobre `--superficie` | 1,33 sobre `--superficie` | No sirve para delimitar un control; para eso está `--borde-control` |
+| `--foco` | `--acento` | 1,43 | 1,00 | El contorno de foco nunca se pinta pegado al botón primario: va separado 2 px, sobre el fondo. En oscuro los dos son el mismo color |
+| `--texto-sobre-acento` | `--foco` | 4,23 | 6,56 | `--foco` no es un fondo |
 
 ### Diferencias con los valores iniciales
 
-Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto de los valores iniciales se mantiene.
+Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto de los valores iniciales se mantiene. Los papeles nuevos y los degradados no cambian un valor inicial: separan usos que antes compartían papel o que la tabla inicial no recogía.
 
 | Papel | Inicial | Ahora (claro) | Motivo |
 | --- | --- | --- | --- |
@@ -166,6 +170,11 @@ Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto 
 | Borde de tarjeta y de control | `#E5E7EB` para los dos | `--borde-decorativo` `#E5E7EB` y `--borde-control` `#64748B` (nuevo) | `#E5E7EB` sobre blanco da 1,24:1: vale para separar tarjetas, no para el borde de un campo, que pide 3:1. El borde de control usa el valor inicial del texto secundario: 4,76:1 |
 | Acento sobre el menú | `#6C3CE9` (3,03:1 sobre `#0B1230`, sin margen, y 2,70:1 sobre `#151C45`, el extremo claro del degradado del menú) | `--menu-indicador` `#A78BFA` y `--foco` `#8B5CF6` (nuevos) | El acento no se usa sobre el menú. El indicador del área actual y el foco usan pasos más claros del mismo tono: 6,01:1 y 3,86:1 en el peor punto. El acento `#6C3CE9` no cambia |
 | `--correcto`, `--aviso` sobre `--acento-suave` | — | Sin cambio de valor | 4,24:1 y 4,25:1. Se prohíbe la combinación en lugar de oscurecer los dos colores de estado, que cumplen en los fondos donde se usan |
+| `--enlace` | `--acento` (servía a enlaces y a botón) | `--enlace` `#6C3CE9` (nuevo) | Con colores forzados el botón es `Highlight` y el enlace tiene que ser `LinkText`, el color que el sistema da a los enlaces; con un solo papel no se pueden separar. En claro y en oscuro valen lo mismo que `--acento` |
+| `--menu-actual` | — | `#1F2757` (nuevo) | La referencia resalta el área actual del menú; hace falta un fondo propio, más claro que el menú, con texto de 12,90:1 y foco de 3,34:1 |
+| `--menu-texto-secundario` | — | `#A3AECB` (nuevo) | Textos menores del menú (contadores, pie). Con `--menu-texto` no se distinguirían del resto; este llega a 7,38:1 en el peor punto del degradado |
+| `--serie-2` a `--serie-4` | Solo existía la serie principal | `#334155`, `#64748B`, `#4A1FB8` (nuevos) | REQ-038 pide distinguir series sin depender del color: cada serie lleva además su trazo y su marcador. Cada color llega a 3:1 sobre `--superficie` y sobre `--degradado-grafico` (4,03:1 la tercera, la más justa) |
+| `--degradado-menu`, `--degradado-acento`, `--degradado-grafico` | Colores planos | Degradados de dos colores de la escala (nuevos) | REQ-085 los pide como recurso de estilo. Cada texto sobre ellos se mide en el peor de 33 puntos; con colores forzados valen `none` y queda el color plano del papel |
 | Tema oscuro | No existía | Columna «Oscuro» | Nuevo por REQ-088. Mismo tono de acento en pasos más claros |
 
 ### Espaciado
@@ -201,8 +210,8 @@ Solo informan de elevación; la separación la dan los bordes. En colores forzad
 
 | Nombre | Claro | Oscuro | Uso |
 | --- | --- | --- | --- |
-| `tarjeta` | `0 1px 2px 0 rgb(15 23 42 / 0.06)` | `0 1px 2px 0 rgb(0 0 0 / 0.40)` | Tarjetas |
-| `elevada` | `0 8px 24px -4px rgb(15 23 42 / 0.16)` | `0 8px 24px -4px rgb(0 0 0 / 0.60)` | Diálogo, cajón del menú, avisos |
+| `tarjeta` | `0 1px 2px 0 rgb(15 23 42 / 0.06)` | `0 1px 2px 0 rgb(11 17 32 / 0.4)` | Tarjetas |
+| `elevada` | `0 8px 24px -4px rgb(15 23 42 / 0.16)` | `0 8px 24px -4px rgb(11 17 32 / 0.6)` | Diálogo, cajón del menú, avisos |
 
 ### Texto
 
@@ -218,6 +227,8 @@ Tipografía sin remates del sistema o una fuente abierta alojada en nuestro domi
 | `cifra` | 30 px | 36 px | Valor de una tarjeta de cifra; baja por pasos de esta tabla hasta que cabe |
 
 Pesos: `normal` 400, `medio` 500, `seminegrita` 600.
+
+Pila de fuente: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`. Es la de `--font-sans` y la fuente por defecto del documento (`--default-font-family`).
 
 ### Tamaños
 
@@ -239,6 +250,17 @@ Con `prefers-reduced-motion: reduce` valen 0 y el esqueleto no se anima (REQ-039
 | `rapida` | 120 ms | Cambios de estado de un control |
 | `media` | 200 ms | Abrir y cerrar el cajón y el diálogo |
 | `esqueleto` | 1500 ms | Ciclo del esqueleto de carga |
+
+### Puntos de ruptura
+
+Las variantes responsivas (`sm:`, `md:`...) parten de estos anchos; no hay otros.
+
+| Nombre | Valor | Desde |
+| --- | --- | --- |
+| `sm` | `40rem` | 640 px |
+| `md` | `48rem` | 768 px |
+| `lg` | `64rem` | 1024 px |
+| `xl` | `80rem` | 1280 px |
 
 ## Componentes base
 
@@ -285,7 +307,7 @@ Carga, vacío (con qué hacer a continuación), error (qué ha pasado y cómo re
 
 - Contraste mínimo 4,5:1 en texto y 3:1 en componentes y gráficos.
 - Todo se puede usar con teclado; foco visible; orden de foco lógico.
-- Objetivos táctiles de al menos 24 por 24 píxeles.
+- Objetivos táctiles de al menos 24 por 24 píxeles. `base.css` lo garantiza a botones, campos y controles con rol. Enlaces sueltos (menú, saltar al contenido, paginación): cada componente garantiza sus 24 px y se comprueban en navegador en PRUEBA-013 y PRUEBA-021; los enlaces dentro de un párrafo quedan exentos, como admite la norma.
 - Formularios con etiqueta visible, errores asociados al campo y anunciados.
 - Nada depende solo del color.
 - Respeta la preferencia de reducir movimiento.

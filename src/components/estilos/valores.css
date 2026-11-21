@@ -1,0 +1,351 @@
+/*
+ * Valores de diseño (020 T-007 (f); diseño «Valores de diseño»). Tres capas en un archivo:
+ *   1. Escala: la lista cerrada de valores (`--escala-*`). Solo la capa 2 y la 3 la leen.
+ *   2. Papeles: para qué sirve cada valor, en tema claro, tema oscuro y colores forzados.
+ *      Los componentes solo usan papeles, nunca un valor de la escala.
+ *   3. Utilidades de Tailwind: una por papel (`@theme inline` y `@utility`).
+ * Cada valor figura con el mismo valor en `docs/DISENO.md` y al revés (PRUEBA-005).
+ * El tema por defecto de Tailwind se elimina: no hay utilidad de color, radio, sombra ni
+ * espaciado que no venga de aquí. Colores en #RRGGBB opaco; solo las sombras llevan alfa.
+ */
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ 1. Escala */
+:root {
+  /* Color: neutro */
+  --escala-neutro-0: #ffffff;
+  --escala-neutro-50: #f8fafc;
+  --escala-neutro-100: #f1f5f9;
+  --escala-neutro-200: #e5e7eb;
+  --escala-neutro-300: #cbd5e1;
+  --escala-neutro-400: #a3b0c2;
+  --escala-neutro-450: #7d8ba0;
+  --escala-neutro-500: #64748b;
+  --escala-neutro-600: #475569;
+  --escala-neutro-700: #334155;
+  --escala-neutro-800: #273449;
+  --escala-neutro-850: #151e2e;
+  --escala-neutro-900: #0f172a;
+  --escala-neutro-950: #0b1120;
+  /* Color: noche (gama oscura del menú) */
+  --escala-noche-300: #a3aecb;
+  --escala-noche-700: #1f2757;
+  --escala-noche-800: #151c45;
+  --escala-noche-900: #0b1230;
+  /* Color: acento (un solo tono morado) */
+  --escala-acento-50: #efe9ff;
+  --escala-acento-200: #d4c6fd;
+  --escala-acento-300: #b39bfb;
+  --escala-acento-400: #a78bfa;
+  --escala-acento-450: #9775f7;
+  --escala-acento-500: #8b5cf6;
+  --escala-acento-550: #7344f0;
+  --escala-acento-600: #6c3ce9;
+  --escala-acento-700: #5b2bd6;
+  --escala-acento-800: #4a1fb8;
+  --escala-acento-900: #2a2152;
+  /* Color: estados */
+  --escala-correcto-400: #4ade80;
+  --escala-correcto-700: #15803d;
+  --escala-aviso-400: #fbbf24;
+  --escala-aviso-700: #b45309;
+  --escala-error-400: #f87171;
+  --escala-error-700: #b91c1c;
+
+  /* Degradados: dos colores de la escala, interpolados en sRGB */
+  --escala-degradado-menu: linear-gradient(
+    to bottom,
+    var(--escala-noche-900),
+    var(--escala-noche-800)
+  );
+  --escala-degradado-acento-claro: linear-gradient(
+    to bottom,
+    var(--escala-acento-550),
+    var(--escala-acento-700)
+  );
+  --escala-degradado-acento-oscuro: linear-gradient(
+    to bottom,
+    var(--escala-acento-300),
+    var(--escala-acento-450)
+  );
+  --escala-degradado-grafico-claro: linear-gradient(
+    to bottom,
+    var(--escala-acento-50),
+    var(--escala-neutro-0)
+  );
+  --escala-degradado-grafico-oscuro: linear-gradient(
+    to bottom,
+    var(--escala-acento-900),
+    var(--escala-neutro-850)
+  );
+
+  /* Espaciado: múltiplos de 4 px */
+  --escala-espaciado-0: 0px;
+  --escala-espaciado-1: 4px;
+  --escala-espaciado-2: 8px;
+  --escala-espaciado-3: 12px;
+  --escala-espaciado-4: 16px;
+  --escala-espaciado-5: 20px;
+  --escala-espaciado-6: 24px;
+  --escala-espaciado-8: 32px;
+  --escala-espaciado-10: 40px;
+  --escala-espaciado-12: 48px;
+  --escala-espaciado-16: 64px;
+
+  /* Radios */
+  --escala-radio-pequeno: 4px;
+  --escala-radio-medio: 8px;
+  --escala-radio-grande: 12px;
+  --escala-radio-completo: 9999px;
+
+  /* Sombras: único valor con alfa (la sombra es un halo, no un color de texto, fondo ni borde).
+     El color es el del neutro 900 en claro y el del neutro 950 en oscuro, y la prueba lo comprueba. */
+  --escala-sombra-tarjeta-claro: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --escala-sombra-tarjeta-oscuro: 0 1px 2px 0 rgb(11 17 32 / 0.4);
+  --escala-sombra-elevada-claro: 0 8px 24px -4px rgb(15 23 42 / 0.16);
+  --escala-sombra-elevada-oscuro: 0 8px 24px -4px rgb(11 17 32 / 0.6);
+
+  /* Texto: tamaño y altura de línea */
+  --escala-texto-pequeno: 12px;
+  --escala-texto-pequeno-altura: 16px;
+  --escala-texto-cuerpo-menor: 14px;
+  --escala-texto-cuerpo-menor-altura: 20px;
+  --escala-texto-cuerpo: 16px;
+  --escala-texto-cuerpo-altura: 24px;
+  --escala-texto-subtitulo: 18px;
+  --escala-texto-subtitulo-altura: 28px;
+  --escala-texto-titulo: 24px;
+  --escala-texto-titulo-altura: 32px;
+  --escala-texto-cifra: 30px;
+  --escala-texto-cifra-altura: 36px;
+
+  /* Pesos */
+  --escala-peso-normal: 400;
+  --escala-peso-medio: 500;
+  --escala-peso-seminegrita: 600;
+
+  /* Tamaños */
+  --escala-tamano-objetivo-minimo: 24px;
+  --escala-tamano-control: 40px;
+  --escala-tamano-foco-grosor: 2px;
+  --escala-tamano-foco-separacion: 2px;
+  --escala-tamano-menu-ancho: 256px;
+  --escala-tamano-contenido-maximo: 1440px;
+
+  /* Duraciones */
+  --escala-duracion-rapida: 120ms;
+  --escala-duracion-media: 200ms;
+  --escala-duracion-esqueleto: 1500ms;
+}
+
+/* ------------------------------------------------------------------ 2. Papeles: tema claro */
+:root {
+  --fondo-pagina: var(--escala-neutro-50);
+  --superficie: var(--escala-neutro-0);
+  --texto: var(--escala-neutro-900);
+  --texto-secundario: var(--escala-neutro-600);
+  --borde-decorativo: var(--escala-neutro-200);
+  --borde-control: var(--escala-neutro-500);
+  --acento: var(--escala-acento-600);
+  --enlace: var(--escala-acento-600);
+  --texto-sobre-acento: var(--escala-neutro-0);
+  --acento-suave: var(--escala-acento-50);
+  --foco: var(--escala-acento-500);
+  --menu-fondo: var(--escala-noche-900);
+  --menu-texto: var(--escala-neutro-100);
+  --menu-texto-secundario: var(--escala-noche-300);
+  --menu-actual: var(--escala-noche-700);
+  --menu-indicador: var(--escala-acento-400);
+  --correcto: var(--escala-correcto-700);
+  --aviso: var(--escala-aviso-700);
+  --error: var(--escala-error-700);
+  --serie-1: var(--escala-acento-600);
+  --serie-2: var(--escala-neutro-700);
+  --serie-3: var(--escala-neutro-500);
+  --serie-4: var(--escala-acento-800);
+
+  --degradado-menu: var(--escala-degradado-menu);
+  --degradado-acento: var(--escala-degradado-acento-claro);
+  --degradado-grafico: var(--escala-degradado-grafico-claro);
+
+  --sombra-tarjeta: var(--escala-sombra-tarjeta-claro);
+  --sombra-elevada: var(--escala-sombra-elevada-claro);
+
+  --foco-grosor: var(--escala-tamano-foco-grosor);
+  --foco-separacion: var(--escala-tamano-foco-separacion);
+  --objetivo-minimo: var(--escala-tamano-objetivo-minimo);
+
+  --duracion-rapida: var(--escala-duracion-rapida);
+  --duracion-media: var(--escala-duracion-media);
+  --duracion-esqueleto: var(--escala-duracion-esqueleto);
+}
+
+/* Tema oscuro: el menú es oscuro en los dos temas, así que no se redefine (REQ-002). */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo-pagina: var(--escala-neutro-950);
+    --superficie: var(--escala-neutro-850);
+    --texto: var(--escala-neutro-100);
+    --texto-secundario: var(--escala-neutro-400);
+    --borde-decorativo: var(--escala-neutro-800);
+    --borde-control: var(--escala-neutro-450);
+    --acento: var(--escala-acento-400);
+    --enlace: var(--escala-acento-400);
+    --texto-sobre-acento: var(--escala-neutro-900);
+    --acento-suave: var(--escala-acento-900);
+    --foco: var(--escala-acento-400);
+    --correcto: var(--escala-correcto-400);
+    --aviso: var(--escala-aviso-400);
+    --error: var(--escala-error-400);
+    --serie-1: var(--escala-acento-400);
+    --serie-2: var(--escala-neutro-300);
+    --serie-3: var(--escala-neutro-450);
+    --serie-4: var(--escala-acento-200);
+
+    --degradado-acento: var(--escala-degradado-acento-oscuro);
+    --degradado-grafico: var(--escala-degradado-grafico-oscuro);
+
+    --sombra-tarjeta: var(--escala-sombra-tarjeta-oscuro);
+    --sombra-elevada: var(--escala-sombra-elevada-oscuro);
+  }
+}
+
+/* Colores forzados: palabras clave del sistema; los degradados y las sombras desaparecen.
+   Las series se definen aquí porque el navegador no fuerza el relleno ni el trazo de SVG. */
+@media (forced-colors: active) {
+  :root {
+    --fondo-pagina: Canvas;
+    --superficie: Canvas;
+    --texto: CanvasText;
+    --texto-secundario: CanvasText;
+    --borde-decorativo: CanvasText;
+    --borde-control: CanvasText;
+    --acento: Highlight;
+    --enlace: LinkText;
+    --texto-sobre-acento: HighlightText;
+    --acento-suave: Canvas;
+    --foco: Highlight;
+    --menu-fondo: Canvas;
+    --menu-texto: CanvasText;
+    --menu-texto-secundario: CanvasText;
+    --menu-actual: Canvas;
+    --menu-indicador: Highlight;
+    --correcto: CanvasText;
+    --aviso: CanvasText;
+    --error: CanvasText;
+    --serie-1: Highlight;
+    --serie-2: CanvasText;
+    --serie-3: CanvasText;
+    --serie-4: CanvasText;
+
+    --degradado-menu: none;
+    --degradado-acento: none;
+    --degradado-grafico: none;
+
+    --sombra-tarjeta: none;
+    --sombra-elevada: none;
+  }
+}
+
+/* Movimiento reducido: las duraciones valen 0 y el esqueleto no se anima (REQ-039). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duracion-rapida: 0ms;
+    --duracion-media: 0ms;
+    --duracion-esqueleto: 0ms;
+  }
+}
+
+/* ------------------------------------------------------------------ 3. Utilidades de Tailwind */
+@theme {
+  --*: initial;
+
+  /* Puntos de ruptura de serie: sin ellos no existirían las variantes `sm:`, `md:`... */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Con el tema de serie eliminado, el preflight no tiene fuente por defecto: se la damos. */
+  --default-font-family: var(--font-sans);
+}
+
+@theme inline {
+  /* Una utilidad de color por papel: `bg-superficie`, `text-texto-secundario`, `border-borde-control`... */
+  --color-fondo-pagina: var(--fondo-pagina);
+  --color-superficie: var(--superficie);
+  --color-texto: var(--texto);
+  --color-texto-secundario: var(--texto-secundario);
+  --color-borde-decorativo: var(--borde-decorativo);
+  --color-borde-control: var(--borde-control);
+  --color-acento: var(--acento);
+  --color-enlace: var(--enlace);
+  --color-texto-sobre-acento: var(--texto-sobre-acento);
+  --color-acento-suave: var(--acento-suave);
+  --color-foco: var(--foco);
+  --color-menu-fondo: var(--menu-fondo);
+  --color-menu-texto: var(--menu-texto);
+  --color-menu-texto-secundario: var(--menu-texto-secundario);
+  --color-menu-actual: var(--menu-actual);
+  --color-menu-indicador: var(--menu-indicador);
+  --color-correcto: var(--correcto);
+  --color-aviso: var(--aviso);
+  --color-error: var(--error);
+  --color-serie-1: var(--serie-1);
+  --color-serie-2: var(--serie-2);
+  --color-serie-3: var(--serie-3);
+  --color-serie-4: var(--serie-4);
+
+  /* Espaciado: solo estos pasos */
+  --spacing-0: var(--escala-espaciado-0);
+  --spacing-1: var(--escala-espaciado-1);
+  --spacing-2: var(--escala-espaciado-2);
+  --spacing-3: var(--escala-espaciado-3);
+  --spacing-4: var(--escala-espaciado-4);
+  --spacing-5: var(--escala-espaciado-5);
+  --spacing-6: var(--escala-espaciado-6);
+  --spacing-8: var(--escala-espaciado-8);
+  --spacing-10: var(--escala-espaciado-10);
+  --spacing-12: var(--escala-espaciado-12);
+  --spacing-16: var(--escala-espaciado-16);
+
+  --radius-pequeno: var(--escala-radio-pequeno);
+  --radius-medio: var(--escala-radio-medio);
+  --radius-grande: var(--escala-radio-grande);
+  --radius-completo: var(--escala-radio-completo);
+
+  --shadow-tarjeta: var(--sombra-tarjeta);
+  --shadow-elevada: var(--sombra-elevada);
+
+  --text-pequeno: var(--escala-texto-pequeno);
+  --text-pequeno--line-height: var(--escala-texto-pequeno-altura);
+  --text-cuerpo-menor: var(--escala-texto-cuerpo-menor);
+  --text-cuerpo-menor--line-height: var(--escala-texto-cuerpo-menor-altura);
+  --text-cuerpo: var(--escala-texto-cuerpo);
+  --text-cuerpo--line-height: var(--escala-texto-cuerpo-altura);
+  --text-subtitulo: var(--escala-texto-subtitulo);
+  --text-subtitulo--line-height: var(--escala-texto-subtitulo-altura);
+  --text-titulo: var(--escala-texto-titulo);
+  --text-titulo--line-height: var(--escala-texto-titulo-altura);
+  --text-cifra: var(--escala-texto-cifra);
+  --text-cifra--line-height: var(--escala-texto-cifra-altura);
+
+  --font-weight-normal: var(--escala-peso-normal);
+  --font-weight-medio: var(--escala-peso-medio);
+  --font-weight-seminegrita: var(--escala-peso-seminegrita);
+
+  --container-menu-ancho: var(--escala-tamano-menu-ancho);
+  --container-contenido-maximo: var(--escala-tamano-contenido-maximo);
+}
+
+/* Degradados: una utilidad por papel (Tailwind no tiene espacio de nombres para ellos). */
+@utility bg-degradado-menu {
+  background-image: var(--degradado-menu);
+}
+@utility bg-degradado-acento {
+  background-image: var(--degradado-acento);
+}
+@utility bg-degradado-grafico {
+  background-image: var(--degradado-grafico);
+}

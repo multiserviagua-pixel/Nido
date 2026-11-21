@@ -36,5 +36,8 @@ export const excepcionesDeImportacion: readonly ExcepcionDeImportacion[] = [
 /** Excepciones a la comprobación de `style` en línea (PRUEBA-005/018). Ninguna por ahora. */
 export const excepcionesDeStyle: readonly string[] = [];
 
-/** Excepciones a la comprobación de valores fuera de la escala (PRUEBA-005). Ninguna por ahora. */
-export const excepcionesDeValores: readonly string[] = [];
+/** Excepciones a la comprobación de valores fuera de la escala (PRUEBA-005): archivos que llevan
+ * su propio estilo, sin Tailwind ni `valores.css`. A cada uno solo se le pide que todo color
+ * literal que traiga sea un valor de la escala, y no se le piden clases ni JSX. Hoy, uno: la
+ * pantalla de activación del conector (CSP por huella, sin hojas externas; 001 T-109). */
+export const excepcionesDeValores: readonly string[] = ["src/lib/oauth/pantalla.ts"];
