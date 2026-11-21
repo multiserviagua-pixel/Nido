@@ -19,6 +19,7 @@ const ROL_MCP = "conector_prueba_mcp";
 const ROL_GESTION = "conector_prueba_gestion";
 
 const TABLAS = [
+  "cierre",
   "clientes_oauth",
   "codigos_activacion",
   "codigos_autorizacion",
@@ -92,7 +93,7 @@ describe("T-103 (a): esquema base, roles y revocaciones (PRUEBA-022, parte)", ()
     expect(bd.archivosCargados).toEqual([ESTADO, SEMILLA]);
   });
 
-  it("crea el esquema con las 12 tablas, todas con RLS activado y sin una sola política", async () => {
+  it("crea el esquema con las 13 tablas, todas con RLS activado y sin una sola política", async () => {
     const bd = await abrir();
     const tablas = (
       await bd.db.query<{ nombre: string; rls: boolean }>(
@@ -526,12 +527,27 @@ describe("T-103 (a): lo que no debe poder hacerse, no se puede (checks y enumera
   it("tokens: tipo cerrado, la caducidad es posterior a la emisión y la sal tiene forma fija", async () => {
     const { bd, conexion } = await conBase();
     const recurso = "https://conector.ejemplo.test/api/mcp";
+    const cliente = (
+      await bd.db.query<{ id: string }>(
+        `insert into ${ESQUEMA}.clientes_oauth (client_id, origen, redirect_uris, comprobado_en)
+         values ('https://esquema.test/oauth', 'cimd', array['https://claude.ai/api/mcp/auth_callback'], now())
+         returning id::text`,
+      )
+    ).rows[0]!.id;
     const insertar = (tipo: string, hmac: string, caduca: string, sal: string | null = null) =>
       bd.db.query(
-        `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, sal)
-         values ($1, $2, $3, $4, now() + ($5)::interval, $6)`,
-        [conexion, tipo, hmac, recurso, caduca, sal],
+        `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, sal, cliente_oauth_id)
+         values ($1, $2, $3, $4, now() + ($5)::interval, $6, $7)`,
+        [conexion, tipo, hmac, recurso, caduca, sal, cliente],
       );
+    // Menor 2 del revisor: un token sin cliente no puede existir (una renovación solo vale para su cliente).
+    await expect(
+      bd.db.query(
+        `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
+         values ($1, 'acceso', $2, $3, now() + interval '5 minutes')`,
+        [conexion, hex("9"), recurso],
+      ),
+    ).rejects.toThrow(/null value in column "cliente_oauth_id"/);
     await insertar("acceso", hex("1"), "5 minutes");
     await expect(insertar("acceso", hex("2"), "-1 minutes")).rejects.toThrow(
       /violates check constraint "tokens_caducidad_posterior"/,
@@ -652,6 +668,23 @@ describe("T-103 (a): reversión probada (artículo 11; PRUEBA-022, parte B)", ()
       "mcp_enviar_informe",
       "mcp_confirmar_orden",
       "informe_es_valido",
+      "leer_cliente",
+      "guardar_cliente_cimd",
+      "registrar_cliente_dcr",
+      "abrir_solicitud",
+      "activar",
+      "canjear_codigo",
+      "renovar",
+      "operar_contar_fallo",
+      "operar_generar_codigo",
+      "operar_suspender_licencia",
+      "operar_reactivar_licencia",
+      "operar_crear_orden",
+      "operar_listar_conexiones",
+      "operar_revocar_conexion",
+      "operar_resumen",
+      "operar_exportar_sucesos",
+      "cerrar_prueba",
     ]) {
       const linea = (JSON.parse(huellaUna) as { funciones: string[] }).funciones.find((x) =>
         x.startsWith(`${f}:true:`),
@@ -847,7 +880,7 @@ describe("T-103 (a): guardas de lo que ya existe (hallazgos 2 y 7; art. 3 y 13)"
     expect(await rolesDelConector(db)).toBe(0);
   });
 
-  it("un rol preexistente inofensivo se normaliza (login, noinherit, límite, tiempos) sin tocar su contraseña", async () => {
+  it("un rol preexistente inofensivo se normaliza (noinherit, límite, tiempos), sin elevarlo (sigue sin login) ni tocar su contraseña", async () => {
     const db = await pglitePlano();
     await db.exec(
       `create role ${ROL_MCP} nologin inherit connection limit 99 password 'solo-de-prueba-1234'`,
@@ -868,9 +901,179 @@ describe("T-103 (a): guardas de lo que ya existe (hallazgos 2 y 7; art. 3 y 13)"
       `select r.rolcanlogin, r.rolinherit, r.rolconnlimit, r.rolconfig, a.rolpassword as p
          from pg_roles r join pg_authid a on a.oid = r.oid where r.rolname = '${ROL_MCP}'`,
     );
-    expect(f).toMatchObject({ rolcanlogin: true, rolinherit: false, rolconnlimit: 10, p: antes.p });
+    expect(f).toMatchObject({
+      rolcanlogin: false,
+      rolinherit: false,
+      rolconnlimit: 10,
+      p: antes.p,
+    });
     expect(f.rolconfig).toEqual(
       expect.arrayContaining(["statement_timeout=5s", "lock_timeout=2s"]),
     );
+  });
+});
+
+describe("T-107 (menores de T-103): adopción de un rol existente, pertenencias en las dos direcciones", () => {
+  it("un rol con otros roles como miembros (la pertenencia en la otra dirección) detiene la aplicación", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ajeno nologin; create role ${ROL_MCP} nologin;
+      grant ${ROL_MCP} to ajeno`);
+    const mensaje = await fallaAlAplicar(db, ESTADO);
+    expect(mensaje).toContain(
+      `${ESQUEMA}: el rol ${ROL_MCP} ya existe y otros roles son miembros de él`,
+    );
+    expect(await existeTabla(db)).toBe(false);
+  });
+
+  it("la pertenencia de quien aplica (en Supabase, postgres entra en los roles que crea) no detiene nada", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_MCP} nologin; create role quien_aplica superuser login;
+      grant ${ROL_MCP} to quien_aplica`);
+    await db.exec("set role quien_aplica");
+    await db.exec(leerSql(ESTADO));
+    await db.exec("reset role");
+    expect(await existeTabla(db)).toBe(true);
+  });
+
+  it("un rol existente sin inicio de sesión no lo recupera: el script no eleva (la persona decide)", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_GESTION} nologin`);
+    await db.exec(leerSql(ESTADO));
+    await db.exec(leerSql(ESTADO));
+    const f = await una<{ rolcanlogin: boolean }>(
+      db,
+      `select rolcanlogin from pg_roles where rolname = '${ROL_GESTION}'`,
+    );
+    expect(f.rolcanlogin).toBe(false);
+  });
+
+  it("un límite de conexiones más estricto no se sube; uno ilimitado o mayor se baja a 10", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_MCP} login connection limit 3;
+      create role ${ROL_GESTION} login connection limit -1`);
+    await db.exec(leerSql(ESTADO));
+    const limites = (
+      await db.query<{ rolname: string; rolconnlimit: number }>(
+        `select rolname, rolconnlimit from pg_roles where rolname like 'conector_prueba%' order by 1`,
+      )
+    ).rows;
+    expect(limites).toEqual([
+      { rolname: ROL_GESTION, rolconnlimit: 10 },
+      { rolname: ROL_MCP, rolconnlimit: 3 },
+    ]);
+  });
+
+  it("reaplicar sobre los roles que creó el propio script no cambia nada ni falla (adopción idempotente)", async () => {
+    const db = await pglitePlano();
+    await db.exec(leerSql(ESTADO));
+    const antes = await una<{ r: string }>(
+      db,
+      `select string_agg(rolname || rolcanlogin || rolinherit || rolconnlimit || coalesce(rolconfig::text, ''), '|' order by rolname) as r
+         from pg_roles where rolname like 'conector_prueba%'`,
+    );
+    await db.exec(leerSql(ESTADO));
+    const despues = await una<{ r: string }>(
+      db,
+      `select string_agg(rolname || rolcanlogin || rolinherit || rolconnlimit || coalesce(rolconfig::text, ''), '|' order by rolname) as r
+         from pg_roles where rolname like 'conector_prueba%'`,
+    );
+    expect(despues).toEqual(antes);
+  });
+});
+
+describe("T-107 (hallazgo 1 del auditor): la adopción no hereda dueños ni concesiones ajenas", () => {
+  it("un rol previo con select/insert sobre otra tabla y dueño de un objeto detiene la aplicación", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_MCP} login noinherit nosuperuser nocreatedb nocreaterole nobypassrls noreplication connection limit 10;
+      create schema ajeno; create table ajeno.secretos(x int);
+      grant usage on schema ajeno to ${ROL_MCP}; grant select, insert on ajeno.secretos to ${ROL_MCP};
+      create table ajeno.propia(x int); alter table ajeno.propia owner to ${ROL_MCP}`);
+    const mensaje = await fallaAlAplicar(db, ESTADO);
+    expect(mensaje).toContain(
+      `${ESQUEMA}: el rol ${ROL_MCP} ya existe y tiene dueños o concesiones fuera del esquema`,
+    );
+    expect(await existeTabla(db)).toBe(false);
+  });
+
+  it("solo una concesión fuera del esquema (sin ser dueño de nada) también la detiene", async () => {
+    const db = await pglitePlano();
+    await db.exec(
+      `create role ${ROL_GESTION} login; create table ajena(x int); grant select on ajena to ${ROL_GESTION}`,
+    );
+    const mensaje = await fallaAlAplicar(db, ESTADO);
+    expect(mensaje).toContain(
+      `el rol ${ROL_GESTION} ya existe y tiene dueños o concesiones fuera del esquema`,
+    );
+    expect(await existeTabla(db)).toBe(false);
+  });
+
+  it("una tabla previa en el esquema con otra forma y dueño mcp detiene la aplicación", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_MCP} login noinherit nosuperuser nocreatedb nocreaterole nobypassrls noreplication connection limit 10;
+      create schema ${ESQUEMA};
+      create table ${ESQUEMA}.tokens (id uuid primary key default gen_random_uuid(), conexion_id uuid not null, tipo text not null);
+      alter table ${ESQUEMA}.tokens owner to ${ROL_MCP}`);
+    const mensaje = await fallaAlAplicar(db, ESTADO);
+    expect(mensaje).toContain(`${ESQUEMA}: el esquema ${ESQUEMA} contiene objetos de otro dueño`);
+    expect(await existeTabla(db)).toBe(false);
+  });
+
+  it("un tipo o una función previos de otro dueño en el esquema también lo detienen", async () => {
+    for (const objeto of [
+      `create type ${ESQUEMA}.t as enum ('a'); alter type ${ESQUEMA}.t owner to ajeno_dueno`,
+      `create function ${ESQUEMA}.f() returns int language sql as 'select 1'; alter function ${ESQUEMA}.f() owner to ajeno_dueno`,
+    ]) {
+      const db = await pglitePlano();
+      await db.exec(`create role ajeno_dueno nologin; create schema ${ESQUEMA}; ${objeto}`);
+      const mensaje = await fallaAlAplicar(db, ESTADO);
+      expect(mensaje).toContain("contiene objetos de otro dueño");
+    }
+  });
+
+  it("la adopción legítima (rol vacío previo, o tras aplicar) sigue pasando", async () => {
+    const db = await pglitePlano();
+    await db.exec(`create role ${ROL_MCP} login`);
+    await db.exec(leerSql(ESTADO));
+    await db.exec(leerSql(ESTADO));
+    expect(await existeTabla(db)).toBe(true);
+  });
+});
+
+describe("T-107 (d): tras el cierre ni la semilla reabre licencias; solo revertir y reaplicar (menor 8 del revisor)", () => {
+  const licencias = async (db: PGlite) =>
+    (
+      await db.query<{ tipo: string; estado: string; n: number }>(
+        `select tipo::text, estado::text, count(*)::int as n from ${ESQUEMA}.licencias group by 1, 2 order by 1, 2`,
+      )
+    ).rows;
+  const ACTIVAS = [
+    { tipo: "A", estado: "activa", n: 1 },
+    { tipo: "B", estado: "activa", n: 1 },
+  ];
+  const REVOCADAS = [
+    { tipo: "A", estado: "revocada", n: 1 },
+    { tipo: "B", estado: "revocada", n: 1 },
+  ];
+
+  it("[estado, semilla]: cerrar; la semilla falla y no cambia nada; [reversión, estado, semilla]: dos activas", async () => {
+    const db = await pglitePlano();
+    await db.exec(leerSql(ESTADO));
+    await db.exec(leerSql(SEMILLA));
+    expect(await licencias(db)).toEqual(ACTIVAS);
+    const r = await una<{ r: { resultado: string } }>(
+      db,
+      `select ${ESQUEMA}.cerrar_prueba('${"ab".repeat(32)}') as r`,
+    );
+    expect(r.r.resultado).toBe("prueba_cerrada");
+    expect(await licencias(db)).toEqual(REVOCADAS);
+    // La semilla no encuentra licencias sin revocar e intenta crearlas: el disparador lo impide.
+    expect(await fallaAlAplicar(db, SEMILLA)).toMatch(/la prueba esta cerrada/);
+    expect(await licencias(db)).toEqual(REVOCADAS);
+    // Para empezar de nuevo hay que revertir y reaplicar: dos licencias activas y sin cierre.
+    for (const n of [REVERSION, ESTADO, SEMILLA]) await db.exec(leerSql(n));
+    expect(await licencias(db)).toEqual(ACTIVAS);
+    expect(
+      (await una<{ n: number }>(db, `select count(*)::int as n from ${ESQUEMA}.cierre`)).n,
+    ).toBe(0);
   });
 });

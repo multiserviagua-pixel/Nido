@@ -78,7 +78,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 3 · Autorización OAuth y operación
 
 ### T-107 `[P]` · Funciones SQL de autorización y operación
-`ingeniero-bd` · C · pendiente · Depende de: T-103 · REQ-003, REQ-004, REQ-006, REQ-008, REQ-014, REQ-017, REQ-019 · CA-003, CA-004, CA-007, CA-008, CA-014, CA-017, CA-024
+`ingeniero-bd` · C · hecha · Depende de: T-103 · REQ-003, REQ-004, REQ-006, REQ-008, REQ-014, REQ-017, REQ-019 · CA-003, CA-004, CA-007, CA-008, CA-014, CA-017, CA-024
 - (a) `leer_cliente`, `guardar_cliente_cimd`, `registrar_cliente_dcr` (límites, purga). Prueba: `tu/bd/clientes.test.ts`, PRUEBA-005 (parte BD).
 - (b) `abrir_solicitud`, `activar` (una transacción; bloqueo por origen). Prueba: `tu/bd/activar.test.ts`, PRUEBA-006 (parte BD), PRUEBA-007 (10 → 1 conexión), PRUEBA-018 (parte: fallo → solo recuento).
 - (c) `canjear_codigo`, `renovar`. Prueba: `tu/bd/tokens.test.ts`, PRUEBA-012 (parte BD, con reloj), PRUEBA-005 (doble canje).

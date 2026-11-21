@@ -2,7 +2,12 @@
 // compuestos en ejecución (arts. 1 y 4). No es una prueba: no termina en .test.ts.
 import { createHmac, randomBytes } from "node:crypto";
 import { afterAll, expect, vi } from "vitest";
-import { crearBd, crearFabrica, type BdApoyo } from "../../../conector/apoyo/index";
+import {
+  crearAlmacenPglite,
+  crearBd,
+  crearFabrica,
+  type BdApoyo,
+} from "../../../conector/apoyo/index";
 
 // Arrancar PGlite en cada prueba cuesta CPU; en paralelo con otros ficheros supera los 5 s por defecto.
 vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
@@ -34,6 +39,21 @@ export function cerrarAlFinal(): void {
 export const una = async <T>(bd: BdApoyo, sql: string, p: unknown[] = []) =>
   (await bd.db.query<T>(sql, p)).rows[0]!;
 
+/** Un cliente OAuth CIMD ficticio y estable: todo token tiene cliente (`tokens.cliente_oauth_id` es not null). */
+export async function clienteSemilla(bd: BdApoyo): Promise<string> {
+  await bd.db.query(
+    `insert into ${ESQUEMA}.clientes_oauth (client_id, origen, redirect_uris, comprobado_en)
+     values ('https://semilla.test/oauth', 'cimd', array['https://claude.ai/api/mcp/auth_callback'], now())
+     on conflict (client_id) do nothing`,
+  );
+  return (
+    await una<{ id: string }>(
+      bd,
+      `select id::text from ${ESQUEMA}.clientes_oauth where client_id = 'https://semilla.test/oauth'`,
+    )
+  ).id;
+}
+
 export interface Sembrado {
   licenciaId: string;
   conexionId: string;
@@ -61,9 +81,9 @@ export async function sembrar(
   );
   const acceso = fab.token("acceso");
   await bd.db.query(
-    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
-     values ($1, 'acceso', $2, $3, now() + interval '300 seconds')`,
-    [conexionId, acceso.hmac, recurso],
+    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+     values ($1, 'acceso', $2, $3, now() + interval '300 seconds', $4)`,
+    [conexionId, acceso.hmac, recurso, await clienteSemilla(bd)],
   );
   return { licenciaId, conexionId, acceso };
 }
@@ -80,9 +100,9 @@ export async function otraConexion(
   );
   const acceso = fabrica.token("acceso");
   await bd.db.query(
-    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
-     values ($1, 'acceso', $2, $3, now() + interval '300 seconds')`,
-    [conexionId, acceso.hmac, RECURSO],
+    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+     values ($1, 'acceso', $2, $3, now() + interval '300 seconds', $4)`,
+    [conexionId, acceso.hmac, RECURSO, await clienteSemilla(bd)],
   );
   return { conexionId, acceso };
 }
@@ -113,6 +133,7 @@ export async function sembrarOrden(
 }
 
 export const TABLAS = [
+  "cierre",
   "clientes_oauth",
   "codigos_activacion",
   "codigos_autorizacion",
@@ -177,6 +198,8 @@ export async function comprobarForma(
   llamada: string,
   parametros: unknown[],
   roles: { permitido: string; prohibidos: string[] },
+  /** Funciones que no leen la hora (operar_*): no se exige `now()`. */
+  sinHora = false,
 ): Promise<void> {
   const f = await definicion(bd, `${nombre}(${firma})`);
   expect(f.secdef).toBe(true);
@@ -184,7 +207,7 @@ export async function comprobarForma(
   expect(f.args).toEqual(args);
   expect(f.cuerpo).not.toMatch(/pg_catalog\s*\.\s*(now|clock_timestamp|transaction_timestamp)/i);
   expect(f.cuerpo).not.toMatch(/clock_timestamp|statement_timestamp|age\s*\(/i);
-  expect(f.cuerpo).toMatch(/\bnow\(\)/);
+  if (!sinHora) expect(f.cuerpo).toMatch(/\bnow\(\)/);
   await bd.db.exec(`grant usage on schema ${ESQUEMA} to anon, authenticated, service_role`);
   for (const rol of roles.prohibidos) {
     await expect(
@@ -202,4 +225,134 @@ export async function comprobarForma(
       where p.oid = '${ESQUEMA}.${nombre}(${firma})'::regprocedure and a.grantee = 0`,
   );
   expect(publico.n).toBe(0);
+}
+
+/** HMAC (ficticio) del origen de una petición: el origen solo existe como HMAC. */
+export const origen = (n: string) => hmacDe(`origen:${n}`);
+
+/** Identificador DCR con la forma del diseño: dcr_ + 22 caracteres. */
+export const idDcr = () => `dcr_${randomBytes(16).toString("base64url")}`;
+
+export const CB_CLAUDE = "https://claude.ai/api/mcp/auth_callback";
+export const CB_CHATGPT = "https://chatgpt.com/connector_platform_oauth_redirect";
+
+export type Resultado = { resultado: string } & Record<string, unknown>;
+/** Llama a una función del conector con el rol de gestión (autorización y operación). */
+export async function gestion(
+  bd: BdApoyo,
+  funcion: string,
+  argumentos: unknown[],
+): Promise<Resultado> {
+  const almacen = await crearAlmacenPglite(bd, ROL_GESTION);
+  return (await almacen.llamar(funcion, argumentos)) as Resultado;
+}
+
+export type Token = ReturnType<typeof fabrica.token>;
+export interface Autorizado {
+  licencia: string;
+  conexion: string;
+  /** HMAC del código de autorización guardado (lo que la app pasaría a `canjear_codigo`). */
+  codigoAut: string;
+  desafio: string;
+}
+export interface Emitido extends Autorizado {
+  acceso: Token;
+  renovacion: Token;
+}
+
+/** Registra un cliente DCR con los dos callbacks y devuelve su identificador. */
+export async function registrarCliente(bd: BdApoyo, desde = "registro"): Promise<string> {
+  const id = idDcr();
+  const r = await gestion(bd, "registrar_cliente_dcr", [
+    origen(desde),
+    id,
+    [CB_CLAUDE, CB_CHATGPT],
+  ]);
+  expect(r.resultado).toBe("registrado");
+  return id;
+}
+
+/** Recorre solicitud y activación y deja un código de autorización sin canjear. */
+export async function autorizar(
+  bd: BdApoyo,
+  cliente: string,
+  tipo: "A" | "B" = "A",
+  callback = CB_CLAUDE,
+): Promise<Autorizado> {
+  const n = randomBytes(8).toString("hex");
+  const { id: licencia } = await una<{ id: string }>(
+    bd,
+    `select id::text from ${ESQUEMA}.licencias where tipo = $1`,
+    [tipo],
+  );
+  await bd.db.query(
+    `insert into ${ESQUEMA}.codigos_activacion (licencia_id, codigo_hmac, caduca_en)
+     values ($1, $2, now() + interval '10 minutes')`,
+    [licencia, hmacDe(`codigo:${n}`)],
+  );
+  const desafio = randomBytes(32).toString("base64url");
+  const abierta = await gestion(bd, "abrir_solicitud", [
+    cliente,
+    callback,
+    desafio,
+    RECURSO,
+    hmacDe(`state:${n}`),
+    hmacDe(`cookie:${n}`),
+  ]);
+  expect(abierta.resultado).toBe("abierta");
+  const codigoAut = hmacDe(`aut:${n}`);
+  const r = await gestion(bd, "activar", [
+    abierta.solicitud,
+    hmacDe(`cookie:${n}`),
+    hmacDe(`state:${n}`),
+    origen(`navegador-${n}`),
+    hmacDe(`codigo:${n}`),
+    codigoAut,
+  ]);
+  expect(r.resultado).toBe("activada");
+  const { conexion_id: conexion } = await una<{ conexion_id: string }>(
+    bd,
+    `select conexion_id::text from ${ESQUEMA}.codigos_autorizacion where codigo_hmac = $1`,
+    [codigoAut],
+  );
+  return { licencia, conexion, codigoAut, desafio };
+}
+
+export const canjear = (
+  bd: BdApoyo,
+  a: Autorizado,
+  cliente: string,
+  acceso: Token,
+  renovacion: Token,
+  callback = CB_CLAUDE,
+) =>
+  gestion(bd, "canjear_codigo", [
+    a.codigoAut,
+    cliente,
+    callback,
+    a.desafio,
+    RECURSO,
+    acceso.hmac,
+    renovacion.hmac,
+  ]);
+
+/** Autoriza y canjea: una conexión con su par de tokens emitido. */
+export async function conectar(
+  bd: BdApoyo,
+  cliente: string,
+  tipo: "A" | "B" = "A",
+  callback = CB_CLAUDE,
+): Promise<Emitido> {
+  const a = await autorizar(bd, cliente, tipo, callback);
+  const acceso = fabrica.token("acceso");
+  const renovacion = fabrica.token("renovacion");
+  const r = await canjear(bd, a, cliente, acceso, renovacion, callback);
+  expect(r).toEqual({ resultado: "emitido", expires_in: 300 });
+  return { ...a, acceso, renovacion };
+}
+
+/** ¿Vale ese token de acceso para el punto MCP? (lo que haría `validar_acceso` con el rol mcp). */
+export async function vale(bd: BdApoyo, t: Token): Promise<boolean> {
+  const almacen = await crearAlmacenPglite(bd, ROL_MCP);
+  return (await almacen.llamar("validar_acceso", [t.hmac, RECURSO])) === true;
 }

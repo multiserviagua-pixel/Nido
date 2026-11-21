@@ -4,7 +4,10 @@
 --
 -- Constitución: art. 1 (solo enteros acotados, booleanos y listas cerradas; ninguna columna de token,
 -- código, dirección ni texto libre: lo secreto va solo como HMAC hexadecimal), art. 2 (el cliente se
--- deriva del token dentro de la base; ninguna función recibe un identificador), art. 3 (todo cierra en
+-- deriva del token dentro de la base; ninguna función recibe un identificador de cliente ni de licencia; la
+-- única excepción, nominal, es `operar_revocar_conexion(p_origen_hmac, p_conexion)`: recibe como texto el
+-- identificador de una CONEXIÓN que dio `operar_listar_conexiones` (REQ-017), solo para revocarla, tras la
+-- credencial de operación y la puerta por origen), art. 3 (todo cierra en
 -- fallo), art. 4 (ninguna contraseña aquí: la pone una persona), art. 11 (reversión probada).
 --
 -- Aviso de la 010 (propuesta 25): su M01 revoca de forma global los permisos por defecto de `postgres`.
@@ -14,6 +17,20 @@ begin;
 -- Si el esquema ya existe, debe ser de quien aplica: no se adopta ni se pisa el de otro dueño.
 do $$
 begin
+  -- Nada de lo que ya haya dentro (relaciones, tipos, funciones) puede ser de otro dueño: un objeto previo
+  -- con otra forma, de otro rol, pasaría el `if not exists` de abajo y seguiría siendo suyo.
+  if exists (
+    select 1 from pg_catalog.pg_class c
+     where c.relnamespace = to_regnamespace('conector_prueba') and c.relowner <> (select r.oid from pg_catalog.pg_roles r where r.rolname = current_user)
+    union all
+    select 1 from pg_catalog.pg_type t
+     where t.typnamespace = to_regnamespace('conector_prueba') and t.typowner <> (select r.oid from pg_catalog.pg_roles r where r.rolname = current_user)
+    union all
+    select 1 from pg_catalog.pg_proc p
+     where p.pronamespace = to_regnamespace('conector_prueba') and p.proowner <> (select r.oid from pg_catalog.pg_roles r where r.rolname = current_user)
+  ) then
+    raise exception 'conector_prueba: el esquema conector_prueba contiene objetos de otro dueño; no se aplica';
+  end if;
   if exists (
     select 1 from pg_catalog.pg_namespace n
      where n.nspname = 'conector_prueba' and n.nspowner <> (select r.oid from pg_catalog.pg_roles r where r.rolname = current_user)
@@ -54,6 +71,9 @@ begin
       ) then
         raise exception 'conector_prueba: el rol % ya existe con atributos peligrosos (superusuario, bypassrls, replicación, createrole o createdb); no se aplica', v_rol;
       end if;
+      -- Pertenencias en las dos direcciones: que sea miembro de otro rol (heredaría sus permisos) o que otros
+      -- sean miembros de él (podrían hacerse pasar por él). Quien aplica y los superusuarios se ignoran: en
+      -- Supabase `postgres` entra en los roles que crea y un superusuario ya lo puede todo.
       if exists (
         select 1 from pg_catalog.pg_auth_members m
           join pg_catalog.pg_roles r on r.oid = m.member
@@ -61,7 +81,47 @@ begin
       ) then
         raise exception 'conector_prueba: el rol % ya existe y es miembro de otro rol; no se aplica', v_rol;
       end if;
-      execute format('alter role %I login noinherit connection limit 10', v_rol);
+      if exists (
+        select 1 from pg_catalog.pg_auth_members m
+          join pg_catalog.pg_roles r on r.oid = m.roleid
+          join pg_catalog.pg_roles u on u.oid = m.member
+         where r.rolname = v_rol and u.rolname <> current_user and not u.rolsuper
+      ) then
+        raise exception 'conector_prueba: el rol % ya existe y otros roles son miembros de él; no se aplica', v_rol;
+      end if;
+      -- Dueños y concesiones del rol fuera del esquema (pg_shdepend: 'o' dueño, 'a' concesión): un rol previo
+      -- con select sobre otra tabla, o dueño de un objeto, conservaría ese acceso al adoptarlo. Los números son
+      -- los oid fijos de los catálogos: 1260 pg_authid, 1259 pg_class, 1255 pg_proc, 1247 pg_type, 2615 pg_namespace.
+      if exists (
+        select 1 from pg_catalog.pg_shdepend d
+          join pg_catalog.pg_roles r on r.oid = d.refobjid
+         where d.refclassid = 1260::oid
+           and r.rolname = v_rol
+           and d.deptype in ('o', 'a')
+           and d.dbid in (0, (select o.oid from pg_catalog.pg_database o where o.datname = current_database()))
+           and not (
+             (d.classid = 1259::oid
+                and exists (select 1 from pg_catalog.pg_class x where x.oid = d.objid and x.relnamespace = to_regnamespace('conector_prueba')))
+             or (d.classid = 1255::oid
+                and exists (select 1 from pg_catalog.pg_proc x where x.oid = d.objid and x.pronamespace = to_regnamespace('conector_prueba')))
+             or (d.classid = 1247::oid
+                and exists (select 1 from pg_catalog.pg_type x where x.oid = d.objid and x.typnamespace = to_regnamespace('conector_prueba')))
+             or (d.classid = 2615::oid and d.objid = to_regnamespace('conector_prueba')::oid)
+           )
+      ) then
+        raise exception 'conector_prueba: el rol % ya existe y tiene dueños o concesiones fuera del esquema; no se aplica', v_rol;
+      end if;
+      -- Adopción sin elevar: no se toca LOGIN (un rol sin inicio de sesión, p. ej. tras el cierre, no lo
+      -- recupera: lo decide una persona) y solo se restringe lo que difiere (herencia y límite de conexiones;
+      -- uno más estricto se respeta). Si ya está como debe, no se ejecuta ningún ALTER y no puede fallar.
+      if exists (select 1 from pg_catalog.pg_roles r where r.rolname = v_rol and r.rolinherit) then
+        execute format('alter role %I noinherit', v_rol);
+      end if;
+      if exists (
+        select 1 from pg_catalog.pg_roles r where r.rolname = v_rol and (r.rolconnlimit < 0 or r.rolconnlimit > 10)
+      ) then
+        execute format('alter role %I connection limit 10', v_rol);
+      end if;
     end if;
     execute format('alter role %I set statement_timeout = %L', v_rol, '5s');
     execute format('alter role %I set idle_in_transaction_session_timeout = %L', v_rol, '10s');
@@ -201,7 +261,15 @@ create table if not exists conector_prueba.tokens (
   revocado_en    timestamptz,
   constraint tokens_caducidad_posterior check (caduca_en > creado_en)
 );
+-- T-107 (c): el cliente OAuth del que se emitió el token (una renovación solo vale para el mismo cliente).
+-- Siempre presente (not null): no hay tokens sin cliente. Si esta tabla ya existía con filas sin cliente, el
+-- `set not null` falla y la transacción entera se deshace: una persona decide qué hacer con ellas.
+alter table conector_prueba.tokens
+  add column if not exists cliente_oauth_id uuid references conector_prueba.clientes_oauth (id) on delete cascade;
+alter table conector_prueba.tokens
+  alter column cliente_oauth_id set not null;
 create index if not exists tokens_por_conexion on conector_prueba.tokens (conexion_id);
+create index if not exists tokens_por_cliente on conector_prueba.tokens (cliente_oauth_id) where cliente_oauth_id is not null;
 create index if not exists tokens_por_sustituto on conector_prueba.tokens (sustituido_por) where sustituido_por is not null;
 
 -- Órdenes de la licencia (pausar o reanudar). Las marcas de tiempo van con su estado.
@@ -298,7 +366,13 @@ create table if not exists conector_prueba.sucesos (
 );
 create index if not exists sucesos_por_momento on conector_prueba.sucesos (momento);
 
--- RLS activado y SIN políticas en las doce tablas (nadie llega por la API; solo security definer).
+-- Cierre de la prueba (T-107 d): una sola fila, terminal. La escribe solo `cerrar_prueba`.
+create table if not exists conector_prueba.cierre (
+  id         boolean primary key default true check (id),
+  cerrado_en timestamptz not null default now()
+);
+
+-- RLS activado y SIN políticas en las trece tablas (nadie llega por la API; solo security definer).
 alter table conector_prueba.licencias enable row level security;
 alter table conector_prueba.codigos_activacion enable row level security;
 alter table conector_prueba.clientes_oauth enable row level security;
@@ -311,6 +385,7 @@ alter table conector_prueba.ejecuciones enable row level security;
 alter table conector_prueba.informes enable row level security;
 alter table conector_prueba.limites_origen enable row level security;
 alter table conector_prueba.sucesos enable row level security;
+alter table conector_prueba.cierre enable row level security;
 
 -- ---------------------------------------------------------------------
 -- Revocaciones (M-4). Ninguno de estos roles tiene permiso alguno sobre tablas ni secuencias.
@@ -367,6 +442,7 @@ begin
        and t.caduca_en <= t.creado_en + interval '300 seconds'
        and c.revocada_en is null
        and l.estado <> 'revocada'
+       and not exists (select 1 from conector_prueba.cierre)
   );
 end;
 $$;
@@ -376,6 +452,8 @@ $$;
 -- conexión del token (si el HMAC la identifica), nunca de una entrada. 20 000 sucesos en 24 horas; el
 -- siguiente deja un solo `registro_saturado` y lo demás se descarta. `registro_saturado` es un código
 -- reservado: nadie puede escribirlo.
+-- Tras el cierre de la prueba SIGUE escribiendo (observabilidad; decisión de la coordinación, D-036): no
+-- concede acceso, guarda solo la forma cerrada y la acota el tope de 20 000 al día.
 create or replace function conector_prueba.registrar_suceso(
   p_token_hmac text,
   p_ruta text,
@@ -480,7 +558,8 @@ begin
      and t.caduca_en > now()
      and t.caduca_en <= t.creado_en + interval '300 seconds'
      and c.revocada_en is null
-     and l.estado <> 'revocada';
+     and l.estado <> 'revocada'
+     and not exists (select 1 from conector_prueba.cierre);
   if not found then
     return jsonb_build_object('resultado', 'no_autorizado');
   end if;
@@ -677,7 +756,8 @@ begin
      and t.caduca_en > now()
      and t.caduca_en <= t.creado_en + interval '300 seconds'
      and c.revocada_en is null
-     and l.estado <> 'revocada';
+     and l.estado <> 'revocada'
+     and not exists (select 1 from conector_prueba.cierre);
   if not found then
     return jsonb_build_object('resultado', 'no_autorizado');
   end if;
@@ -784,7 +864,8 @@ begin
      and t.caduca_en > now()
      and t.caduca_en <= t.creado_en + interval '300 seconds'
      and c.revocada_en is null
-     and l.estado <> 'revocada';
+     and l.estado <> 'revocada'
+     and not exists (select 1 from conector_prueba.cierre);
   if not found then
     return jsonb_build_object('resultado', 'no_autorizado');
   end if;
@@ -841,5 +922,1230 @@ grant execute on function conector_prueba.mcp_enviar_informe(text, text, text, t
 revoke all on function conector_prueba.mcp_confirmar_orden(text, text, text)
   from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
 grant execute on function conector_prueba.mcp_confirmar_orden(text, text, text) to conector_prueba_mcp;
+
+-- =====================================================================
+-- T-107 (autorización y operación). Solo las ejecuta `conector_prueba_gestion` (no recibe entradas de un
+-- modelo). Ninguna recibe un identificador de cliente (de licencia) como autoridad: el cliente OAuth que
+-- reciben es el del protocolo (`client_id` público), nunca el cliente de HumanaIA.
+-- =====================================================================
+
+-- callbacks_validos(uris) -> boolean. Auxiliar: uno o dos callbacks distintos, idénticos a los de la lista
+-- cerrada (comparación exacta de texto). Cualquier otro valor, también una variante, es falso.
+create or replace function conector_prueba.callbacks_validos(p_uris text[])
+returns boolean
+language plpgsql
+immutable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  if p_uris is null or cardinality(p_uris) not between 1 and 2 then
+    return false;
+  end if;
+  if not (p_uris <@ array['https://claude.ai/api/mcp/auth_callback',
+                          'https://chatgpt.com/connector_platform_oauth_redirect']::text[]) then
+    return false;
+  end if;
+  return cardinality(p_uris) = 1 or p_uris[1] <> p_uris[2];
+end;
+$$;
+
+-- purgar() -> void. Purga a 24 h, dentro de las funciones que escriben: solicitudes y códigos de
+-- autorización caducados, límites vencidos y clientes DCR que nunca se usaron. Solo la llaman otras
+-- funciones de este esquema.
+create or replace function conector_prueba.purgar()
+returns void
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  delete from conector_prueba.solicitudes_autorizacion where caduca_en <= now() - interval '24 hours';
+  delete from conector_prueba.codigos_autorizacion where caduca_en <= now() - interval '24 hours';
+  delete from conector_prueba.limites_origen
+   where ventana_desde <= now() - interval '24 hours'
+     and (bloqueado_hasta is null or bloqueado_hasta <= now());
+  delete from conector_prueba.clientes_oauth
+   where origen = 'dcr' and ultimo_uso_en is null and creado_en <= now() - interval '24 hours';
+end;
+$$;
+
+-- leer_cliente(client_id) -> jsonb: {"resultado": "desconocido"} |
+-- {"resultado": "conocido", "origen", "redirect_uris", "vigente"}. `vigente`: un cliente CIMD vale 1 h desde
+-- su última comprobación (después, la app lo vuelve a descargar; nunca se usa caducado); uno DCR, siempre
+-- que no haya vencido sin uso (24 h). Un DCR vencido sin uso es desconocido aunque aún no se haya purgado.
+create or replace function conector_prueba.leer_cliente(p_client_id text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_origen conector_prueba.origen_cliente_oauth;
+  v_uris text[];
+  v_comprobado timestamptz;
+  v_creado timestamptz;
+  v_uso timestamptz;
+begin
+  if p_client_id is null or char_length(p_client_id) > 300 then
+    return jsonb_build_object('resultado', 'desconocido');
+  end if;
+  select c.origen, c.redirect_uris, c.comprobado_en, c.creado_en, c.ultimo_uso_en
+    into v_origen, v_uris, v_comprobado, v_creado, v_uso
+    from conector_prueba.clientes_oauth c
+   where c.client_id = p_client_id;
+  if not found or (v_origen = 'dcr' and v_uso is null and v_creado <= now() - interval '24 hours') then
+    return jsonb_build_object('resultado', 'desconocido');
+  end if;
+  return jsonb_build_object(
+    'resultado', 'conocido',
+    'origen', v_origen::text,
+    'redirect_uris', to_jsonb(v_uris),
+    'vigente', case when v_origen = 'cimd'
+                    then v_comprobado is not null and v_comprobado <= now()
+                         and v_comprobado > now() - interval '1 hour'
+                    else true end);
+end;
+$$;
+
+-- guardar_cliente_cimd(client_id, callbacks) -> {"resultado": "guardado" | "no_valido" | "cerrada"}. Tras el cierre
+-- de la prueba devuelve `cerrada` sin escribir nada (decisión de la coordinación, D-036). El origen es
+-- siempre `cimd` (nunca una entrada) y el identificador, una URL https sin puerto, usuario, consulta ni
+-- fragmento. Callbacks: todos de la lista o rechazo entero. La lista de hosts y la descarga son de la app.
+create or replace function conector_prueba.guardar_cliente_cimd(p_client_id text, p_redirect_uris text[])
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_client_id is null or char_length(p_client_id) > 300
+     or p_client_id !~ '^https://[a-z0-9.-]{1,200}(/[A-Za-z0-9._~/-]{0,90})?$'
+     or not conector_prueba.callbacks_validos(p_redirect_uris) then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  perform conector_prueba.purgar();
+  begin
+    update conector_prueba.clientes_oauth c
+       set redirect_uris = p_redirect_uris, comprobado_en = now()
+     where c.client_id = p_client_id and c.origen = 'cimd';
+    if not found then
+      insert into conector_prueba.clientes_oauth (client_id, origen, redirect_uris, comprobado_en)
+      values (p_client_id, 'cimd', p_redirect_uris, now())
+      on conflict (client_id) do nothing;
+    end if;
+  exception when check_violation then
+    return jsonb_build_object('resultado', 'no_valido');
+  end;
+  if not found then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  return jsonb_build_object('resultado', 'guardado');
+end;
+$$;
+
+-- registrar_cliente_dcr(origen_hmac, client_id, callbacks) ->
+-- {"resultado": "registrado" | "limite" | "origen_bloqueado" | "no_valido" | "cerrada"} (`cerrada` tras el
+-- cierre de la prueba, sin escribir nada). El origen llega solo como HMAC.
+-- 50 clientes sin uso en total (`limite`) y 5 por origen y hora (`origen_bloqueado`); se serializa para que
+-- el recuento no se pase. Purga a 24 h al escribir. Nunca repite lo recibido.
+create or replace function conector_prueba.registrar_cliente_dcr(
+  p_origen_hmac text,
+  p_client_id text,
+  p_redirect_uris text[]
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_ventana timestamptz;
+  v_registros smallint;
+  v_sin_uso bigint;
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_origen_hmac is null or p_origen_hmac !~ '^[0-9a-f]{64}$'
+     or p_client_id is null or p_client_id !~ '^dcr_[A-Za-z0-9_-]{22}$'
+     or not conector_prueba.callbacks_validos(p_redirect_uris) then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  perform pg_advisory_xact_lock(hashtext('conector_prueba.dcr'));
+  perform conector_prueba.purgar();
+
+  select l.ventana_desde, l.fallos
+    into v_ventana, v_registros
+    from conector_prueba.limites_origen l
+   where l.ambito = 'dcr' and l.origen_hmac = p_origen_hmac;
+  if found and v_ventana > now() - interval '1 hour' and v_registros >= 5 then
+    return jsonb_build_object('resultado', 'origen_bloqueado');
+  end if;
+
+  select count(*) into v_sin_uso
+    from conector_prueba.clientes_oauth c
+   where c.origen = 'dcr' and c.ultimo_uso_en is null;
+  if v_sin_uso >= 50 then
+    return jsonb_build_object('resultado', 'limite');
+  end if;
+
+  begin
+    insert into conector_prueba.clientes_oauth (client_id, origen, redirect_uris)
+    values (p_client_id, 'dcr', p_redirect_uris);
+  exception when unique_violation or check_violation then
+    return jsonb_build_object('resultado', 'no_valido');
+  end;
+
+  -- En `limites_origen`, para el ámbito `dcr`, `fallos` cuenta los registros de la ventana de 1 h.
+  update conector_prueba.limites_origen l
+     set ventana_desde = case when l.ventana_desde <= now() - interval '1 hour' then now() else l.ventana_desde end,
+         fallos = case when l.ventana_desde <= now() - interval '1 hour' then 1 else l.fallos + 1 end
+   where l.ambito = 'dcr' and l.origen_hmac = p_origen_hmac;
+  if not found then
+    insert into conector_prueba.limites_origen (ambito, origen_hmac, ventana_desde, fallos)
+    values ('dcr', p_origen_hmac, now(), 1);
+  end if;
+  return jsonb_build_object('resultado', 'registrado');
+end;
+$$;
+
+revoke all on function conector_prueba.callbacks_validos(text[])
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.purgar()
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.leer_cliente(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.leer_cliente(text) to conector_prueba_gestion;
+revoke all on function conector_prueba.guardar_cliente_cimd(text, text[])
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.guardar_cliente_cimd(text, text[]) to conector_prueba_gestion;
+revoke all on function conector_prueba.registrar_cliente_dcr(text, text, text[])
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.registrar_cliente_dcr(text, text, text[]) to conector_prueba_gestion;
+
+-- ---------------------------------------------------------------------
+-- T-107 (b): abrir_solicitud y activar. Los recuentos de intentos están dentro de la función que canjea.
+-- ---------------------------------------------------------------------
+
+-- origen_bloqueado(ámbito, origen_hmac) -> boolean. Auxiliar de lectura: ¿sigue bloqueado ese origen?
+create or replace function conector_prueba.origen_bloqueado(
+  p_ambito conector_prueba.ambito_limite,
+  p_origen_hmac text
+)
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  return exists (
+    select 1 from conector_prueba.limites_origen l
+     where l.ambito = p_ambito and l.origen_hmac = p_origen_hmac and l.bloqueado_hasta > now()
+  );
+end;
+$$;
+
+-- contar_fallo(ámbito, origen_hmac) -> boolean (¿queda bloqueado?). 5 fallos en una ventana de 15 minutos
+-- bloquean el origen 15 minutos. Un origen ya bloqueado no se vuelve a contar. La ventana se reinicia
+-- cuando pasan 15 minutos desde el primer fallo. Solo la llaman otras funciones de este esquema.
+-- La fila del origen se crea con `insert … on conflict (ambito, origen_hmac) do nothing` (nunca hay
+-- `unique_violation`: su DETAIL llevaría el HMAC del origen y la excepción abortaría la petición) y se
+-- bloquea con `select … for update` ANTES de evaluar el bloqueo: dos peticiones concurrentes del mismo origen
+-- se serializan sobre esa fila y la segunda ve el recuento de la primera. Se usa `do nothing` y no `do
+-- update`: el bloqueo ya lo toma el `for update` y así el comportamiento es idéntico con la fila nueva o
+-- ya existente. La carrera real se prueba en Nido (PRUEBA-008); PGlite solo la simula con un disparador.
+create or replace function conector_prueba.contar_fallo(
+  p_ambito conector_prueba.ambito_limite,
+  p_origen_hmac text
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_ventana timestamptz;
+  v_fallos smallint;
+  v_bloqueo timestamptz;
+begin
+  insert into conector_prueba.limites_origen (ambito, origen_hmac, ventana_desde, fallos)
+  values (p_ambito, p_origen_hmac, now(), 0)
+  on conflict (ambito, origen_hmac) do nothing;
+  select l.ventana_desde, l.fallos, l.bloqueado_hasta
+    into v_ventana, v_fallos, v_bloqueo
+    from conector_prueba.limites_origen l
+   where l.ambito = p_ambito and l.origen_hmac = p_origen_hmac
+     for update;
+  if not found then
+    -- Otra transacción acaba de purgar esa fila: ante la duda, se deniega (art. 3).
+    return true;
+  end if;
+  if v_bloqueo is not null and v_bloqueo > now() then
+    return true;
+  end if;
+  if v_ventana <= now() - interval '15 minutes' then
+    update conector_prueba.limites_origen l
+       set ventana_desde = now(), fallos = 1, bloqueado_hasta = null
+     where l.ambito = p_ambito and l.origen_hmac = p_origen_hmac;
+    return false;
+  end if;
+  v_fallos := least(v_fallos + 1, 1000);
+  if v_fallos >= 5 then
+    update conector_prueba.limites_origen l
+       set fallos = v_fallos, bloqueado_hasta = now() + interval '15 minutes'
+     where l.ambito = p_ambito and l.origen_hmac = p_origen_hmac;
+    return true;
+  end if;
+  update conector_prueba.limites_origen l
+     set fallos = v_fallos
+   where l.ambito = p_ambito and l.origen_hmac = p_origen_hmac;
+  return false;
+end;
+$$;
+
+-- abrir_solicitud(client_id, redirect_uri, desafio, recurso, state_hmac, cookie_hmac) ->
+-- {"resultado": "abierta", "solicitud": uuid} | {"resultado": "no_valida"}. Solicitud de 10 minutos. Todo se
+-- valida ANTES de insertar (en particular, un desafío PKCE de exactamente 43 caracteres base64url): lo que
+-- no vale es `no_valida`, sin excepción ni eco. El cliente debe ser conocido y vigente, y el callback, uno de
+-- los suyos (y por tanto de la lista). `state` y la cookie solo existen como HMAC.
+create or replace function conector_prueba.abrir_solicitud(
+  p_client_id text,
+  p_redirect_uri text,
+  p_desafio text,
+  p_recurso text,
+  p_state_hmac text,
+  p_cookie_hmac text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_id uuid;
+  v_cliente uuid;
+  v_origen conector_prueba.origen_cliente_oauth;
+  v_uris text[];
+  v_comprobado timestamptz;
+  v_creado timestamptz;
+  v_uso timestamptz;
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_client_id is null or char_length(p_client_id) > 300
+     or p_redirect_uri is null or char_length(p_redirect_uri) > 300
+     or p_desafio is null or char_length(p_desafio) <> 43 or p_desafio !~ '^[A-Za-z0-9_-]{43}$'
+     or p_recurso is null or char_length(p_recurso) > 300
+     or p_recurso !~ '^(https://[a-z0-9.-]{1,200}|http://localhost)(:[0-9]{1,5})?/api/mcp$'
+     or p_state_hmac is null or p_state_hmac !~ '^[0-9a-f]{64}$'
+     or p_cookie_hmac is null or p_cookie_hmac !~ '^[0-9a-f]{64}$' then
+    return jsonb_build_object('resultado', 'no_valida');
+  end if;
+
+  select c.id, c.origen, c.redirect_uris, c.comprobado_en, c.creado_en, c.ultimo_uso_en
+    into v_cliente, v_origen, v_uris, v_comprobado, v_creado, v_uso
+    from conector_prueba.clientes_oauth c
+   where c.client_id = p_client_id;
+  if not found
+     or (v_origen = 'dcr' and v_uso is null and v_creado <= now() - interval '24 hours')
+     or (v_origen = 'cimd' and (v_comprobado is null or v_comprobado > now()
+                                or v_comprobado <= now() - interval '1 hour'))
+     or not (p_redirect_uri = any (v_uris)) then
+    return jsonb_build_object('resultado', 'no_valida');
+  end if;
+
+  perform conector_prueba.purgar();
+  -- Tope global de solicitudes vigentes: quien conozca un cliente público no puede llenar la tabla. Al
+  -- superarlo, no_valida. Es un tope blando: peticiones simultáneas pueden pasarlo por unas pocas filas.
+  if (select count(*) from conector_prueba.solicitudes_autorizacion s where s.caduca_en > now()) >= 1000 then
+    return jsonb_build_object('resultado', 'no_valida');
+  end if;
+  begin
+    insert into conector_prueba.solicitudes_autorizacion
+      (cliente_oauth_id, redirect_uri, desafio_pkce, recurso, state_hmac, cookie_hmac, caduca_en)
+    values
+      (v_cliente, p_redirect_uri, p_desafio, p_recurso, p_state_hmac, p_cookie_hmac,
+       now() + interval '10 minutes')
+    returning id into v_id;
+  exception when check_violation then
+    return jsonb_build_object('resultado', 'no_valida');
+  end;
+  return jsonb_build_object('resultado', 'abierta', 'solicitud', v_id::text);
+end;
+$$;
+
+-- activar(solicitud, cookie_hmac, state_hmac, origen_hmac, codigo_hmac, autorizacion_hmac) ->
+-- {"resultado": "activada", "redirect_uri"} | solicitud_no_valida | origen_bloqueado | codigo_no_valido.
+-- En UNA transacción: solicitud (bloqueo de fila, misma cookie y mismo state, vigente), código (bloqueo de
+-- fila: un solo uso, vigente, de una licencia activa), conexión (el asistente sale del callback), código de
+-- autorización de 300 s. Si algo falla, no queda nada a medias; con un código no válido solo queda el
+-- recuento de intentos. Un origen bloqueado se rechaza sin evaluar ni consumir nada; una solicitud no válida
+-- no cuenta como intento.
+create or replace function conector_prueba.activar(
+  p_solicitud text,
+  p_cookie_hmac text,
+  p_state_hmac text,
+  p_origen_hmac text,
+  p_codigo_hmac text,
+  p_autorizacion_hmac text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_solicitud uuid;
+  v_cliente uuid;
+  v_redirect text;
+  v_cookie text;
+  v_state text;
+  v_caduca timestamptz;
+  v_codigo uuid;
+  v_licencia uuid;
+  v_conexion uuid;
+  v_bloqueo timestamptz;
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_origen_hmac is null or p_origen_hmac !~ '^[0-9a-f]{64}$' then
+    return jsonb_build_object('resultado', 'origen_bloqueado');
+  end if;
+  if p_solicitud is null or p_solicitud !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+     or p_cookie_hmac is null or p_cookie_hmac !~ '^[0-9a-f]{64}$'
+     or p_state_hmac is null or p_state_hmac !~ '^[0-9a-f]{64}$'
+     or p_codigo_hmac is null or p_codigo_hmac !~ '^[0-9a-f]{64}$'
+     or p_autorizacion_hmac is null or p_autorizacion_hmac !~ '^[0-9a-f]{64}$' then
+    return jsonb_build_object('resultado', 'solicitud_no_valida');
+  end if;
+
+  perform conector_prueba.purgar();
+  -- La fila del origen se crea primero (como en contar_fallo): un `select … for update` sobre una fila que aún
+  -- no existe no bloquea nada, y dos primeras peticiones del mismo origen no se serializarían.
+  insert into conector_prueba.limites_origen (ambito, origen_hmac, ventana_desde, fallos)
+  values ('activacion', p_origen_hmac, now(), 0)
+  on conflict (ambito, origen_hmac) do nothing;
+  -- Se bloquea la fila del origen (si existe) ANTES de evaluar si está bloqueado: peticiones concurrentes del
+  -- mismo origen se serializan y ninguna evalúa un código con el límite ya alcanzado por otra.
+  select l.bloqueado_hasta
+    into v_bloqueo
+    from conector_prueba.limites_origen l
+   where l.ambito = 'activacion' and l.origen_hmac = p_origen_hmac
+     for update;
+  if found and v_bloqueo > now() then
+    return jsonb_build_object('resultado', 'origen_bloqueado');
+  end if;
+
+  select s.id, s.cliente_oauth_id, s.redirect_uri, s.cookie_hmac, s.state_hmac, s.caduca_en
+    into v_solicitud, v_cliente, v_redirect, v_cookie, v_state, v_caduca
+    from conector_prueba.solicitudes_autorizacion s
+   where s.id = p_solicitud::uuid
+     for update;
+  if not found or v_cookie <> p_cookie_hmac or v_state <> p_state_hmac or v_caduca <= now() then
+    return jsonb_build_object('resultado', 'solicitud_no_valida');
+  end if;
+
+  select a.id, a.licencia_id
+    into v_codigo, v_licencia
+    from conector_prueba.codigos_activacion a
+    join conector_prueba.licencias l on l.id = a.licencia_id
+   where a.codigo_hmac = p_codigo_hmac
+     and a.usado_en is null
+     and a.caduca_en > now()
+     and l.estado = 'activa'
+     for update;
+  if not found then
+    perform conector_prueba.contar_fallo('activacion', p_origen_hmac);
+    return jsonb_build_object('resultado', 'codigo_no_valido');
+  end if;
+
+  begin
+    update conector_prueba.codigos_activacion set usado_en = now() where id = v_codigo;
+    insert into conector_prueba.conexiones (licencia_id, asistente)
+    values (v_licencia,
+            case v_redirect
+              when 'https://claude.ai/api/mcp/auth_callback' then 'claude'::conector_prueba.asistente
+              when 'https://chatgpt.com/connector_platform_oauth_redirect' then 'chatgpt'::conector_prueba.asistente
+              else 'otro'::conector_prueba.asistente end)
+    returning id into v_conexion;
+    insert into conector_prueba.codigos_autorizacion
+      (codigo_hmac, conexion_id, cliente_oauth_id, redirect_uri, desafio_pkce, recurso, caduca_en)
+    select p_autorizacion_hmac, v_conexion, s.cliente_oauth_id, s.redirect_uri, s.desafio_pkce, s.recurso,
+           now() + interval '300 seconds'
+      from conector_prueba.solicitudes_autorizacion s
+     where s.id = v_solicitud;
+    update conector_prueba.clientes_oauth set ultimo_uso_en = now() where id = v_cliente;
+    delete from conector_prueba.solicitudes_autorizacion where id = v_solicitud;
+  exception when unique_violation then
+    -- El subbloque se deshace entero: ni código consumido ni conexión.
+    return jsonb_build_object('resultado', 'solicitud_no_valida');
+  end;
+  return jsonb_build_object('resultado', 'activada', 'redirect_uri', v_redirect);
+end;
+$$;
+
+revoke all on function conector_prueba.origen_bloqueado(conector_prueba.ambito_limite, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.contar_fallo(conector_prueba.ambito_limite, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.abrir_solicitud(text, text, text, text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.abrir_solicitud(text, text, text, text, text, text)
+  to conector_prueba_gestion;
+revoke all on function conector_prueba.activar(text, text, text, text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.activar(text, text, text, text, text, text)
+  to conector_prueba_gestion;
+
+-- ---------------------------------------------------------------------
+-- T-107 (c): canjear_codigo y renovar. Los tokens llegan ya como HMAC (la app los sortea o los deriva); aquí
+-- solo se guardan. Acceso 300 s, renovación 14 días deslizantes, gracia 60 s.
+-- ---------------------------------------------------------------------
+
+-- canjear_codigo(codigo_hmac, client_id, redirect_uri, desafio, recurso, acceso_hmac, renovacion_hmac) ->
+-- {"resultado": "emitido", "expires_in": 300} | {"resultado": "no_valido"}. `desafio` es el S256 que la app
+-- calcula del verificador (el verificador no llega a la base de datos). El código sirve una vez: presentarlo
+-- de nuevo, aunque sea con datos erróneos, revoca su conexión (`reutilizacion`) y sus tokens y responde
+-- `no_valido`. Cliente, callback, desafío y recurso deben ser exactamente los de la solicitud. Todo o nada.
+create or replace function conector_prueba.canjear_codigo(
+  p_codigo_hmac text,
+  p_client_id text,
+  p_redirect_uri text,
+  p_desafio text,
+  p_recurso text,
+  p_acceso_hmac text,
+  p_renovacion_hmac text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_codigo uuid;
+  v_conexion uuid;
+  v_cliente uuid;
+  v_redirect text;
+  v_desafio text;
+  v_recurso text;
+  v_caduca timestamptz;
+  v_usado timestamptz;
+  v_cliente_pedido uuid;
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  if p_codigo_hmac is null or p_codigo_hmac !~ '^[0-9a-f]{64}$'
+     or p_acceso_hmac is null or p_acceso_hmac !~ '^[0-9a-f]{64}$'
+     or p_renovacion_hmac is null or p_renovacion_hmac !~ '^[0-9a-f]{64}$'
+     or p_acceso_hmac = p_renovacion_hmac
+     or p_client_id is null or char_length(p_client_id) > 300
+     or p_redirect_uri is null or char_length(p_redirect_uri) > 300
+     or p_desafio is null or char_length(p_desafio) <> 43
+     or p_recurso is null or char_length(p_recurso) > 300 then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  -- Orden de bloqueos, el de operar_revocar_conexion y cerrar_prueba: la conexión primero y luego sus tokens.
+  -- La conexión se conoce por una lectura sin bloqueo; el código se relee ya bloqueado.
+  select a.conexion_id into v_conexion
+    from conector_prueba.codigos_autorizacion a
+   where a.codigo_hmac = p_codigo_hmac;
+  if not found then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  perform 1 from conector_prueba.conexiones c where c.id = v_conexion for update;
+
+  select a.id, a.conexion_id, a.cliente_oauth_id, a.redirect_uri, a.desafio_pkce, a.recurso, a.caduca_en, a.usado_en
+    into v_codigo, v_conexion, v_cliente, v_redirect, v_desafio, v_recurso, v_caduca, v_usado
+    from conector_prueba.codigos_autorizacion a
+   where a.codigo_hmac = p_codigo_hmac
+     for update;
+  if not found then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  if v_usado is not null then
+    -- Reutilización: se revoca esa conexión (si no lo estaba ya, conserva su motivo) y todos sus tokens.
+    update conector_prueba.conexiones
+       set revocada_en = now(), motivo_revocacion = 'reutilizacion'
+     where id = v_conexion and revocada_en is null;
+    update conector_prueba.tokens set revocado_en = now() where conexion_id = v_conexion and revocado_en is null;
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  select c.id into v_cliente_pedido from conector_prueba.clientes_oauth c where c.client_id = p_client_id;
+  if v_cliente_pedido is null or v_cliente_pedido <> v_cliente
+     or v_redirect <> p_redirect_uri or v_desafio <> p_desafio or v_recurso <> p_recurso
+     or v_caduca <= now() then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  if not exists (
+    select 1
+      from conector_prueba.conexiones c
+      join conector_prueba.licencias l on l.id = c.licencia_id
+     where c.id = v_conexion and c.revocada_en is null and l.estado <> 'revocada'
+  ) then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  begin
+    update conector_prueba.codigos_autorizacion set usado_en = now() where id = v_codigo;
+    insert into conector_prueba.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+    values (v_conexion, 'acceso', p_acceso_hmac, v_recurso, now() + interval '300 seconds', v_cliente);
+    insert into conector_prueba.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+    values (v_conexion, 'renovacion', p_renovacion_hmac, v_recurso, now() + interval '14 days', v_cliente);
+    update conector_prueba.conexiones set ultimo_uso_en = now() where id = v_conexion;
+  exception when unique_violation then
+    return jsonb_build_object('resultado', 'no_valido');
+  end;
+  return jsonb_build_object('resultado', 'emitido', 'expires_in', 300);
+end;
+$$;
+
+-- renovar(presentado_hmac, client_id, recurso, sal, acceso_hmac, renovacion_hmac) -> jsonb:
+--   {"resultado": "rotado", "expires_in": 300}          vigente: guarda la sal, marca sustituido e inserta el par
+--   {"resultado": "repetido", "sal", "expires_in"}     sustituido hace 60 s o menos: la app deriva el MISMO par
+--   {"resultado": "reutilizado"}                        sustituido hace más de 60 s: revoca ESA conexión
+--   {"resultado": "no_valido"}                          desconocido, caducado, de otro tipo, cliente o recurso, o
+--                                                      de una conexión o licencia revocadas
+-- Bloquea la fila del token presentado: con varias peticiones a la vez, una rota y las demás repiten.
+-- Con la licencia suspendida se renueva (se sirve `suspendida`). La caducidad es deslizante: 14 días desde
+-- cada rotación. `repetido` no escribe nada.
+create or replace function conector_prueba.renovar(
+  p_presentado_hmac text,
+  p_client_id text,
+  p_recurso text,
+  p_sal text,
+  p_acceso_hmac text,
+  p_renovacion_hmac text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_token uuid;
+  v_conexion uuid;
+  v_cliente uuid;
+  v_recurso text;
+  v_caduca timestamptz;
+  v_sustituido timestamptz;
+  v_sal text;
+  v_revocado timestamptz;
+  v_cliente_pedido uuid;
+  v_nuevo uuid;
+  v_expira timestamptz;
+begin
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  if p_presentado_hmac is null or p_presentado_hmac !~ '^[0-9a-f]{64}$'
+     or p_client_id is null or char_length(p_client_id) > 300
+     or p_recurso is null or char_length(p_recurso) > 300
+     or p_sal is null or p_sal !~ '^[A-Za-z0-9_-]{22}$'
+     or p_acceso_hmac is null or p_acceso_hmac !~ '^[0-9a-f]{64}$'
+     or p_renovacion_hmac is null or p_renovacion_hmac !~ '^[0-9a-f]{64}$'
+     or p_acceso_hmac = p_renovacion_hmac then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  -- Orden de bloqueos, el de operar_revocar_conexion y cerrar_prueba: la conexión primero y luego sus tokens.
+  -- La conexión se conoce por una lectura sin bloqueo; el token se relee ya bloqueado.
+  select t.conexion_id into v_conexion
+    from conector_prueba.tokens t
+   where t.token_hmac = p_presentado_hmac and t.tipo = 'renovacion';
+  if not found then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  perform 1 from conector_prueba.conexiones c where c.id = v_conexion for update;
+
+  select t.id, t.conexion_id, t.cliente_oauth_id, t.recurso, t.caduca_en, t.sustituido_en, t.sal, t.revocado_en
+    into v_token, v_conexion, v_cliente, v_recurso, v_caduca, v_sustituido, v_sal, v_revocado
+    from conector_prueba.tokens t
+   where t.token_hmac = p_presentado_hmac and t.tipo = 'renovacion'
+     for update;
+  if not found or v_revocado is not null or v_cliente is null or v_recurso <> p_recurso then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  select c.id into v_cliente_pedido from conector_prueba.clientes_oauth c where c.client_id = p_client_id;
+  if v_cliente_pedido is null or v_cliente_pedido <> v_cliente then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  if not exists (
+    select 1
+      from conector_prueba.conexiones c
+      join conector_prueba.licencias l on l.id = c.licencia_id
+     where c.id = v_conexion and c.revocada_en is null and l.estado <> 'revocada'
+  ) then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+
+  if v_sustituido is null then
+    if v_caduca <= now() then
+      return jsonb_build_object('resultado', 'no_valido');
+    end if;
+    begin
+      insert into conector_prueba.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+      values (v_conexion, 'acceso', p_acceso_hmac, v_recurso, now() + interval '300 seconds', v_cliente);
+      insert into conector_prueba.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+      values (v_conexion, 'renovacion', p_renovacion_hmac, v_recurso, now() + interval '14 days', v_cliente)
+      returning id into v_nuevo;
+      update conector_prueba.tokens
+         set sal = p_sal, sustituido_por = v_nuevo, sustituido_en = now()
+       where id = v_token;
+      update conector_prueba.conexiones set ultimo_uso_en = now() where id = v_conexion;
+    exception when unique_violation then
+      return jsonb_build_object('resultado', 'no_valido');
+    end;
+    return jsonb_build_object('resultado', 'rotado', 'expires_in', 300);
+  end if;
+
+  if v_sustituido + interval '60 seconds' >= now() then
+    -- Gracia: el acceso del par emitido en esa rotación (mismo instante de creación) dice cuánto le queda.
+    select a.caduca_en into v_expira
+      from conector_prueba.tokens a
+     where a.conexion_id = v_conexion and a.tipo = 'acceso' and a.creado_en = v_sustituido
+       and a.revocado_en is null
+     limit 1;
+    if v_expira is null or v_sal is null then
+      return jsonb_build_object('resultado', 'no_valido');
+    end if;
+    return jsonb_build_object(
+      'resultado', 'repetido',
+      'sal', v_sal,
+      'expires_in', greatest(0, ceil(extract(epoch from (v_expira - now())))::integer));
+  end if;
+
+  update conector_prueba.conexiones
+     set revocada_en = now(), motivo_revocacion = 'reutilizacion'
+   where id = v_conexion and revocada_en is null;
+  update conector_prueba.tokens set revocado_en = now() where conexion_id = v_conexion and revocado_en is null;
+  return jsonb_build_object('resultado', 'reutilizado');
+end;
+$$;
+
+revoke all on function conector_prueba.canjear_codigo(text, text, text, text, text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.canjear_codigo(text, text, text, text, text, text, text)
+  to conector_prueba_gestion;
+revoke all on function conector_prueba.renovar(text, text, text, text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.renovar(text, text, text, text, text, text)
+  to conector_prueba_gestion;
+
+-- ---------------------------------------------------------------------
+-- T-107 (d): operar_*, operar_contar_fallo y cerrar_prueba (estado terminal). La credencial de operación
+-- (`hia_op_`) se comprueba en la app, en tiempo constante, contra su huella; la base de datos no guarda
+-- ninguna. Aquí se limita por origen (5 fallos en 15 min bloquean 15 min) y se hace cumplir el cierre.
+-- Ninguna recibe un identificador de licencia: eligen entre A y B. `p_conexion` de operar_revocar_conexion es el
+-- UUID de conexión que dio `operar_listar_conexiones` (REQ-017), no una autoridad: no sale de ningún token.
+-- ---------------------------------------------------------------------
+
+-- Tras el cierre ninguna licencia puede crearse ni reactivarse, tampoco a mano ni con la semilla.
+create or replace function conector_prueba.impedir_licencias_tras_cierre()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  if new.estado <> 'revocada' and exists (select 1 from conector_prueba.cierre) then
+    raise exception 'conector_prueba: la prueba esta cerrada (cierre); no se crean ni reactivan licencias';
+  end if;
+  return new;
+end;
+$$;
+drop trigger if exists licencias_tras_cierre on conector_prueba.licencias;
+create trigger licencias_tras_cierre
+  before insert or update on conector_prueba.licencias
+  for each row execute function conector_prueba.impedir_licencias_tras_cierre();
+
+-- prueba_cerrada() -> boolean. Auxiliar: ¿se cerró la prueba (`cerrar_prueba`)? Es terminal, sin vuelta.
+create or replace function conector_prueba.prueba_cerrada()
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  return exists (select 1 from conector_prueba.cierre);
+end;
+$$;
+
+-- operar_puerta(origen_hmac) -> text. Puerta común de las operaciones: nula si pasa; `origen_bloqueado` si el
+-- origen no es un HMAC o está bloqueado. Todas las `operar_*` (salvo `operar_contar_fallo`) y `cerrar_prueba`
+-- la llaman con la misma línea.
+create or replace function conector_prueba.operar_puerta(p_origen_hmac text)
+returns text
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  if p_origen_hmac is null or p_origen_hmac !~ '^[0-9a-f]{64}$'
+     or conector_prueba.origen_bloqueado('operacion', p_origen_hmac) then
+    return 'origen_bloqueado';
+  end if;
+  return null;
+end;
+$$;
+
+-- operar_contar_fallo(origen_hmac) -> {"resultado": "contado" | "bloqueado" | "invalido"}. La app la llama
+-- cuando la credencial de operación no coincide. Funciona también tras el cierre.
+create or replace function conector_prueba.operar_contar_fallo(p_origen_hmac text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+begin
+  if p_origen_hmac is null or p_origen_hmac !~ '^[0-9a-f]{64}$' then
+    return jsonb_build_object('resultado', 'invalido');
+  end if;
+  perform conector_prueba.purgar();
+  if conector_prueba.contar_fallo('operacion', p_origen_hmac) then
+    return jsonb_build_object('resultado', 'bloqueado');
+  end if;
+  return jsonb_build_object('resultado', 'contado');
+end;
+$$;
+
+-- operar_generar_codigo(origen_hmac, tipo A|B, codigo_hmac) ->
+-- generado | no_valido | licencia_desconocida | licencia_no_activa | origen_bloqueado | cerrada.
+-- El código lo sortea la app y se muestra una vez en la terminal de la persona; aquí solo su HMAC, 10 min.
+create or replace function conector_prueba.operar_generar_codigo(p_origen_hmac text, p_tipo text, p_codigo_hmac text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_licencia uuid;
+  v_estado conector_prueba.estado_licencia;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_tipo is null or p_tipo not in ('A', 'B') or p_codigo_hmac is null or p_codigo_hmac !~ '^[0-9a-f]{64}$' then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  select l.id, l.estado
+    into v_licencia, v_estado
+    from conector_prueba.licencias l
+   where l.tipo = p_tipo::conector_prueba.tipo_licencia and l.estado <> 'revocada'
+   order by l.creada_en desc
+   limit 1;
+  if not found then
+    return jsonb_build_object('resultado', 'licencia_desconocida');
+  end if;
+  if v_estado <> 'activa' then
+    return jsonb_build_object('resultado', 'licencia_no_activa');
+  end if;
+  begin
+    insert into conector_prueba.codigos_activacion (licencia_id, codigo_hmac, caduca_en)
+    values (v_licencia, p_codigo_hmac, now() + interval '10 minutes');
+  exception when unique_violation then
+    return jsonb_build_object('resultado', 'no_valido');
+  end;
+  return jsonb_build_object('resultado', 'generado');
+end;
+$$;
+
+-- operar_suspender_licencia(origen_hmac, tipo A|B) -> suspendida | sin_cambio | no_valido |
+-- licencia_desconocida | origen_bloqueado | cerrada.
+create or replace function conector_prueba.operar_suspender_licencia(p_origen_hmac text, p_tipo text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_licencia uuid;
+  v_estado conector_prueba.estado_licencia;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_tipo is null or p_tipo not in ('A', 'B') then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  select l.id, l.estado
+    into v_licencia, v_estado
+    from conector_prueba.licencias l
+   where l.tipo = p_tipo::conector_prueba.tipo_licencia and l.estado <> 'revocada'
+   order by l.creada_en desc
+   limit 1
+     for update;
+  if not found then
+    return jsonb_build_object('resultado', 'licencia_desconocida');
+  end if;
+  if v_estado = 'suspendida' then
+    return jsonb_build_object('resultado', 'sin_cambio');
+  end if;
+  update conector_prueba.licencias set estado = 'suspendida' where id = v_licencia;
+  return jsonb_build_object('resultado', 'suspendida');
+end;
+$$;
+
+-- operar_reactivar_licencia(origen_hmac, tipo A|B) -> reactivada | sin_cambio | no_valido |
+-- licencia_desconocida | origen_bloqueado | cerrada.
+create or replace function conector_prueba.operar_reactivar_licencia(p_origen_hmac text, p_tipo text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_licencia uuid;
+  v_estado conector_prueba.estado_licencia;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_tipo is null or p_tipo not in ('A', 'B') then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  select l.id, l.estado
+    into v_licencia, v_estado
+    from conector_prueba.licencias l
+   where l.tipo = p_tipo::conector_prueba.tipo_licencia and l.estado <> 'revocada'
+   order by l.creada_en desc
+   limit 1
+     for update;
+  if not found then
+    return jsonb_build_object('resultado', 'licencia_desconocida');
+  end if;
+  if v_estado = 'activa' then
+    return jsonb_build_object('resultado', 'sin_cambio');
+  end if;
+  update conector_prueba.licencias set estado = 'activa' where id = v_licencia;
+  return jsonb_build_object('resultado', 'reactivada');
+end;
+$$;
+
+-- operar_crear_orden(origen_hmac, tipo A|B, orden pausar|reanudar) ->
+-- {"resultado": "creada", "orden": uuid, "anuladas": n} | no_valido | licencia_desconocida | origen_bloqueado |
+-- cerrada. Anula las órdenes no confirmadas de esa licencia (pendientes o entregadas) y crea una pendiente.
+create or replace function conector_prueba.operar_crear_orden(p_origen_hmac text, p_tipo text, p_orden text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_licencia uuid;
+  v_anuladas integer;
+  v_nueva uuid;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_tipo is null or p_tipo not in ('A', 'B') or p_orden is null or p_orden not in ('pausar', 'reanudar') then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  select l.id
+    into v_licencia
+    from conector_prueba.licencias l
+   where l.tipo = p_tipo::conector_prueba.tipo_licencia and l.estado <> 'revocada'
+   order by l.creada_en desc
+   limit 1
+     for update;
+  if not found then
+    return jsonb_build_object('resultado', 'licencia_desconocida');
+  end if;
+  update conector_prueba.ordenes
+     set estado = 'anulada', anulada_en = now()
+   where licencia_id = v_licencia and estado in ('pendiente', 'entregada');
+  get diagnostics v_anuladas = row_count;
+  insert into conector_prueba.ordenes (licencia_id, tipo)
+  values (v_licencia, p_orden::conector_prueba.tipo_orden)
+  returning id into v_nueva;
+  return jsonb_build_object('resultado', 'creada', 'orden', v_nueva::text, 'anuladas', v_anuladas);
+end;
+$$;
+
+-- operar_listar_conexiones(origen_hmac) -> {"resultado": "listado", "conexiones": [...]}. Sin ningún secreto:
+-- identificador, licencia (A o B), asistente, fechas y motivo. Disponible tras el cierre.
+create or replace function conector_prueba.operar_listar_conexiones(p_origen_hmac text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_lista jsonb;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  select coalesce(jsonb_agg(jsonb_build_object(
+           'id', c.id::text,
+           'licencia', l.tipo::text,
+           'asistente', c.asistente::text,
+           'creada_en', c.creada_en,
+           'ultimo_uso_en', c.ultimo_uso_en,
+           'revocada_en', c.revocada_en,
+           'motivo', c.motivo_revocacion::text) order by c.creada_en, c.id), '[]'::jsonb)
+    into v_lista
+    from conector_prueba.conexiones c
+    join conector_prueba.licencias l on l.id = c.licencia_id;
+  return jsonb_build_object('resultado', 'listado', 'conexiones', v_lista);
+end;
+$$;
+
+-- operar_revocar_conexion(origen_hmac, conexion) -> revocada | sin_cambio | conexion_desconocida | origen_bloqueado |
+-- cerrada. Revoca solo esa conexión (motivo `operador`) y sus tokens. Un identificador mal formado o
+-- inexistente es `conexion_desconocida`, sin eco.
+create or replace function conector_prueba.operar_revocar_conexion(p_origen_hmac text, p_conexion text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_conexion uuid;
+  v_revocada timestamptz;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'cerrada');
+  end if;
+  if p_conexion is null or p_conexion !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then
+    return jsonb_build_object('resultado', 'conexion_desconocida');
+  end if;
+  select c.id, c.revocada_en
+    into v_conexion, v_revocada
+    from conector_prueba.conexiones c
+   where c.id = p_conexion::uuid
+     for update;
+  if not found then
+    return jsonb_build_object('resultado', 'conexion_desconocida');
+  end if;
+  if v_revocada is not null then
+    return jsonb_build_object('resultado', 'sin_cambio');
+  end if;
+  update conector_prueba.conexiones
+     set revocada_en = now(), motivo_revocacion = 'operador'
+   where id = v_conexion;
+  update conector_prueba.tokens set revocado_en = now() where conexion_id = v_conexion and revocado_en is null;
+  return jsonb_build_object('resultado', 'revocada');
+end;
+$$;
+
+-- operar_resumen(origen_hmac) -> recuentos cerrados, protocolos y percentil 95 (ms) por herramienta.
+-- Ningún valor recibido. Disponible tras el cierre.
+create or replace function conector_prueba.operar_resumen(p_origen_hmac text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_resumen jsonb;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  select jsonb_build_object(
+    'resultado', 'resumen',
+    'cerrada', conector_prueba.prueba_cerrada(),
+    'licencias', (select coalesce(jsonb_agg(jsonb_build_object('tipo', l.tipo::text, 'estado', l.estado::text)
+                                            order by l.tipo, l.creada_en), '[]'::jsonb)
+                    from conector_prueba.licencias l),
+    'conexiones', (select jsonb_build_object('total', count(*),
+                                             'activas', count(*) filter (where c.revocada_en is null),
+                                             'revocadas', count(*) filter (where c.revocada_en is not null))
+                     from conector_prueba.conexiones c),
+    'ordenes', (select jsonb_build_object('pendiente', count(*) filter (where o.estado = 'pendiente'),
+                                          'entregada', count(*) filter (where o.estado = 'entregada'),
+                                          'confirmada', count(*) filter (where o.estado = 'confirmada'),
+                                          'anulada', count(*) filter (where o.estado = 'anulada'))
+                  from conector_prueba.ordenes o),
+    'ejecuciones', (select jsonb_build_object('total', count(*),
+                                              'cerradas', count(*) filter (where e.cerrada_en is not null))
+                      from conector_prueba.ejecuciones e),
+    'informes', (select count(*) from conector_prueba.informes i),
+    'sucesos', (select jsonb_build_object('total', count(*),
+                                          'correcto', count(*) filter (where s.resultado = 'correcto'),
+                                          'rechazado', count(*) filter (where s.resultado = 'rechazado'),
+                                          'error', count(*) filter (where s.resultado = 'error'))
+                  from conector_prueba.sucesos s),
+    'protocolos', (select jsonb_build_object('2025-11-25', count(*) filter (where s.protocolo = '2025-11-25'),
+                                             '2026-07-28', count(*) filter (where s.protocolo = '2026-07-28'),
+                                             'otra', count(*) filter (where s.protocolo = 'otra'))
+                     from conector_prueba.sucesos s),
+    'p95_ms', (select jsonb_build_object(
+                 'obtener_instrucciones',
+                 round(percentile_cont(0.95) within group (order by s.duracion_ms)
+                       filter (where s.herramienta = 'obtener_instrucciones'))::integer,
+                 'enviar_informe',
+                 round(percentile_cont(0.95) within group (order by s.duracion_ms)
+                       filter (where s.herramienta = 'enviar_informe'))::integer,
+                 'confirmar_orden',
+                 round(percentile_cont(0.95) within group (order by s.duracion_ms)
+                       filter (where s.herramienta = 'confirmar_orden'))::integer)
+                 from conector_prueba.sucesos s))
+    into v_resumen;
+  return v_resumen;
+end;
+$$;
+
+-- operar_exportar_sucesos(origen_hmac, dia 'AAAA-MM-DD') -> {"resultado": "exportado", "sucesos": [...]} |
+-- no_valido. Día en UTC; solo la forma cerrada de `sucesos`. Disponible tras el cierre.
+create or replace function conector_prueba.operar_exportar_sucesos(p_origen_hmac text, p_dia text)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+  v_dia date;
+  v_lista jsonb;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  if p_dia is null or p_dia !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then
+    return jsonb_build_object('resultado', 'no_valido');
+  end if;
+  begin
+    v_dia := p_dia::date;
+  exception when others then
+    return jsonb_build_object('resultado', 'no_valido');
+  end;
+  select coalesce(jsonb_agg(jsonb_build_object(
+           'momento', s.momento,
+           'ruta', s.ruta,
+           'herramienta', s.herramienta,
+           'resultado', s.resultado::text,
+           'codigo', s.codigo,
+           'duracion_ms', s.duracion_ms,
+           'protocolo', s.protocolo,
+           'asistente', s.asistente::text) order by s.id), '[]'::jsonb)
+    into v_lista
+    from conector_prueba.sucesos s
+   where s.momento >= (v_dia::timestamp at time zone 'UTC')
+     and s.momento < ((v_dia + 1)::timestamp at time zone 'UTC');
+  return jsonb_build_object('resultado', 'exportado', 'sucesos', v_lista);
+end;
+$$;
+
+-- cerrar_prueba(origen_hmac) -> prueba_cerrada | ya_cerrada | origen_bloqueado. TERMINAL, sin vuelta (RD-076,
+-- M-5): deja constancia en `cierre`, revoca todas las licencias, conexiones y tokens e invalida los códigos
+-- sin usar. Desde entonces generar, activar, abrir solicitud, canjear, renovar, validar y las operaciones de
+-- cambio se rechazan; solo `operar_resumen`, `operar_listar_conexiones` y `operar_exportar_sucesos`
+-- responden. Ningún trigger deja reactivar o crear licencias. Ya revocadas conservan su motivo.
+create or replace function conector_prueba.cerrar_prueba(p_origen_hmac text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog, pg_temp
+as $$
+declare
+  v_puerta text;
+begin
+  v_puerta := conector_prueba.operar_puerta(p_origen_hmac);
+  if v_puerta is not null then
+    return jsonb_build_object('resultado', v_puerta);
+  end if;
+  perform pg_advisory_xact_lock(hashtext('conector_prueba.cierre'));
+  if conector_prueba.prueba_cerrada() then
+    return jsonb_build_object('resultado', 'ya_cerrada');
+  end if;
+  insert into conector_prueba.cierre (id, cerrado_en) values (true, now());
+  update conector_prueba.licencias set estado = 'revocada' where estado <> 'revocada';
+  update conector_prueba.conexiones
+     set revocada_en = now(), motivo_revocacion = 'cierre'
+   where revocada_en is null;
+  update conector_prueba.tokens set revocado_en = now() where revocado_en is null;
+  update conector_prueba.codigos_activacion set usado_en = now() where usado_en is null;
+  update conector_prueba.codigos_autorizacion set usado_en = now() where usado_en is null;
+  delete from conector_prueba.solicitudes_autorizacion;
+  return jsonb_build_object('resultado', 'prueba_cerrada');
+end;
+$$;
+
+revoke all on function conector_prueba.impedir_licencias_tras_cierre()
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.prueba_cerrada()
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.operar_puerta(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+revoke all on function conector_prueba.operar_contar_fallo(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_contar_fallo(text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_generar_codigo(text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_generar_codigo(text, text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_suspender_licencia(text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_suspender_licencia(text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_reactivar_licencia(text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_reactivar_licencia(text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_crear_orden(text, text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_crear_orden(text, text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_listar_conexiones(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_listar_conexiones(text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_revocar_conexion(text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_revocar_conexion(text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_resumen(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_resumen(text) to conector_prueba_gestion;
+revoke all on function conector_prueba.operar_exportar_sucesos(text, text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.operar_exportar_sucesos(text, text) to conector_prueba_gestion;
+revoke all on function conector_prueba.cerrar_prueba(text)
+  from public, anon, authenticated, service_role, conector_prueba_mcp, conector_prueba_gestion;
+grant execute on function conector_prueba.cerrar_prueba(text) to conector_prueba_gestion;
 
 commit;

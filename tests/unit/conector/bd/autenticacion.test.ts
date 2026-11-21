@@ -5,7 +5,17 @@
 // No sustituye a Postgres real de Supabase ni a pgTAP (CI).
 import { beforeAll, describe, expect, it } from "vitest";
 import type { BdApoyo } from "../../../conector/apoyo/index";
-import { abrir, cerrarAlFinal, ESQUEMA, estado, fabrica, RECURSO, ROL_MCP, una } from "./comun";
+import {
+  abrir,
+  cerrarAlFinal,
+  clienteSemilla,
+  ESQUEMA,
+  estado,
+  fabrica,
+  RECURSO,
+  ROL_MCP,
+  una,
+} from "./comun";
 
 cerrarAlFinal();
 
@@ -111,9 +121,9 @@ async function preparar(bd: BdApoyo, c: Caso): Promise<Preparado> {
   const tipo = c.tipo ?? "acceso";
   const token = fabrica.token(tipo);
   await bd.db.query(
-    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, creado_en, caduca_en, revocado_en)
+    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, creado_en, caduca_en, revocado_en, cliente_oauth_id)
      values ($1, $2, $3, $4, now() + $5::interval, now() + $6::interval,
-             case when $7::boolean then now() else null end)`,
+             case when $7::boolean then now() else null end, $8)`,
     [
       conexionId,
       tipo,
@@ -122,6 +132,7 @@ async function preparar(bd: BdApoyo, c: Caso): Promise<Preparado> {
       c.creado ?? "0 seconds",
       c.caduca ?? "300 seconds",
       c.revocado === true,
+      await clienteSemilla(bd),
     ],
   );
   const { id: ejecucion } = await una<{ id: string }>(

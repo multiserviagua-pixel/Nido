@@ -39,6 +39,21 @@ afterAll(async () => {
 const una = async <T>(bd: BdApoyo, sql: string, p: unknown[] = []) =>
   (await bd.db.query<T>(sql, p)).rows[0]!;
 
+/** Un cliente OAuth ficticio y estable: todo token tiene cliente (`tokens.cliente_oauth_id` es not null). */
+async function clienteSemilla(bd: BdApoyo): Promise<string> {
+  await bd.db.query(
+    `insert into ${ESQUEMA}.clientes_oauth (client_id, origen, redirect_uris, comprobado_en)
+     values ('https://semilla.test/oauth', 'cimd', array['https://claude.ai/api/mcp/auth_callback'], now())
+     on conflict (client_id) do nothing`,
+  );
+  return (
+    await una<{ id: string }>(
+      bd,
+      `select id::text from ${ESQUEMA}.clientes_oauth where client_id = 'https://semilla.test/oauth'`,
+    )
+  ).id;
+}
+
 interface Sembrado {
   licenciaId: string;
   conexionId: string;
@@ -63,9 +78,9 @@ async function sembrar(
   );
   const acceso = fabrica.token("acceso");
   await bd.db.query(
-    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
-     values ($1, 'acceso', $2, $3, now() + interval '300 seconds')`,
-    [conexionId, acceso.hmac, RECURSO],
+    `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+     values ($1, 'acceso', $2, $3, now() + interval '300 seconds', $4)`,
+    [conexionId, acceso.hmac, RECURSO, await clienteSemilla(bd)],
   );
   return { licenciaId, conexionId, acceso };
 }
@@ -130,15 +145,15 @@ describe("T-103 (c): validar_acceso (PRUEBA-011, parte BD, con reloj)", () => {
     const almacen = await almacenMcp(bd);
     const futuro = fabrica.token("acceso");
     await bd.db.query(
-      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, creado_en, caduca_en)
-       values ($1, 'acceso', $2, $3, now() + interval '1 hour', now() + interval '65 minutes')`,
-      [a.conexionId, futuro.hmac, RECURSO],
+      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, creado_en, caduca_en, cliente_oauth_id)
+       values ($1, 'acceso', $2, $3, now() + interval '1 hour', now() + interval '65 minutes', $4)`,
+      [a.conexionId, futuro.hmac, RECURSO, await clienteSemilla(bd)],
     );
     const largo = fabrica.token("acceso");
     await bd.db.query(
-      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
-       values ($1, 'acceso', $2, $3, now() + interval '1 day')`,
-      [a.conexionId, largo.hmac, RECURSO],
+      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+       values ($1, 'acceso', $2, $3, now() + interval '1 day', $4)`,
+      [a.conexionId, largo.hmac, RECURSO, await clienteSemilla(bd)],
     );
     expect(await almacen.llamar("validar_acceso", [futuro.hmac, RECURSO]), "aún no emitido").toBe(
       false,
@@ -155,9 +170,9 @@ describe("T-103 (c): validar_acceso (PRUEBA-011, parte BD, con reloj)", () => {
     const a = await sembrar(bd, "A");
     const renov = fabrica.token("renovacion");
     await bd.db.query(
-      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en)
-       values ($1, 'renovacion', $2, $3, now() + interval '14 days')`,
-      [a.conexionId, renov.hmac, RECURSO],
+      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+       values ($1, 'renovacion', $2, $3, now() + interval '14 days', $4)`,
+      [a.conexionId, renov.hmac, RECURSO, await clienteSemilla(bd)],
     );
     const almacen = await almacenMcp(bd);
     const casos: [string, unknown[]][] = [
@@ -273,10 +288,25 @@ describe("T-103 (c): ninguna función del esquema recibe un identificador de cli
     expect(filas.map((f) => f.nombre)).toEqual(
       expect.arrayContaining(["validar_acceso", "registrar_suceso"]),
     );
+    // Única excepción, nominal y justificada (REQ-017): `operar_revocar_conexion(p_origen_hmac, p_conexion)`
+    // recibe, como TEXTO, el identificador de conexión que antes dio `operar_listar_conexiones`. No es una
+    // autoridad: no sale de ningún token, solo elige UNA conexión para que la persona operadora la revoque (tras
+    // la credencial de operación y la puerta por origen), y revocar es siempre restrictivo. Cualquier otra
+    // función o parámetro con ese nombre sigue prohibido.
+    const EXCEPCION = { funcion: "operar_revocar_conexion", parametro: "p_conexion" };
     for (const f of filas) {
-      expect((f.args ?? []).join(","), f.nombre).not.toMatch(/cliente|licencia|conexion/);
+      const args = (f.args ?? []).filter(
+        (a) => !(f.nombre === EXCEPCION.funcion && a === EXCEPCION.parametro),
+      );
+      expect(args.join(","), f.nombre).not.toMatch(/cliente|licencia|conexion/);
       expect(f.tipos, f.nombre).not.toMatch(/uuid/);
     }
+    const revocar = filas.find((f) => f.nombre === EXCEPCION.funcion)!;
+    expect(revocar.args, "la excepción es exactamente ese parámetro, de texto").toEqual([
+      "p_origen_hmac",
+      EXCEPCION.parametro,
+    ]);
+    expect(revocar.tipos).toBe("p_origen_hmac text, p_conexion text");
   });
 
   it("todas las funciones security definer fijan search_path = pg_catalog, pg_temp y califican sus tablas", async () => {
