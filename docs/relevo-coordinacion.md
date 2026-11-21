@@ -29,6 +29,8 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 
 - **D-040 (21/11, 20:20):** constitución 1.5 (nota del artículo 2) y respuestas del responsable a A-1, A-4, A-9, A-10, A-11 y A-12 de la 022 (c112d71). Al relanzar o encargar a Fase 3 g, indicarle D-039 y D-040. **A-12, pendiente de la coordinación en T-114:** al ejecutar el SQL de T-114 en `Nido`, añadir por rol (`conector_prueba_mcp` y `conector_prueba_gestion`) `alter role … set log_min_messages = 'panic'`, `log_min_error_statement = 'panic'`, `log_parameter_max_length = 0` y `log_parameter_max_length_on_error = 0`, y comprobar en `pg_roles.rolconfig` (a nivel de base de datos Supabase lo deniega; detalle en `specs/022-…/aclaraciones.md`).
 
+- **Noche del 21 al 22/11:** el responsable se fue a dormir con estas palabras: «Voy a dormir, tienes todo autorizado hasta las 8 de mañana». La coordinación sigue vigilando y relanzando chats. Se mantiene el equipo despierto hasta las 8:15 con un proceso en segundo plano (`despierto.ps1` en la carpeta temporal; no cambia ajustes del sistema). Siguen reservados los secretos, las cuentas y el gasto: los verificadores de contraseñas de T-114 esperan al responsable.
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
