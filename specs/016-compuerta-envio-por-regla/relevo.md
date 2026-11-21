@@ -6,41 +6,50 @@ Actualizado: 21/11/2026 · Orquestador del carril B2 (documentación del envío 
 
 | Paso | Función | Estado |
 | --- | --- | --- |
-| 1 | 016 compuerta | **APROBADA 21/11/2026 (D-036).** 25 REQ, 28 CA. Auditor: vuelta 1 APTO CON CONDICIONES (5 MAYOR corregidos), vuelta 2 APTO |
-| 2 | 017 vía protegida del dueño | **APROBADA 21/11/2026 (D-036).** 21 REQ, 20 CA, 24,6 KB. Auditor: 4 vueltas, última APTO CON CONDICIONES sin MAYOR |
-| 3 | 018 aprendizaje de estilo (carpeta `018-aprendizaje-estilo`) | **APROBADA 21/11/2026 (D-036).** 20 REQ, 20 CA, 23,4 KB. Auditor: 2 vueltas, última APTO CON CONDICIONES sin MAYOR. **Aceptación del riesgo residual PENDIENTE del responsable** |
-| 4 | Verificación de Gmail y Outlook (arquitecto, `verificar-decision`, 21/11/2026) | **HECHA**: `verificacion-gmail-outlook.md`. Gmail viable con restricciones y hoy sin activación posible; Outlook.com no viable; Microsoft 365 no viable por ahora. **Choca con las tres especificaciones aprobadas (D1 a D7): decide la coordinación** |
+| Enmienda 1 | 016 compuerta | **PROPUESTA (P0 de la enmienda NO abierta).** 27 REQ, 30 CA. Auditor: vuelta 1 NO APTO (1 BLOQUEANTE, 4 MAYOR, corregidos); vuelta 2 APTO CON CONDICIONES con **2 MAYOR nuevos** (M-1, M-2) |
+| Enmienda 1 | 017 vía protegida | **PROPUESTA.** 24 REQ, 23 CA. Vuelta 2: APTO CON CONDICIONES, 2 MENOR; depende de cerrar M-1 de la 016 |
+| Enmienda 1 | 018 aprendizaje de estilo | **PROPUESTA.** 21 REQ, 21 CA. Vuelta 2: APTO, 2 MENOR. Aceptación del riesgo residual pendiente del responsable |
+| Piloto | `piloto-gmail.md` (arquitecto) | **ESCRITO, sin ejecutar** (todas las pruebas NO EJECUTADA). Pendiente de comprobarlo con el comprobador y de ajustarlo si cambia la enmienda |
 
-## Resultado de la verificación (D1 a D7: decide la coordinación, con dictamen del auditor-seguridad)
+Las aprobaciones de 21/11/2026 (D-036) de las versiones anteriores siguen en el historial; la enmienda las reabre hasta nueva P0. Commit e063e08 (enmiendas y dictámenes).
 
-- **D1.** La 017 exige presencia del dueño que el navegador del asistente no aporte para activar y apagar el filtro; Google no documenta reautenticación forzada ni nominativa para terceros. En Gmail la compuerta no se puede activar hasta decidir si un código de un solo uso del móvil (HMAC en el código) cuenta como presencia.
-- **D2.** Contacto previo (REQ-002 de la 016): la etiqueta SENT se pone también a lo insertado, a lo enviado por otras aplicaciones y desde la web; ningún campo dice quién lo escribió; con «si no se puede distinguir, no cuenta» no habría envíos. Además `gmail.modify` permite insertar mensajes con cabeceras de autenticación falsas.
-- **D3.** Aviso y resumen en forma de correo no quedan fuera del alcance del agente (papelera, archivo, filtros). Solo las propiedades del script, vistas en una aplicación web, lo están. ¿Cumple «deja al dueño» una página que el dueño abre, o rige P-15 (no se ofrece envío)?
-- **D4.** «Fijada a una versión» depende de que nadie más edite el proyecto: compartirlo da edición; el alcance `drive` de ChatGPT comparte y borra; Claude muestra `share_file` y `trash_file` que Google no documenta.
-- **D5.** Sin compuerta en Outlook.com; Microsoft 365 solo con otra verificación (Power Automate premium o Azure del cliente).
-- **D6.** La 018 choca con los mismos límites (quién escribió, quién cambió una etiqueta).
-- **D7.** El prompt 1.2 deja enviar en conversación con confirmación del dueño y el paso 4 de la instalación lo bloquea; lo así enviado no se distingue de lo que escribe el dueño.
-- Para el diseño: responder a la dirección de respuesta y no al remitente en `reply` de Gmail y de Graph (construir el mensaje en bruto); Apps Script no verifica RSA/ECDSA/Ed25519 (procedencia del «seguir» solo con HMAC); 90 minutos diarios de disparadores en Gmail personal; el paso 4 de INSTALACION-CLIENTE no bloquea `create_filter`, `trash_*`, `mark_*_spam`, `delete_label`. Diez puntos sin comprobar (NC-1 a NC-10) necesitan cuentas de prueba y datos ficticios: cuentas y gasto los decide el responsable.
-- **Mi lectura.** Con D1 a D3 la compuerta tal como está aprobada probablemente no es activable en Gmail sin una decisión de producto: o se acepta una vía con presencia por código de un solo uso y avisos en una página del dueño, o la función se difiere. Opciones y recomendación para la coordinación: (A) abrir una vuelta de especificación y auditoría que admita esa vía en Gmail; (B) diferir el envío sin revisión hasta las pruebas reales NC-1 a NC-10; (C) lo anterior más un piloto en cuenta de prueba. Recomiendo B con C, y que el diseño de la 016, 017 y 018 espere a esa decisión.
+## Por qué no se abre la P0 de las enmiendas
 
-## Condiciones que pasan al diseño
+D-036 exige que no queden bloqueantes ni mayores. Quedan dos MAYOR en la 016 y la orden limitaba a una vuelta de corrección y dos de auditoría. Ambos se arreglan con texto (dictamen `016/dictamen-enmienda-2.md`):
 
-- **016** (`016/dictamen-especificacion-2.md`): umbral de CA-024 con 300 intentos o más por asistente y también con filtro apagado; antigüedad máxima del contacto previo (propone 24 meses) o nombrarlo en el riesgo residual y el aviso de la 017; metadatos del interruptor sin hora por consulta; aviso alterado = no envío visible en el resumen. El resumen inalterable (REQ-011) no tiene salida de reserva: si la plataforma no lo permite, el diseño se detiene. Tercer nivel del requisito 8 (P-15): si la plataforma ni protege el aviso ni detecta su alteración, no ofrece envío.
-- **018** (`018/dictamen-especificacion-2.md`): (b) fórmula envenenada, R-1 (24 h e informe antes de usar una novedad), R-2 («si no se distingue quién cambió la etiqueta, no cuenta»), R-3 (opción restrictiva).
-- **017** (`017/dictamen-especificacion-2.md`, R-1 a R-4): pendientes restrictivos no se anulan por cambios de estado; constancia «hecha por el dueño» solo de una fuente que el agente no escriba; tope diario de peticiones de presencia; definición de «estado» de un pendiente. T-1 (dónde vive la vía protegida: opciones A a D, recomendadas A o D) y T-2 (qué permiten Gmail y Outlook) sin decidir.
+- **M-1 (REQ-026, CA-029, REQ-017; arts. 8 y 9).** La condición del prompt solo se comprueba al activar. La vuelta atrás de la 015 puede volver a servir la 1.2 (navegador con la sesión del dueño y envío en conversación). Corrección: rige mientras haya en el canal una cuenta con la compuerta instalada; el canal no puede pasar a esa versión, tampoco por vuelta atrás; CA-029 prueba el cambio de versión y la vuelta atrás.
+- **M-2 (REQ-002, CA-002).** «Sin cambios» no basta: la copia de referencia la puede escribir el agente. Corrección: un mensaje que procede de un borrador del agente no cuenta, lo haya cambiado o no el dueño; la procedencia la fija la compuerta con algo que el agente no pueda escribir ni omitir.
+- Menores: 016 m-1 (la lista guiada de REQ-017 sea de permitidas, lo no nombrado bloqueado) y m-2 (comprobar filtros y etiquetas al dejar el correo de cortesía); 017 m-1 (toda reinstalación con secreto nuevo empieza desactivada y con la activación pendiente) y m-2 (datos del agente o de terceros en la vía protegida como texto inerte; ampliar A-21 de SEGURIDAD); 018 m-1 (si no sabe con seguridad si la compuerta está activa, la trata como activa) y m-2 (cambios en un borrador solo como «rasgo de la lista → valor»).
+
+**Siguiente paso para quien siga:** una vuelta del especificador solo con esas correcciones, y confirmar con el auditor (vuelta 3, acotada a estos puntos; hace falta autorización de la coordinación porque excede el límite de dos). Si no hay bloqueantes ni mayores, P0 por D-036.
+
+## Decisiones de la coordinación ya aplicadas (D-036, 21/11/2026)
+
+Solo Gmail; presencia por código de un solo uso (o llave de acceso si NC-5); contacto previo solo con discriminador probado (NC-2) y nunca lo de la compuerta, del agente, de un borrador del agente ni de un delegado; avisos y resumen en la página del dueño más correo de cortesía sin autoridad; la compuerta comprueba su huella; la 018 con las mismas restricciones; piloto como condición de activación. Duda 1 (leído no impide el envío) aceptada por el auditor con las correcciones.
+
+## Lo que necesita el responsable para el piloto (cuentas y gasto, art. 14)
+
+Detalle en `piloto-gmail.md`, apartado de requisitos: seis cuentas de Google dedicadas y sin datos reales (cuatro `gmail.com`: DUEÑO-P con verificación en dos pasos, CONTACTO-A, CONTACTO-B, DELEGADO; dos en Workspace de prueba: DUEÑO-W, CONTACTO-W, con dominio propio de prueba y acceso a su DNS); proyectos de Apps Script creados por él con su sesión (PS-COMP, PS-VINC, PS-WEB, PS-OTRA, PS-REM) y la API de Apps Script activada; cuentas de Claude y ChatGPT dedicadas con conectores de Gmail y Drive y las extensiones de navegador, en un perfil aparte; un móvil con aplicación de códigos temporales (y un dispositivo con llaves de acceso para NC-5 a); opcional con gasto, un dominio no ASCII para NC-7. Los pasos con sesión los hace una persona; ningún agente tiene credenciales.
 
 ## Cuestiones que solo puede decidir el responsable
 
-**018, aceptación del riesgo residual (persistencia y amplificación de una fórmula envenenada en el aprendizaje continuo).** La coordinación no puede aceptarlo (D-036 no lo cubre; arts. 6, 13 y 14). Opciones: (A) aceptarlo con las condiciones del diseño (300 pruebas por asistente para la variante de fórmula o visto bueno del dueño para fórmulas nuevas; novedad con 24 h de espera); (B) variante restrictiva: ninguna fórmula literal aprendida en los borradores que la compuerta envía (R-3) más visto bueno para las fórmulas. Recomiendo B si no hay prisa en el estilo literal y A con visto bueno si se quiere el estilo completo. Hasta su respuesta: no hay aprendizaje activo en cuentas reales, ni prompt con la 018 en un canal de cliente, ni cierre P7 de la 018. Diseño y plan siguen (propuesta P-6 de la 018 para anotarlo en TECNOLOGIAS).
+**018, aceptación del riesgo residual** (persistencia y amplificación de una fórmula envenenada). Opciones: (A) aceptarlo con las condiciones del diseño (300 pruebas por asistente o visto bueno del dueño para fórmulas nuevas; novedad con 24 h de espera); (B) variante restrictiva: ninguna fórmula literal aprendida en borradores que la compuerta envía, más visto bueno para las fórmulas. **Recomiendo B** si no hay prisa en el estilo literal; A con visto bueno si se quiere el estilo completo. Hasta su respuesta: no hay aprendizaje activo en cuentas reales, ni prompt con la 018 en canal de cliente, ni cierre P7 de la 018.
 
+**017, cuestión 1:** ¿se compromete HumanaIA a no pedir nunca a un cliente que active o relaje la compuerta? (A) Sí y por escrito (aviso, soporte, `marketing/`, 052); (B) no, y el aviso dice que toda petición de relajar, aunque parezca de HumanaIA, es posible engaño (rige hoy). **Recomiendo A.** No bloquea: la especificación aplica B.
 
-Y **017, cuestión 1:** ¿se compromete HumanaIA a no pedir nunca a un cliente que active o relaje la compuerta? Opciones: A, sí y por escrito (aviso, soporte, `marketing/`, 052); B, no se compromete y el aviso dice que toda petición de relajar, aunque parezca de HumanaIA, es posible engaño (rige hoy). Recomiendo A. No bloquea nada: la especificación aplica B. La 2 y la 3 las fijó la coordinación por D-036 con la opción restrictiva (instala siempre el dueño; solo cuenta el titular y los delegados solo hacen urgentes).
+Supuestos cambiables: 24 meses de antigüedad del contacto previo; 0 fugas en 300 intentos; 30 días de historial; 10 peticiones de presencia al día; topes 1 por hilo, 5 por destinatario y día, 10 por cuenta y día.
 
-Supuestos que puede cambiar: 016, topes 1 por hilo, 5 por destinatario y día y 10 por cuenta y día (el responsable no eligió topes bajos; antes 20 por cuenta); licencia no vigente = «parar»; HTML y contenido oculto no desactivables. 017, reautenticación propia con plazo de cambio pendiente de 24 horas y 3 peticiones de presencia por hora.
+## Dudas del arquitecto sobre el piloto (apartado 9 de `piloto-gmail.md`)
 
-## Propuestas para la coordinación
+D-1 añadir NC-5 (b) y (c) a REQ-026 (sin ellos REQ-004 de la 017 impide activar); D-2 dónde viven las sondas (propone `specs/016-…/piloto/sondas/` y tareas TP-1 a TP-3); D-3 gasto de Workspace, dominio no ASCII y suscripciones (del responsable); D-4 si la comprobación de huella puede llamar a la API de Apps Script (REQ-014 limita la red); D-5 tope de 10 envíos frente a los 300 intentos de CA-024; D-6 repetir el piloto cada 6 meses o al cambiar un conector; D-7 dónde consta el resultado (fila en TECNOLOGIAS).
 
-En `016/propuestas.md` (P-01 a P-15) y `017/propuestas.md`: PLAN, TECNOLOGIAS, SEGURIDAD (amenazas y ruta crítica), ARQUITECTURA, INSTALACION-CLIENTE, ADR-0004, 012 (prompt: la frase «sin que salga un solo correo que yo no haya revisado»), 040/041, 052. `docs/PLAN.md` sigue con la 1.3 («REQ-019 de la 016» es ahora REQ-018). `marketing/LEEME.md` línea 111 (afirmación 11) aún habla de «reglas» de remitente: corregir antes de publicar (no lo toco).
+## Propuestas para la coordinación (no aplicadas)
+
+`016/propuestas.md` (P-01 a P-24: PLAN, TECNOLOGIAS, SEGURIDAD, ARQUITECTURA, INSTALACION-CLIENTE paso 4 con bloqueo de `send_message`, `reply`, `forward`, `create_filter`, `trash_*` y de Drive; ADR-0004; prompt 012 sobre navegador y envío en conversación; P-24 dividir la 016 por tamaño), `017/propuestas.md` (P-12 a P-15), `018/propuestas.md` (P-7 a P-10). Tamaños: 016 40 KB, 017 35 KB, 018 30 KB, por encima de los 25 KB de D-023 (aviso). `docs/PLAN.md` sigue en la 1.3; las especificaciones citan constitución 1.4 y la vigente es 1.5 (no cambia el art. 8). **`marketing/LEEME.md` línea 111** (afirmación 11) aún habla de «reglas» de remitente: para la coordinación, no la toco.
+
+## Qué no se pudo comprobar
+
+Todo es revisión de texto: ninguna prueba real. Pendientes en el piloto: NC-1 a NC-7, NC-9, NC-11 a NC-13, REQ-017 por asistente, vuelta atrás del prompt. NC-8 y NC-10 no aplican (Outlook fuera).
 
 ## Reparto
 
