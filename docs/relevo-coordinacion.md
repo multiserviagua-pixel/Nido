@@ -43,7 +43,7 @@ Proyecto `pre-nido` (`prj_QpVn3kgANvg1iqdzsepM2cdvYRur`) en el equipo `humana-ia
 - Clones `C:\dev\qa-t010\` y `C:\dev\qa-t010b\`: se pueden borrar.
 
 ## Pendiente del responsable
-Proyecto Sentry UE con «no almacenar IP» (DP-2); `CONECTOR_SECRETO` y demás variables secretas de `pre-nido`; SQL en Supabase «Nido» (AR-05, AR-06, endurecimiento de T-123 b; Fase 1 m prepara los pasos); buzón de pruebas y Claude Max (AR-03, AR-04, AR-08); revisiones visuales T-013 y T-019 de la 020; visibilidad del repositorio (público ahora); seguir con Vercel Pro tras el 27/11.
+Pegar en Vercel `pre-nido` el DSN de Sentry como `SUPERVISION_DSN` (el proyecto Sentry `pre-nido` lo creó la coordinación el 21/11 en la sesión del responsable: plataforma Node sin SDK, ingesta `ingest.de.sentry.io`, «no almacenar IP» activado y comprobado por la API, alerta de incidencias de prioridad alta por correo creada de serie; DSN en Settings → Projects → pre-nido → Client Keys); `CONECTOR_SECRETO` y demás variables secretas de `pre-nido`; SQL en Supabase «Nido» (AR-05, AR-06, endurecimiento de T-123 b; Fase 1 m prepara los pasos); buzón de pruebas y Claude Max (AR-03, AR-04, AR-08); revisiones visuales T-013 y T-019 de la 020; visibilidad del repositorio (público ahora); seguir con Vercel Pro tras el 27/11.
 
 ## Cómo se relanza una fase
 1. Comprobar que el proceso terminó (no basta con que el vigía avise: los chats reescriben el relevo a menudo) y leer el relevo y la copia de trabajo de la tarea en curso (trabajo sin commitear).
