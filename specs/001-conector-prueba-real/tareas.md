@@ -70,7 +70,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `sb/{almacen,conector}.ts`, `src/lib/registro/sucesos.ts`, `mcp/herramientas/{obtener-instrucciones,enviar-informe,confirmar-orden}.ts`, `mcp/esquemas/sanear-informe.ts`, `mcp/{servidor,salida,entrada}.ts`, `src/app/api/mcp/route.ts`, `eslint.config.mjs`, pruebas.
 
 ### T-106 · Trazado y región
-`plataforma` · C, Res. · pendiente · Depende de: T-105 · REQ-002, REQ-009, REQ-012 · CA-002, CA-009, CA-012
+`plataforma` · C, Res. · hecha · Depende de: T-105 · REQ-002, REQ-009, REQ-012 · CA-002, CA-009, CA-012
 - (a) C-4: trazar `prompts/agente-prueba/`, `contratos/` y `bd/raiz-supabase.crt` en las rutas del conector; `headers()` no se toca. Prueba: `tp/trazado.test.ts`, PRUEBA-016 (parte V-3: la traza de `next build` los incluye).
 - (b) `vercel.json` y `.vercelignore` (002 diseño §Batería, «Región»): `regions` `["arn1"]`, sin conmutación ni regiones en `functions`, `installCommand` `npm ci --ignore-scripts`. Prueba: `tp/region.test.ts`: casos de archivo de «Región» (PRUEBA-012 de la 002, parte).
 - Archivos: `next.config.ts`, `vercel.json`, `.vercelignore`, pruebas.

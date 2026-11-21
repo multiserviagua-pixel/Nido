@@ -1,0 +1,31 @@
+# Lo que no se sube a Vercel (T-106, 002 diseño «Región»). El build y el conector necesitan:
+# src/, public/, prompts/, contratos/, supabase/conector-prueba/raiz-supabase.crt, package*.json,
+# .npmrc, next.config.ts, tsconfig.json, postcss.config.mjs y vercel.json. No excluir ninguno.
+# Sin negaciones (!): la prueba tests/unit/plataforma/region.test.ts las rechaza y evalúa estos
+# patrones con semántica gitignore contra rutas que deben quedar dentro y fuera.
+.env*
+.claude/
+.git/
+.github/
+marketing/
+/specs/
+/tests/
+node_modules
+/docs/
+/scripts/
+playwright.config.ts
+vitest.config.ts
+supabase/migrations/
+supabase/reversiones/
+supabase/tests/
+.next/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+/coverage/
+/out/
+supabase/.temp/
+supabase/.branches/
+dist/
+*.log
+/herramientas/despliegue/

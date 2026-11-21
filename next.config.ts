@@ -36,6 +36,19 @@ function extensionesDePagina(): string[] {
 const configuracion: NextConfig = {
   poweredByHeader: false,
   pageExtensions: extensionesDePagina(),
+  // 001 C-4 (T-106): el conector lee en ejecución el prompt, los contratos y la raíz TLS de Supabase
+  // con rutas desde `process.cwd()`; sin esto la traza de la función no los incluye. Solo `/api/mcp`.
+  // AVISO para T-108 y T-110: las rutas /oauth/* usarán `conector.ts` y también leerán la raíz TLS de
+  // Supabase; al crearlas, añadir aquí su clave (p. ej. "/oauth/autorizar") con
+  // "./supabase/conector-prueba/raiz-supabase.crt" y ampliar `tests/unit/plataforma/trazado.test.ts`
+  // (claves exactas y traza de cada ruta). Sin eso la función de esa ruta falla al arrancar en Vercel.
+  outputFileTracingIncludes: {
+    "/api/mcp": [
+      "./prompts/agente-prueba/**",
+      "./contratos/**",
+      "./supabase/conector-prueba/raiz-supabase.crt",
+    ],
+  },
   async headers() {
     return [
       { source: "/:path*", headers: cabecerasGenerales },
