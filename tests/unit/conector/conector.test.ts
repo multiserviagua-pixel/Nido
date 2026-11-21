@@ -10,6 +10,7 @@ import { join, relative } from "node:path";
 import tls from "node:tls";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ErrorDeAplicacion } from "../../../src/lib/plataforma/errores";
+import { alcanzables, construirGrafo } from "../diseno/apoyo/grafo";
 import {
   crearAdaptadorPostgres,
   leerRaizConfiable,
@@ -359,11 +360,35 @@ describe("fronteras de importación", () => {
     }
   });
 
-  it("solo conector.ts importa el cliente `postgres`", () => {
+  // MENOR-8 del revisor: tampoco por una cadena de importaciones. Se recorre el grafo de módulos desde cada
+  // archivo de `src/mcp/` (también reexportaciones y tipos) y no debe alcanzar el rol de gestión ni los
+  // clientes con la clave secreta o de sesión.
+  it("src/mcp/ no alcanza autorizacion, admin ni servidor, ni siquiera de forma transitiva", () => {
+    const grafo = construirGrafo(RAIZ_REPO);
+    const origenes = [...grafo.modulos.keys()].filter((r) => r.startsWith("src/mcp/"));
+    expect(origenes.length).toBeGreaterThan(0);
+    const alcance = alcanzables(grafo, origenes, { incluirTipos: true });
+    const vetados = [
+      "src/lib/supabase/autorizacion.ts",
+      "src/lib/supabase/admin.ts",
+      "src/lib/supabase/servidor.ts",
+    ];
+    for (const vetado of vetados) {
+      expect(alcance.modulos.has(vetado), `${vetado}: ${alcance.cadena(vetado).join(" -> ")}`).toBe(
+        false,
+      );
+    }
+    // El módulo que sí debe alcanzar sigue alcanzándose (la prueba no es vacía).
+    expect(alcance.modulos.has("src/lib/supabase/conector.ts")).toBe(true);
+  });
+
+  it("solo conector.ts y autorizacion.ts importan el cliente `postgres`", () => {
     const infractores = fuentes
       .filter((f) => importa(f.texto, /from\s+["']postgres["']|require\(\s*["']postgres["']/))
       .map((f) => f.ruta)
-      .filter((r) => r !== "src/lib/supabase/conector.ts");
+      .filter(
+        (r) => r !== "src/lib/supabase/conector.ts" && r !== "src/lib/supabase/autorizacion.ts",
+      );
     expect(infractores).toEqual([]);
   });
 });

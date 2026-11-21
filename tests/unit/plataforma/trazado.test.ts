@@ -10,6 +10,17 @@ import { describe, expect, it } from "vitest";
 
 const RAIZ = resolve(__dirname, "../../..");
 const TRAZA = join(RAIZ, ".next", "server", "app", "api", "mcp", "route.js.nft.json");
+// T-108 (e): `/api/operacion` usa el rol de gestión y solo lee la raíz TLS (ni prompt ni contratos).
+const TRAZA_OPERACION = join(
+  RAIZ,
+  ".next",
+  "server",
+  "app",
+  "api",
+  "operacion",
+  "route.js.nft.json",
+);
+const REQUERIDOS_OPERACION = ["supabase/conector-prueba/raiz-supabase.crt"];
 const REQUERIDOS = [
   "prompts/agente-prueba/0.1.md",
   "prompts/agente-prueba/arranque.md",
@@ -21,8 +32,11 @@ const REQUERIDOS = [
 ];
 
 // Lista blanca: fuera de node_modules/ y .next/ la traza solo puede contener REQUERIDOS (ni más ni menos).
-function ajenosALaListaBlanca(rutas: Iterable<string>): string[] {
-  return [...rutas].filter((r) => !/^(node_modules|\.next)\//.test(r) && !REQUERIDOS.includes(r));
+function ajenosALaListaBlanca(
+  rutas: Iterable<string>,
+  permitidos: readonly string[] = REQUERIDOS,
+): string[] {
+  return [...rutas].filter((r) => !/^(node_modules|\.next)\//.test(r) && !permitidos.includes(r));
 }
 
 function recorrer(dir: string, salida: string[] = []): string[] {
@@ -45,7 +59,7 @@ async function incluye(): Promise<Record<string, string[]>> {
 describe("trazado de archivos del conector (C-4, V-3)", () => {
   it("next.config.ts declara outputFileTracingIncludes para /api/mcp con los tres orígenes", async () => {
     const inc = await incluye();
-    expect(Object.keys(inc)).toEqual(["/api/mcp"]);
+    expect(Object.keys(inc)).toEqual(["/api/mcp", "/api/operacion"]);
     const globs = inc["/api/mcp"];
     expect(globs).toBeDefined();
     expect(globs).toEqual(
@@ -60,6 +74,12 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
   it("no traza el resto del repositorio en esa ruta (solo lo necesario)", async () => {
     const globs = (await incluye())["/api/mcp"] ?? [];
     expect(globs.length).toBe(3);
+  });
+
+  it("/api/operacion traza solo la raíz TLS de Supabase (T-108 e)", async () => {
+    expect((await incluye())["/api/operacion"]).toEqual([
+      "./supabase/conector-prueba/raiz-supabase.crt",
+    ]);
   });
 
   it("la lista blanca detecta lo que sobra fuera de node_modules y .next", () => {
@@ -91,7 +111,9 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
       ...recorrer(join(RAIZ, "src")),
     ].filter((p) => existsSync(p));
     const masReciente = Math.max(...entradas.map((p) => statSync(p).mtimeMs));
-    const vieja = !existsSync(TRAZA) || statSync(TRAZA).mtimeMs < masReciente;
+    const vieja = [TRAZA, TRAZA_OPERACION].some(
+      (z) => !existsSync(z) || statSync(z).mtimeMs < masReciente,
+    );
     if (vieja) {
       execFileSync("npx", ["next", "build"], {
         cwd: RAIZ,
@@ -109,5 +131,16 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
     for (const r of REQUERIDOS) expect(rutas, r).toContain(r);
     // 5: lista blanca; la traza no arrastra nada más (secretos, specs, docs, migraciones, ajustes...).
     expect(ajenosALaListaBlanca(rutas)).toEqual([]);
+
+    // T-108 (e): `/api/operacion` incluye la raíz TLS y nada más fuera de node_modules y .next.
+    expect(existsSync(TRAZA_OPERACION)).toBe(true);
+    const trazaOperacion = JSON.parse(readFileSync(TRAZA_OPERACION, "utf8")) as { files: string[] };
+    const rutasOperacion = new Set(
+      trazaOperacion.files.map((f) =>
+        relative(RAIZ, resolve(dirname(TRAZA_OPERACION), f)).replaceAll("\\", "/"),
+      ),
+    );
+    for (const r of REQUERIDOS_OPERACION) expect(rutasOperacion, r).toContain(r);
+    expect(ajenosALaListaBlanca(rutasOperacion, REQUERIDOS_OPERACION)).toEqual([]);
   }, 300_000);
 });

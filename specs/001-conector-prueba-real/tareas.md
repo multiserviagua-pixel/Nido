@@ -86,7 +86,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `sql`, pruebas.
 
 ### T-108 · Metadatos, CIMD, origen, rol de gestión y operaciones
-`ingeniero-backend` · C · pendiente · Depende de: T-104 a T-107 · REQ-001, REQ-003, REQ-004, REQ-014, REQ-017, REQ-019 · CA-001, CA-003, CA-004, CA-014, CA-017, CA-024
+`ingeniero-backend` · C · hecha · Depende de: T-104 a T-107 · REQ-001, REQ-003, REQ-004, REQ-014, REQ-017, REQ-019 · CA-001, CA-003, CA-004, CA-014, CA-017, CA-024
 - (a) `callbacks.ts`, `metadatos.ts` y rutas `.well-known`; CIMD en `false` sin URL comprobada. Prueba: PRUEBA-001 (V-2; CAD-002; `no-store`; 503 sin configuración; `Host` falso sin efecto).
 - (b) `cimd.ts` (lista vacía sin V-6). Prueba: PRUEBA-005 (parte: 0 peticiones fuera de la lista).
 - (c) `origen.ts`. Prueba: PRUEBA-006 (parte: sin cabecera fuera de local → rechazo sin evaluar).

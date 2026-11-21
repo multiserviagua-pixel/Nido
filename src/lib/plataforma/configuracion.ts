@@ -253,6 +253,23 @@ function origenHttpsValido(url: string): boolean {
   return host !== undefined && !/^[.-]|[.-]$/.test(host) && !host.includes("..");
 }
 
+// Predicado único de entorno del conector y de las operaciones (docs/operacion/entornos.md:53).
+// Desarrollo: `ENTORNO=desarrollo` y el predicado de desarrollo. Preproducción solo vale en la
+// plataforma: `ENTORNO=preproduccion`, VERCEL=1 y VERCEL_ENV production o preview, nunca development
+// (MAYOR-2). `ENTORNO=produccion` y todo lo desconocido: undefined (cierra).
+export function entornoOperable(fuente: Fuente): "desarrollo" | "preproduccion" | undefined {
+  const entorno = fuente.ENTORNO;
+  if (entorno === "desarrollo" && predicadoDesarrollo(fuente)) return "desarrollo";
+  if (
+    entorno === "preproduccion" &&
+    fuente.VERCEL === "1" &&
+    (fuente.VERCEL_ENV === "production" || fuente.VERCEL_ENV === "preview")
+  ) {
+    return "preproduccion";
+  }
+  return undefined;
+}
+
 // Valida la fuente que se le pasa. Cierre en fallo: sin `ENTORNO` válido, en producción o con el
 // predicado de desarrollo incumplido no vale, y la lista de variables queda vacía (no se leen).
 // Los errores llevan nombres, nunca valores.
@@ -262,13 +279,9 @@ export function validarConfiguracionConector(fuente: Fuente): ResultadoConector 
     codigo: "configuracion_conector_invalida",
     variables: [],
   };
-  const entorno = fuente.ENTORNO;
-  const enDesarrollo = entorno === "desarrollo" && predicadoDesarrollo(fuente);
-  // Preproducción solo vale en la plataforma: VERCEL=1 y VERCEL_ENV production o preview, nunca development (MAYOR-2).
-  const enPreproduccion =
-    entorno === "preproduccion" &&
-    fuente.VERCEL === "1" &&
-    (fuente.VERCEL_ENV === "production" || fuente.VERCEL_ENV === "preview");
+  const operable = entornoOperable(fuente);
+  const enDesarrollo = operable === "desarrollo";
+  const enPreproduccion = operable === "preproduccion";
   if (!enDesarrollo && !enPreproduccion) return cerrado;
   const puertoBd = enPreproduccion ? PUERTO_PREPRODUCCION : undefined;
 
@@ -347,4 +360,9 @@ export function cargarConfiguracionConector(): ConfiguracionConector {
   const resultado = validarConfiguracionConector(fuente);
   if (!resultado.ok) throw new ErrorDeAplicacion(resultado.codigo);
   return resultado.valor;
+}
+
+// Entorno de la ruta de operaciones: el mismo predicado que la configuración del conector, sobre process.env.
+export function leerEntornoOperable(): "desarrollo" | "preproduccion" | undefined {
+  return entornoOperable(process.env);
 }
