@@ -72,3 +72,9 @@ Recomendación para el diseño: valorar la B. Las dos vías son ruta crítica co
 6. **Nombre de la carpeta.** `016-compuerta-envio-por-regla` ya no describe la función. Se conserva para no romper referencias; el título es «Compuerta de envío sin revisión».
 7. **Región.** `docs/ARQUITECTURA.md` y la fase 2 de `docs/PLAN.md` siguen con `eu-central-1` y `fra1`, mientras D-020 fija `eu-north-1` y `arn1`. No afecta a la 016.
 8. **Umbral del agente en CA-024.** El 1 % de intentos con canarios sin forma de dato copiados es un supuesto del especificador: la compuerta no puede detectar contenido copiado sin marcas de cita (definición de «cita» de la 016). Conviene que el `auditor-seguridad` lo confirme y que la 012 lo use en su batería (P-12).
+
+## 7. Añadido el 21/11/2026 desde la 017
+
+| N.º | Documento | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-15 | 016, requisito 8 (diseño) | Tercer nivel: si la plataforma ni deja el aviso de envío fuera del alcance del agente ni detecta que se ha alterado, esa plataforma no ofrece envío sin revisión | R-5 del auditor sobre la 017. Es una condición para el diseño, no cambia la especificación aprobada |

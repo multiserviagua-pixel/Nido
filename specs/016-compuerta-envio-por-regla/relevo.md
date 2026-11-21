@@ -6,22 +6,25 @@ Actualizado: 21/11/2026 · Orquestador del carril B2 (documentación del envío 
 
 | Paso | Función | Estado |
 | --- | --- | --- |
-| 1 | 016 reescrita con la 1.4 | **APROBADA el 21/11/2026 por delegación D-036** (P0). 25 REQ, 28 CA, 24,5 KB. Dictamen 1: APTO CON CONDICIONES (5 MAYOR corregidos); dictamen 2: APTO |
-| 2 | 017 nueva (vía protegida del dueño) | Siguiente: `especificador`, luego `auditor-seguridad`, P0 |
-| 3 | 018 nueva (aprendizaje) | Pendiente |
+| 1 | 016 compuerta | **APROBADA 21/11/2026 (D-036).** 25 REQ, 28 CA. Auditor: vuelta 1 APTO CON CONDICIONES (5 MAYOR corregidos), vuelta 2 APTO |
+| 2 | 017 vía protegida del dueño | **APROBADA 21/11/2026 (D-036).** 21 REQ, 20 CA, 24,6 KB. Auditor: 4 vueltas, última APTO CON CONDICIONES sin MAYOR |
+| 3 | 018 aprendizaje | Siguiente: `especificador`, luego `auditor-seguridad`, P0 |
 | 4 | Verificación de Gmail y Outlook (arquitecto, `verificar-decision`) | Pendiente, tras las tres P0 |
 
-## Condiciones que la 016 deja al diseño
+## Condiciones que pasan al diseño
 
-Detalle en `dictamen-especificacion-2.md`: (1) umbral de CA-024 con 300 intentos o más por asistente y también con filtro apagado; (2) antigüedad máxima del contacto previo (propone 24 meses) o nombrarlo en el riesgo residual y el aviso de la 017; (3) metadatos del interruptor, sin hora por consulta; (4) aviso alterado por el agente = motivo de no envío visible en el resumen. El resumen inalterable (REQ-011) no tiene salida de reserva: si la plataforma no lo permite, el diseño se detiene.
+- **016** (`016/dictamen-especificacion-2.md`): umbral de CA-024 con 300 intentos o más por asistente y también con filtro apagado; antigüedad máxima del contacto previo (propone 24 meses) o nombrarlo en el riesgo residual y el aviso de la 017; metadatos del interruptor sin hora por consulta; aviso alterado = no envío visible en el resumen. El resumen inalterable (REQ-011) no tiene salida de reserva: si la plataforma no lo permite, el diseño se detiene. Tercer nivel del requisito 8 (P-15): si la plataforma ni protege el aviso ni detecta su alteración, no ofrece envío.
+- **017** (`017/dictamen-especificacion-2.md`, R-1 a R-4): pendientes restrictivos no se anulan por cambios de estado; constancia «hecha por el dueño» solo de una fuente que el agente no escriba; tope diario de peticiones de presencia; definición de «estado» de un pendiente. T-1 (dónde vive la vía protegida: opciones A a D, recomendadas A o D) y T-2 (qué permiten Gmail y Outlook) sin decidir.
 
-## Cuestiones que solo puede decidir el responsable
+## Cuestión que solo puede decidir el responsable
 
-Ninguna. Supuestos del especificador que puede cambiar: topes 1 por hilo, 5 por destinatario y día y 10 por cuenta y día (el responsable no eligió topes bajos como control; antes eran 20 por cuenta); licencia no vigente = «parar»; HTML y contenido oculto no desactivables.
+**017, cuestión 1:** ¿se compromete HumanaIA a no pedir nunca a un cliente que active o relaje la compuerta? Opciones: A, sí y por escrito (aviso, soporte, `marketing/`, 052); B, no se compromete y el aviso dice que toda petición de relajar, aunque parezca de HumanaIA, es posible engaño (rige hoy). Recomiendo A. No bloquea nada: la especificación aplica B. La 2 y la 3 las fijó la coordinación por D-036 con la opción restrictiva (instala siempre el dueño; solo cuenta el titular y los delegados solo hacen urgentes).
+
+Supuestos que puede cambiar: 016, topes 1 por hilo, 5 por destinatario y día y 10 por cuenta y día (el responsable no eligió topes bajos; antes 20 por cuenta); licencia no vigente = «parar»; HTML y contenido oculto no desactivables. 017, reautenticación propia con plazo de cambio pendiente de 24 horas y 3 peticiones de presencia por hora.
 
 ## Propuestas para la coordinación
 
-En `propuestas.md` de la 016 (P-01 a P-14: PLAN, TECNOLOGIAS, SEGURIDAD amenazas y ruta crítica, ARQUITECTURA, contratos, INSTALACION-CLIENTE, ADR-0004, marketing, 012 y 052). `docs/PLAN.md` sigue con la 1.3 y el «REQ-019 de la 016» (ahora REQ-018). El prompt 1.2 dice «sin que salga un solo correo que yo no haya revisado»: P-11 para la 012.
+En `016/propuestas.md` (P-01 a P-15) y `017/propuestas.md`: PLAN, TECNOLOGIAS, SEGURIDAD (amenazas y ruta crítica), ARQUITECTURA, INSTALACION-CLIENTE, ADR-0004, 012 (prompt: la frase «sin que salga un solo correo que yo no haya revisado»), 040/041, 052. `docs/PLAN.md` sigue con la 1.3 («REQ-019 de la 016» es ahora REQ-018). `marketing/LEEME.md` línea 111 (afirmación 11) aún habla de «reglas» de remitente: corregir antes de publicar (no lo toco).
 
 ## Reparto
 
