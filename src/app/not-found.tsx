@@ -1,3 +1,7 @@
 export default function NoEncontrada() {
-  return <h1>Página no encontrada</h1>;
+  return (
+    <main>
+      <h1>Página no encontrada</h1>
+    </main>
+  );
 }

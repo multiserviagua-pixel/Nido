@@ -8,12 +8,14 @@ export default function ErrorPagina({
   retry: () => void;
 }) {
   return (
-    <div role="alert">
-      <h1>Error</h1>
-      <p>Se ha producido un error. Inténtalo de nuevo más tarde.</p>
-      <button type="button" onClick={() => retry()}>
-        Reintentar
-      </button>
-    </div>
+    <main>
+      <div role="alert">
+        <h1>Error</h1>
+        <p>Se ha producido un error. Inténtalo de nuevo más tarde.</p>
+        <button type="button" onClick={() => retry()}>
+          Reintentar
+        </button>
+      </div>
+    </main>
   );
 }

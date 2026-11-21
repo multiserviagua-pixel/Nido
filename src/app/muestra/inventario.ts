@@ -42,6 +42,33 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
     ruta: "/muestra",
     estados: [{ clave: "unico", nombre: "Único" }],
   },
+  // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
+  // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
+  // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).
+  {
+    tipo: "componente",
+    clave: "armazon-superadmin",
+    nombre: "Armazón de superadmin",
+    estados: [
+      { clave: "resumen", nombre: "Resumen" },
+      { clave: "clientes", nombre: "Clientes" },
+      { clave: "ordenes", nombre: "Órdenes" },
+      { clave: "auditoria", nombre: "Auditoría" },
+      { clave: "ajustes", nombre: "Ajustes" },
+      { clave: "nombre-largo-120", nombre: "Nombre largo de 120 caracteres" },
+    ],
+  },
+  {
+    tipo: "componente",
+    clave: "armazon-cliente",
+    nombre: "Armazón de cliente",
+    estados: [
+      { clave: "resumen", nombre: "Resumen" },
+      { clave: "actividad", nombre: "Actividad" },
+      { clave: "suscripcion", nombre: "Suscripción" },
+      { clave: "cuenta", nombre: "Cuenta" },
+    ],
+  },
 ]);
 
 /** Dirección estable de un estado. Para una página, su ruta fija. */

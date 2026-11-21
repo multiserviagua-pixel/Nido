@@ -56,10 +56,31 @@ export const TEXTOS = {
     volverAlResumen: "Ir al Resumen",
   },
 
+  /** Nombre del producto: una sola constante para el título del documento y, desde T-015, el menú
+   * (REQ-005, REQ-087). El título de cada vista se pone delante: «<vista> · <producto>». */
+  marca: {
+    nombreProducto: "Nido: Agentes de Correo",
+  },
+
   armazon: {
     saltarAlContenido: "Saltar al contenido",
     abrirMenu: "Abrir menú",
     cerrarMenu: "Cerrar menú",
+    navegacionPrincipal: "Navegación principal",
+    cabecera: "Cabecera de la página",
+    contenidoPrincipal: "Contenido principal",
+  },
+
+  /** Áreas del menú: las de superadmin (fase 3) y el juego de cliente de la muestra. */
+  areas: {
+    resumen: "Resumen",
+    clientes: "Clientes",
+    ordenes: "Órdenes",
+    auditoria: "Auditoría",
+    ajustes: "Ajustes",
+    actividad: "Actividad",
+    suscripcion: "Suscripción",
+    cuenta: "Cuenta",
   },
 
   formulario: {

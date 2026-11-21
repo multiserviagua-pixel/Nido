@@ -1,12 +1,13 @@
 // Índice de la muestra (020 T-005), generado a partir del inventario. Se pinta en el servidor en
 // cada petición: la comprobación lee `Host` con `headers()`. Sin datos reales ni de la petición.
+// Es una página suelta, fuera del armazón: pone su propio `main` (el layout raíz ya no lo trae).
 import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";
 import { INVENTARIO, rutaDeEstado } from "./inventario";
 
 export default async function IndiceDeLaMuestra() {
   await comprobarAccesoMuestra();
   return (
-    <>
+    <main>
       <h1>Muestra de componentes</h1>
       <p>
         Cada componente y cada vista del sistema de diseño, en cada uno de sus estados y con datos
@@ -32,6 +33,6 @@ export default async function IndiceDeLaMuestra() {
           </section>
         );
       })}
-    </>
+    </main>
   );
 }

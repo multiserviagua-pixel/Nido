@@ -110,7 +110,8 @@ async function enlacesIndebidos(page: Page): Promise<string[]> {
   return page.evaluate((saltar) => {
     const malos: string[] = [];
     for (const a of document.querySelectorAll<HTMLAnchorElement>("a[href]")) {
-      const u = new URL(a.href);
+      // Se resuelve contra la ruta sin consulta: «#otro» en una página con consulta no es un enlace con consulta.
+      const u = new URL(a.getAttribute("href")!, location.origin + location.pathname);
       const nombre = `${(a.textContent ?? "").trim().slice(0, 30)} → ${a.getAttribute("href")}`;
       if (u.search !== "") malos.push(`consulta: ${nombre}`);
       if (u.hash !== "") {
@@ -401,6 +402,8 @@ test.describe("PRUEBA-018 · controles: la medida detecta lo que debe", () => {
     const malos = await enlacesIndebidos(page);
     expect(malos.join(" ")).toContain("consulta: con consulta");
     expect(malos.join(" ")).toContain("fragmento: con fragmento");
+    // Cada enlace indebido se etiqueta una sola vez y con su motivo: «#otro» no es una consulta.
+    expect(malos).toHaveLength(2);
   });
 
   test("el enlace de salto al contenido es el único fragmento admitido", async ({ page }) => {
