@@ -1,0 +1,11 @@
+{"esperadas":66,"inesperadas":0,"saltadas":0,"intermitentes":0}
+Pruebas que terminan «ok» pero solo anotan (2) o comprueban una parte (6); 11 anotaciones «no ejecutada»:
+- [14] muestra/anchos.spec.ts | «ancho máximo del contenido en 1920 y 2560 px» (indice/unico) | solo anota: ancho máximo de 1440 px de indice/unico, la página no está dentro del armazón. Se activa con T-010 (a).
+- [19] muestra/anchos.spec.ts | «cobertura: lo que aún no tiene entrada en el inventario» | solo anota (3): diálogo a 568 por 320 y a 320 por 256 (T-010 diálogo); 999.999.999 completa a 320 px (T-010 tarjeta de cifra); nombre de 120 caracteres sin solapes (T-010 armazón, tarjeta, tabla).
+- [21] muestra/combinaciones.spec.ts | «PRUEBA-022 · indice/unico · tema claro» | parcial: pares de color de fill y stroke de SVG, con opacity y con fondos de hermanos posicionados. Se activa con T-032 y T-033.
+- [22] muestra/combinaciones.spec.ts | «PRUEBA-022 · indice/unico · tema oscuro» | parcial: lo mismo que la 21.
+- [43] muestra/red-y-direccion.spec.ts | «dirección sin texto escrito, y los enlaces no llevan consulta ni fragmento» | parcial: dirección tras escribir texto en indice/unico; el estado no tiene campos de texto. Se activa con T-010 (formulario, filtros y búsqueda).
+- [54] muestra/red-y-direccion.spec.ts | «las vistas de /muestra/servidor/ no existen aún» | solo comprueba la guarda; anotado: tras activar todas las vistas, 0 líneas nuevas en el registro y 0 envíos a la supervisión. Se activa con T-008 y T-016.
+- [56] muestra/tema-y-movimiento.spec.ts | «cambio de tema con la vista abierta: sin recarga y con el estado intacto» | parcial (2): tabla ordenada (T-010 tabla) y cajón abierto (T-010 armazón, cajón); el estado no los tiene.
+- [60] muestra/tema-y-movimiento.spec.ts | «fuente bloqueada: el texto es visible en el primer pintado» | parcial: desplazamiento del texto de 0,1 o menos al llegar la fuente real (CA-023) no se mide; hoy la pila es de sistema. Se activa con T-011 (b).
+TOTAL anotaciones no ejecutada: 11 (en 8 pruebas)

@@ -1,0 +1,51 @@
+{
+  "estado": "indice/unico",
+  "politica": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'",
+  "resumen": {
+    "script-src-elem · inline": 7
+  },
+  "infracciones": [
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    },
+    {
+      "directiva": "script-src-elem",
+      "bloqueado": "inline",
+      "disposicion": "report",
+      "muestra": ""
+    }
+  ]
+}
