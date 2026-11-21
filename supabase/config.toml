@@ -1,0 +1,13 @@
+# Configuración de la CLI de Supabase (función 010, T-007; diseño D-10, CA-028).
+# Sin secretos: solo nombres y listas cerradas.
+project_id = "agentes-correo-humanaia"
+
+[api]
+# Únicos esquemas accesibles desde la API (REQ-033). `privado` no figura nunca.
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+
+[db.seed]
+# Sin carga automática al arrancar o reiniciar: el seed va con `psql` y la variable
+# `app.entorno` (D-10, CA-003). Nunca `--include-seed` en producción.
+enabled = false

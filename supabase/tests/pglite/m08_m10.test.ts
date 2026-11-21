@@ -421,7 +421,9 @@ describe("el conector no tiene permisos sobre tablas ni vistas (CA-009, REQ-012,
     for (const f of r.rows) {
       expect(f.dueno, f.proname).toBe("postgres");
       expect(f.prosecdef, f.proname).toBe(true);
-      expect(String(f.config).replace(/[" ]/g, ""), f.proname).toBe("{search_path=pg_catalog,pg_temp}");
+      expect(String(f.config).replace(/[" ]/g, ""), f.proname).toBe(
+        "{search_path=pg_catalog,pg_temp}",
+      );
       expect(f.destinos, f.proname).toBe(f.proname.startsWith("mcp_") ? "conector:EXECUTE" : "");
     }
   });
@@ -1228,8 +1230,10 @@ describe("ciclo, guarda y todo o nada de M08, M09 y M10 (REQ-029, N-7)", () => {
     expect(await firma()).toEqual({ ...antes, ajustes_globales: "0:", catalogo_problemas: "0:" });
     for (const m of [M08, M09, M10]) await aplicar(db, m());
     // ajustes_globales lleva la hora de su inserción: se compara sin ella.
-    const { ajustes_globales: _a, ...resto } = await firma();
-    const { ajustes_globales: _b, ...restoAntes } = antes;
+    const sinHora = (f: Record<string, string>) =>
+      Object.fromEntries(Object.entries(f).filter(([k]) => k !== "ajustes_globales"));
+    const resto = sinHora(await firma());
+    const restoAntes = sinHora(antes);
     expect(resto).toEqual(restoAntes);
     expect(await contar("ajustes_globales")).toBe(1);
     expect((await obtener(TA)).estado).toBe("activa");
@@ -1300,7 +1304,8 @@ describe("ciclo, guarda y todo o nada de M08, M09 y M10 (REQ-029, N-7)", () => {
     expect(await cuenta("es_admin")).toBe(1);
     await aplicar(db, M08());
     expect(await cuenta("es_admin")).toBe(1);
-    for (const f of [...MCP, "licencia_vigente", "resolver_token"]) expect(await cuenta(f), f).toBe(0);
+    for (const f of [...MCP, "licencia_vigente", "resolver_token"])
+      expect(await cuenta(f), f).toBe(0);
   });
 
   it("si el conector es miembro de algún rol, M08 falla con migracion_concesiones_ajenas y no cambia nada", async () => {
@@ -1400,7 +1405,10 @@ describe("dictamen del auditor: carreras simuladas y concesiones de PUBLIC (T-00
       await valor<string>(db, `select estado::text from public.ordenes where id = '${OA}'`),
     ).toBe("anulada");
     expect(
-      await valor<string | null>(db, `select entregada_en::text from public.ordenes where id = '${OA}'`),
+      await valor<string | null>(
+        db,
+        `select entregada_en::text from public.ordenes where id = '${OA}'`,
+      ),
     ).toBeNull();
   });
 
