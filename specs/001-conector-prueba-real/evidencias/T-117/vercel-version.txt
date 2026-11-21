@@ -1,0 +1,3 @@
+# vercel --version (CLI 65.16.0, 21/11/2026, sin sesion)
+Vercel CLI 65.16.0 (native)
+65.16.0

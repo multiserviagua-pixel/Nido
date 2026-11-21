@@ -1,0 +1,468 @@
+# vercel  --help
+Vercel CLI 65.16.0
+▲ vercel [options] [command | path]
+
+Deploy and Develop:
+  deploy           Deploy your project to Vercel (default)
+  bisect           Bisect the current project interactively or via an automated
+                   test script
+  build            Build the project
+  ci               Inspect Vercel CI and rerun runs
+  curl             Request deployments with protection bypass
+  dev              Starts the `vercel dev` server
+  httpstat         Show deployment HTTP timing
+  init             Initialize example Vercel Projects
+  inspect          Show information about a deployment
+  list             List deployments
+  promote          Promote an existing Deployment to current
+  redeploy         Rebuild and deploy a previous deployment
+  remove           Delete deployment(s) by project name or deployment ID
+  rollback         Roll back to a previous deployment
+  rolling-release  Shift deployment traffic in stages
+  templates        Find, inspect, and deploy Vercel templates
+
+Projects and Configuration:
+  cache           Manage cache for a Project
+  deploy-hooks    Manage deploy hooks for Git-triggered builds
+  env             Interact with Environment Variables for a Project
+  environments    Manage custom environments for a Project
+  flags           Manage feature flags for a Vercel project
+  git             Manage your Git repository connection to the current Project
+  link            Link a local directory to a Vercel project
+  microfrontends  Manage microfrontends groups
+  open            Opens the current project in the Vercel Dashboard
+  project         Manage your Vercel projects
+  pull            Pull Environment Variables and project settings into .vercel
+
+Domains and Traffic:
+  alias      Interact with deployment aliases
+  certs      Interact with SSL certificates
+  dns        Manage DNS records for your domains
+  domains    Manage domains
+  redirects  Manage redirects for a project
+  routes     Manage routing rules for a project
+
+Data and Compute:
+  ai-gateway     Manage AI Gateway resources
+  blob           Interact with Vercel Blob
+  crons          Manage cron jobs for a project [beta]
+  daemons        Manage daemons for a project [beta]
+  global-config  Manage Global Config stores (dashboard API parity)
+  sandbox        Interact with Vercel Sandbox
+  schedules      Manage schedules for the current project [beta]
+  storage        Manage project storage resources
+  vcr            Manage Vercel Container Registry repositories and images (see
+                 `vcr image`)
+
+Operations and Security:
+  activity    List user activity events
+  agent-runs  Inspect Agent Runs observability data
+  alerts      List alert groups or inspect a group
+  comments    Review and act on Vercel Toolbar comments from the command line
+  drains      Manage drains for logs, traces, analytics, and speed insights
+  firewall    Manage firewall rules and bypass settings
+  health      Show the current Vercel platform status and recent incidents
+  kms         Manage KMS issuers, signing keys, and project grants [beta]
+  logs        Display logs
+  metrics     Query observability metrics for your Vercel project or team
+  monitors    Add, inspect, list, update, and remove monitors, and manage their
+              notification destinations
+  security    Inspect the security posture of the current team
+  traces      Inspect project traces and search spans across a Vercel team
+  webhooks    Manage webhooks
+
+Account and Billing:
+  billing        Manage billing for a team
+  buy            Purchase Vercel products for your team
+  login          Sign in to your Vercel account
+  logout         Sign out the currently authenticated user
+  organizations  Manage Vercel organizations
+  pricing        Compare public plan features
+  signup         Create a Vercel account and sign in
+  switch         Switch to a different team
+  teams          Manage Teams under your Vercel account
+  tokens         Manage your personal Vercel authentication tokens
+  whoami         Shows the username of the currently logged in user
+
+CLI and Integrations:
+  agent        Generate Vercel deployment guidance in AGENTS.md
+  api          Make authenticated HTTP requests to the Vercel API
+  changelog    Show the latest Vercel product updates
+  connect      Manage connectors
+  docs         Search and read the Vercel docs
+  doctor       Check your CLI setup and show how to fix problems
+  feedback     Send bugs, friction, and feature requests to the Vercel team
+  help         Show help for a command
+  install      Install a marketplace integration
+  integration  Manage marketplace integrations
+  kb           Show the latest Vercel Knowledge Base guides, newest first
+  mcp          Set up MCP agents for Vercel
+  setup        Set up coding agents for Vercel
+  skills       Discover agent skills relevant to your project
+  telemetry    Allows you to enable or disable telemetry collection
+  token-pass   Set up a coding agent with Vercel Token Pass
+  upgrade      Upgrade the current global or native Vercel CLI installation
+  version      Manages the installed Vercel CLI version
+
+Global Options:
+  --changelog                Show the 5 latest Vercel product updates
+  --cwd <DIR>                Run the command in another directory
+  -d, --debug                Debug mode (default: off)
+  -Q, --global-config <DIR>  Path to the global `.vercel` directory
+  -h, --help                 Output usage information
+  -A, --local-config <FILE>  Path to the local `vercel.json` file
+  --no-color                 No color mode (default: off)
+  --non-interactive          Run without interactive prompts (default: on when
+                             an agent is detected)
+  -S, --scope <TEAM>         Team to run the command in (slug or ID)
+  -t, --token <TOKEN>        Login token
+  -v, --version              Output the version number
+
+Examples:
+  Deploy the current directory
+    vercel
+
+  Deploy a linked project without prompts
+    vercel deploy --yes --non-interactive
+
+  Show help for a command
+    vercel domains --help
+
+# vercel deploy --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel deploy [project-path] [options]
+Deploy your project to Vercel. Use `--temporary` to create a temporary
+deployment without logging in. The `deploy` command is the default command for
+the Vercel CLI, and can be omitted (`vc deploy my-app` equals `vc my-app`). Use
+`--dry` to inspect the detected framework preset and source files without
+deploying.
+
+Options:
+  --archive <FORMAT>                 Compress the deployment code into an
+                                     archive before uploading it
+  --build-env <KEY=VALUE>            Specify environment variables during
+                                     build-time (e.g. `--build-env KEY1=value1
+                                     --build-env KEY2=value2`)
+  --create-if-missing                Create the --project if it doesn't exist
+                                     yet. Needed only when --project names a new
+                                     project with --yes or in non-interactive
+                                     mode. Can't be used with --dry
+  --delete-project-after <DURATION>  Create a temporary project that is deleted
+                                     automatically after 1h, 1d, 1w, 2w, or 30d.
+                                     Only applies when the deploy creates the
+                                     project
+  --dry                              Inspect the detected framework preset and
+                                     source files without uploading or creating
+                                     a deployment. Non-TTY output includes every
+                                     file as JSON
+  --env <KEY=VALUE>                  Specify environment variables during
+                                     run-time (e.g. `--env KEY1=value1 --env
+                                     KEY2=value2`)
+  --environment <ENVIRONMENT>        Environment to deploy to: production,
+                                     preview, or a custom environment
+  --force                            Force a new deployment even if nothing has
+                                     changed
+  --guidance                         Receive command suggestions once deployment
+                                     is complete
+  --json                             Output as JSON
+  --logs                             Print the build logs
+  --meta <KEY=VALUE>                 Specify metadata for the deployment (e.g.
+                                     `--meta KEY1=value1 --meta KEY2=value2`)
+  --no-wait                          Don't wait for the deployment to finish
+  --prebuilt                         Use in combination with `vc build`. Deploy
+                                     an existing build
+  --prod                             Create a production deployment (shorthand
+                                     for `--environment production`)
+  -p, --project <NAME_OR_ID>         Project name or ID to deploy to, without
+                                     linking this directory (default: linked
+                                     project). A missing name is created; with
+                                     --yes or in non-interactive mode, add
+                                     --create-if-missing
+  --regions <REGION>                 Set default regions to enable the
+                                     deployment on
+  --skip-domain                      Disable the automatic promotion (aliasing)
+                                     of the relevant domains to a new production
+                                     deployment. You can use `vc promote` to
+                                     complete the domain-assignment process
+                                     later
+  --temporary                        Create a temporary deployment without
+                                     logging in. When logged in, use
+                                     `--delete-project-after` instead
+  --turbo                            Use a Turbo build machine for this
+                                     deployment
+  --verify                           Load the deployment URL once it is ready
+                                     and report the status code, size, and page
+                                     title, even with Deployment Protection on
+                                     (creates the project's Protection Bypass
+                                     for Automation secret if missing). Exits 1
+                                     if the load fails. Can't be used with
+                                     --no-wait or --dry
+  --with-cache                       Retain build cache when using "--force"
+  -y, --yes                          Use default options to skip all prompts
+
+Global Options: See `vercel --help`
+
+Examples:
+  Deploy the current directory
+    vercel
+
+  Deploy a single HTML file
+    vercel ./index.html
+
+  Deploy a custom path
+    vercel /usr/src/project
+
+  Deploy to production and check that the URL loads
+    vercel deploy --prod --verify
+
+  Deploy with run-time Environment Variables
+    vercel --env NODE_ENV=production
+
+  Deploy with prebuilt outputs
+    vercel build
+    vercel deploy --prebuilt
+
+  Deploy using a Turbo build machine
+    vercel deploy --turbo
+
+  Inspect deployment inputs without deploying
+    vercel deploy --dry
+
+  Get every deployment file as JSON
+    vercel deploy --dry --json
+
+  Write Deployment URL to a file
+    vercel > deployment-url.txt
+
+# vercel rollback --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel rollback <deployment> [options]
+Roll back to a previous deployment
+
+Commands:
+  status [project]  Show the status of any current pending rollbacks
+
+Options:
+  --json            Output as JSON
+  --timeout <TIME>  Time to wait for rollback completion (default: 3m)
+  -y, --yes         Accept default value for all prompts
+
+Global Options: See `vercel --help`
+
+Examples:
+  Rollback a deployment using id or url
+    vercel rollback <DEPLOYMENT>
+
+# vercel promote --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel promote <deployment> [options]
+Promote an existing Deployment to current
+
+Commands:
+  status [project]  Show the status of any current pending promotions
+
+Options:
+  --json            Output as JSON
+  --timeout <TIME>  Time to wait for promotion completion (default: 3m)
+  -y, --yes         Skip the confirmation prompt when linking a Project
+
+Global Options: See `vercel --help`
+
+Examples:
+  Promote a Deployment using ID or URL
+    vercel promote <DEPLOYMENT>
+
+# vercel link --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel link [command] [options]
+Link a local directory to a Vercel project
+
+Commands:
+  add  Add projects to an existing repository link created by link --repo
+
+Options:
+  --json                      Output as JSON
+  -p, --project <NAME_OR_ID>  Set the project name or ID to link; required for
+                              non-interactive existing-project links
+  --repo                      Link multiple projects from the Git repository
+                              (alpha; per-directory project links take
+                              precedence)
+  -y, --yes                   Skip questions when setting up with default team
+                              and settings
+
+Global Options: See `vercel --help`
+
+Examples:
+  Link current directory to a Vercel project
+    vercel link
+
+  Link current directory with default options and skip questions
+    vercel link --yes
+
+  Link to an existing project in CI or agent mode
+    vercel link --yes --scope <TEAM> --project <project-name-or-id>
+
+  Link a specific directory to a Vercel project
+    vercel link --cwd /path/to/project
+
+  Link multiple projects from the current Git repository
+    vercel link --repo
+
+  Add additional projects to an existing repository link
+    vercel link add
+
+# vercel inspect --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel inspect <deployment> [options]
+Show information about a deployment.
+
+Options:
+  --json            Output as JSON
+  --logs            Prints the build logs instead of the deployment summary
+  --timeout <TIME>  Time to wait for deployment completion (default: 3m)
+  --wait            Blocks until deployment completes (exits 1 if --timeout is
+                    reached first)
+
+Global Options: See `vercel --help`
+
+Examples:
+  Get information about a deployment by its unique URL
+    vercel inspect my-deployment-ji2fjij2.vercel.app
+
+  Get information about the deployment an alias points to
+    vercel inspect my-deployment.vercel.app
+
+  Get information about a deployment by piping in the URL
+    echo my-deployment.vercel.app | vercel inspect
+
+  Wait up to 90 seconds for deployment to complete
+    vercel inspect my-deployment.vercel.app --wait --timeout 90s
+
+  Get deployment build logs
+    vercel inspect my-deployment.vercel.app --logs
+
+  Get deployment information as JSON
+    vercel inspect my-deployment.vercel.app --json
+
+# vercel list --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel list [app] [options]
+List deployments.
+
+Options:
+  -a, --all                        List resources across all projects
+  -e, --environment <ENVIRONMENT>  Filter deployments by environment
+  --json                           Output as JSON
+  -n, --limit <NUMBER>             Number of results to return per page
+                                   (default: 20, max: 100)
+  --meta <KEY=VALUE>               Filter deployments by metadata (e.g. `--meta
+                                   KEY=value`). Can appear many times.
+  --next <CURSOR>                  Show the next page using the cursor from the
+                                   previous output
+  --policy <KEY=VALUE>             See deployments with provided Deployment
+                                   Retention policies (e.g. `--policy
+                                   KEY=value`). Can appear many times.
+  --status <STATUS>                Filter deployments by their status. Can be
+                                   comma-separated for multiple statuses (e.g.:
+                                   `--status BUILDING,READY`)
+  -y, --yes                        Accept default value for all prompts
+
+Global Options: See `vercel --help`
+
+Examples:
+  List all deployments for the currently linked project
+    vercel list
+
+  List all deployments across all projects
+    vercel list --all
+
+  List all deployments for the project `my-app`
+    vercel list my-app
+
+  Filter deployments by metadata
+    vercel list --meta key1=value1 --meta key2=value2
+
+  Show the next page, using the cursor from the previous output
+    vercel list my-app --next <CURSOR>
+
+  Filter deployments by status
+    vercel list --status READY
+
+  Filter deployments by multiple statuses
+    vercel list --status BUILDING,ERROR
+
+# vercel logout --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel logout
+Sign out the currently authenticated user.
+
+Global Options: See `vercel --help`
+
+Examples:
+  Sign out the currently authenticated user.
+    vercel logout
+
+# vercel telemetry --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel telemetry <command>
+Allows you to enable or disable telemetry collection
+
+Commands:
+  enable   Enables telemetry collection
+  disable  Disables telemetry collection
+  status   Shows whether telemetry collection is enabled or disabled
+
+Global Options: See `vercel --help`
+
+# vercel curl --help
+<claude-code-hint v="1" type="plugin" value="vercel@claude-plugins-official" />
+Vercel CLI 65.16.0
+▲ vercel curl <path> [options]
+Make curl requests to Vercel deployments with automatic protection bypass.
+
+Options:
+  --deployment <DEPLOYMENT>     The deployment ID or URL to target
+  --json                        With --trace, emit { response, requestId } as
+                                JSON on stdout
+  --protection-bypass <SECRET>  Protection bypass secret for accessing protected
+                                deployments
+  --trace                       Capture a session trace for the request and
+                                print the trace request id
+  -y, --yes                     Skip confirmation when linking is required (e.g.
+                                in non-interactive mode)
+
+Global Options: See `vercel --help`
+
+Examples:
+  Access a protected deployment URL
+    vercel curl https://your-project-abc123.vercel.app/api/hello
+
+  Make a GET request to an API endpoint
+    vercel curl /api/hello
+
+  Make a POST request with data
+    vercel curl /api/users -- --request POST --data '{"name": "John"}'
+
+  Target a specific deployment by ID
+    vercel curl /api/status --deployment ERiL45NJvP8ghWxgbvCM447bmxwV
+
+  Target a specific deployment by URL
+    vercel curl /api/status --deployment https://your-project-abc123.vercel.app
+
+  Use curl options after the separator
+    vercel curl /api/test -- --header "Content-Type: application/json" --request PUT
+
+  Use with protection bypass secret
+    vercel curl /api/protected --protection-bypass <secret> -- --request GET
+
+  Capture a session trace for the request
+    vercel curl --trace /api/hello
+

@@ -150,7 +150,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `src/lib/plataforma/supervision.ts`, `src/lib/plataforma/manejador.ts`, `src/app/api/salud/route.ts`, `src/instrumentation.ts`, pruebas.
 
 ### T-117 · Despliegue en `pre-nido`
-`plataforma` · C, Res. · **bloqueada** · Depende de: (a) T-106, **DP-1**; (b) T-113, T-114, T-115, T-116, AR-02, AR-06, AR-07 · REQ-001, REQ-002, REQ-019 · CA-001, CA-002, CA-024
+`plataforma` · C, Res. · (a) **hecha, corregida tras el dictamen del revisor (NO APTO: 1 MAYOR y 11 menores), pendiente de nueva revisión** (21/11/2026: `docs/operacion/despliegue-preproduccion.md`; propone `framework` y `buildCommand` en `vercel.json` y `min-release-age` en `.npmrc` sin aplicarlos, a decidir con dictamen del auditor); (b) **bloqueada** · Depende de: (a) T-106, **DP-1**; (b) T-113, T-114, T-115, T-116, AR-02, AR-06, AR-07 · REQ-001, REQ-002, REQ-019 · CA-001, CA-002, CA-024
 - (a) Procedimiento de despliegue y vuelta atrás de preproducción para la persona: clon limpio de `main`, CLI de Vercel verificada (versión, opciones, fuente), `COMMIT_DESPLEGADO`, sin `--regions`, `vercel rollback`; nombres de variables, nunca valores. Prueba: revisión (cada orden con fuente oficial; ningún valor); `arnes` en verde.
 - (b) Primer despliegue: **lo hace una persona** (AR-06, AR-07); el agente comprueba desde fuera. Vuelta atrás: dos despliegues del mismo commit, `rollback` al primero y vuelta. Prueba: `conector:comprobar`: PRUEBA-047 (`arn1`), PRUEBA-001 (V), V-3; PRUEBA-013 y 027 de la 002; vuelta atrás en 10 min.
 - Archivos: `docs/operacion/despliegue-preproduccion.md`, `ev/T-117/`.
@@ -165,7 +165,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 
 ### T-119 · Navegador real, pasos 3 a 13 y resultados
 `qa` · C (por la parte (f); el resto, R) · pendiente · Depende de: T-117, T-118, AR-16; por partes, AR-09, AR-10, AR-11, AR-12 · REQ-001, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-011, REQ-015, REQ-016, REQ-018, REQ-019, REQ-020 · CA-004, CA-005, CA-008, CA-009, CA-011, CA-015, CA-016, CA-018, CA-019, CA-020, CA-021, CA-022, CA-023, CA-024, CA-025
-- (a) Antes del paso 3: V-6 y navegador real (AR-16). Prueba: PRUEBA-009 (R: GET y POST), PRUEBA-006 (V-6).
+- (a) Antes del paso 3: V-6 y navegador real (AR-16). Prueba: PRUEBA-009 (R: GET y POST), PRUEBA-006 (V-6). Además, ráfaga de más de 100 peticiones por minuto desde una IP a `/api/salud` y a `/oauth/token`, con 429 o 403 en cada ruta y aciertos en Firewall overview (WAF; dictamen del auditor sobre T-117 (a), 21/11/2026).
 - (b) Pasos 3 a 5 (alta y activación en Claude: AR-11). Prueba: PRUEBA-040, PRUEBA-041 (inicio).
 - (c) Pasos 6 a 8 (tras AR-09). Prueba: PRUEBA-042, PRUEBA-049 (paso 7), PRUEBA-045.
 - (d) Pasos 9, 10 y 12. Prueba: PRUEBA-043, 044, 050 y 048 (diaria).
