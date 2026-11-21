@@ -112,7 +112,7 @@ Autor: `arquitecto`. Salen de la corrección de `diseno.md` tras `dictamen-disen
 | Asunto | Qué se le pide | De dónde sale |
 | --- | --- | --- |
 | A-14 | Aceptar o rechazar por escrito la excepción al artículo 4: la contraseña de aplicación de la cuenta de envío vive en la configuración del servicio de identidad, no en el gestor de variables. Va unido al A-11 | Hallazgo m-26 |
-| A-15 | Presentarle expresamente la enmienda de REQ-007 y CA-006 (navegador reconocido), en lugar de aprobarla solo por delegación: el riesgo original se le presentó con una premisa falsa | Hallazgo m-27 |
+| A-15 | **Superada por D-039** (el responsable respondió el 21/11/2026). Presentarle expresamente la enmienda de REQ-007 y CA-006 (navegador reconocido), en lugar de aprobarla solo por delegación: el riesgo original se le presentó con una premisa falsa | Hallazgo m-27 |
 
 ### Especificación de la 021 (para el `especificador`)
 
@@ -120,7 +120,7 @@ Autor: `arquitecto`. Salen de la corrección de `diseno.md` tras `dictamen-disen
 | --- | --- | --- |
 | REQ-024 y CA-017 | Además de lo ya pedido: el cupo de restablecimientos por cuenta no se aplica a una solicitud desde un navegador reconocido de esa cuenta, que tiene su propio cupo de 3 por hora; y el levantamiento del bloqueo pone también a cero el cupo de restablecimientos de la cuenta | Hallazgo m-18 |
 | REQ-038 | Además de lo ya pedido: durante 24 horas, la presentación de cada sesión (nivel, métodos y momentos de emisión de su token), y en cada sesión completa el momento de emisión del token con el que se completó | Hallazgos m-23 y m-24 |
-| REQ-007 y CA-006 | Sin cambio de texto respecto a lo ya pedido; su aprobación pasa por el responsable (A-15) | Hallazgo m-27 |
+| REQ-007 y CA-006 | **Superada por D-039** (A-15 respondida; texto ya escrito). Sin cambio de texto respecto a lo ya pedido; su aprobación pasa por el responsable (A-15) | Hallazgo m-27 |
 
 ### Función 024 (inventario de acciones)
 
@@ -142,7 +142,7 @@ Autor: `arquitecto`. Salen de la corrección de `diseno.md` tras `dictamen-disen
 | Cambio | Motivo |
 | --- | --- |
 | Tabla `privado.presentaciones_sesion` (una fila por sesión, solo administradores activos, momentos que no retroceden, borrado a las 24 horas) y columna `completada_con_token_de` en `privado.sesiones_administrador`; la condición 5 de `privado.es_admin()` pasa a ser estricta y sin holgura | Hallazgos m-23 y m-24 |
-| En `privado.cambios_esperados`: tipo `factor` con `factor_id` (5 minutos, un solo factor, ligado a la sesión) y `huella_marca_conservada`; función `admin_anunciar_factor` y fase `anunciar` de C-6 | Hallazgos M-13 y m-19 |
+| En `privado.cambios_esperados`: tipo `factor` con `factor_id` (5 minutos, un solo factor, ligado a la sesión) y `huella_marca_conservada` (**sustituida el 21/11 por `marca_conservada_id`**, abajo); función `admin_anunciar_factor` y fase `anunciar` de C-6 | Hallazgos M-13 y m-19 |
 | El disparador sobre las tablas del servicio, declarado solo sobre las columnas que importan y comparando valor anterior y nuevo; sus nombres, de T-P2 punto 13 | Hallazgo M-13 |
 | Tipo `navegador_restablecimiento` en el contador; `admin_levantar_bloqueo` y la función reservada ponen a cero el cupo de restablecimientos de la cuenta | Hallazgo m-18 |
 | Lista cerrada de funciones para `authenticated`: añadir `sesion_presentar` y `admin_anunciar_factor` a las ya previstas, con el comportamiento con un solo factor de las cuatro de la propia sesión | Hallazgo m-23 |
@@ -159,7 +159,7 @@ Autor: `arquitecto`. Salen de la corrección de `diseno.md` tras `dictamen-disen
 
 ## Al preparar la 3.ª vuelta del auditor (21/11/2026)
 
-Autor: `arquitecto`. Salen de comprobar M-13, M-14 y m-17 a m-29 contra `diseno.md`, de los avisos H-1 y V-1 de la 020, de A-13 por delegación (D-036) y de A-15 (entonces anotada por D-036; desde el 21/11, abierta y reservada al responsable). Ninguna está aplicada; el arquitecto no ha editado nada fuera de esta carpeta. Las migraciones de la 010 se han leído como dato.
+Autor: `arquitecto`. Salen de comprobar M-13, M-14 y m-17 a m-29 contra `diseno.md`, de los avisos H-1 y V-1 de la 020, de A-13 por delegación (D-036) y de A-15 (entonces anotada por D-036; desde el 21/11, abierta y reservada al responsable; **superado por D-039**, que la respondió el mismo día). Ninguna está aplicada; el arquitecto no ha editado nada fuera de esta carpeta. Las migraciones de la 010 se han leído como dato.
 
 ### Fase 2 (función 010)
 
@@ -198,14 +198,14 @@ Autor: `arquitecto`. Salen de comprobar M-13, M-14 y m-17 a m-29 contra `diseno.
 
 | Cambio | Motivo |
 | --- | --- |
-| Escribir la enmienda de REQ-007 y CA-006 ya propuesta (14/11), con el umbral de REQ-024 y CA-017, solo cuando el responsable responda A-15 (abierta y reservada a él desde el 21/11/2026; ya no por D-036). Hasta entonces, ni se escribe ni se implementa lo que depende de ella | A-15, m-27 |
+| **Superada por D-039** (escrita en tres vueltas el 21/11/2026, pendiente de aprobar). Escribir la enmienda de REQ-007 y CA-006 ya propuesta (14/11), con el umbral de REQ-024 y CA-017, solo cuando el responsable responda A-15 (abierta y reservada a él desde el 21/11/2026; ya no por D-036). Hasta entonces, ni se escribe ni se implementa lo que depende de ella | A-15, m-27 |
 
 ### Coordinación y responsable
 
 | Asunto | Qué se pide | De dónde sale |
 | --- | --- | --- |
 | A-13 | Anotar en `aclaraciones.md` y `docs/TECNOLOGIAS.md`: «decidida por delegación D-036, 21/11/2026: si fallan T-P2.12 o T-P2.13 no se acepta el riesgo y vuelve al arquitecto». Sustituye la anotación «reservado a una persona» de `aclaraciones.md` del 14/11 solo en cuanto a no aceptar; aceptar el riesgo seguiría reservado al responsable | A-13 |
-| A-15 | **Abierta, reservada al responsable** (cambio del 21/11/2026, `aclaraciones.md`): presentársela como decisión suya, umbral incluido, con el motivo de m-27 (la premisa original era falsa) y la contradicción con su respuesta a la cuestión 10. Vuelve a valer la fila A-15 de «Para el responsable» del 14/11 | m-27, m-33 |
+| A-15 | **Superada por D-039** (respondida por el responsable el 21/11/2026). Texto anterior: **abierta, reservada al responsable** (cambio del 21/11/2026, `aclaraciones.md`): presentársela como decisión suya, umbral incluido, con el motivo de m-27 (la premisa original era falsa) y la contradicción con su respuesta a la cuestión 10. Vuelve a valer la fila A-15 de «Para el responsable» del 14/11 | m-27, m-33 |
 | A-11 y A-14 | Siguen reservadas al responsable (cuentas y secretos); no se decidieron | m-26 |
 | Tamaño (D-023) | `diseno.md` mide entre 47.500 y 48.000 caracteres (unos 49 KB; contado por bloques, sin terminal), por encima de los 40 KB. Opciones: (a) al escribir `plan.md`, llevar allí «Tareas previas» (T-P2 y T-P3) y el contenido de las pruebas, y dejar en el diseño solo la referencia; (b) dividir la función en 021-A (acceso, sesión, guardia y protección) y 021-B (gestión de administradores, recuperación y bloqueos); (c) aceptar el exceso hasta P1. Recomendada: (a), y (b) si aun así no cabe | D-023 |
 
@@ -215,7 +215,7 @@ Autor: `arquitecto`. Salen de `dictamen-diseno-4.md`. Ninguna está aplicada.
 
 | Para | Qué se pide | De dónde sale |
 | --- | --- | --- |
-| Coordinación | Dejar constancia en `docs/TECNOLOGIAS.md`, además de en `aclaraciones.md`, de A-13 (decidida por D-036 el 21/11/2026) y de A-15 (abierta y reservada al responsable desde el 21/11/2026); completa las filas A-13 y A-15 de «Coordinación y responsable» de arriba | m-43 |
+| Coordinación | En lo que toca a A-15, **superada por D-039** (D-039 ya está anotada en `docs/TECNOLOGIAS.md`); sigue lo de A-13. Dejar constancia en `docs/TECNOLOGIAS.md`, además de en `aclaraciones.md`, de A-13 (decidida por D-036 el 21/11/2026) y de A-15 (abierta y reservada al responsable desde el 21/11/2026); completa las filas A-13 y A-15 de «Coordinación y responsable» de arriba | m-43 |
 | Fase 2 (010) | PRUEBA-048 pasa a T-007 de la 021 y recorre `pg_proc` en todos los esquemas que no son del sistema para `PUBLIC`, `anon`, `authenticated` y `acceso`; su `04_funciones` cambia en esa tarea y cada migración lleva su `revoke` | m-40 |
 | Fase 1 (002) | La 021 amplía `scripts/patrones-secretos.mjs` en su T-017 (ruta reservada, la aprobación la nombra) con formas del acceso que hoy no se detectan | M-18 |
 | Función 020 | En RSC y acción Next no escapa la dirección (`text/x-component`); si su PRUEBA-034 o su cadena hostil llevan testigos en RSC, aplicar los criterios por tipo de respuesta de PRUEBA-055 de la 021 | M-17 |
@@ -228,7 +228,7 @@ Autor: `arquitecto`. Texto de los menores, de `revision-plan.md` (resumen del or
 
 | Para | Qué se pide | De dónde sale |
 | --- | --- | --- |
-| Coordinación | «m-43 sin hacer: A-13 y A-15 no constan en `docs/TECNOLOGIAS.md` (coordinación).» Completa las filas A-13 y A-15 de «Coordinación y responsable» y la de «Tras la 4.ª vuelta» | Revisión del 21/11, menor 6 |
+| Coordinación | En lo que toca a A-15, **superada por D-039**. «m-43 sin hacer: A-13 y A-15 no constan en `docs/TECNOLOGIAS.md` (coordinación).» Completa las filas A-13 y A-15 de «Coordinación y responsable» y la de «Tras la 4.ª vuelta» | Revisión del 21/11, menor 6 |
 | Coordinación | «`@supabase/supabase-js` 2.119.0 sin entrada en `docs/TECNOLOGIAS.md` (coordinación).» Versión y licencia: `diseno.md`, «Dependencias nuevas»; T-010 (a) las relee al instalar | Revisión del 21/11, menor 17 |
 | Coordinación | Menor 13 («T-008 (36 REQ), T-012 (31 REQ, ~16 archivos) y T-011 (~25 pruebas) son grandes: valorar partirlas»). Hecho sin renumerar: T-008 (b), T-011 (b) y T-012 (c) pasan a «aparte» (D-029), con su propia revisión y dictamen. Partirlas en tareas nuevas (T-019 en adelante) no cabe en los 25 KB de `tareas.md` sin recortar otra cosa; si la coordinación lo quiere, encargarlo aparte | Revisión del 21/11, menor 13 |
 
@@ -238,11 +238,32 @@ Autor: `arquitecto`. Salen de `dictamen-diseno-5.md` y de los menores 14 y 15 de
 
 | Para | Qué se pide | De dónde sale |
 | --- | --- | --- |
-| Coordinación | Añadir a la ficha de A-15 del relevo: sin marca, quien conozca la dirección de un administrador lo mantiene bloqueado (5 fallos cada 15 min) y, con uno solo, solo queda `levantar-bloqueo.mjs`; es riesgo mayor (AM-08a) que solo el responsable puede aceptar por escrito. Si no responde o rechaza la marca, ese riesgo queda pendiente y nunca figura como controlado; si la rechaza, el bloqueo por un tercero vuelve al arquitecto | M-20 |
-| Fase 1 (002) | Hasta A-15, `configuracion.ts` no declara ni exige `ACCESO_HMAC_DISPOSITIVO` y `registro.ts` acepta 13 códigos; la variable y `acceso_navegador_anulado_por_intentos` llegan con A-15 (corrige la fila de variables del 14/11) | m-50 |
+| Coordinación | **Superada por D-039** (el responsable eligió la marca; AM-08a queda como riesgo residual tratado por ella). Añadir a la ficha de A-15 del relevo: sin marca, quien conozca la dirección de un administrador lo mantiene bloqueado (5 fallos cada 15 min) y, con uno solo, solo queda `levantar-bloqueo.mjs`; es riesgo mayor (AM-08a) que solo el responsable puede aceptar por escrito. Si no responde o rechaza la marca, ese riesgo queda pendiente y nunca figura como controlado; si la rechaza, el bloqueo por un tercero vuelve al arquitecto | M-20 |
+| Fase 1 (002) | **Superada por D-039** en cuanto a esperar a A-15: la variable y el código llegan con T-010 (d), tras aprobar la enmienda. Texto anterior: hasta A-15, `configuracion.ts` no declara ni exige `ACCESO_HMAC_DISPOSITIVO` y `registro.ts` acepta 13 códigos; la variable y `acceso_navegador_anulado_por_intentos` llegan con A-15 (corrige la fila de variables del 14/11) | m-50 |
 | Fase 2 (010) | PRUEBA-048 compara por firma (`regprocedure`), recorre todo esquema fuera de su lista N-1 más `privado`, y cada tarea de la 021 añade sus firmas; añadir la marca quita las firmas antiguas con `drop` y `revoke` | m-45, m-49 |
 | Función 024 | La 021 espera su A-1 (iv), I-42 a I-44, para los códigos `accion` de T-008 (b) y T-009 | Revisión, menor 14 |
 | Función 052 (fase 6) | Google Workspace en la lista de encargados (REQ-021, REQ-022): envía la invitación y el restablecimiento a direcciones de administradores; región y adenda, de T-003 de la 021. También en `docs/SEGURIDAD.md` si allí se lista | Revisión, menor 15 |
+
+## Tras la 2.ª vuelta de la enmienda (D-039, 21/11/2026)
+
+Autor: `arquitecto`. Salen de «Dudas de la enmienda» de `especificacion.md`. Ninguna está aplicada fuera de esta carpeta.
+
+| Para | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| Función 024 | Acción nueva (d) «Se anuló la marca de un navegador reconocido»: un código `accion` por cada motivo de `motivo_anulacion` (los 12 de `diseno.md`, «Datos»), `objeto_tipo` `administrador`, sin cliente y sin columnas nuevas. Principal solo con `titular` (origen `persona`, actor el titular) e `intentos` (origen `sistema`); los demás, vinculables a I-24 a I-28, I-30, I-31, I-33 a I-36 y (c), según `diseno.md`, «Auditoría». Sustituye a la petición del 14/11 de confirmar que «Olvidar este navegador» y la anulación por intentos no dejan fila | Duda 6; REQ-041, CA-017 (10) |
+| `especificador` (T-005 a) | Siguen sin aplicar, sin cambio de texto: la acción (c) en REQ-040 y REQ-041 (fila del 14/11, A-4) y la presentación de cada sesión durante 24 horas en REQ-038 (fila de la 2.ª vuelta del auditor, m-23 y m-24). El diseño ya las tiene | Duda 7 |
+| Coordinación | La 024 copia `origen`, `actor` y momento de la principal a cada vinculada (su D-3), así que la (d) vinculada lleva el actor de su causa. El diseño lee el «solo» de REQ-041 como prohibición de los datos de la marca y del origen de red, no de esas columnas comunes; si no vale, lo dice la especificación o la 024 | REQ-041 |
+
+## Tras la revisión D-039 del `revisor` (21/11/2026)
+
+Autor: `arquitecto`. Salen de la corrección tras esa revisión y de la decisión de la coordinación sobre su MAYOR-1 (D-036). Ninguna está aplicada fuera de esta carpeta.
+
+| Para | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| Fase 2 (010) | `privado.dispositivos_reconocidos` lleva `id` (UUID aleatorio) y la huella solo ahí; en `privado.cambios_esperados`, `marca_conservada_id` (referencia a ese `id`) en lugar de `huella_marca_conservada` (REQ-038). Los fallos con marca válida de la cuenta suman solo en `navegador_primer_factor`, nunca en `origen_primer_factor` (REQ-024 b) | Revisión D-039, MAYOR-1 y menor de la huella |
+| Función 024 | Los códigos `accion` de (d) cubren los doce motivos de REQ-024 (e), `renovacion` y `limite` incluidos (vinculados a la I-33 que emite la nueva); sin cambio respecto a la petición de la 2.ª vuelta | Revisión D-039, menor de las anulaciones |
+| Supervisión (fase 1, V-112) y alertas (fase 4) | Aviso cuando pasen 90 días desde la última rotación anotada de la contraseña de aplicación de envío (A-14), sin el valor; hasta que exista, lo recuerda `guia-responsable.md` | Revisión D-039, menor de A-14 |
+| `docs/SEGURIDAD.md`, lista de publicación | En la entrada ya pedida de la contraseña de aplicación (A-14), anotar que da acceso a la cuenta de envío por todos los protocolos que la admiten (sin verificar; T-P3.13) | Revisión D-039, menor de A-14 |
 
 ## Decisiones en VERIFICAR
 
