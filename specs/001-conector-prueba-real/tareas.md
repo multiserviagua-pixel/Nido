@@ -95,7 +95,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `oauth/{callbacks,metadatos,cimd,origen}.ts`, `src/app/.well-known/**`, `sb/autorizacion.ts`, `src/lib/licencias/operaciones.ts`, `src/app/api/operacion/route.ts`, pruebas.
 
 ### T-109 `[P]` · Pantalla de activación
-`ingeniero-frontend` (revisa también `disenador-ui`) · C · pendiente · Depende de: T-108 · REQ-005 · CA-005
+`ingeniero-frontend` (revisa también `disenador-ui`) · C · hecha (pendiente de revisión) · Depende de: T-108 · REQ-005 · CA-005
 - `pantalla.ts`. Prueba: PRUEBA-009 (B: sin JavaScript, `state` escapado, estados, CSP), PRUEBA-010 (parte automática).
 - Archivos: `oauth/pantalla.ts`, prueba.
 
