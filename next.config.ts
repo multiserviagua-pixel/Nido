@@ -12,6 +12,14 @@ const cabecerasGenerales = [
   { key: "X-Robots-Tag", value: "noindex" },
 ];
 
+const SIN_AUTORIZAR = "/((?!oauth/autorizar/?$).*)";
+const cabecerasAutorizar = [
+  ...cabecerasGenerales.filter(
+    (c) => c.key !== "Content-Security-Policy" && c.key !== "Referrer-Policy",
+  ),
+  { key: "Referrer-Policy", value: "same-origin" },
+];
+
 // Control 1 de la muestra (diseño 020, «Cómo no existe en producción»; T-004). Los archivos de
 // ruta de la muestra son `page.muestra.tsx` y `layout.muestra.tsx`: solo son rutas si se añade la
 // extensión `muestra.tsx`, y eso solo con `ENTORNO` exactamente `desarrollo` o `preproduccion`,
@@ -40,8 +48,8 @@ const configuracion: NextConfig = {
   // con rutas desde `process.cwd()`; sin esto la traza de la función no los incluye. Solo `/api/mcp`.
   // `/api/operacion` (T-108 e) usa `autorizacion.ts` (rol de gestión) y lee la misma raíz TLS; no lee el
   // prompt ni los contratos. T-110: las rutas /oauth/* que usen `autorizacion.ts` añaden aquí su clave
-  // (p. ej. "/oauth/autorizar") con la raíz y amplían `tests/unit/plataforma/trazado.test.ts`; sin eso la
-  // función de esa ruta falla al arrancar en Vercel.
+  // con la raíz y amplían `tests/unit/plataforma/trazado.test.ts`; sin eso la función de esa ruta falla al
+  // arrancar en Vercel (T-110 a y b: /oauth/registro y /oauth/autorizar; T-110 d: /oauth/token).
   outputFileTracingIncludes: {
     "/api/mcp": [
       "./prompts/agente-prueba/**",
@@ -49,15 +57,20 @@ const configuracion: NextConfig = {
       "./supabase/conector-prueba/raiz-supabase.crt",
     ],
     "/api/operacion": ["./supabase/conector-prueba/raiz-supabase.crt"],
+    // T-110: las rutas OAuth que usan el rol de gestión leen la misma raíz TLS y nada más.
+    "/oauth/autorizar": ["./supabase/conector-prueba/raiz-supabase.crt"],
+    "/oauth/registro": ["./supabase/conector-prueba/raiz-supabase.crt"],
+    "/oauth/token": ["./supabase/conector-prueba/raiz-supabase.crt"],
   },
   async headers() {
     return [
-      { source: "/:path*", headers: cabecerasGenerales },
-      // Excepción (001, C-4): la pantalla de autorización necesita el origen propio.
-      {
-        source: "/oauth/autorizar",
-        headers: [{ key: "Referrer-Policy", value: "same-origin" }],
-      },
+      // Excepción (001, C-4): la regla global EXCLUYE `/oauth/autorizar` en su `source` (con o sin barra
+      // final) y otra regla distinta le da las mismas cabeceras salvo dos, sin depender del orden:
+      //  - `Referrer-Policy: same-origin` (con `no-referrer` el `POST` llega con `Origin: null`);
+      //  - sin `Content-Security-Policy`: la pantalla lleva la suya (con huella de estilo y
+      //    `frame-ancestors none`) y la global no debe pisarla ni sumarse a ella.
+      { source: SIN_AUTORIZAR, headers: cabecerasGenerales },
+      { source: "/oauth/autorizar", headers: cabecerasAutorizar },
     ];
   },
 };

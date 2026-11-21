@@ -100,12 +100,12 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `oauth/pantalla.ts`, prueba.
 
 ### T-110 · Registro, autorización y tokens
-`ingeniero-backend` · C · pendiente · Depende de: T-108, T-109 · REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-014 · CA-003, CA-004, CA-005, CA-006, CA-007, CA-014
+`ingeniero-backend` · C · implementada, en integración · Depende de: T-108, T-109 · REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-014 · CA-003, CA-004, CA-005, CA-006, CA-007, CA-014
 - (a) `clientes.ts` y `/oauth/registro`. Prueba: PRUEBA-005 (DCR).
 - (b) `peticion.ts` y `GET /oauth/autorizar`. Prueba: PRUEBA-005 (sin redirigir; `state` e `iss`), PRUEBA-009 (parte: solicitud y cookie).
 - (c) `activacion.ts` y `POST /oauth/autorizar`. Prueba: PRUEBA-006, PRUEBA-009 (`Origin` ajeno o `null` sin contar intento), PRUEBA-018 (parte: no disponible).
 - (d) `tokens.ts` y `/oauth/token`. Prueba: PRUEBA-012, PRUEBA-005 (PKCE), PRUEBA-011 (parte), PRUEBA-018 (parte: emitir y renovar).
-- Archivos: `oauth/{clientes,peticion,activacion,tokens}.ts`, `src/app/oauth/{registro,autorizar,token}/route.ts`, pruebas.
+- Archivos: `oauth/{clientes,peticion,activacion,tokens}.ts`, `src/app/oauth/{registro,autorizar,token}/route.ts`, pruebas; añadidos en la implementación: `next.config.ts`, `tests/unit/plataforma/{cabeceras,trazado}.test.ts`, `src/lib/oauth/cuerpo.ts`, `src/lib/oauth/pantalla.ts`.
 
 ### T-111 · Órdenes de la persona
 `plataforma` · C, Res. · pendiente · Depende de: T-110 · REQ-001, REQ-002, REQ-006, REQ-015, REQ-017 · CA-001, CA-002, CA-008, CA-015, CA-017

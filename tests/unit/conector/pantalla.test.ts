@@ -47,6 +47,7 @@ describe("pantalla: estados y textos", () => {
     expect(html).toContain("Código de activación");
     expect(html).toContain("Te lo da HumanaIA. Caduca a los 10 minutos y solo sirve una vez");
     expect(html).toContain(">Activar</button>");
+    expect(html).toContain("Continúa solo si has empezado tú esta conexión desde tu asistente.");
     expect(html).not.toContain('role="alert"');
   });
 

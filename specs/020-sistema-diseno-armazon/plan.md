@@ -75,6 +75,7 @@ El visto bueno del 13/11/2026 a un boceto del Resumen orienta la propuesta visua
 | Los agentes de diseño no cargan skills | El `disenador-ui` y el `ingeniero-frontend` trabajan sin la guía | El orquestador carga la skill y pasa la guía en cada encargo de los bloques 3, 4 y 5 |
 | Dos tareas tocan el mismo archivo | Conflicto en `inventario.ts` o `textos.ts` | Las tareas de componente van en serie; `[P]` solo donde no se comparten archivos |
 | El árbol de dependencias crece sin que nadie lo vea | PRUEBA-037 falla por un paquete nuevo | Se declara y se revisa, o se retira la dependencia |
+| H-1 (T-009 c, 21/11/2026): la consulta de la dirección aparece en el documento, dentro de los guiones de datos de Next (escapada, sin ejecutarse), no fuera de un `script` | PRUEBA-018 lo anota; es texto de la dirección reflejado en una página del mismo origen que `/admin` (diseño:621) | Se entrega a la 021 con el inventario de la política de contenido. Pendiente de dictamen del `auditor-seguridad` antes de la 021; hasta entonces la muestra queda cerrada en producción y preproducción |
 | Un texto de una página o de un paquete da órdenes a un agente | Aparece en una lectura de documentación | Es un dato (artículo 7). Se informa al responsable |
 
 ## Entornos y despliegue

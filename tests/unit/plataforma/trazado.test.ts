@@ -20,6 +20,10 @@ const TRAZA_OPERACION = join(
   "operacion",
   "route.js.nft.json",
 );
+// T-110: rutas OAuth con el rol de gestión; solo la raíz TLS.
+const TRAZAS_OAUTH = ["autorizar", "registro", "token"].map((r) =>
+  join(RAIZ, ".next", "server", "app", "oauth", r, "route.js.nft.json"),
+);
 const REQUERIDOS_OPERACION = ["supabase/conector-prueba/raiz-supabase.crt"];
 const REQUERIDOS = [
   "prompts/agente-prueba/0.1.md",
@@ -59,7 +63,13 @@ async function incluye(): Promise<Record<string, string[]>> {
 describe("trazado de archivos del conector (C-4, V-3)", () => {
   it("next.config.ts declara outputFileTracingIncludes para /api/mcp con los tres orígenes", async () => {
     const inc = await incluye();
-    expect(Object.keys(inc)).toEqual(["/api/mcp", "/api/operacion"]);
+    expect(Object.keys(inc)).toEqual([
+      "/api/mcp",
+      "/api/operacion",
+      "/oauth/autorizar",
+      "/oauth/registro",
+      "/oauth/token",
+    ]);
     const globs = inc["/api/mcp"];
     expect(globs).toBeDefined();
     expect(globs).toEqual(
@@ -80,6 +90,13 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
     expect((await incluye())["/api/operacion"]).toEqual([
       "./supabase/conector-prueba/raiz-supabase.crt",
     ]);
+  });
+
+  it("/oauth/autorizar, /oauth/registro y /oauth/token (T-110) trazan solo la raíz TLS de Supabase", async () => {
+    const inc = await incluye();
+    for (const ruta of ["/oauth/autorizar", "/oauth/registro", "/oauth/token"]) {
+      expect(inc[ruta], ruta).toEqual(["./supabase/conector-prueba/raiz-supabase.crt"]);
+    }
   });
 
   it("la lista blanca detecta lo que sobra fuera de node_modules y .next", () => {
@@ -111,7 +128,7 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
       ...recorrer(join(RAIZ, "src")),
     ].filter((p) => existsSync(p));
     const masReciente = Math.max(...entradas.map((p) => statSync(p).mtimeMs));
-    const vieja = [TRAZA, TRAZA_OPERACION].some(
+    const vieja = [TRAZA, TRAZA_OPERACION, ...TRAZAS_OAUTH].some(
       (z) => !existsSync(z) || statSync(z).mtimeMs < masReciente,
     );
     if (vieja) {
@@ -142,5 +159,16 @@ describe("trazado de archivos del conector (C-4, V-3)", () => {
     );
     for (const r of REQUERIDOS_OPERACION) expect(rutasOperacion, r).toContain(r);
     expect(ajenosALaListaBlanca(rutasOperacion, REQUERIDOS_OPERACION)).toEqual([]);
+
+    // T-110: `/oauth/autorizar`, `/oauth/registro` y `/oauth/token` incluyen la raíz TLS y nada más fuera de node_modules y .next.
+    for (const traza of TRAZAS_OAUTH) {
+      expect(existsSync(traza), traza).toBe(true);
+      const t = JSON.parse(readFileSync(traza, "utf8")) as { files: string[] };
+      const rutasOauth = new Set(
+        t.files.map((f) => relative(RAIZ, resolve(dirname(traza), f)).replaceAll("\\", "/")),
+      );
+      for (const r of REQUERIDOS_OPERACION) expect(rutasOauth, r).toContain(r);
+      expect(ajenosALaListaBlanca(rutasOauth, REQUERIDOS_OPERACION), traza).toEqual([]);
+    }
   }, 300_000);
 });

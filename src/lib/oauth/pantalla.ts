@@ -37,6 +37,7 @@ const TEXTOS = {
   codigoNoValido: "El código no es válido o ha caducado. Pide uno nuevo a HumanaIA.",
   bloqueado: "Demasiados intentos. Espera 15 minutos y pide un código nuevo a HumanaIA.",
   solicitudNoValida: "Esta solicitud ha caducado. Vuelve a empezar desde tu asistente.",
+  soloSiEmpezaste: "Continúa solo si has empezado tú esta conexión desde tu asistente.",
   noDisponible: "No se ha podido completar. Inténtalo de nuevo en unos minutos.",
 } as const;
 
@@ -129,8 +130,10 @@ function formulario(e: Extract<EstadoPantalla, { tipo: "formulario" }>): string 
   const error = e.codigoNoValido === true;
   const descripcion = error ? "error-codigo ayuda-codigo" : "ayuda-codigo";
   return `<p>Vas a conectar: <strong>${NOMBRES[e.asistente]}</strong></p>
+<p class="ayuda">${TEXTOS.soloSiEmpezaste}</p>
 <form method="post" action="/oauth/autorizar">
 <input type="hidden" name="solicitud" value="${escaparHtml(e.solicitud)}">
+<input type="hidden" name="asistente" value="${e.asistente}">
 <input type="hidden" name="state" value="${escaparHtml(e.state)}">
 <label for="codigo">Código de activación</label>
 <p class="ayuda" id="ayuda-codigo">Te lo da HumanaIA. Caduca a los 10 minutos y solo sirve una vez.</p>
