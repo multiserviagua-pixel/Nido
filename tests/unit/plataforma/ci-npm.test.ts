@@ -167,7 +167,9 @@ describe("arnes.yml: dependencias de npm (D-030)", () => {
     expect(comprobarFlujo(mutar(tras, "$1\n        'if': false"))).toContain("if:");
     expect(comprobarFlujo(mutar(tras, "$1\n        if : ${{ false }}"))).toContain("if:");
     expect(
-      comprobarFlujo(mutar(/( {6}- uses: actions\/setup-node@v4)/, "$1\n        if: false")),
+      comprobarFlujo(
+        mutar(/( {6}- uses: actions\/setup-node@[0-9a-f]{40} # v[\d.]+)/, "$1\n        if: false"),
+      ),
     ).toContain("if:");
   });
 
@@ -210,7 +212,7 @@ describe("arnes.yml: dependencias de npm (D-030)", () => {
 
   it("actions/checkout lleva persist-credentials: false, con mutación", () => {
     expect(flujo).toMatch(
-      /- uses: actions\/checkout@v4\n {8}with:\n {10}persist-credentials: false/,
+      /- uses: actions\/checkout@[0-9a-f]{40} # v[\d.]+\n {8}with:\n {10}persist-credentials: false/,
     );
     expect(
       comprobarFlujo(mutar(/\n {8}with:\n {10}persist-credentials: false/, "")).join("|"),

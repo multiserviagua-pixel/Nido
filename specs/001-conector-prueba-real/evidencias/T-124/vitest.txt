@@ -1,0 +1,12 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-124
+
+
+ Test Files  103 passed (103)
+      Tests  3231 passed (3231)
+   Start at  23:28:42
+   Duration  1026.68s (tests 98%, import 1%)
+
+    Isolate  103 workers spawned · ~492ms startup each (spawn + environment, per file)
+             at least ~24.82s faster with isolate: false — reuses workers across files instead of one per file
+

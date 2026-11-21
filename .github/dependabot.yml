@@ -1,0 +1,8 @@
+# Solo las acciones de GitHub (fijadas por SHA): propone la subida del SHA y de su comentario de versión.
+# Cambio de CI por delegación D-036 (21/11/2026). No se añaden otros ecosistemas.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

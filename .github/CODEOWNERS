@@ -1,0 +1,26 @@
+# Propietarios de lo que protege el CI, la cadena de suministro y las rutas críticas (D-036, 21/11/2026).
+# Propietario: la cuenta dueña del repositorio. Si el responsable prefiere otro usuario o equipo, lo cambia aquí.
+# AVISO: este archivo solo surte efecto si una persona activa en la protección de rama de main la
+# «revisión de propietarios de código» (ajuste de producción, no lo aplica un agente). Además, si el
+# propietario es quien abre los PR, GitHub no acepta su propia aprobación: la persona decide si exige
+# un segundo revisor, un equipo propietario o si se salta la regla como administrador.
+/.github/ @multiserviagua-pixel
+/.github/CODEOWNERS @multiserviagua-pixel
+/.npmrc @multiserviagua-pixel
+/package-lock.json @multiserviagua-pixel
+/package.json @multiserviagua-pixel
+/scripts/ @multiserviagua-pixel
+/tests/unit/plataforma/ @multiserviagua-pixel
+/vitest.config.ts @multiserviagua-pixel
+/vercel.json @multiserviagua-pixel
+/next.config.ts @multiserviagua-pixel
+/supabase/migrations/ @multiserviagua-pixel
+/supabase/reversiones/ @multiserviagua-pixel
+/prompts/ @multiserviagua-pixel
+/docs/CONSTITUCION.md @multiserviagua-pixel
+/.claude/ @multiserviagua-pixel
+/contratos/ @multiserviagua-pixel
+/supabase/conector-prueba/ @multiserviagua-pixel
+/eslint.config.mjs @multiserviagua-pixel
+/docs/SEGURIDAD.md @multiserviagua-pixel
+/.gitattributes @multiserviagua-pixel

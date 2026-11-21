@@ -43,6 +43,9 @@ function extensionesDePagina(): string[] {
 
 const configuracion: NextConfig = {
   poweredByHeader: false,
+  // T-124: Next escribe un bloque gestionado en AGENTS.md (documentado para `next dev`; el carril A2 lo vio
+  // también con build y start). Desactivado para que ninguna orden de Next modifique el archivo.
+  agentRules: false,
   pageExtensions: extensionesDePagina(),
   // 001 C-4 (T-106): el conector lee en ejecución el prompt, los contratos y la raíz TLS de Supabase
   // con rutas desde `process.cwd()`; sin esto la traza de la función no los incluye. Solo `/api/mcp`.

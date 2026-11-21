@@ -1,0 +1,8 @@
+vitest=0
+tipos=0
+estilo=0
+aislamiento=0
+arnes=0
+build=0
+agents=0
+fin

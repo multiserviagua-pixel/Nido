@@ -2,12 +2,9 @@
 # y se vean sus resultados. El CI completo (tipos, estilo, pruebas, pgTAP,
 # escáneres) se monta en la fase 1.
 #
-# Pendientes antes del primer push (dictamen del auditor-seguridad, T-120):
-#  - fijar las acciones por huella SHA completa (checkout, setup-node);
-#  - canal de aviso para los fallos del diario sobre main (función 003).
-#
-# V-115: comprobar las versiones vigentes de estas acciones y fijarlas por
-# huella antes de usarlas.
+# Acciones fijadas por SHA completo de commit con la versión en comentario (T-124, D-036, 21/11/2026);
+# lo comprueba tests/unit/plataforma/acciones-fijadas.test.ts. Dependabot propone las subidas.
+# Pendiente: canal de aviso para los fallos del diario sobre main (función 003).
 
 name: Arnés
 
@@ -27,10 +24,10 @@ jobs:
     name: Comprobador documental y de suministro
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 26
       - name: Comprobar trazabilidad, cabeceras y secretos

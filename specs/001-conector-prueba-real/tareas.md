@@ -209,9 +209,11 @@ Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten a
 - Archivos: `tu/bd/validar.test.ts`; `sql`, solo con (b).
 
 ### T-124 · `agentRules: false` en `next.config.ts`
-`plataforma` · C · pendiente · Depende de: T-110 · REQ-015 · CA-015
+`plataforma` · C · hecha (evidencia completa en verde, 21/11/2026; revisor APTO CON MENORES, auditor APTO CON CONDICIONES) · Depende de: T-110 · REQ-015 · CA-015
 - `next dev`, `next build` y `next start` escriben un bloque en `AGENTS.md` (hallazgo del carril A2). Fijar `agentRules: false` en `next.config.ts` y comprobar que tras `next build` `AGENTS.md` no cambia. Decisión de la coordinación, 21/11/2026 (D-036).
-- Revisión: `revisor`. Archivos: `next.config.ts`, prueba en `tests/unit/plataforma`.
+- Cambio de CI incluido (D-036, 21/11/2026, con dictamen del `auditor-seguridad`): acciones de `.github/workflows` fijadas por SHA completo de commit con la versión en comentario; `.github/CODEOWNERS` sobre CI, `.npmrc`, bloqueo, scripts, pruebas de plataforma, migraciones, prompts, contratos, constitución, `.claude` y demás rutas críticas (solo surte efecto si una persona activa la revisión de propietarios en la protección de rama); `.github/dependabot.yml` solo para `github-actions`. Pruebas en `tests/unit/plataforma` (`acciones-fijadas`, `ci-npm`, `agent-rules`).
+- La comprobación de que `AGENTS.md` no cambia tras `next build` consta en `evidencias/T-124/agents-md.txt` (la ejecuta el responsable, no hay build en esta máquina de agente).
+- Revisión: `revisor`. Archivos: `next.config.ts`, `.github/` (flujos, `CODEOWNERS`, `dependabot.yml`), pruebas en `tests/unit/plataforma`.
 
 ## Equivalencias (numeración del 19/11 → actual)
 
