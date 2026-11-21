@@ -1,0 +1,4 @@
+solo caso=6 politica-rls orden='npm run aislamiento' salida=1 duracion_s=2
+solo caso=7 canario orden='npm run arnes' salida=1 duracion_s=2 apariciones_del_canario_en_la_salida=0
+solo caso=8 compilacion orden='npm run build' salida=1 duracion_s=18
+FIN

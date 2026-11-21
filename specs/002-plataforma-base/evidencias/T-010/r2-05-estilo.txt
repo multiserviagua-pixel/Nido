@@ -1,0 +1,7 @@
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+orden=npm run estilo salida=0 duracion_s=21

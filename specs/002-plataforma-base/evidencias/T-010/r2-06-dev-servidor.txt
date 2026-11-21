@@ -1,0 +1,22 @@
+
+> nido@0.1.0 dev
+> next dev
+
+▲ Next.js 16.4.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://<IP-local>:3000
+- Environments: .env.local
+✓ Ready in 693ms
+✓ Running next.config.ts took 41ms
+
+✓ Generated AGENTS.md for AI agents. Set `agentRules: false` in next.config to disable.
+ GET /api/salud 200 in 97ms (next.js: 84ms, application-code: 13ms)
+ GET / 200 in 247ms (next.js: 165ms, application-code: 82ms)
+ GET /no-existe-qa 404 in 247ms (next.js: 230ms, application-code: 17ms)
+ POST / 200 in 15ms (next.js: 1.3ms, application-code: 13ms)
+ GET /api/salud 200 in 7ms (next.js: 1.2ms, application-code: 5ms)
+ POST /api/salud 405 in 6ms (next.js: 1.2ms, application-code: 5ms)
+ POST / 200 in 14ms (next.js: 1.4ms, application-code: 13ms)
+ POST / 200 in 14ms (next.js: 1.1ms, application-code: 12ms)
+ GET / 200 in 13ms (next.js: 1.3ms, application-code: 12ms)
+[?25h

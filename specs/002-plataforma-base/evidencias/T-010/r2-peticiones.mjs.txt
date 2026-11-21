@@ -1,0 +1,10 @@
+const B = "http://localhost:3000";
+const r = [];
+const c = (n, ok, d) => { r.push(ok); console.log(`${ok ? "OK " : "FALLA"} ${n}: ${d}`); };
+let x = await fetch(B + "/"); let t = await x.text();
+c("GET / 200", x.status === 200, x.status); c("GET / lang=es", /<html[^>]*lang="es"/.test(t), "lang es");
+x = await fetch(B + "/no-existe-qa"); await x.text(); c("ruta inexistente 404", x.status === 404, x.status);
+x = await fetch(B + "/", { method: "POST", body: "{}" }); await x.text(); c("POST / sin 2xx", x.status < 200 || x.status > 299, x.status);
+x = await fetch(B + "/api/salud"); t = await x.text(); c("GET /api/salud 200", x.status === 200, x.status); c("cuerpo exacto", t === '{"estado":"ok"}', t);
+x = await fetch(B + "/api/salud", { method: "POST", body: "{}" }); await x.text(); c("POST /api/salud 405", x.status === 405, x.status);
+process.exit(r.every(Boolean) ? 0 : 1);

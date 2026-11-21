@@ -1,0 +1,12 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+src/lib/qa_tipos.ts(1,14): error TS2322: Type 'string' is not assignable to type 'number'.
+caso=1 tipos orden='npm run verificar' salida=2 duracion_s=9

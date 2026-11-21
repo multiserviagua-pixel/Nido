@@ -1,0 +1,8 @@
+OK  GET / 200: 200
+OK  GET / lang=es: lang es
+OK  ruta inexistente 404: 404
+FALLA POST / sin 2xx: 200
+OK  GET /api/salud 200: 200
+OK  cuerpo exacto: {"estado":"ok"}
+OK  POST /api/salud 405: 405
+salida=1

@@ -1,0 +1,24 @@
+#!/bin/bash
+# PRUEBA-055, 2.a pasada, intento 2 (VITEST_MAX_WORKERS=3): un defecto cada vez con la cadena completa npm run verificar (en el clon de main 9e629f1).
+cd /c/dev/qa-t010b
+E=/c/dev/agentes-correo-humanaia/.claude/worktrees/t-010b/specs/002-plataforma-base/evidencias/T-010/r2-11-prueba-055
+mkdir -p $E; : > $E/resumen.txt
+export VITEST_MAX_WORKERS=3
+BASE=9e629f1
+reset(){ git checkout -q -- . ; rm -rf .next ; git clean -fdq -e node_modules ; git reset -q --hard $BASE; }
+CAN="gh""p_""$(printf 'Ab1Cd2Ef3Gh4%.0s' 1 2 3)"
+caso(){ n=$1; nombre=$2; reset; aplicar_$n
+  s=$(date +%s); npm run verificar > $E/$n-$nombre.txt 2>&1; rc=$?
+  extra=""; [ $n = 7 ] && extra=" apariciones_del_canario_en_la_salida=$(grep -cF "$CAN" $E/$n-$nombre.txt)"
+  echo "caso=$n $nombre orden='npm run verificar' salida=$rc duracion_s=$(( $(date +%s)-s ))$extra" | tee -a $E/$n-$nombre.txt >> $E/resumen.txt; }
+aplicar_0(){ :; }
+aplicar_1(){ printf 'export const x: number = "no es un numero";\n' > src/lib/qa_tipos.ts; }
+aplicar_2(){ printf 'export const v = process.env.QA_VARIABLE;\n' > src/lib/qa_env.ts; }
+aplicar_3(){ printf 'import { expect, it } from "vitest";\n\nit("qa falla a proposito", () => {\n  expect(1).toBe(2);\n});\n' > tests/unit/qa_falla.test.ts; }
+aplicar_4(){ printf 'import { expect, it } from "vitest";\n\nit.only("qa only", () => {\n  expect(1).toBe(1);\n});\n' > tests/unit/qa_only.test.ts; }
+aplicar_5(){ git rm -rq tests supabase/tests/pglite; }
+aplicar_6(){ node -e 'const fs=require("fs");let t=fs.readFileSync("docs/MODELO-DATOS.sql","utf8");const i=t.search(/create policy/i);const j=t.indexOf(";",i);fs.writeFileSync("docs/MODELO-DATOS.sql",t.slice(0,i)+t.slice(j+1));console.log("politica quitada: "+t.slice(i,i+70).replace(/\s+/g," "))' > $E/6-defecto.txt; }
+aplicar_7(){ printf '%s\n' "$CAN" > src/lib/qa_canario.txt; }
+aplicar_8(){ mkdir -p src/app/qa-rota; printf 'import { ErrorDeAplicacion } from "../../lib/plataforma/errores";\n\nexport default function Pagina() {\n  throw new ErrorDeAplicacion("entrada_invalida");\n}\n' > src/app/qa-rota/page.tsx; }
+for c in "0 sin-defectos" "1 tipos" "2 process-env" "3 prueba-fallida" "4 only" "5 ninguna-prueba" "6 politica-rls" "7 canario" "8 compilacion"; do caso $c; done
+reset; echo FIN >> $E/resumen.txt

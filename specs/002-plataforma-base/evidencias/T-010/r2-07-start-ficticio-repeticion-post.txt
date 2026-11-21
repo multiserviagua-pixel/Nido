@@ -1,0 +1,5 @@
+== repeticion A (entorno ficticio no desarrollo)
+POST / 200
+POST / 200
+POST / 200
+HTTP/1.1 200 OK

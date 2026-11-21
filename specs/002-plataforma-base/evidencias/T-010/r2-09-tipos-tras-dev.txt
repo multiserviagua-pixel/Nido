@@ -1,0 +1,16 @@
+== tipos tras npm run dev (con .next/dev existente)
+Generating route types...
+✓ Types generated successfully
+.next/dev/types/validator.ts(30,44): error TS2344: Type 'Route' does not satisfy the constraint '"/"'.
+  Type 'LayoutRoutes' is not assignable to type '"/"'.
+    Type '"/muestra"' is not assignable to type '"/"'.
+.next/dev/types/validator.ts(30,75): error TS2344: Type 'Route' does not satisfy the constraint '"/"'.
+  Type 'LayoutRoutes' is not assignable to type '"/"'.
+    Type '"/muestra"' is not assignable to type '"/"'.
+salida=1
+== tipos tras borrar .next
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+salida=0

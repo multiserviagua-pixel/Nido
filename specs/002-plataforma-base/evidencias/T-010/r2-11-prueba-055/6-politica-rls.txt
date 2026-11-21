@@ -1,0 +1,56 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010b
+
+(node:15116) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Worker forks emitted error.
+ ❯ EventEmitter.onTaskError node_modules/vitest/dist/chunks/index.Di8au7q4.js:5926:21
+ ❯ EventEmitter.emit node:events:526:24
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5401:22
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+Caused by: Error: Worker exited unexpectedly with exit code 3221226505 during starting state
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5399:33
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  82 passed (82)
+      Tests  2260 passed (2260)
+     Errors  1 error
+   Start at  13:30:30
+   Duration  1066.65s (tests 98%, import 1%, setup 1%)
+
+    Isolate  82 workers spawned · ~2.15s startup each (spawn + environment, per file)
+             at least ~56.69s faster with isolate: false — reuses workers across files instead of one per file
+
+caso=6 politica-rls orden='npm run verificar' salida=1 duracion_s=1151

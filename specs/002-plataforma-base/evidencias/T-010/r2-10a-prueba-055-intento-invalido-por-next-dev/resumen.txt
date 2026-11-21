@@ -1,0 +1,10 @@
+caso=1 tipos orden='npm run verificar' salida=2 duracion_s=6
+caso=2 process-env orden='npm run verificar' salida=2 duracion_s=4
+caso=3 prueba-fallida orden='npm run verificar' salida=2 duracion_s=4
+caso=4 only orden='npm run verificar' salida=2 duracion_s=4
+caso=5 ninguna-prueba orden='npm run verificar' salida=2 duracion_s=4
+caso=6 politica-rls orden='npm run verificar' salida=2 duracion_s=6
+caso=7 canario orden='npm run verificar' salida=1 duracion_s=4 apariciones_del_canario_en_la_salida=0
+caso=8 compilacion orden='npm run verificar' salida=2 duracion_s=6
+caso=0 sin-defectos orden='npm run verificar' salida=2 duracion_s=6
+FIN

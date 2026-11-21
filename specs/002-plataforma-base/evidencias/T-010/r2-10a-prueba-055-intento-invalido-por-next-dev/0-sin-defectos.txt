@@ -1,0 +1,17 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+.next/dev/types/validator.ts(30,44): error TS2344: Type 'Route' does not satisfy the constraint '"/"'.
+  Type 'LayoutRoutes' is not assignable to type '"/"'.
+    Type '"/muestra"' is not assignable to type '"/"'.
+.next/dev/types/validator.ts(30,75): error TS2344: Type 'Route' does not satisfy the constraint '"/"'.
+  Type 'LayoutRoutes' is not assignable to type '"/"'.
+    Type '"/muestra"' is not assignable to type '"/"'.
+caso=0 sin-defectos orden='npm run verificar' salida=2 duracion_s=6

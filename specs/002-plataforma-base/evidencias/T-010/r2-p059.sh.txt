@@ -1,0 +1,35 @@
+#!/bin/bash
+# PRUEBA-059 reformulada (QA, T-010 2.ª pasada). Recorre commits de main con (002) y comprueba, en el arbol de HEAD, la carpeta por tarea.
+cd "${1:-/c/dev/qa-t010b}"
+HEAD=$(git rev-parse --short HEAD); fallos=0
+D=specs/002-plataforma-base/evidencias
+echo "HEAD=$HEAD"
+echo "--- A. asunto y constancia de delegacion por commit"
+for c in f9f0494 12044a1 03b82c0 6791036 0d8fd6d 50b01c3 d852217 5a1b9ab 9e629f1; do
+  s=$(git log -1 --format=%s $c)
+  echo "$s" | grep -qE '^T-[0-9]+( y T-[0-9]+)? \(002\): ' && f=si || { f=no; fallos=$((fallos+1)); }
+  git log -1 --format=%B $c | grep -q "aprobado por delegación D-036" && d=si || d=no
+  desde=anterior; case $c in 0d8fd6d|50b01c3|d852217|5a1b9ab|9e629f1) desde=T-005-o-posterior;; esac
+  req=no_exigida; [ $desde = T-005-o-posterior ] && { req=exigida; [ $d = si ] || { req=FALTA; fallos=$((fallos+1)); }; }
+  echo "$c asunto_forma=$f delegacion_en_mensaje=$d ($req, $desde)"
+done
+echo "--- B. todo commit first-parent de main con (002) en el asunto esta en la lista anterior"
+conocidos=" f9f0494 12044a1 03b82c0 6791036 0d8fd6d 50b01c3 d852217 5a1b9ab 9e629f1 "
+for c in $(git log --first-parent --format=%h main); do
+  git log -1 --format=%s $c | grep -q '(002)' && case "$conocidos" in *" $c "*) ;; *) echo "NO LISTADO $c: $(git log -1 --format=%s $c | cut -c1-80)"; fallos=$((fallos+1));; esac
+done
+echo "--- C. carpeta de evidencias en el arbol de HEAD (T-001 a T-006 y T-009)"
+for t in T-001 T-002 T-003 T-004 T-005 T-006 T-009; do
+  ob="verificar.md revision.md aprobacion.md"; case $t in T-001|T-003|T-004|T-005|T-006) ob="$ob dictamen.md";; esac
+  falt=""; for a in $ob; do [ -s $D/$t/$a ] || falt="$falt $a"; done
+  [ -z "$falt" ] && echo "OK $t ($ob)" || { echo "FALLA $t falta:$falt"; fallos=$((fallos+1)); }
+done
+echo "--- D. 'no consta' en T-001 a T-004 donde no hay delegacion; literal de delegacion de T-005, T-006, T-009 coincide con git log"
+for t in T-001 T-002 T-003 T-004; do grep -q "no consta" $D/$t/aprobacion.md && echo "OK $t: dice 'no consta'" || { echo "FALLA $t sin 'no consta'"; fallos=$((fallos+1)); }; done
+for p in "T-005 0d8fd6d" "T-005 5a1b9ab" "T-006 50b01c3" "T-009 d852217"; do set -- $p
+  lit=$(git log -1 --format=%B $2 | grep -o "aprobado por delegación D-036, [0-9/]*" | head -1)
+  grep -qF "$lit" $D/$1/aprobacion.md && echo "OK $1 $2 literal «$lit» presente en aprobacion.md" || { echo "FALLA $1 $2 literal «$lit» ausente"; fallos=$((fallos+1)); }
+done
+echo "--- E. T-011 y T-012 (commit 9e629f1): sin carpeta propia; T-012 las crea para las demas; admitido por la tabla (T-011 y T-012 en un commit)"
+echo "RESULTADO_PRUEBA_059_existencia fallos=$fallos"
+exit $fallos

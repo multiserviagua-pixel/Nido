@@ -1,0 +1,6 @@
+== POST / segun content-type (start, entorno ficticio)
+text/plain -> 405
+application/json -> 405
+application/x-www-form-urlencoded -> 200
+sin cuerpo ni content-type -> 405
+node fetch cuerpo texto -> 405

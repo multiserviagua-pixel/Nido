@@ -1,0 +1,27 @@
+// QA T-010 2.a pasada: arranca el servidor (npm run dev | npm run start), ejecuta las peticiones de PRUEBA-024 con fetch de Node y lo para.
+// Uso: node servir.mjs <dev|start> <directorio>   (el entorno del proceso ya trae las variables; no se imprime ninguna)
+import { spawn, execSync } from "node:child_process";
+const [modo, cwd] = process.argv.slice(2);
+const B = "http://localhost:3000";
+const srv = spawn("npm", ["run", modo], { cwd, shell: true, stdio: ["ignore", "pipe", "pipe"] });
+let log = ""; srv.stdout.on("data", (d) => (log += d)); srv.stderr.on("data", (d) => (log += d));
+const parar = () => { try { execSync(`taskkill /T /F /PID ${srv.pid}`, { stdio: "ignore" }); } catch {} };
+let listo = false;
+for (let i = 0; i < 120 && !listo; i++) { try { await fetch(B + "/api/salud"); listo = true; } catch { await new Promise((r) => setTimeout(r, 1000)); } }
+if (!listo) { console.log("FALLA el servidor no arranco"); console.log(log.slice(0, 1500)); parar(); process.exit(2); }
+console.log(`== modo=${modo} (npm run ${modo})`);
+const r = [];
+const c = (n, ok, d) => { r.push(ok); console.log(`${ok ? "OK   " : "FALLA"} ${n}: ${d}`); };
+let x = await fetch(B + "/"); let t = await x.text();
+c("GET / 200", x.status === 200, x.status); c("GET / lang=es", /<html[^>]*lang="es"/.test(t), "lang es");
+x = await fetch(B + "/no-existe-qa"); await x.text(); c("ruta inexistente 404", x.status === 404, x.status);
+x = await fetch(B + "/", { method: "POST", body: "{}" }); await x.text(); c("POST / (cuerpo texto, fetch por defecto) sin 2xx", x.status < 200 || x.status > 299, x.status);
+x = await fetch(B + "/api/salud"); t = await x.text(); c("GET /api/salud 200", x.status === 200, x.status); c("cuerpo exacto", t === '{"estado":"ok"}', t);
+x = await fetch(B + "/api/salud", { method: "POST", body: "{}" }); await x.text(); c("POST /api/salud 405", x.status === 405, x.status);
+console.log("-- informativo: POST / segun Content-Type (fetch de Node)");
+for (const [ct, body] of [["application/json", "{}"], ["text/plain", "{}"], ["application/x-www-form-urlencoded", "a=1"], ["multipart/form-data; boundary=x", "--x--"], [undefined, undefined]]) {
+  for (let k = 1; k <= 2; k++) { x = await fetch(B + "/", { method: "POST", headers: ct ? { "content-type": ct } : {}, body }); await x.text(); console.log(`   POST / content-type=${ct ?? "(ninguno, sin cuerpo)"} intento ${k}: ${x.status}`); }
+}
+parar();
+console.log(`RESULTADO modo=${modo}: ${r.filter(Boolean).length} de ${r.length}`);
+process.exit(r.every(Boolean) ? 0 : 1);

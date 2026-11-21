@@ -1,0 +1,10 @@
+# Entorno de la 2.ª pasada (T-010, 21/11/2026), medido al cerrar la pasada
+$ node -v
+v26.13.0
+$ npm -v
+11.20.0
+$ powershell -File m.ps1   (Get-CimInstance Win32_ComputerSystem y Win32_OperatingSystem)
+CPU logicos: 14
+RAM total GB: 15.5
+RAM libre GB: 3.3
+Nota: la memoria libre de 2,3 GB citada en el informe es la que anotó la pasada al empezar; los 3,3 GB de arriba son la medida de ahora, con otra carga. Las dos cifras son de otras sesiones en paralelo.

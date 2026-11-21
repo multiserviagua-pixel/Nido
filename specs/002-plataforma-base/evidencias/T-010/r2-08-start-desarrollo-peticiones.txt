@@ -1,0 +1,6 @@
+== ENTORNO=desarrollo (.env.local) con npm run start
+HTTP/1.1 503 Service Unavailable
+{"estado":"error"}GET / 200
+ruta inexistente 404
+POST / 200
+POST /api/salud 405

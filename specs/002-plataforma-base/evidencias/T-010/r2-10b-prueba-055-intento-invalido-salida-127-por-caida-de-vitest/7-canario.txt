@@ -1,0 +1,24 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010b
+
+caso=7 canario orden='npm run verificar' salida=127 duracion_s=200 apariciones_del_canario_en_la_salida=0

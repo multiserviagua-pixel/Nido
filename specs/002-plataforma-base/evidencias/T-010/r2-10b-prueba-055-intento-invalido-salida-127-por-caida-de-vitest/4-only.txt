@@ -1,0 +1,500 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010b
+
+
+<--- Last few GCs --->
+
+[27492:0000022353457000]   179955 ms: Scavenge (during sweeping) 62.5 (96.1) -> 30.9 (96.1) MB, pooled: 0.0 MB, 1.27 / 0.00 ms (average mu = 0.899, current mu = 0.426) allocation failure; 
+[27492:0000022353457000]   184617 ms: Scavenge (during sweeping) 62.7 (96.6) -> 31.5 (96.6) MB, pooled: 0.0 MB, 7.45 / 0.00 ms (average mu = 0.899, current mu = 0.426) allocation failure; 
+
+
+<--- Last few GCs --->
+
+[27492:0000022353457000]   179955 ms: Scavenge (during sweeping) 62.5 (96.1) -> 30.9 (96.1) MB, pooled: 0.0 MB, 1.27 / 0.00 ms (average mu = 0.899, current mu = 0.426) allocation failure; 
+[27492:0000022353457000]   184617 ms: Scavenge (during sweeping) 62.7 (96.6) -> 31.5 (96.6) MB, pooled: 0.0 MB, 7.45 / 0.00 ms (average mu = 0.899, current mu = 0.426) allocation failure; 
+
+FATAL ERROR: MarkCompactCollector: young object promotion failed Allocation failed - JavaScript heap out of memory
+FATAL ERROR: MarkCompactCollector: young object promotion failed Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+----- Native stack trace -----
+
+ 1: 00007FF6D8F4F626 
+ 2: 00007FF6D8F4FA42 
+ 3: 00007FF6D960B867 
+ 4: 00007FF6D960B7FA 
+ 5: 00007FF6D951C077 
+ 6: 00007FF6D86641D5 
+ 7: 00007FF6D7CDD4AC 
+ 8: 00007FF6D7C9AFBA 
+ 9: 00007FF6D817C639 
+10: 00007FF6D819F15D 
+11: 00007FF6D8C73193 
+12: 00007FFD9586DDA7 
+13: 00007FFD97459C6C 
+
+<--- Last few GCs --->
+
+[872:0000022AB61BE000]   200528 ms: Scavenge (during sweeping) 115.4 (134.4) -> 99.8 (134.4) MB, pooled: 0.0 MB, 3.62 / 0.00 ms (average mu = 0.890, current mu = 0.963) allocation failure; 
+[872:0000022AB61BE000]   201734 ms: Scavenge (during sweeping) 115.6 (134.4) -> 100.0 (134.4) MB, pooled: 0.0 MB, 1.65 / 0.00 ms (average mu = 0.890, current mu = 0.963) allocation failure; 
+
+FATAL ERROR: Commit wasm code space Allocation failed - process out of memory
+Reason: region size: 286720
+----- Native stack trace -----
+
+ 1: 00007FF6D8F4F626 node::SetAbortHandler+54
+ 2: 00007FF6D8F4FA42 node::OnFatalError+978
+ 3: 00007FF6D960B867 v8::Object::GetCreationContext+567
+ 4: 00007FF6D960B7FA v8::Object::GetCreationContext+458
+ 5: 00007FF6D90C808F v8::platform::tracing::TraceObject::cpu_duration+8815
+ 6: 00007FF6D90C740F v8::platform::tracing::TraceObject::cpu_duration+5615
+ 7: 00007FF6D90CC3D6 v8::platform::tracing::TraceObject::cpu_duration+26038
+ 8: 00007FF6D90CC1A9 v8::platform::tracing::TraceObject::cpu_duration+25481
+ 9: 00007FF6D90EA6E3 v8::platform::tracing::TraceObject::cpu_duration+149699
+10: 00007FF6D9177EB0 v8::internal::compiler::CompilationDependencies::~CompilationDependencies+527296
+11: 00007FF6D8AFB5D0 ASN1_OBJECT_it+784336
+12: 00007FF6D8AF2256 ASN1_OBJECT_it+746582
+13: 0000022ABE573928 
+ ❯ tests/unit/conector/enviar-informe.test.ts (25 tests | 2 failed) 207430ms
+   ❯ enviar_informe: ejecución desconocida, igual en todos los casos (PRUEBA-017) (3)
+     × token de otro cliente: nada escrito en la ejecución del primero 17641ms
+   ❯ enviar_informe: repeticiones y simultaneidad (PRUEBA-017; PRUEBA-007, parte) (2)
+     × el segundo envío, igual o distinto, responde repetido y conserva el primero 2988ms
+ ❯ tests/unit/conector/bd/tokens.test.ts (21 tests | 1 failed) 257964ms
+   ❯ T-107 (c): renovar (PRUEBA-012, parte BD, con reloj) (9)
+     × rechaza (no_valido) sin escribir: tipo equivocado, desconocido, otro cliente o recurso, sal o HMAC mal formados 7593ms
+ ❯ tests/unit/conector/bd/informe.test.ts (25 tests | 1 failed) 282746ms
+   ❯ T-103 (e): ejecución desconocida y cierre en fallo (5)
+     × ejecución inexistente, mal formada o nula -> ejecucion_desconocida, sin efecto y sin eco 3206ms
+ ❯ tests/unit/conector/bd/operar.test.ts (29 tests | 2 failed) 306380ms
+   ❯ T-107 (d): operar_generar_codigo, suspender, reactivar y crear_orden (5)
+     × crear_orden rechaza tipos no válidos y licencias revocadas, sin escribir 9280ms
+   ❯ T-107 (d): listar_conexiones y revocar_conexion (PRUEBA-013) (3)
+     × lista las conexiones sin ningún secreto 3584ms
+[vitest-pool]: Timeout terminating forks worker for test files C:/dev/qa-t010b/tests/unit/conector/bd/operar.test.ts.
+ ❯ supabase/tests/pglite/m04_m05.test.ts (39 tests | 2 failed) 405235ms
+   ❯ REQ-055, CA-033, D-8: la huella es la del texto (6)
+     × la versión es única 828ms
+   ❯ REQ-015 a REQ-019, REQ-061, CA-013, CA-014, CA-038: auditoría según las clases de D-3 (9)
+     × una escritura como authenticated en cada tabla de M02 deja 1 fila con el actor, la acción, la tabla, el objeto y el cliente 8431ms
+(node:29316) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ ❯ tests/unit/conector/operaciones.test.ts (54 tests | 4 failed) 429537ms
+   ❯ PRUEBA-020: operaciones de HumanaIA sin desplegar (32)
+     ❯ formato validado ANTES de llamar a la base (sin eco) (19)
+       × tipo en minúscula: 400, ninguna llamada de operación y sin eco 11463ms
+       × orden ausente: 400, ninguna llamada de operación y sin eco 1337ms
+       × conexión que no es UUID: 400, ninguna llamada de operación y sin eco 1285ms
+       × día mal formado: 400, ninguna llamada de operación y sin eco 1320ms
+ ❯ tests/unit/qa_only.test.ts (1 test | 1 failed) 4ms
+   × qa only
+ ❯ supabase/tests/pglite/m02_m03.test.ts (58 tests | 3 failed) 470901ms
+   ❯ REQ-024, CA-019, D-7: formatos de las columnas de texto (19)
+     × catalogo_problemas.codigo rechaza cada valor sin formato y acepta los válidos 1515ms
+     × catalogo_problemas.descripcion rechaza cada valor sin formato y acepta los válidos 2421ms
+     × clientes.nombre rechaza cada valor sin formato y acepta los válidos 60110ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > catalogo_problemas.codigo rechaza cada valor sin formato y acepta los válidos
+RangeError: Array buffer allocation failed
+ ❯ Cr node_modules/@electric-sql/pglite/src/initdb.ts:87:39
+ ❯ St node_modules/@electric-sql/pglite/src/initdb.ts:272:3
+ ❯ pgliteForInitDb node_modules/@electric-sql/pglite/src/pglite.ts:598:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBase supabase/tests/pglite/arnes.ts:22:3
+     20| export async function crearBase(): Promise<Base> {
+     21|   const db = new PGlite();
+     22|   await db.exec(readFileSync(RUTA_PREAMBULO, "utf8"));
+       |   ^
+     23|   return db;
+     24| }
+ ❯ supabase/tests/pglite/m02_m03.test.ts:124:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/23]⎯
+
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > catalogo_problemas.codigo rechaza cada valor sin formato y acepta los válidos
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > catalogo_problemas.descripcion rechaza cada valor sin formato y acepta los válidos
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > clientes.nombre rechaza cada valor sin formato y acepta los válidos
+Error: PGlite is closed
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:936:13
+ ❯ q.close node_modules/@electric-sql/pglite/src/pglite.ts:832:16
+ ❯ supabase/tests/pglite/m02_m03.test.ts:127:12
+    125| });
+    126| afterEach(async () => {
+    127|   await db.close();
+       |            ^
+    128| });
+    129|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/23]⎯
+
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > catalogo_problemas.descripcion rechaza cada valor sin formato y acepta los válidos
+RangeError: Array buffer allocation failed
+ ❯ Object.expandFileStorage node_modules/@electric-sql/pglite/release/pglite.js:1:95219
+ ❯ Object.write node_modules/@electric-sql/pglite/release/pglite.js:1:98001
+ ❯ Object.write node_modules/@electric-sql/pglite/release/pglite.js:1:137247
+ ❯ Object.write node_modules/@electric-sql/pglite/release/pglite.js:1:116923
+ ❯ Object.write node_modules/@electric-sql/pglite/release/pglite.js:1:137247
+ ❯ doWritev node_modules/@electric-sql/pglite/release/pglite.js:1:198393
+ ❯ _fd_pwrite node_modules/@electric-sql/pglite/release/pglite.js:1:198588
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/23]⎯
+
+ FAIL  supabase/tests/pglite/m02_m03.test.ts > REQ-024, CA-019, D-7: formatos de las columnas de texto > clientes.nombre rechaza cada valor sin formato y acepta los válidos
+Error: Hook timed out in 60000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ supabase/tests/pglite/m02_m03.test.ts:123:1
+    121|
+    122| let db: Base;
+    123| beforeEach(async () => {
+       | ^
+    124|   db = await crearBase();
+    125| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/23]⎯
+
+ FAIL  supabase/tests/pglite/m04_m05.test.ts > REQ-055, CA-033, D-8: la huella es la del texto > la versión es única
+RangeError: WebAssembly.Memory(): could not allocate memory
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:335:80
+ ❯ q.create node_modules/@electric-sql/pglite/src/pglite.ts:268:5
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:594:48
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBase supabase/tests/pglite/arnes.ts:22:3
+     20| export async function crearBase(): Promise<Base> {
+     21|   const db = new PGlite();
+     22|   await db.exec(readFileSync(RUTA_PREAMBULO, "utf8"));
+       |   ^
+     23|   return db;
+     24| }
+ ❯ supabase/tests/pglite/m04_m05.test.ts:53:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/23]⎯
+
+ FAIL  supabase/tests/pglite/m04_m05.test.ts > REQ-055, CA-033, D-8: la huella es la del texto > la versión es única
+ FAIL  supabase/tests/pglite/m04_m05.test.ts > REQ-015 a REQ-019, REQ-061, CA-013, CA-014, CA-038: auditoría según las clases de D-3 > una escritura como authenticated en cada tabla de M02 deja 1 fila con el actor, la acción, la tabla, el objeto y el cliente
+Error: PGlite is closed
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:936:13
+ ❯ q.close node_modules/@electric-sql/pglite/src/pglite.ts:832:16
+ ❯ supabase/tests/pglite/m04_m05.test.ts:56:12
+     54| });
+     55| afterEach(async () => {
+     56|   await db.close();
+       |            ^
+     57| });
+     58|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/23]⎯
+
+ FAIL  supabase/tests/pglite/m04_m05.test.ts > REQ-015 a REQ-019, REQ-061, CA-013, CA-014, CA-038: auditoría según las clases de D-3 > una escritura como authenticated en cada tabla de M02 deja 1 fila con el actor, la acción, la tabla, el objeto y el cliente
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBase supabase/tests/pglite/arnes.ts:22:3
+     20| export async function crearBase(): Promise<Base> {
+     21|   const db = new PGlite();
+     22|   await db.exec(readFileSync(RUTA_PREAMBULO, "utf8"));
+       |   ^
+     23|   return db;
+     24| }
+ ❯ supabase/tests/pglite/m04_m05.test.ts:53:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/23]⎯
+
+ FAIL  tests/unit/qa_only.test.ts > qa only
+Error: [Vitest] Unexpected .only modifier. Remove it or pass --allowOnly argument to bypass this error
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/23]⎯
+
+ FAIL  tests/unit/conector/enviar-informe.test.ts > enviar_informe: ejecución desconocida, igual en todos los casos (PRUEBA-017) > token de otro cliente: nada escrito en la ejecución del primero
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/enviar-informe.test.ts:51:14
+ ❯ tests/unit/conector/enviar-informe.test.ts:265:44
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/23]⎯
+
+ FAIL  tests/unit/conector/enviar-informe.test.ts > enviar_informe: repeticiones y simultaneidad (PRUEBA-017; PRUEBA-007, parte) > el segundo envío, igual o distinto, responde repetido y conserva el primero
+RangeError: Array buffer allocation failed
+ ❯ Cr node_modules/@electric-sql/pglite/src/initdb.ts:87:39
+ ❯ St node_modules/@electric-sql/pglite/src/initdb.ts:272:3
+ ❯ pgliteForInitDb node_modules/@electric-sql/pglite/src/pglite.ts:598:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/enviar-informe.test.ts:51:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/23]⎯
+
+ FAIL  tests/unit/conector/operaciones.test.ts > PRUEBA-020: operaciones de HumanaIA sin desplegar > formato validado ANTES de llamar a la base (sin eco) > tipo en minúscula: 400, ninguna llamada de operación y sin eco
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ Module.abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/operaciones.test.ts:94:14
+ ❯ tests/unit/conector/operaciones.test.ts:302:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/23]⎯
+
+ FAIL  tests/unit/conector/operaciones.test.ts > PRUEBA-020: operaciones de HumanaIA sin desplegar > formato validado ANTES de llamar a la base (sin eco) > orden ausente: 400, ninguna llamada de operación y sin eco
+ FAIL  tests/unit/conector/operaciones.test.ts > PRUEBA-020: operaciones de HumanaIA sin desplegar > formato validado ANTES de llamar a la base (sin eco) > día mal formado: 400, ninguna llamada de operación y sin eco
+RangeError: Array buffer allocation failed
+ ❯ Cr node_modules/@electric-sql/pglite/src/initdb.ts:87:39
+ ❯ St node_modules/@electric-sql/pglite/src/initdb.ts:272:3
+ ❯ pgliteForInitDb node_modules/@electric-sql/pglite/src/pglite.ts:598:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ Module.abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/operaciones.test.ts:94:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/23]⎯
+
+ FAIL  tests/unit/conector/operaciones.test.ts > PRUEBA-020: operaciones de HumanaIA sin desplegar > formato validado ANTES de llamar a la base (sin eco) > conexión que no es UUID: 400, ninguna llamada de operación y sin eco
+RangeError: WebAssembly.Memory(): could not allocate memory
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:335:80
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ Module.abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/operaciones.test.ts:94:14
+ ❯ tests/unit/conector/operaciones.test.ts:302:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/23]⎯
+
+ FAIL  tests/unit/conector/bd/esquema.test.ts > T-103 (a): lo que no debe poder hacerse, no se puede (checks y enumerados) > clientes_oauth: solo los dos callbacks de la lista y como mucho 2
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/esquema.test.ts:39:14
+ ❯ conBase tests/unit/conector/bd/esquema.test.ts:343:16
+ ❯ tests/unit/conector/bd/esquema.test.ts:479:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/23]⎯
+
+ FAIL  tests/unit/conector/bd/esquema.test.ts > T-103 (a): lo que no debe poder hacerse, no se puede (checks y enumerados) > conexiones: la revocación y su motivo van juntos y el motivo es de la lista cerrada
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/esquema.test.ts:39:14
+ ❯ conBase tests/unit/conector/bd/esquema.test.ts:343:16
+ ❯ tests/unit/conector/bd/esquema.test.ts:504:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/23]⎯
+
+ FAIL  tests/unit/conector/bd/informe.test.ts > T-103 (e): ejecución desconocida y cierre en fallo > ejecución inexistente, mal formada o nula -> ejecucion_desconocida, sin efecto y sin eco
+RangeError: WebAssembly.Memory(): could not allocate memory
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:335:80
+ ❯ q.create node_modules/@electric-sql/pglite/src/pglite.ts:268:5
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:594:48
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ tests/unit/conector/bd/informe.test.ts:459:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/23]⎯
+
+ FAIL  tests/unit/conector/bd/operar.test.ts > T-107 (d): operar_generar_codigo, suspender, reactivar y crear_orden > crear_orden rechaza tipos no válidos y licencias revocadas, sin escribir
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ tests/unit/conector/bd/operar.test.ts:370:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/23]⎯
+
+ FAIL  tests/unit/conector/bd/operar.test.ts > T-107 (d): listar_conexiones y revocar_conexion (PRUEBA-013) > lista las conexiones sin ningún secreto
+RangeError: Array buffer allocation failed
+ ❯ Cr node_modules/@electric-sql/pglite/src/initdb.ts:87:39
+ ❯ St node_modules/@electric-sql/pglite/src/initdb.ts:272:3
+ ❯ pgliteForInitDb node_modules/@electric-sql/pglite/src/pglite.ts:598:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ tests/unit/conector/bd/operar.test.ts:395:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/23]⎯
+
+ FAIL  tests/unit/conector/bd/tokens.test.ts > T-107 (c): renovar (PRUEBA-012, parte BD, con reloj) > rechaza (no_valido) sin escribir: tipo equivocado, desconocido, otro cliente o recurso, sal o HMAC mal formados
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ tests/unit/conector/bd/tokens.test.ts:408:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/23]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 3 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+RangeError: WebAssembly.instantiate(): Out of memory: Cannot allocate Wasm memory for new instance
+ ❯ Object.b node_modules/@electric-sql/pglite/dist/chunk-BD5WXLQO.js:1:906
+ ❯ instantiateWasm node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:65315
+ ❯ node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:1:15488
+ ❯ createWasm node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:1:15472
+ ❯ br node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:62348
+ ❯ Cr node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:65133
+ ❯ St node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:66771
+ ❯ q.Ee node_modules/@electric-sql/pglite/dist/chunk-CTPU3OXM.js:3:206065
+ ❯ q._checkReady node_modules/@electric-sql/pglite/dist/chunk-CTPU3OXM.js:3:199274
+
+This error originated in "supabase/tests/pglite/m02_m03.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "clientes.nombre rechaza cada valor sin formato y acepta los válidos". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Worker forks emitted error.
+ ❯ EventEmitter.onTaskError node_modules/vitest/dist/chunks/index.Di8au7q4.js:5926:21
+ ❯ EventEmitter.emit node:events:514:20
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5401:22
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+Caused by: Error: Worker exited unexpectedly with exit code 134 during started state while running test file C:/dev/qa-t010b/supabase/tests/pglite/m01.test.ts
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5399:33
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Worker forks emitted error.
+ ❯ EventEmitter.onTaskError node_modules/vitest/dist/chunks/index.Di8au7q4.js:5926:21
+ ❯ EventEmitter.emit node:events:514:20
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5401:22
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+Caused by: Error: Worker exited unexpectedly with exit code 134 during started state while running test file C:/dev/qa-t010b/tests/unit/conector/bd/esquema.test.ts
+ ❯ ChildProcess.emitUnexpectedExit node_modules/vitest/dist/chunks/index.Di8au7q4.js:5399:33
+ ❯ ChildProcess.emit node:events:514:20
+ ❯ ChildProcess._handle.onexit node:internal/child_process:323:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  8 failed | 74 passed (84)
+      Tests  18 failed | 2192 passed (2292)
+     Errors  3 errors
+   Start at  09:56:22
+   Duration  473.07s (tests 97%, import 1%, setup 1%, transform 1%)
+
+    Isolate  84 workers spawned · ~3.44s startup each (spawn + environment, per file)
+             at least ~18.79s faster with isolate: false — reuses workers across files instead of one per file
+
+caso=4 only orden='npm run verificar' salida=1 duracion_s=495

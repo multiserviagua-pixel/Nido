@@ -1,0 +1,51 @@
+
+> nido@0.1.0 verificar
+> npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build
+
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully
+
+> nido@0.1.0 estilo
+> prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> nido@0.1.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v5.1.0 C:/dev/qa-t010b
+
+
+<--- Last few GCs --->
+ 0[39012:00000158E6E35000]   165252 ms: Incremental Mark-Compact 116.9 (174.0) -> 109.6 (174.6) MB, pooled: 0.0 MB, 77.29 / 0.03 ms (+ 0.4 ms in 1 steps since start of marking, biggest step 0.4 ms, walltime since start of marking 961 ms) (average mu = 0.896[39012:00000158E6E35000]   165415 ms: Incremental Mark-Compact 110.6 (174.6) -> 110.3 (175.1) MB, pooled: 0.0 MB, 13.82 / 0.00 ms (+ 3.8 ms in 79 steps since start of marking, biggest step 0.2 ms, walltime since start of marking 116 ms) (average mu = 0.89
+FATAL ERROR: MarkCompactCollector: young object promotion failed Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF6D8F4F626 node::SetAbortHandler+54
+ 2: 00007FF6D8F4FA42 node::OnFatalError+978
+ 3: 00007FF6D960B867 v8::Object::GetCreationContext+567
+ 4: 00007FF6D960B7FA v8::Object::GetCreationContext+458
+ 5: 00007FF6D951C077 SSL_CTX_set_stateless_cookie_verify_cb+219415
+ 6: 00007FF6D86641D5 v8::internal::compiler::CompilationDependencies::RecordDependency+42485
+ 7: 00007FF6D7CDD6D1 EC_GROUP_free+1729
+ 8: 00007FF6D7F12862 v8::platform::DefaultJobState::Join+194
+ 9: 00007FF6D7F12762 v8::platform::DefaultJobHandle::Join+18
+10: 00007FF6D85F3F29 v8::base::TimeTicks::Now+20489
+11: 00007FF6D7CA4FE0 v8::base::OS::SNPrintF+10576
+12: 00007FF6D85E348F v8::internal::ThreadIsolation::JitPageReference::RegisterAllocation+8895
+13: 00007FF6D7C9DDA9 v8::internal::ThreadIsolation::RegisterInstructionStreamAllocation+2313
+14: 00007FF6D7C9D9BB v8::internal::ThreadIsolation::RegisterInstructionStreamAllocation+1307
+15: 00007FF6D8C58F5D v8::base::bits::SignedSaturatedAdd64+23069
+16: 00007FF6D7C6A84C v8::internal::ThreadIsolation::RegisterJitPage+15788
+17: 00007FF6D7C688CE v8::internal::ThreadIsolation::RegisterJitPage+7726
+18: 00007FF6D7C6875D v8::internal::ThreadIsolation::RegisterJitPage+7357
+19: 00007FF6D7F69BCF EC_POINT_mul+52815
+20: 00007FF6D89C58E9 v8::Uint32::Value+28457
+21: 000001589FE7F37A 
+caso=3 prueba-fallida orden='npm run verificar' salida=127 duracion_s=224

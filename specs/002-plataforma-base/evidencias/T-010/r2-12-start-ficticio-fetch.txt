@@ -1,0 +1,23 @@
+(node:33308) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+== modo=start (npm run start)
+OK    GET / 200: 200
+OK    GET / lang=es: lang es
+OK    ruta inexistente 404: 404
+OK    POST / (cuerpo texto, fetch por defecto) sin 2xx: 405
+OK    GET /api/salud 200: 200
+OK    cuerpo exacto: {"estado":"ok"}
+OK    POST /api/salud 405: 405
+-- informativo: POST / segun Content-Type (fetch de Node)
+   POST / content-type=application/json intento 1: 405
+   POST / content-type=application/json intento 2: 405
+   POST / content-type=text/plain intento 1: 405
+   POST / content-type=text/plain intento 2: 405
+   POST / content-type=application/x-www-form-urlencoded intento 1: 200
+   POST / content-type=application/x-www-form-urlencoded intento 2: 200
+   POST / content-type=multipart/form-data; boundary=x intento 1: 409
+   POST / content-type=multipart/form-data; boundary=x intento 2: 409
+   POST / content-type=(ninguno, sin cuerpo) intento 1: 405
+   POST / content-type=(ninguno, sin cuerpo) intento 2: 405
+RESULTADO modo=start: 7 de 7
+salida=0 duracion_s=3 (entorno ficticio: ENTORNO=preproduccion, VERCEL=1, VERCEL_ENV=preview, VERCEL_REGION=arn1, COMMIT_DESPLEGADO y SUPERVISION_DSN ficticios en el entorno del proceso)

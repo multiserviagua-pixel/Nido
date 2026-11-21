@@ -1,0 +1,21 @@
+== curl -i POST / (dev)
+HTTP/1.1 200 OK
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+X-Frame-Options: DENY
+Content-Security-Policy: frame-ancestors 'none'
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+X-Robots-Tag: noindex
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+Cache-Control: no-store
+Content-Type: text/html; charset=utf-8
+Date: Sat, 21 Nov 2026 08:49:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<!DOCTYPE html><html lang="es"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="script" fetchPriority="low"
+== segundo intento con content-type json
+200
+== GET /
+200

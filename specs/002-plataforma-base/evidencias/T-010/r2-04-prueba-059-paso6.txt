@@ -1,0 +1,30 @@
+== commits reales de main: recorrido paso 6 (script de la 1.a pasada, en el arbol de cada commit)
+FALLA f9f0494: falta verificar.md
+FALLA f9f0494: falta revision.md
+FALLA f9f0494: falta aprobacion.md
+FALLA 12044a1: mensaje sin forma T-NNN (FFF):
+FALLA 6791036: falta verificar.md
+FALLA 6791036: falta revision.md
+FALLA 6791036: falta aprobacion.md
+FALLA 0d8fd6d: falta verificar.md
+FALLA 0d8fd6d: falta revision.md
+FALLA 0d8fd6d: falta aprobacion.md
+FALLA 50b01c3: falta verificar.md
+FALLA 50b01c3: falta revision.md
+FALLA 50b01c3: falta aprobacion.md
+FALLA d852217: falta verificar.md
+FALLA d852217: falta revision.md
+FALLA d852217: falta aprobacion.md
+FALLA 5a1b9ab: falta verificar.md
+FALLA 5a1b9ab: falta revision.md
+FALLA 5a1b9ab: falta aprobacion.md
+FALLA 9e629f1: mensaje sin forma T-NNN (FFF):
+== simulacion: commit ficticio sin aprobacion.md
+FALLA HEAD: falta aprobacion.md
+salida=1
+== simulacion: mismo commit con los tres archivos
+OK HEAD
+salida=0
+== simulacion: asunto sin forma
+FALLA HEAD: mensaje sin forma T-NNN (FFF):
+salida=1

@@ -1,0 +1,32 @@
+HEAD=9e629f1
+--- A. asunto y constancia de delegacion por commit
+f9f0494 asunto_forma=si delegacion_en_mensaje=no (no_exigida, anterior)
+12044a1 asunto_forma=si delegacion_en_mensaje=no (no_exigida, anterior)
+03b82c0 asunto_forma=si delegacion_en_mensaje=no (no_exigida, anterior)
+6791036 asunto_forma=si delegacion_en_mensaje=no (no_exigida, anterior)
+0d8fd6d asunto_forma=si delegacion_en_mensaje=si (exigida, T-005-o-posterior)
+50b01c3 asunto_forma=si delegacion_en_mensaje=si (exigida, T-005-o-posterior)
+d852217 asunto_forma=si delegacion_en_mensaje=si (exigida, T-005-o-posterior)
+5a1b9ab asunto_forma=si delegacion_en_mensaje=si (exigida, T-005-o-posterior)
+9e629f1 asunto_forma=si delegacion_en_mensaje=si (exigida, T-005-o-posterior)
+--- B. todo commit first-parent de main con (002) en el asunto esta en la lista anterior
+NO LISTADO 56555dd: 001 y 002: reformula PRUEBA-059 y PRUEBA-024, tareas T-011 y T-012 (002) y T-121
+--- C. carpeta de evidencias en el arbol de HEAD (T-001 a T-006 y T-009)
+OK T-001 (verificar.md revision.md aprobacion.md dictamen.md)
+OK T-002 (verificar.md revision.md aprobacion.md)
+OK T-003 (verificar.md revision.md aprobacion.md dictamen.md)
+OK T-004 (verificar.md revision.md aprobacion.md dictamen.md)
+OK T-005 (verificar.md revision.md aprobacion.md dictamen.md)
+OK T-006 (verificar.md revision.md aprobacion.md dictamen.md)
+OK T-009 (verificar.md revision.md aprobacion.md)
+--- D. 'no consta' en T-001 a T-004 donde no hay delegacion; literal de delegacion de T-005, T-006, T-009 coincide con git log
+OK T-001: dice 'no consta'
+OK T-002: dice 'no consta'
+OK T-003: dice 'no consta'
+OK T-004: dice 'no consta'
+OK T-005 0d8fd6d literal «aprobado por delegación D-036, 20/11/2026» presente en aprobacion.md
+OK T-005 5a1b9ab literal «aprobado por delegación D-036, 20/11/2026» presente en aprobacion.md
+OK T-006 50b01c3 literal «aprobado por delegación D-036, 20/11/2026» presente en aprobacion.md
+OK T-009 d852217 literal «aprobado por delegación D-036, 20/11/2026» presente en aprobacion.md
+--- E. T-011 y T-012 (commit 9e629f1): sin carpeta propia; T-012 las crea para las demas; admitido por la tabla (T-011 y T-012 en un commit)
+RESULTADO_PRUEBA_059_existencia fallos=1

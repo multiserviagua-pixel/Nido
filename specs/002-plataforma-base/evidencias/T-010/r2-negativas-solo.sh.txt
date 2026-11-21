@@ -1,0 +1,20 @@
+#!/bin/bash
+# PRUEBA-055, 2.a pasada, paso del defecto ejecutado solo (casos 6, 7 y 8, cuya cadena completa no llego al paso por caida de Node/Windows por memoria agotada).
+cd /c/dev/qa-t010b
+E=/c/dev/agentes-correo-humanaia/.claude/worktrees/t-010b/specs/002-plataforma-base/evidencias/T-010/r2-11-prueba-055
+export VITEST_MAX_WORKERS=3
+BASE=9e629f1
+reset(){ git checkout -q -- . ; rm -rf .next ; git clean -fdq -e node_modules ; git reset -q --hard $BASE; }
+CAN="gh""p_""$(printf 'Ab1Cd2Ef3Gh4%.0s' 1 2 3)"
+aplicar_6(){ node -e 'const fs=require("fs");let t=fs.readFileSync("docs/MODELO-DATOS.sql","utf8");const i=t.search(/create policy/i);const j=t.indexOf(";",i);fs.writeFileSync("docs/MODELO-DATOS.sql",t.slice(0,i)+t.slice(j+1))'; }
+aplicar_7(){ printf '%s\n' "$CAN" > src/lib/qa_canario.txt; }
+aplicar_8(){ mkdir -p src/app/qa-rota; printf 'import { ErrorDeAplicacion } from "../../lib/plataforma/errores";\n\nexport default function Pagina() {\n  throw new ErrorDeAplicacion("entrada_invalida");\n}\n' > src/app/qa-rota/page.tsx; }
+solo(){ n=$1; nombre=$2; paso=$3; reset; aplicar_$n
+  s=$(date +%s); npm run $paso > $E/solo-$n-$nombre.txt 2>&1; rc=$?
+  extra=""; [ $n = 7 ] && extra=" apariciones_del_canario_en_la_salida=$(grep -cF "$CAN" $E/solo-$n-$nombre.txt)"
+  echo "solo caso=$n $nombre orden='npm run $paso' salida=$rc duracion_s=$(( $(date +%s)-s ))$extra" | tee -a $E/solo-$n-$nombre.txt >> $E/resumen-solo.txt; }
+: > $E/resumen-solo.txt
+solo 6 politica-rls aislamiento
+solo 7 canario arnes
+solo 8 compilacion build
+reset; echo FIN >> $E/resumen-solo.txt
