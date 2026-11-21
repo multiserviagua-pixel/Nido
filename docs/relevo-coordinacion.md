@@ -25,6 +25,8 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 - **Memoria:** la máquina tiene 16 GB y se queda sin memoria con dos suites completas a la vez (Vitest y `next build`). Tres chats a la vez es el máximo razonable.
 - Trabajo de otro chat sin commitear en la carpeta principal: `specs/016-compuerta-envio-por-regla/` y `marketing/`. No se tocan; los chats integran con rutas explícitas.
 
+- **D-039 (21/11, 19:45):** el responsable respondió A-15 (navegador reconocido), A-11 (Google Workspace) y A-14 (excepción al art. 4 acotada y con rotación); anotado en `specs/021-…/aclaraciones.md` (59bed21). Fase 3 g aún las ve abiertas en su relevo: al relanzarla o en el próximo encargo de la 021, indicarle D-039.
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
