@@ -26,3 +26,7 @@ Relación con «Qué queda por decidir» de `docs/propuesta-enmienda-articulo-8.
 - **Filtro de enlaces y datos:** «las 2 pero con un activador en configuraciones con alerta del riesgo que implica». Activo por defecto; solo el dueño lo desactiva, por la vía protegida y tras un aviso.
 - **Controles añadidos:** resumen diario y envío diferido de 15 minutos, cancelable por el dueño.
 - **Lo que tiene que hacer la fase 2 con la 016:** reescribir la especificación con la 1.4 (REQ-001, REQ-002, REQ-006, REQ-019, resumen, espera y filtro desactivable) y aplicar las condiciones de los dos dictámenes. La 017 se reduce a activar, desactivar, excluir, el ajuste del filtro y el historial. La 018 lleva el aprendizaje con los 100 últimos correos.
+
+Aplicado en la especificación del 21/11/2026 (reescrita con la 1.4; numeración de requisitos nueva).
+
+Corregida tras el dictamen 1 del auditor, 21/11/2026.
