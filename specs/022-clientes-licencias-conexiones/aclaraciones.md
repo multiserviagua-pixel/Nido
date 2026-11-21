@@ -102,3 +102,14 @@ El responsable delegó las decisiones no reservadas a una persona (D-019). Sobre
 - **A-7:** se acepta la regla de nombres (DD-05, DD-06). Los alfabetos mezclados quedan como riesgo aceptado y anotado.
 - **A-8:** aceptado: la alerta de conexión nueva es de la fase 4; hasta entonces se detecta por ficha y auditoría.
 - **Reservados a una persona, sin decidir:** A-1 (aplicar la nota aclaratoria del artículo 2 a la constitución: enmienda, la aplica coordinación con fecha y versión) y A-4 (dónde ejecutar pgTAP; impide pasar a VERIFICADA).
+
+## Respuestas del responsable del 21/11/2026 (A-1, A-4, A-9, A-10, A-11 y A-12 del diseño)
+
+Preguntadas por la coordinación en su chat, con cada cuestión explicada y la recomendación del arquitecto. Respuesta expresa: «Aprobar las seis (Recomendado)». Decisión D-040.
+
+- **A-1:** nota aclaratoria del artículo 2 aplicada en la constitución 1.5 y en `.claude/rules/interfaz.md`. Vale también para A-1 de la 023 y la 025 y A-2 de la 024.
+- **A-4:** opción (a), pgTAP con varias conexiones en CI (`bd.yml`).
+- **A-9:** opción (a), se acepta la lista cerrada de la 010 y se ajusta REQ-052.
+- **A-10:** opción (a), la baja de la 010: definitiva, revoca las conexiones y no se reactiva; para pausar, suspender. Cambian REQ-011, REQ-067, CA-007 y CA-041, sale O-4 y hay motivo por baja. Sustituye a la respuesta del 13/11 en ese punto.
+- **A-11:** opción (a), la de la 010; se ajusta CA-022.
+- **A-12:** opción (a), desactivar en `Nido` el detalle de errores y las sentencias con parámetros. Lo ejecuta la coordinación en el panel de Supabase.

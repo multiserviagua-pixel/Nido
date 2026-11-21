@@ -19,5 +19,5 @@ Sigue `docs/DISENO.md`.
 - Textos en español de España, trato de tú. Fechas y números con formato español.
 - Los errores no muestran datos internos ni valores recibidos.
 - No se cargan fuentes ni recursos de terceros en tiempo de ejecución.
-- Ningún dato en la URL que no sea un identificador propio del usuario.
+- Ningún dato en la URL que no sea un identificador propio del usuario o, en el dashboard de superadmin, el identificador del cliente sobre el que se actúa, que nunca concede permiso (nota del artículo 2, D-040).
 - El panel no edita el texto del prompt y no genera facturas.
