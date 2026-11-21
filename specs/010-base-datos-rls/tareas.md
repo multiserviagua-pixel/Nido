@@ -85,3 +85,12 @@ Tareas que han subido de nivel de modelo o de esfuerzo, y por qué (`docs/EQUIPO
 - Evidencia de integración con la máquina cargada: `npx vitest run --maxWorkers=3` en verde y tipos, estilo, aislamiento, arnés y build en 0 por separado; no se lanzan dos suites completas a la vez.
 - `pglite-pgtap` 0.0.18 se instala en T-008 (D-034). `comprobaciones-cli.md` pasa a `verificaciones.md` cuando toque, sin bloquear migraciones.
 - **Condiciones heredadas de T-005** (`evidencias/T-005/dictamenes.md`): T-006 hace que el canje de código y `resolver_token()` comprueben `clientes.estado = 'activo'` en cada llamada, con prueba de canje contra un cliente de baja; las reversiones de M08 y M09 no se apoyan en el `cascade` de M07; fases 3 a 6, ninguna RPC escribe `ordenes.estado` como dueño sin repetir la comprobación de transiciones; M09 o la 060, vista para el dashboard de cliente sin `ordenes.creada_por` ni `licencias.estado_manual`; al cierre de la 010, atar el nombre de política y disparador de la reversión de M07 a su tabla y añadir la prueba de la homónima.
+
+## Decisiones de la coordinación por D-036 (21/11/2026)
+
+1. Al `auditor-seguridad` se le piden solo huecos reales y explotables; el control definitivo de los detectores de texto es el ciclo de CI (T-012 y T-013). Si una vuelta solo deja menores, se integra y se anotan.
+2. Para el `build` en la carpeta principal se puede ejecutar `npm ci --ignore-scripts` allí si faltan dependencias, sin otra instalación en curso. `pglite-pgtap` 0.0.18 se instala en T-008 (D-034).
+3. Evidencia de integración con la máquina cargada: `vitest run --maxWorkers=3` en verde más `tipos`, `estilo`, `aislamiento`, `arnes` y `build` con exit 0 por separado; no se lanzan dos suites completas a la vez.
+4. `comprobaciones-cli.md` pasa a `verificaciones.md` cuando toque, sin bloquear las migraciones.
+5. Se retiran las copias de trabajo y ramas de T-001 a T-004 ya integradas cuando no hagan falta.
+6. No se arranca `next dev` en la carpeta principal; si aparece un bloque de ello en `AGENTS.md`, se deshace con `git checkout -- AGENTS.md` y no se commitea.
