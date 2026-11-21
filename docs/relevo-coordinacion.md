@@ -27,6 +27,8 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 
 - **D-039 (21/11, 19:45):** el responsable respondió A-15 (navegador reconocido), A-11 (Google Workspace) y A-14 (excepción al art. 4 acotada y con rotación); anotado en `specs/021-…/aclaraciones.md` (59bed21). Fase 3 g aún las ve abiertas en su relevo: al relanzarla o en el próximo encargo de la 021, indicarle D-039.
 
+- **D-040 (21/11, 20:20):** constitución 1.5 (nota del artículo 2) y respuestas del responsable a A-1, A-4, A-9, A-10, A-11 y A-12 de la 022 (c112d71). Al relanzar o encargar a Fase 3 g, indicarle D-039 y D-040. **A-12, pendiente de la coordinación en T-114:** al ejecutar el SQL de T-114 en `Nido`, añadir por rol (`conector_prueba_mcp` y `conector_prueba_gestion`) `alter role … set log_min_messages = 'panic'`, `log_min_error_statement = 'panic'`, `log_parameter_max_length = 0` y `log_parameter_max_length_on_error = 0`, y comprobar en `pg_roles.rolconfig` (a nivel de base de datos Supabase lo deniega; detalle en `specs/022-…/aclaraciones.md`).
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
