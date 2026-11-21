@@ -7,7 +7,7 @@ import { TEXTOS } from "../textos";
 export const TONOS_DE_ESTADO = ["neutro", "correcto", "aviso", "error", "informativo"] as const;
 export type TonoDeEstado = (typeof TONOS_DE_ESTADO)[number];
 
-/** Nombres de icono que `c/iconos/` (T-006 b) tiene que ofrecer para los estados. */
+/** Nombres de icono que `src/components/iconos/` (T-006 b) tiene que ofrecer para los estados. */
 export const ICONOS_DE_ESTADO = [
   "neutro",
   "correcto",
