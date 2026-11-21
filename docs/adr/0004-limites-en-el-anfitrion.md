@@ -17,6 +17,7 @@ Un límite escrito en un prompt es texto, no un control: otro texto puede intent
 5. El informe no admite texto libre, de modo que el agente no tiene un canal por el que sacar contenido hacia nuestro servidor.
 
 6. **Envío por regla (D-037, constitución 1.3, 20/11/2026).** Los puntos 1 y 4 se mantienen: el agente sigue sin la herramienta de enviar y el servidor sigue sin pedir envíos. El único envío sin revisión lo hace una compuerta de código instalada en la cuenta del cliente, con las condiciones del artículo 8. Su diseño es una función nueva y está pendiente; hasta que exista, no se envía nada.
+7. **Respuesta sin reglas de remitente (D-038, constitución 1.4, 21/11/2026).** Sustituye las reglas de remitente del punto 6: la compuerta responde a quien el dueño ya ha escrito antes, con las exclusiones, filtros, topes, resumen diario y espera de 15 minutos del artículo 8 y de la 016. Los puntos 1 y 4 se mantienen. Hasta que la 016 esté cerrada, no se envía nada.
 
 ## Alternativas
 
