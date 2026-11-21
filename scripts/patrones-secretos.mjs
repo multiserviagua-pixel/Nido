@@ -23,6 +23,8 @@ export const PATRONES = [
     nombre: 'código de activación del conector',
     patron: /(?<![0-9A-Z-])[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}(?![0-9A-Z-])/,
   },
+  // DSN de Sentry (001, T-121): clave pública de 32 hexadecimales, con o sin la secreta antigua, `@` o `%40`, y cualquier subdominio de sentry.io; sin exclusión por la izquierda.
+  { nombre: 'DSN de Sentry', patron: /[0-9a-f]{32}(?::[0-9a-f]{32})?(?:@|%40)(?:[a-z0-9-]+\.)*sentry\.io/i },
   {
     nombre: 'variable con valor secreto',
     patron: /\b[A-Z][A-Z0-9_]*(?:SECRET|SECRETO|TOKEN|PASSWORD|CONTRASENA|API_KEY|PRIVATE_KEY)[A-Z0-9_]*\s*[=:]\s*["']?[A-Za-z0-9+/_-]{24,}/,

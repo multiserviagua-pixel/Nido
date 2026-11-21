@@ -189,7 +189,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten archivos con T-105 a T-114 ni T-117 salvo los que citan; T-122 rebasa sobre lo que haya en `main`.
 
 ### T-121 `[P]` · Patrón de DSN de Sentry en el escáner
-`plataforma` · C, Res. · pendiente · Depende de: T-101, T-116 · REQ-015 · CA-015
+`plataforma` · C, Res. · hecha (revisor sin bloqueantes ni mayores y auditor APTO; 21/11/2026, D-036; menores abiertos para una tarea aparte: patrón `sentry_key=<32 hex>` de la cabecera X-Sentry-Auth y de la URL del SDK, que hoy no se detecta; regla de retaguardia `(?<=[0-9a-f]{32})(?:@|%40)…` más barata en tiradas largas; caso de JSON con barras escapadas) · Depende de: T-101, T-116 · REQ-015 · CA-015
 - Entrada nueva en `PATRONES`: nombre «DSN de Sentry», `/[0-9a-f]{32}(?::[0-9a-f]{32})?(?:@|%40)(?:[a-z0-9-]+\.)*sentry\.io/i` (clave pública, con o sin la secreta antigua, `@` o `%40`, cualquier subdominio de `sentry.io`), sin exclusión por la izquierda, como las del conector. El gancho y `comprobar-specs.mjs` la toman sin más cambios.
 - Prueba (primero, en rojo): `tp/patrones-supervision.test.ts`, con el DSN compuesto en ejecución: se detecta suelto, en `SUPERVISION_DSN=…`, en JSON, codificado en URL y con la parte secreta; solo devuelve el nombre, nunca el valor. No se detectan la URL de ingreso sin clave (`/api/<n>/envelope/`), 31 hexadecimales ni otro dominio. `arnes` en verde en todo el árbol (las pruebas actuales componen el DSN en ejecución; Grep de `[0-9a-f]{32}@` sin coincidencias el 21/11/2026).
 - Archivos: `scripts/patrones-secretos.mjs`, `tp/patrones-supervision.test.ts`.
