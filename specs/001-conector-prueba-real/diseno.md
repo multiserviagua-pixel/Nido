@@ -6,6 +6,8 @@ Numeración de la especificación del 14/11/2026; `RD-`/`CAD-`: anexo; «V§n»:
 
 Lo anterior, cerrado según `dictamen-diseno-3.md`. Tercera vuelta: N-1 → paso 13, PRUEBA-023, R-8; N-2 → Datos, V-10, PRUEBA-008; N-3 → Configuración, PRUEBA-018; N-4 → C-4.
 
+**D-036** (21/11/2026, coordinación): C-2 añade `prompt_no_valido` (T-122); apartado «HMAC del token en `registrar_suceso`», decisión A tomada (ver el apartado).
+
 **D-025** (19/11/2026): «ancla», «cambio firmado», carpeta sellada y calendario firmado quedan en suspenso hasta la 003; rige 002§Integración y `plan.md`.
 
 ## Resumen
@@ -17,7 +19,7 @@ Lo anterior, cerrado según `dictamen-diseno-3.md`. Tercera vuelta: N-1 → paso
 Reutiliza sin repetir 002§Esqueleto, §App base (errores; `configuracion.ts`, único lector), §Supervisión, §Entornos (WAF de `/api/*`), despliegue, vuelta atrás, ventana y carpeta sellada. Integra tras el ancla y reúne lo reservado en **un cambio firmado**. Cambios pedidos a la 002:
 
 - **C-1** `configuracion.ts`: grupo «conector» validado solo por las rutas del conector, no por `/api/salud`; con `ENTORNO=produccion` no se lee y el conector queda cerrado.
-- **C-2** `codigos.ts` y etiqueta `codigo` de supervisión: `almacen_no_disponible`, `configuracion_conector_invalida`.
+- **C-2** `codigos.ts` y etiqueta `codigo` de supervisión: `almacen_no_disponible`, `configuracion_conector_invalida` y `prompt_no_valido` (D-036, 21/11/2026; T-122). `prompt_no_valido`: prompt ilegible, vacío o con huella distinta (`prompt-ficticio.ts`); `configuracion_conector_invalida` queda solo para el grupo de C-1 y la clave de `secretos.ts`. Los tres se supervisan (fuera de `EXCLUIDOS` de `supervision.ts`) y en la capa HTTP (`NO_DISPONIBLES` de `manejador.ts`) dan 503 con `{"estado":"error"}`; el resto de códigos, 500 (condición de T-104 para T-105).
 - **C-3** Órdenes de la persona (carpeta sellada): `operar` y `conector:ciclo`, solo con `preproduccion`.
 - **C-4** `next.config.ts`: trazar `prompts/agente-prueba/` y `contratos/` en las rutas del conector; `inventario-rutas.json`: rutas de este diseño; en `/oauth/autorizar`, `Referrer-Policy: same-origin` (con `no-referrer` el `POST` llega con `Origin: null`): la regla global de `headers()` excluye esa ruta en su `source` y otra le pone `same-origin`, sin depender del orden (gana la última); la excepción va al inventario de cabeceras; PRUEBA-009.
 - **C-5** 002§Ventana: el periodo programado empieza el día D, no en D+1.
@@ -106,7 +108,7 @@ Suceso: `momento`, `ruta` (del archivo), `herramienta`, `resultado` (`correcto`,
 
 ### Prompt y arranque ficticios
 
-`prompts/agente-prueba/0.1.md`: leer la bandeja, contar según el guion, `prueba-revisado` a un mensaje, un borrador con fecha y hora en el asunto, `enviar_informe` con RD-075, `confirmar_orden` si hay orden; nada de enviar, eliminar, reenviar, compartir, credenciales ni contenido; marca `MARCA-PROMPT-FICTICIO-0001`. `arranque.md`: primero `obtener_instrucciones`; límites que nada relaja; sin `activa` no se toca el buzón (RD-070); en pausa, decirlo (RD-077); sin dirección ni URL. Huella: lectura única, finales `\n`, SHA-256 del UTF-8 entregado, comparada con la esperada fijada en `prompt-ficticio.ts` (distinta → 503). Fuera de la base de datos y de variables; el almacén da el estado y la herramienta añade el texto solo con `activa`; ilegible o vacío → 503. Reglas constantes: `max_correos_por_revision` 30, `ventana_dias` 3, `preparar_borradores` `true`, `guardar_adjuntos` y `descargar_facturas_por_enlace` `false`.
+`prompts/agente-prueba/0.1.md`: leer la bandeja, contar según el guion, `prueba-revisado` a un mensaje, un borrador con fecha y hora en el asunto, `enviar_informe` con RD-075, `confirmar_orden` si hay orden; nada de enviar, eliminar, reenviar, compartir, credenciales ni contenido; marca `MARCA-PROMPT-FICTICIO-0001`. `arranque.md`: primero `obtener_instrucciones`; límites que nada relaja; sin `activa` no se toca el buzón (RD-070); en pausa, decirlo (RD-077); sin dirección ni URL. Huella: lectura única, finales `\n`, SHA-256 del UTF-8 entregado, comparada con la esperada fijada en `prompt-ficticio.ts` (distinta → `prompt_no_valido`, 503; C-2). Fuera de la base de datos y de variables; el almacén da el estado y la herramienta añade el texto solo con `activa`; ilegible o vacío → `prompt_no_valido`, 503. Se comprueba antes de llamar al almacén: sin ejecución abierta ni orden marcada. Reglas constantes: `max_correos_por_revision` 30, `ventana_dias` 3, `preparar_borradores` `true`, `guardar_adjuntos` y `descargar_facturas_por_enlace` `false`.
 
 ### Configuración
 
@@ -235,7 +237,7 @@ B: batería (PGlite, sin red). L: contra `Nido`. R: real. V: revisión.
 | 013 revocar una conexión | B | CA-008 |
 | 014 cruzados A/B | B | CA-010 |
 | 015 suspendida, pausada, reanudada | B | CA-011 |
-| 016 huella invariable; huella distinta → 503 | B, V | CA-012 |
+| 016 huella invariable; huella distinta, ilegible o vacío → `prompt_no_valido` y 503 por `/api/mcp` | B, V | CA-012 |
 | 017 ajenos, inválidos, repeticiones, lotes, no objeto, `__proto__`/`constructor` | B | CA-013 |
 | 018 caídas, variables (URL de BD con `?sslmode=disable` u `?options=…` → no válida), cuerpo; certificado no confiable → 503 sin consultar | B | CA-014 |
 | 019 marcas (también en `id`), copia del estado (sal sin secreto → 0 tokens), escáner | B | CA-015; CAD-025 |
@@ -331,6 +333,25 @@ No delegables (lo delegado, en `aclaraciones.md`):
 - **P1** Respuesta expresa a `readOnlyHint: false` (RD-016); y si PRUEBA-022 halla concesiones ajenas a `PUBLIC` (AR-01 decidida por delegación D-036, 20/11/2026; ADR-0007).
 
 **E-1** (la aplica el orquestador), RD-023: «…ruta, herramienta, resultado, código de error y, como valores de listas cerradas, duración en milisegundos, versión del protocolo y asistente».
+
+## HMAC del token en `registrar_suceso` (ADR-0003 punto 4; 21/11/2026)
+
+**Duda.** ADR-0003 punto 4: «cada función recibe el HMAC del token y deriva el cliente dentro de la base de datos». ADR-0007 punto 7 lo aplica a `validar_acceso` y las `mcp_*`, y no a `registrar_suceso`, porque este diseño no le daba firma. La firma aplicada (`001_estado.sql`, `registrar_suceso`, 7 parámetros) recibe `p_token_hmac` **opcional**: con él solo deriva `asistente` (enumerado cerrado), sin comprobar tipo, caducidad, revocación ni recurso. Hoy solo la llama `/api/mcp` (`src/mcp/entrada.ts`) y solo tras el paso 6, con el HMAC que `validar_acceso` acaba de aceptar (un token no válido es anónimo y no escribe en `sucesos`); las rutas de gestión, cuando la usen, no tienen token de acceso y lo pasarán nulo. `sucesos` no tiene columna de cliente, licencia ni conexión, y la función devuelve solo `resultado`. ¿Basta así o el punto 4 exige más?
+
+**Opciones.**
+- **A. Mantener la firma** y dejar escrito que el punto 4 rige para las funciones que leen o escriben datos de un cliente; `registrar_suceso` no los lee ni los escribe: el HMAC, opcional, solo etiqueta `asistente`. Endurecimiento menor: buscar solo con `t.tipo = 'acceso'`.
+- **B. HMAC obligatorio y validado** (como `validar_acceso`): se pierden los sucesos de gestión y de rechazo, o hace falta una segunda función; más trabajo por petición; nada gana el aislamiento.
+- **C. Sin HMAC, `asistente` como parámetro** de lista cerrada: la app no lo conoce sin cambiar `validar_acceso`, cuya forma hereda la fase 2, y pasa a ser una entrada de la app en vez de un dato derivado en la base.
+- **D. Dos funciones** (con HMAC obligatorio para el rol mcp y sin él para gestión): más concesiones y superficie, el mismo resultado.
+
+**Recomendada: A**, con la prueba de T-123 y la precisión en el ADR-0007 punto 7 (decidida; la escribe el `arquitecto`; el ADR no lo cambia este apartado).
+
+**Consecuencias de A.**
+- **Art. 2.** Ningún identificador de cliente entra; el único dato derivado del token es `asistente`, en la base. Con un HMAC ajeno solo cambia la etiqueta de un suceso; no se lee ni se escribe nada de otro cliente. Se prueba (T-123): HMAC de B, inexistente, mal formado y nulo → mismo `resultado`; solo cambia `sucesos`.
+- **Art. 3.** El fallo se descarta sin cambiar la respuesta; HMAC mal formado → `asistente` nulo, no error. Mismo `resultado` exista o no el token: sin oráculo de existencia. Límite aceptado: el tope de 20 000 al día es común a todos los clientes; quien tenga un token válido puede agotarlo y deja sin observabilidad, no sin servicio (A-22 parcial).
+- **Art. 7.** El token nunca llega a la base: la app calcula el HMAC con su clave. Los demás campos se validan en `sucesos.ts` y en SQL con las mismas listas cerradas y expresiones; nada recibido cambia el alcance.
+
+Decisión: opción A (D-036, 21/11/2026, coordinación): se mantiene la firma actual de `registrar_suceso`; el ADR-0003 punto 4 rige para las funciones que leen o escriben datos de un cliente. El endurecimiento opcional (solo tokens de tipo `acceso`) queda sin aplicar: exigiría reaplicar SQL en `Nido` (R-2, persona); T-123 se limita a la parte (a). Dictamen del `auditor-seguridad` (21/11/2026): APTO CON CONDICIONES, sin bloqueantes ni mayores. Condiciones: (a) T-123 (a) con evidencia antes de cerrar; (b) precisión en ADR-0007 punto 7 (escrita); (c) la gestión pasa siempre `p_token_hmac` nulo, con prueba o comentario donde se llame; (d) endurecimiento `t.tipo = acceso` pendiente de la próxima reaplicación de SQL en `Nido` (R-2). Menor: el tope de 20 000 sucesos es compartido (A-22, fase 2); avisar en supervisión de `registro_saturado`. T-123 (`ingeniero-bd`) prueba esa decisión.
 
 ## Pendiente de verificar
 

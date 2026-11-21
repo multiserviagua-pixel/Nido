@@ -184,6 +184,30 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - D-030: Vitest en el CI solo para la carpeta `tests/unit/plataforma` (`npx vitest run tests/unit/plataforma`, sin red real ni secretos), donde viven `npmrc.test.ts` y `ci-npm.test.ts`; el resto de las pruebas en el CI queda pendiente de la tarea de CI completo, aún sin identificador. El CI no se ha ejecutado (sin remoto).
 - Pendientes antes del primer push (dictamen del auditor-seguridad): fijar por SHA las acciones de `arnes.yml` (V-115) y definir el canal de aviso del diario sobre `main` (función 003).
 
+## Bloque 8 · Condiciones del carril A2
+
+Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten archivos con T-105 a T-114 ni T-117 salvo los que citan; T-122 rebasa sobre lo que haya en `main`.
+
+### T-121 `[P]` · Patrón de DSN de Sentry en el escáner
+`plataforma` · C, Res. · pendiente · Depende de: T-101, T-116 · REQ-015 · CA-015
+- Entrada nueva en `PATRONES`: nombre «DSN de Sentry», `/[0-9a-f]{32}(?::[0-9a-f]{32})?(?:@|%40)(?:[a-z0-9-]+\.)*sentry\.io/i` (clave pública, con o sin la secreta antigua, `@` o `%40`, cualquier subdominio de `sentry.io`), sin exclusión por la izquierda, como las del conector. El gancho y `comprobar-specs.mjs` la toman sin más cambios.
+- Prueba (primero, en rojo): `tp/patrones-supervision.test.ts`, con el DSN compuesto en ejecución: se detecta suelto, en `SUPERVISION_DSN=…`, en JSON, codificado en URL y con la parte secreta; solo devuelve el nombre, nunca el valor. No se detectan la URL de ingreso sin clave (`/api/<n>/envelope/`), 31 hexadecimales ni otro dominio. `arnes` en verde en todo el árbol (las pruebas actuales componen el DSN en ejecución; Grep de `[0-9a-f]{32}@` sin coincidencias el 21/11/2026).
+- Archivos: `scripts/patrones-secretos.mjs`, `tp/patrones-supervision.test.ts`.
+
+### T-122 · Código propio `prompt_no_valido` (C-2)
+`ingeniero-backend` (revisan `revisor` y `auditor-seguridad`) · C · pendiente · Depende de: T-105, T-116 · REQ-012, REQ-014 · CA-012, CA-014
+- Diseño §Lo que toma de la 002, C-2, y §Prompt y arranque ficticios. Sin cambio en `contratos/` (no lista códigos internos), en `001_estado.sql` ni en `sucesos.ts` (el código cumple `^[a-z0-9_]{1,40}$`), ni en lo que sigue con `configuracion_conector_invalida` por C-1: `configuracion.ts`, `oauth/secretos.ts`, `mcp/entrada.ts`, `licencias/operaciones.ts`, `sb/{conector,autorizacion}.ts`; tampoco en `supervision.ts`, cuya lista sale de `CODIGOS` (el código nuevo no va a `EXCLUIDOS`).
+- Pruebas (primero, en rojo): `tu/prompt-ficticio.test.ts` (`falla`, l. 35) y `tu/obtener-instrucciones.test.ts` (l. 167, 173) esperan `prompt_no_valido`; `tu/servidor.test.ts` (l. 326, 339), igual; `tp/manejador-503.test.ts` (l. 25, 43): tres códigos con 503; `tp/supervision.test.ts`: `prompt_no_valido` en `CODIGOS_ESPERADOS` (l. 68-78) y en l. 171; `tu/configuracion.test.ts` l. 83: `CODIGOS` lo contiene. Nueva en `tu/ruta-mcp.test.ts`: con `vi.mock` de `src/mcp/prompt-ficticio` que falla, `tools/call obtener_instrucciones` por `/api/mcp` → 503, `{"estado":"error"}`, `no-store`, registro con `prompt_no_valido` y sin `configuracion_conector_invalida`, 0 ejecuciones (PRUEBA-016, parte HTTP).
+- Código: `codigos.ts` (`"prompt_no_valido"` tras `configuracion_conector_invalida`); `manejador.ts` (`NO_DISPONIBLES`); `prompt-ficticio.ts` l. 52, 54 y 58; comentarios de `mcp/herramientas/obtener-instrucciones.ts` (l. 8, 20) y `mcp/servidor.ts` (l. 11, 29).
+- Archivos: `src/lib/registro/codigos.ts`, `src/lib/plataforma/manejador.ts`, `mcp/prompt-ficticio.ts`, `mcp/herramientas/obtener-instrucciones.ts`, `mcp/servidor.ts`, las siete pruebas citadas.
+
+### T-123 · HMAC de `registrar_suceso`: prueba de la decisión
+`ingeniero-bd` · C · pendiente (decisión A tomada el 21/11/2026, D-036; solo parte (a)) · Depende de: esa decisión, T-103 · REQ-010, REQ-015 · CA-010, CA-015
+- (a) Prueba, en `tu/bd/validar.test.ts`, junto a las de `registrar_suceso`: con A y B sembrados, HMAC de A, de B, inexistente, mal formado y nulo → mismo `resultado`; `huellaDeLicencia` de A y de B igual antes y después; `asistente`, el de la conexión del HMAC o nulo (PRUEBA-014 y 019, partes).
+- (b) Decidido el 21/11/2026 (D-036): el endurecimiento (`t.tipo = 'acceso'`) NO se aplica por ahora; exigiría reaplicar SQL en `Nido` (R-2, persona).
+- (c) Condición del auditor (21/11/2026): prueba o comentario de que la gestión pasa siempre `p_token_hmac` nulo. Con (b) pendiente de la próxima reaplicación de SQL en `Nido`.
+- Archivos: `tu/bd/validar.test.ts`; `sql`, solo con (b).
+
 ## Equivalencias (numeración del 19/11 → actual)
 
 | Actual | Antiguas | Actual | Antiguas |
@@ -198,6 +222,8 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 | T-108 | T-128, T-129, T-131, T-132, T-137 | T-118 | T-156, T-158 |
 | T-109 | T-130 | T-119 | T-155, T-159 a T-164 |
 | T-110 | T-133 a T-136 | | |
+
+T-120 a T-123 actuales son tareas nuevas (bloques 7 y 8): no son las antiguas del mismo número de esta tabla.
 
 ## Escalados
 

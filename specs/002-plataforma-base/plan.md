@@ -4,7 +4,7 @@ Autor: `arquitecto` · Fecha: 19/11/2026 · Camino corto por D-025 (`docs/TECNOL
 
 ## Orden de trabajo
 
-Diez tareas en cuatro bloques. Cada una en su rama `tarea/T-NNN`, con la prueba delante, y entra en `main` por diseño §Integración (`verificar` por quien no implementa, `revisor`, `auditor-seguridad` si es crítica, «sí» del responsable, `merge --squash`).
+Diez tareas en cuatro bloques, más T-011 y T-012 (bloque 5, 21/11/2026, §Correcciones tras la 1.ª pasada de T-010). Cada una en su rama `tarea/T-NNN`, con la prueba delante, y entra en `main` por diseño §Integración (`verificar` por quien no implementa, `revisor`, `auditor-seguridad` si es crítica, «sí» del responsable, `merge --squash`).
 
 1. **Esqueleto** (T-001 → T-002 → T-003): manifiesto y configuraciones; páginas base, que hacen falta para `next build`; `npm run verificar`. En serie: comparten `package.json` o son la puerta de las siguientes.
 2. **Errores, configuración y entornos sin secretos** (T-004 → T-005 → T-006): manejador, errores, registro y `/api/salud`; `configuracion.ts`; `.env.example` y la lista de variables por entorno. En serie: cada una usa el archivo de la anterior.
@@ -75,6 +75,17 @@ Reservadas, que el «sí» nombra como tales: T-001 y T-003 (configuraciones de 
 
 Las de diseño §Esqueleto, más `@electric-sql/pglite` 0.5.17 (diseño §Integración, fuente anotada). En T-001, con `verificar-decision` y fuente: `@types/node`, `@types/react`, `@types/react-dom`, TypeScript 6.0.x, ESLint 10 frente a `eslint-config-next` y JSX en Vitest. En T-007: VERIFICAR el nombre de archivo de migración que acepta la CLI de Supabase; hasta verificarlo en la 003, la migración se nombra `supabase/migrations/0001_base.sql` y no se usa con la CLI.
 
+## Correcciones tras la 1.ª pasada de T-010 (coordinación, D-036, 21/11/2026)
+
+La 1.ª pasada de T-010 (20/11/2026, `evidencias/T-010/informe.md`) no se superó. La coordinación decide, por delegación D-036 (constitución 1.3):
+
+1. **PRUEBA-059 reformulada** (`tareas.md`): D-036 sustituyó el «sí» por tarea de D-025; la aprobación consta en el mensaje del commit. La carpeta `evidencias/T-NNN/` completa es obligatoria desde T-005; T-001 a T-004 llevan evidencia mínima a posteriori, con «no consta» donde falte (art. 13). Como en `main` tampoco existen las de T-005, T-006 y T-009, T-012 las rellena con la misma regla. Se mantiene el detector del paso 6. Se admite que T-002 y T-003 compartan commit.
+2. **PRUEBA-024 reformulada**: en desarrollo, `npm run dev`; `npm run start`, solo con entorno no de desarrollo ficticio. El cierre en fallo de `ENTORNO=desarrollo` con `NODE_ENV=production` no se toca. La guía la corrige T-011 (también su línea 79); `docs/operacion/**` queda autorizada para T-011 por D-036, con `plataforma` y `revisor`.
+3. **Hallazgo ajeno**: el tiempo agotado de `tests/unit/diseno/acceso-muestra.test.ts` es de la función 020 (Fase 3 d); aquí no se arregla.
+4. **Repetición de T-010** con `qa` en un clon limpio de `main` tras T-011 y T-012, con el criterio de `tareas.md`, «Repetición de T-010».
+
+Orden: T-011 y T-012 en paralelo (no comparten archivos) → T-010. Reservada: T-011 (`docs/operacion/**`).
+
 ## Pendiente de decidir (responsable)
 
 - **R-1. Alcance de la base de datos.** La especificación aprobada de la 002 deja fuera «migraciones, RLS, pgTAP y su vuelta atrás» (§Fuera de alcance) y la 010 está en PROPUESTA; D-024 y el relevo piden Supabase local con la migración base. Sin especificación aprobada no se implementa (artículo 5), así que T-007 y T-008 quedan **bloqueadas**. Opciones: a) enmienda de la 002 que incorpore la migración base y las pruebas de aislamiento en local (vuelve a P0); b) aprobar la 010, o la parte mínima, y mover allí T-007 y T-008; c) dejarlas fuera ahora: `aislamiento` sigue probando `docs/MODELO-DATOS.sql` (T-003). La 001 no depende de ellas. Este plan no elige.
@@ -91,3 +102,4 @@ Puerta P1. La abre el responsable, con fecha.
 | Fecha | Quién | Resultado |
 | --- | --- | --- |
 | 19/11/2026 | Orquestador, por delegación (D-019) | P1 abierta para T-001 a T-006, T-009 y T-010. Comprobador SUPERADO; diseño 38 KB. T-007 y T-008 (migración base y RLS) **siguen bloqueadas por R-1**: la especificación aprobada deja fuera las migraciones y enmendarla no se decide por delegación. R-2: el orquestador hace el `merge --squash`, solo tras el «sí» expreso del responsable. R-5: `plataforma` escribe `scripts/` y pruebas de plataforma. R-3, R-4 y R-6 quedan para el responsable |
+| 21/11/2026 | Coordinación, por delegación (D-036) | PRUEBA-059 y PRUEBA-024 reformuladas; T-011 y T-012 añadidas; repetición de T-010 pendiente (§Correcciones tras la 1.ª pasada de T-010) |
