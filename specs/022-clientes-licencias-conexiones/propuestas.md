@@ -93,3 +93,29 @@ Autor: `arquitecto`, al escribir `diseno.md`. Sustituyen o concretan las fronter
 | P-30 | ADR: ampliación de ADR-0003 («operaciones del panel»), enmienda del punto 7 de ADR-0006 (dos causas de suspensión) y, si hace falta, del punto 4 de ADR-0002 (15 minutos, un código vivo) | Cambian fronteras o valores de ADR vigentes |
 | P-31 | Pasar a `aclaraciones.md` las 19 decisiones por delegación (DD-01 a DD-19) de `diseno.md` | D-019 pide anotarlas allí; el encargo del arquitecto no le dejaba editar ese archivo |
 | P-32 | `docs/SEGURIDAD.md`: rutas críticas de P-05. `docs/DISENO.md`: ficha de cliente con sus secciones y el aviso de baja con conexiones activas. `docs/ARQUITECTURA.md`, flujo 1: un solo código vivo y 15 minutos | Documentos compartidos |
+
+## Consolidación del diseño (21/11/2026)
+
+Autor: `arquitecto`. `diseno.md` y `diseno.nuevo.md` se consolidan en `diseno.md` (base: la condensación del 19/11/2026, con el dictamen del 14/11/2026 incorporado; ver su apartado «Consolidación»). **`diseno.nuevo.md` queda retirado**: se ha vaciado a una nota y falta borrarlo con `git rm` (el arquitecto no tenía terminal). Ninguna petición está aplicada. Los números D-, O-, DD- y A- son los del `diseno.md` consolidado. Con la 010 ya diseñada y con migraciones, P-07 a P-14 pasan a ser **migraciones propias de la 022** (DD-22), y lo que sigue es lo que la 010 y otras funciones tienen que saber o cambiar.
+
+### A la 010 (sin editar sus archivos)
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-33 | Aceptar que migraciones de la 022, posteriores a M10, cambien sus tablas y funciones: quitar `licencias.estado` y `estado_manual` (D-2) y reescribir `licencia_vigente` y `resolver_token` (M08) con la regla única; revocar a `authenticated` los `insert` y `update` de M07 sobre `clientes`, `licencias`, `codigos_activacion` y `conexiones` (D-6); quitar las cascadas de M02 sobre códigos y conexiones; quitar los disparadores genéricos de M04 sobre esas cuatro tablas (D-10). Actualizar sus pruebas de permisos (`m07.test.ts` y pgTAP) y su ciclo de migraciones. Alternativa: si M02 aún no está en `Nido` (T-014), incorporarlo en la 010, sin cambiar lo demás | DD-22; cuestión 3 de la 010 («lo que cambien lo hacen con su propia migración») |
+| P-34 | REQ-010 de la 010: ampliar la lista cerrada de funciones con `execute` para `authenticated` con las 18 de la 022 (D-8, D-9), y fijar cómo se exponen si `privado` no está en la API (T-P4). `revocar_conexion_interna` y `crear_codigo_interno`, sin `execute` para `authenticated` | m-3 del dictamen |
+| P-35 | `auditoria`: `fila_principal_id` y `origen` (también los pide la 021) y `accion` de lista cerrada con las I- de la 022 | D-10 |
+| P-36 | T-014: comprobar en `Nido` `log_statement`, `log_min_duration_statement` y `log_min_error_statement` (la 010 ya cita `log_statement`) y si el detalle de los errores de restricción llega al registro del proyecto | M-2 del dictamen; asunto A-12 |
+| P-37 | Si el responsable elige A-10 (b): quitar `al_dar_de_baja`, `impedir_reactivar_cliente` y la condición `k.estado = 'activo'` de `resolver_token`. Si elige (a): `al_dar_de_baja` da motivo de revocación (D-4) | A-10, reservado |
+| P-38 | Si el responsable elige A-11 (b): quitar `clientes_select_usuario` y `licencias_select_usuario` hasta la fase 5 | A-11, reservado |
+| P-39 | Si el responsable elige A-9 (b): ampliar TP de M02, con dictamen del `auditor-seguridad` | A-9, reservado |
+
+### A otras funciones
+
+| N.º | A quién | Petición |
+| --- | --- | --- |
+| P-40 | 021 | Las 18 funciones de la 022 en la lista cerrada de PRUEBA-048; mismo patrón de `es_admin()` antes y después de los cerrojos (su m-1) |
+| P-41 | 020 | `src/app/muestra/clientes/` en PRUEBA-024, con `page.muestra.tsx` y `comprobarAccesoMuestra()` primero (m-9) |
+| P-42 | 001 y 014 | El canje del código de autorización comprueba conexión y licencia vivas (m-4); la activación vuelve a comprobar tras los cerrojos y marca el uso con actualización condicionada (m-1); `generar_codigo` solo en local, o por `crear_codigo_interno` (DD-26, m-7) |
+| P-43 | Coordinación | Pasar DD-20 a DD-27 a `aclaraciones.md` como decididas por delegación D-036 (21/11/2026); presentar al responsable A-1, A-4, A-9, A-10, A-11 y A-12 (`diseno.md`, «Asuntos abiertos»); que la lista de publicación de `docs/SEGURIDAD.md` exija la alerta de conexión nueva (A-8) |
+| P-44 | Especificador, según las respuestas | A-9: REQ-052 y CA-006. A-10: REQ-011, REQ-067, CA-007, CA-041 y motivo de revocación por baja en REQ-025. A-11: CA-022 |
