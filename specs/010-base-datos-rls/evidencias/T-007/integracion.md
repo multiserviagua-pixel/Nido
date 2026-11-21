@@ -11,4 +11,4 @@ Rama `tarea/010-T-007` rebasada sobre `main` (6d2bdcc), en su copia de trabajo, 
 | `npm run estilo` | 0 avisos tras formatear `m08_m10`, `seed` y `seed-config` con Prettier (el formato de `m08_m10` coincide con el commit 2001742 de la fase 1) y quitar dos variables sin uso en `m08_m10` (sin cambio de comportamiento) |
 | `npm run aislamiento` | 45 de 45 superadas |
 | `node scripts/comprobar-specs.mjs` | SUPERADO |
-| Build | pendiente en la carpeta principal tras el squash |
+| Build (carpeta principal, tras el squash 6f815b9) | salida 0. Un primer intento lo mató el sistema por memoria baja; reintento con `esperar-memoria.sh` (4485 MB libres), regla D |
