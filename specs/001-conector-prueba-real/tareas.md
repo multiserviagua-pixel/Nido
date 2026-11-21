@@ -202,7 +202,7 @@ Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten a
 - Archivos: `src/lib/registro/codigos.ts`, `src/lib/plataforma/manejador.ts`, `mcp/prompt-ficticio.ts`, `mcp/herramientas/obtener-instrucciones.ts`, `mcp/servidor.ts`, las siete pruebas citadas.
 
 ### T-123 · HMAC de `registrar_suceso`: prueba de la decisión
-`ingeniero-bd` · C · pendiente (decisión A tomada el 21/11/2026, D-036; solo parte (a)) · Depende de: esa decisión, T-103 · REQ-010, REQ-015 · CA-010, CA-015
+`ingeniero-bd` · C · hecha en (a) y (c) (decisión A, 21/11/2026, D-036; revisor sin bloqueantes ni mayores y auditor APTO CON CONDICIONES, menores aplicados; (c) cubierta hoy por la lista cerrada `FUNCIONES_GESTION` y una prueba estática, y exigirá una prueba en la ruta de gestión cuando registre sucesos; (b) sigue sin aplicarse, con la próxima reaplicación de SQL en `Nido`) · Depende de: esa decisión, T-103 · REQ-010, REQ-015 · CA-010, CA-015
 - (a) Prueba, en `tu/bd/validar.test.ts`, junto a las de `registrar_suceso`: con A y B sembrados, HMAC de A, de B, inexistente, mal formado y nulo → mismo `resultado`; `huellaDeLicencia` de A y de B igual antes y después; `asistente`, el de la conexión del HMAC o nulo (PRUEBA-014 y 019, partes).
 - (b) Decidido el 21/11/2026 (D-036): el endurecimiento (`t.tipo = 'acceso'`) NO se aplica por ahora; exigiría reaplicar SQL en `Nido` (R-2, persona).
 - (c) Condición del auditor (21/11/2026): prueba o comentario de que la gestión pasa siempre `p_token_hmac` nulo. Con (b) pendiente de la próxima reaplicación de SQL en `Nido`.

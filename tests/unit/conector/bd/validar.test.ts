@@ -2,6 +2,7 @@
 // 1 s, tipo, recurso, revocada -> falso) y PRUEBA-019 (parte: suceso cerrado). No sustituye a Postgres
 // real de Supabase ni a pgTAP (CI). Valores sembrados compuestos en ejecución (arts. 1 y 4).
 import { createHmac, randomBytes } from "node:crypto";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { afterAll, describe, expect, it, vi } from "vitest";
 
 // Arrancar PGlite en cada prueba cuesta CPU; en paralelo con otros ficheros supera los 5 s por defecto.
@@ -13,6 +14,7 @@ import {
   ROLES_SUPABASE,
   type BdApoyo,
 } from "../../../conector/apoyo/index";
+import { estado, huellaDeLicencia, TABLAS } from "./comun";
 
 const ESQUEMA = "conector_prueba";
 const ROL_MCP = "conector_prueba_mcp";
@@ -87,34 +89,6 @@ async function sembrar(
 
 async function almacenMcp(bd: BdApoyo) {
   return crearAlmacenPglite(bd, ROL_MCP);
-}
-
-const TABLAS = [
-  "clientes_oauth",
-  "codigos_activacion",
-  "codigos_autorizacion",
-  "conexiones",
-  "ejecuciones",
-  "informes",
-  "licencias",
-  "limites_origen",
-  "ordenes",
-  "solicitudes_autorizacion",
-  "sucesos",
-  "tokens",
-];
-/** Huella del contenido de todas las tablas: lo que no debe cambiar ante un rechazo. */
-async function estado(bd: BdApoyo): Promise<Record<string, string>> {
-  const salida: Record<string, string> = {};
-  for (const t of TABLAS) {
-    salida[t] = (
-      await una<{ h: string }>(
-        bd,
-        `select coalesce(md5(string_agg(x::text, '|' order by x::text)), 'vacia') as h from ${ESQUEMA}.${t} x`,
-      )
-    ).h;
-  }
-  return salida;
 }
 
 describe("T-103 (c): validar_acceso (PRUEBA-011, parte BD, con reloj)", () => {
@@ -541,5 +515,147 @@ describe("T-103 (c): registrar_suceso", () => {
     ]);
     expect(f.cuerpo).not.toMatch(/pg_catalog\s*\.\s*(now|clock_timestamp|transaction_timestamp)/i);
     expect(f.cuerpo).not.toMatch(/clock_timestamp|statement_timestamp|age\s*\(/i);
+  });
+});
+
+// T-123 (a) (001): decisión A del apartado «HMAC del token en `registrar_suceso`» (diseño; ADR-0003 punto 4).
+// El HMAC es opcional y solo etiqueta `asistente`: el `resultado` no revela si es de A, de B, inexistente,
+// mal formado o nulo, y lo que pertenece a una licencia no cambia (art. 2). PRUEBA-014 y 019, partes.
+describe("T-123 (a): el HMAC de registrar_suceso no cambia el resultado ni toca datos de ninguna licencia", () => {
+  const ARGS = ["mcp", "obtener_instrucciones", "correcto", "ok", 12, "2025-11-25"] as const;
+
+  it("HMAC de A, de B, inexistente, mal formado y nulo: mismo resultado; huellas de A y B intactas; asistente solo el de la conexión del HMAC", async () => {
+    const bd = await abrir();
+    const a = await sembrar(bd, "A", "claude");
+    const b = await sembrar(bd, "B", "chatgpt");
+    const antesA = await huellaDeLicencia(bd, a.licenciaId);
+    const antesB = await huellaDeLicencia(bd, b.licenciaId);
+    const antesTablas = await estado(bd);
+    const almacen = await crearAlmacenPglite(bd, ROL_MCP);
+
+    const casos: [string, string | null, "claude" | "chatgpt" | null][] = [
+      ["de A", a.acceso.hmac, "claude"],
+      ["de B", b.acceso.hmac, "chatgpt"],
+      ["inexistente", hmacDe("inexistente-" + randomBytes(8).toString("hex")), null],
+      ["mal formado: corto", "abc", null],
+      ["mal formado: mayúsculas", a.acceso.hmac.toUpperCase(), null],
+      ["mal formado: no hexadecimal", "no-es-hex-" + "z".repeat(54), null],
+      ["el token en claro (ficticio) en lugar del HMAC", a.acceso.valor, null],
+      ["nulo", null, null],
+    ];
+    const resultados: unknown[] = [];
+    for (const [nombre, hmac, asistente] of casos) {
+      const r = (await almacen.llamar("registrar_suceso", [hmac, ...ARGS])) as unknown;
+      resultados.push(r);
+      expect(r, nombre).toEqual({ resultado: "registrado" });
+      const ultima = await una<{ asistente: string | null }>(
+        bd,
+        `select asistente::text from ${ESQUEMA}.sucesos order by id desc limit 1`,
+      );
+      expect(ultima.asistente, nombre).toBe(asistente);
+    }
+    expect(new Set(resultados.map((r) => JSON.stringify(r))).size).toBe(1);
+
+    expect(await huellaDeLicencia(bd, a.licenciaId)).toBe(antesA);
+    expect(await huellaDeLicencia(bd, b.licenciaId)).toBe(antesB);
+    // Solo cambia `sucesos`: ninguna otra tabla (tokens, conexiones, licencias...) se toca.
+    const despues = await estado(bd);
+    for (const t of TABLAS) {
+      if (t === "sucesos") expect(despues[t], t).not.toBe(antesTablas[t]);
+      else expect(despues[t], t).toBe(antesTablas[t]);
+    }
+  });
+
+  it("el rol de gestión, con HMAC de otra licencia o nulo, tampoco cambia el resultado", async () => {
+    const bd = await abrir();
+    const a = await sembrar(bd, "A", "claude");
+    const b = await sembrar(bd, "B", "otro");
+    const antesA = await huellaDeLicencia(bd, a.licenciaId);
+    const antesB = await huellaDeLicencia(bd, b.licenciaId);
+    const antesTablas = await estado(bd);
+    const almacen = await crearAlmacenPglite(bd, ROL_GESTION);
+    // La función no distingue roles: con el HMAC de A etiqueta la conexión de A; nulo e inexistente, nada.
+    const casos: [string | null, "claude" | null][] = [
+      [a.acceso.hmac, "claude"],
+      [null, null],
+      [hmacDe("x"), null],
+    ];
+    for (const [hmac, asistente] of casos) {
+      expect(await almacen.llamar("registrar_suceso", [hmac, ...ARGS])).toEqual({
+        resultado: "registrado",
+      });
+      const ultima = await una<{ asistente: string | null }>(
+        bd,
+        `select asistente::text from ${ESQUEMA}.sucesos order by id desc limit 1`,
+      );
+      expect(ultima.asistente).toBe(asistente);
+    }
+    expect(await huellaDeLicencia(bd, a.licenciaId)).toBe(antesA);
+    expect(await huellaDeLicencia(bd, b.licenciaId)).toBe(antesB);
+    const despues = await estado(bd);
+    for (const t of TABLAS) {
+      if (t === "sucesos") expect(despues[t], t).not.toBe(antesTablas[t]);
+      else expect(despues[t], t).toBe(antesTablas[t]);
+    }
+  });
+});
+
+// T-123 (c) (001): condición del auditor (21/11/2026): la gestión pasa siempre `p_token_hmac` nulo.
+// Hoy NO existe llamador de gestión de `registrar_suceso`: la única vía es `registrarSuceso` del almacén,
+// que solo usa `src/mcp/entrada.ts` (tras `validar_acceso`). Esta prueba lo hace cumplir de forma estática:
+// ni la gestión (`src/lib/licencias`, `src/lib/oauth`, `src/lib/supabase/autorizacion.ts`) ni las rutas
+// de `src/app` mencionan `registrarSuceso`/`registrar_suceso`. Cuando una ruta de gestión lo use, esta
+// prueba fallará y obligará a añadir ahí una prueba de que pasa `tokenHmac: null`.
+// SALVEDAD: la prueba solo detecta menciones POR NOMBRE en `src/`. No detecta una llamada nueva a través
+// de una función añadida a los 4 archivos permitidos (sucesos.ts, almacen.ts, conector.ts, entrada.ts).
+// Para sucesos.ts se refuerza: solo puede exportar `registrarSucesoTrasResponder` (valores).
+// BARRERA ESTRUCTURAL (la que de verdad impide la llamada de gestión): `FUNCIONES_GESTION`
+// (src/lib/supabase/autorizacion.ts:27) no incluye `registrar_suceso`; el adaptador de gestión rechaza
+// cualquier otro nombre con `almacen_no_disponible` antes de consultar (autorizacion.ts:~591, probado en
+// tests/unit/conector/autorizacion.test.ts:~563-579); y el adaptador del rol mcp solo lo importa `src/mcp/`.
+describe("T-123 (c): la gestión no llama a registrar_suceso con un HMAC", () => {
+  const raiz = new URL("../../../../", import.meta.url);
+  const leer = (ruta: string) => readFileSync(new URL(ruta, raiz), "utf8");
+  const listar = (dir: string): string[] => {
+    const base = new URL(dir.endsWith("/") ? dir : dir + "/", raiz);
+    const salida: string[] = [];
+    for (const n of readdirSync(base)) {
+      const rel = dir.replace(/\/$/, "") + "/" + n;
+      if (statSync(new URL(rel, raiz)).isDirectory()) salida.push(...listar(rel));
+      else if (/\.(ts|tsx|mjs)$/.test(n)) salida.push(rel);
+    }
+    return salida;
+  };
+
+  it("sucesos.ts solo exporta `registrarSucesoTrasResponder` entre los valores que llegan a registrarSuceso", () => {
+    const fuente = leer("src/lib/registro/sucesos.ts");
+    expect(fuente).not.toMatch(/^export\s+(\*|\{|default)/m);
+    const valores = [
+      ...fuente.matchAll(/^export\s+(?:async\s+)?(?:function\*?|const|let|var|class)\s+(\w+)/gm),
+    ].map((m) => m[1]);
+    expect(valores).toEqual(["registrarSucesoTrasResponder"]);
+  });
+
+  it("solo el almacén, su adaptador, el registrador y la entrada MCP mencionan el suceso", () => {
+    const todos = listar("src").filter((f) => /registrarSuceso|registrar_suceso/.test(leer(f)));
+    expect(todos.sort()).toEqual([
+      "src/lib/registro/sucesos.ts",
+      "src/lib/supabase/almacen.ts",
+      "src/lib/supabase/conector.ts",
+      "src/mcp/entrada.ts",
+    ]);
+  });
+
+  it("la gestión y las rutas de aplicación no lo usan (cuando lo usen, deberán pasar tokenHmac nulo)", () => {
+    const gestion = [
+      ...listar("src/lib/licencias"),
+      ...listar("src/lib/oauth"),
+      ...listar("src/app"),
+      "src/lib/supabase/autorizacion.ts",
+    ];
+    expect(gestion.length).toBeGreaterThan(0);
+    for (const f of gestion) {
+      expect(leer(f), f).not.toMatch(/registrarSuceso|registrar_suceso/);
+    }
   });
 });
