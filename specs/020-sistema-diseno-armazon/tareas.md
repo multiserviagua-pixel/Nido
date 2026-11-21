@@ -84,7 +84,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 ## Bloque 3 · Pruebas en navegador, armazón y componentes de la propuesta
 
 ### T-009 · Pruebas en navegador
-`qa` · R, Res. · pendiente · Depende de: T-005; (c), además T-007 · REQ-001, REQ-008, REQ-009, REQ-011 a REQ-029, REQ-032, REQ-034 a REQ-037, REQ-039 a REQ-044, REQ-046, REQ-049, REQ-054, REQ-056 a REQ-060, REQ-062, REQ-068 a REQ-075, REQ-077, REQ-079, REQ-080, REQ-088 · CA-001 a CA-025, CA-027, CA-028, CA-030 a CA-034, CA-036, CA-038 a CA-046, CA-048 a CA-054, CA-057
+`qa` · R, Res. · (a)(b)(c) integradas en a47b28a (21/11/2026), (d) a (j) pendientes · Depende de: T-005; (c), además T-007 · REQ-001, REQ-008, REQ-009, REQ-011 a REQ-029, REQ-032, REQ-034 a REQ-037, REQ-039 a REQ-044, REQ-046, REQ-049, REQ-054, REQ-056 a REQ-060, REQ-062, REQ-068 a REQ-075, REQ-077, REQ-079, REQ-080, REQ-088 · CA-001 a CA-025, CA-027, CA-028, CA-030 a CA-034, CA-036, CA-038 a CA-046, CA-048 a CA-054, CA-057
 
 Cada parte cierra con su prueba escrita y en verde. (f) a (j) pueden escribirse mientras avanza el bloque 2.
 
@@ -217,6 +217,13 @@ Cada parte añade sus entradas a `m/inventario.ts` y sus textos a `c/textos.ts` 
 3. **T-013 y T-019 son de una persona.** Se prepara lo que necesite ver (capturas o dirección local y una lista corta de qué mirar) y se sigue con lo que no dependa de ellas.
 4. Copia `c-020-t005` y rama `tarea/020-T-005` retiradas (ya integradas).
 5. **Evidencia de integración con la máquina cargada:** `npx vitest run --maxWorkers=3` en verde y tipos, estilo, aislamiento, arnés y build en 0 por separado.
+
+### Decisiones de la coordinación por D-036 (segunda tanda, 21/11/2026)
+
+6. Retiradas las copias `c-020-t006b`, `c-020-t007` y `c-020-t007fg`.
+7. No se arranca `next dev` en la carpeta principal (lo arregla T-124 de la 001); si cambia `AGENTS.md`, `git checkout -- AGENTS.md` sin commitear; tras `npm run dev`, borrar `.next` de esa copia si `npm run tipos` falla.
+8. `tests/unit/diseno/acceso-muestra.test.ts` agota 30 s bajo carga (hallazgo del carril A2): si es de este carril, arreglarlo sin relajar el control, con revisor y `auditor-seguridad`.
+9. T-009 (a)(b)(c) integradas (a47b28a). H-1 (la consulta de la dirección dentro de los guiones de Next) anotado en `plan.md`; pendiente de dictamen del `auditor-seguridad` antes de la 021. Pendientes de T-009 para T-010 y T-020 en `evidencias/T-009/resultado.md`. La orden oficial `npm run navegador` queda sin ejecutar (puerto 3100 ocupado por un `next start` que no se pudo parar); se ejecuta en CI o con el puerto libre antes de P7.
 
 ## Escalados
 
