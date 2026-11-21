@@ -598,6 +598,37 @@ describe("T-123 (a): el HMAC de registrar_suceso no cambia el resultado ni toca 
       else expect(despues[t], t).toBe(antesTablas[t]);
     }
   });
+
+  // T-123 (b): solo un token de tipo 'acceso' etiqueta el asistente; el HMAC de un token de renovación
+  // se trata igual que uno inexistente (como ya hacen validar_acceso y las demás funciones).
+  it("el HMAC de un token de renovación no etiqueta el asistente: igual que uno inexistente", async () => {
+    const bd = await abrir();
+    const a = await sembrar(bd, "A", "claude");
+    const renov = fabrica.token("renovacion");
+    await bd.db.query(
+      `insert into ${ESQUEMA}.tokens (conexion_id, tipo, token_hmac, recurso, caduca_en, cliente_oauth_id)
+       values ($1, 'renovacion', $2, $3, now() + interval '14 days', $4)`,
+      [a.conexionId, renov.hmac, RECURSO, await clienteSemilla(bd)],
+    );
+    const almacen = await crearAlmacenPglite(bd, ROL_MCP);
+    const ultimo = async () =>
+      (
+        await una<{ asistente: string | null }>(
+          bd,
+          `select asistente::text from ${ESQUEMA}.sucesos order by id desc limit 1`,
+        )
+      ).asistente;
+    const conRenovacion = await almacen.llamar("registrar_suceso", [renov.hmac, ...ARGS]);
+    const asistenteRenovacion = await ultimo();
+    const conInexistente = await almacen.llamar("registrar_suceso", [
+      hmacDe("inexistente"),
+      ...ARGS,
+    ]);
+    expect(conRenovacion).toEqual(conInexistente);
+    expect(conRenovacion).toEqual({ resultado: "registrado" });
+    expect(asistenteRenovacion).toBeNull();
+    expect(await ultimo()).toBeNull();
+  });
 });
 
 // T-123 (c) (001): condición del auditor (21/11/2026): la gestión pasa siempre `p_token_hmac` nulo.

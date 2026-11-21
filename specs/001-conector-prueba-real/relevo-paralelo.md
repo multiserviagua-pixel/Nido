@@ -11,7 +11,7 @@ Alcance: 002·T-006, T-009, T-010; 001·T-104, T-115, T-116, T-118 (a), T-121, T
 
 ## Pendiente
 - **T-118 (b)**: espera a personas (AR-03, AR-04, AR-08). Nada que ejecutar hasta que respondan; la parte (a) (guion fechado, calendario y plantillas) está en `main` (6c1473e) y su rama ya está retirada.
-- **T-123 (b)**: el endurecimiento `t.tipo = 'acceso'` en `registrar_suceso` NO se aplica; irá con la próxima reaplicación de SQL en `Nido` (R-2, persona).
+- **T-123 (b)**: el endurecimiento `t.tipo = 'acceso'` en `registrar_suceso` está en el repositorio (T-123 (b)); falta aplicar el SQL en `Nido` (R-2, persona).
 - T-116: M2 (`after()` de next/server) para el despliegue (CAD-034); activar «no almacenar IP» en Sentry UE (persona).
 - Personas: crear proyecto Sentry UE (DP-2); generar `CONECTOR_SECRETO` (comando en `docs/operacion/entornos.md`); en preproducción, URL de BD con puerto 6543 y variables de sistema de Vercel; punto 12 del ADR-0007 (revocar concesiones ajenas a `PUBLIC`, R-2).
 

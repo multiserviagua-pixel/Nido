@@ -486,7 +486,8 @@ begin
     select c.asistente into v_asistente
       from conector_prueba.tokens t
       join conector_prueba.conexiones c on c.id = t.conexion_id
-     where t.token_hmac = p_token_hmac;
+     where t.token_hmac = p_token_hmac
+       and t.tipo = 'acceso';
   end if;
 
   select count(*) into v_total
