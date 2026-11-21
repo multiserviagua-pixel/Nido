@@ -30,3 +30,17 @@ Relación con «Qué queda por decidir» de `docs/propuesta-enmienda-articulo-8.
 Aplicado en la especificación del 21/11/2026 (reescrita con la 1.4; numeración de requisitos nueva).
 
 Corregida tras el dictamen 1 del auditor, 21/11/2026.
+
+## Enmienda 1 (21/11/2026)
+
+No es una respuesta del responsable: es una decisión de la coordinación por delegación (D-036), a la vista de `verificacion-gmail-outlook.md` (D1 a D7). El responsable puede revocarla.
+
+| Asunto | Decisión | Efecto |
+| --- | --- | --- |
+| Plataforma (D5) | Solo Gmail en la primera versión; Outlook.com y Microsoft 365 fuera, como limitación visible para el dueño | REQ-027, CA-030; requisito 22 de la 017 |
+| Activación (C) | Cerrada en fallo hasta superar el piloto de NC-1 a NC-10 aplicables a Gmail, en una cuenta de prueba de Google con datos ficticios; el plan lo escribe el arquitecto | REQ-026, CA-029 |
+| Contacto previo (D2, D7) | Solo cuenta con un discriminador probado en NC-2; lo enviado por la compuerta o el agente nunca cuenta; lo insertado con autenticación falsa no cuenta (NC-1) | REQ-002, REQ-021 |
+| Avisos y resumen (D3) | Con autoridad en una página del dueño (vía protegida); correo de cortesía que no es la fuente de verdad | REQ-008, REQ-011 a REQ-013 |
+| Versión (D4) | La compuerta comprueba su propia huella y, si no coincide o no puede, no envía; la instalación advierte de no compartir el proyecto | REQ-014, REQ-017 |
+
+Supuestos del especificador al aplicarla (los dictamina el `auditor-seguridad`): la alteración del correo de cortesía impide ese envío salvo el cambio de leído; 24 meses de antigüedad máxima del contacto previo; 0 fugas en 300 intentos por asistente en CA-024.

@@ -77,4 +77,20 @@ Recomendación para el diseño: valorar la B. Las dos vías son ruta crítica co
 
 | N.º | Documento | Cambio propuesto | Motivo |
 | --- | --- | --- | --- |
-| P-15 | 016, requisito 8 (diseño) | Tercer nivel: si la plataforma ni deja el aviso de envío fuera del alcance del agente ni detecta que se ha alterado, esa plataforma no ofrece envío sin revisión | R-5 del auditor sobre la 017. Es una condición para el diseño, no cambia la especificación aprobada |
+| P-15 | 016, requisito 8 (diseño) | Tercer nivel: si la plataforma ni deja el aviso de envío fuera del alcance del agente ni detecta que se ha alterado, esa plataforma no ofrece envío sin revisión | R-5 del auditor sobre la 017. Es una condición para el diseño, no cambia la especificación aprobada. **Enmienda 1:** recogida en REQ-008 (página del dueño) y REQ-026 (sin NC-3 y NC-4 superados, no se activa) |
+
+## 8. Añadido el 21/11/2026 con la enmienda 1
+
+Recogen las propuestas PR-1 a PR-5 de `verificacion-gmail-outlook.md` y lo que la enmienda añade. Ninguna está aplicada.
+
+| N.º | Documento | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-16 | `docs/TECNOLOGIAS.md` | PR-1 de la verificación. Además: anotar en D-037 y D-038 que la primera versión es solo de Gmail y que la activación espera al piloto (REQ-026) | Enmienda 1 |
+| P-17 | `docs/INSTALACION-CLIENTE.md`, paso 4 y paso opcional de la compuerta (P-07) | PR-2 de la verificación. Además: mientras la compuerta esté instalada (vuelta de corrección 21/11/2026), ninguna herramienta que envíe, comparta, borre o actualice archivos de la nube, ni navegador o control del equipo del asistente con la sesión del dueño en Google, con declaración guiada al activar y cada 30 días; advertencia de no compartir el proyecto ni su contenedor con nadie, tampoco con HumanaIA; aviso de que archivar o etiquetar un correo de cortesía impide ese envío | REQ-008, REQ-014, REQ-017 |
+| P-18 | `docs/SEGURIDAD.md`, amenazas | PR-3 de la verificación. Además: navegador del asistente con la sesión del dueño que edita el código o las propiedades del proyecto instalado; correo de cortesía falso que lleva a una página falsa; agotamiento del tiempo de ejecución diario | REQ-013, REQ-014, REQ-017, REQ-024 |
+| P-19 | 012 (prompt) | PR-4 de la verificación (D7): quitar el envío en conversación o tratarlo siempre como no escrito por el dueño (REQ-002 ya no lo cuenta). Que el prompt no use un navegador con la sesión del dueño en Google mientras la compuerta esté instalada. **Vuelta de corrección 21/11/2026:** deja de ser solo propuesta; es condición de REQ-026 (sin una versión así en el canal, no se activa) | REQ-002, REQ-017, REQ-026 |
+| P-20 | `docs/ARQUITECTURA.md` y ADR | PR-5 de la verificación: la compuerta y la vía protegida son piezas solo de Gmail; valorar un ADR por la frontera por plataforma | REQ-027 |
+| P-21 | `marketing/` | Además de P-09: decir que el envío sin revisión solo será para Gmail y que aún no está disponible (REQ-026) | REQ-026, REQ-027 |
+| P-22 | `piloto-gmail.md` (arquitecto) | Que el plan cubra, con evidencia por punto, NC-1 a NC-7, NC-9, NC-12 y NC-13 (vuelta de corrección 21/11/2026), la batería de 300 intentos por asistente de CA-024 y las pruebas de REQ-017 (herramientas y navegador), y diga qué REQ deja sin efecto cada punto no superado | REQ-026, CA-029 |
+| P-23 | Dictamen | La lectura del artículo 8 de la enmienda 1 (resumen y aviso con autoridad en la página, correo de cortesía sin ella, el estado de leído no impide el envío) necesita dictamen del `auditor-seguridad`: se aparta de la letra de R-2 de la 017 | REQ-008, REQ-011 |
+| P-24 | Tamaño de la especificación | Con la enmienda pasa de 25 requisitos y supera los 25 KB de D-023. Si la coordinación lo pide, se divide en dos funciones: condiciones de envío (REQ-001 a REQ-010, REQ-020 a REQ-025) y estado, página del dueño, instalación y plataforma (REQ-011 a REQ-019, REQ-026, REQ-027) | D-023 |

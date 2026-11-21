@@ -42,3 +42,14 @@ Se propuso `018-aprendizaje-compuerta`. Se usa `018-aprendizaje-estilo` porque l
 | N.º | Documento | Cambio propuesto | Motivo |
 | --- | --- | --- | --- |
 | P-6 | `docs/TECNOLOGIAS.md` | Decisión nueva en estado PENDIENTE: aceptación por el responsable del riesgo residual de la 018 (persistencia y amplificación), con las opciones R-3 y «visto bueno para fórmulas del continuo» delante. Al responder, su respuesta literal y la fecha | Dictamen 2 del auditor; D-036 no cubre aceptar riesgos; artículos 6, 13 y 14 |
+
+## Añadido el 21/11/2026 con la enmienda 1
+
+| N.º | Documento | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-7 | `piloto-gmail.md` (arquitecto) | Punto nuevo **NC-11 (propuesto, sin comprobar):** que el agente, con sus conectores, pueda leer el visto bueno y la pausa guardados en el estado de la compuerta por un camino que ni él ni un tercero puedan escribir, y aplicar el discriminador de NC-2 a los enviados. Si no, la 018 queda sin visto bueno y en pausa (REQ-021) | REQ-001, REQ-021 |
+| P-8 | 012 (prompt), sobre P-1 | Puntos 1, 3 y 8 de P-1: el visto bueno, la pausa y la reanudación solo valen en la vía protegida; en conversación el dueño pide el arranque y rehacer. Las correcciones de etiqueta solo valen si las dice el dueño en conversación. Lo que el agente envía, también en conversación con confirmación, nunca es muestra propia (D7) | REQ-001, REQ-008, REQ-012, REQ-019 |
+| P-9 | 017, sobre P-2 | La vía protegida aloja el visto bueno y la pausa de la 018 (REQ-021): pausar y retirar el visto bueno, restrictivas urgentes; darlo y reanudar, relajantes. Ver y borrar lo aprendido sigue como propuesta | REQ-021 |
+| P-10 | Coordinación | Consecuencia que conviene tener presente: en Outlook.com, en Microsoft 365 y en Gmail sin compuerta no se usa el arranque, y en Gmail no se aprende de enviados hasta superar NC-2 | REQ-001, REQ-021 |
+
+P-5 queda contestada por la verificación de la 016 (D2 y D6) y por la enmienda 1, salvo NC-11.
