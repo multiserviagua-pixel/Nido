@@ -1,6 +1,6 @@
 # 021 · Acceso de superadmin con doble factor y gestión de administradores
 
-Estado: APROBADA
+Estado: PLANIFICADA
 Fase: 3 · Fecha: 12/11/2026, actualizada el 13/11/2026 con las respuestas de `aclaraciones.md` · Autor: `especificador`
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.

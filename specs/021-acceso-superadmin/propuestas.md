@@ -157,6 +157,93 @@ Autor: `arquitecto`. Salen de la corrección de `diseno.md` tras `dictamen-disen
 | `docs/SEGURIDAD.md`, rutas críticas | Toda operación nueva con la clave secreta exige dictamen del `auditor-seguridad` antes de la puerta P1, también con esa puerta delegada | Hallazgo m-28 |
 | `specs/021-acceso-superadmin/guia-responsable.md` (por escribir, en el plan) | Los tres procedimientos de fuera del panel, y el aviso de no rotar `ACCESO_HMAC_DISPOSITIVO` durante un ataque de bloqueos salvo que esté comprometido | Hallazgos m-25 y m-28 |
 
+## Al preparar la 3.ª vuelta del auditor (21/11/2026)
+
+Autor: `arquitecto`. Salen de comprobar M-13, M-14 y m-17 a m-29 contra `diseno.md`, de los avisos H-1 y V-1 de la 020, de A-13 por delegación (D-036) y de A-15 (entonces anotada por D-036; desde el 21/11, abierta y reservada al responsable). Ninguna está aplicada; el arquitecto no ha editado nada fuera de esta carpeta. Las migraciones de la 010 se han leído como dato.
+
+### Fase 2 (función 010)
+
+| Cambio | Motivo |
+| --- | --- |
+| Las migraciones de la 010 ya existen: `20261120000200_clientes_y_acceso.sql` crea `public.administradores (usuario_id, creado_en)` con `on delete cascade` hacia `auth.users`, y `20261120000700_reglas_de_acceso.sql` define `privado.es_admin()` como «fila en `administradores` y `aal = 'aal2'`», con `es_admin()` y `clientes_del_usuario()` como únicas funciones ejecutables por `authenticated`. Lo que pide la 021 («Datos», «La regla de acceso», «Funciones de operación») va en **migraciones nuevas** posteriores, nunca editando las aplicadas, con su prueba pgTAP de acceso cruzado y vuelta atrás probada | `diseno.md`, «Supuestos» y «Migración y vuelta atrás» |
+| La vuelta atrás de la migración que sustituye `es_admin()` restaura la de M07, que reabre el acceso solo por `aal2`: debe ir junto con la vuelta atrás de la aplicación y figurar así en su cabecera | Artículo 11; fila M-4 de «Migración y vuelta atrás» |
+| Quitar el `on delete cascade` de `administradores` (y decidir el de `usuarios_cliente`, que no es de la 021): borrar la cuenta en el servicio no debe quitar la fila de administrador sin pasar por la regla del mínimo | REQ-021; frontera 3 de este archivo |
+| Ampliar la lista cerrada de funciones de `authenticated` (hoy dos) con las cuatro de sesión y las `admin_*` de la 021; la prueba que compara con la lista (PRUEBA-048) debe fallar si aparece otra | m-5, m-23 |
+| En `privado.cambios_esperados`, el tipo `factor` cubre el alta y el borrado, 5 minutos; lo abren C-6 `anunciar`, `admin_anunciar_factor`, `admin_sustituir_factor` (para el borrado del anterior) y `admin_retirar_factor`. **Corregido el 21/11 tras la 3.ª vuelta (M-16):** en el alta, el anuncio se ata al primer `factor_id` que aparece y cubre su paso a `verified` y su borrado si se cancela, hasta que lo cierra la función del panel o pasan 5 min; en el borrado, solo el `factor_id` anunciado; un factor sin verificar que el registro no tiene nunca consume ni dispara; otro `factor_id` en la ventana cuenta como sin anuncio. La ligadura a la sesión la comprueban las funciones del panel, no el disparador (la tabla del servicio no tiene columna de sesión). El disparador no actúa ante el borrado de un factor que el registro ya da por retirado (baja, S-4) | M-13, M-16 |
+| El disparador sobre las tablas del servicio compara valor anterior y nuevo solo de la contraseña cifrada, el correo, el cambio de correo pendiente y el alta, estado o borrado de un factor; los nombres exactos salen de T-P2 punto 13 | M-13 |
+
+### Función 020
+
+| Cambio | Motivo |
+| --- | --- |
+| PRUEBA-034 (y PRUEBA-024, que dice «da 404»): exigir 404 solo en carga completa. En navegación RSC, exigir el mismo código y la misma marca (`NEXT_HTTP_ERROR_FALLBACK;404`) en los tres casos, carga igual salvo valores por petición, 0 testigos y, si hay 307, `Location` del mismo origen, sin consulta y que empieza por `/admin` (corregido tras la 4.ª vuelta, m-38). Añadir que el documento del 404 lleve `lang="es"` | Aviso V-1 del relevo de la 020 y `evidencias/T-005/resultado.md` |
+| PRUEBA-009 dice «parámetros de más ignorados». En `/admin` y `/acceso`, la guardia de la 021 puede redirigir a la ruta fija de una tabla constante cuando sobra un parámetro; esa redirección es opcional y no es el control de H-1 (m-38). Alinear el texto de la 020 para esas rutas, o confirmar que la regla de la 020 se refiere solo a la muestra | H-1, `diseno.md` de la 021, «La guardia» |
+| H-1: la 021 lo trata con «no reflejar» (sin parámetros admitidos y comodín que no lee sus segmentos; la redirección es opcional, m-38) y una prueba nueva (PRUEBA-055 de la 021). La política de contenido no lo cubre, porque el texto queda dentro de un guion que lleva el valor de un solo uso. La condición de la 020 (muestra cerrada en producción y preproducción hasta el dictamen) no cambia. **3.ª vuelta (21/11):** el auditor lo da como MENOR informativo para la 020 y recomienda añadir a su cadena hostil U+2028, `<!--<script>` y un testigo en la ruta | H-1 de `plan.md` de la 020; `dictamen-diseno-3.md` |
+| El inventario de PRUEBA-018 se hizo solo sobre `indice/unico`. La 021 lo necesita sobre todos los estados (diálogos y gráficos incluidos) para decidir si Radix o Recharts inyectan estilos | Inventario de la 020 y T-P4 de la 021 |
+
+### Fase 1 (función 002)
+
+| Cambio | Motivo |
+| --- | --- |
+| La redirección por parámetros de más la hace la guardia, no el `proxy.ts`, y es opcional (M-15, 21/11). Next serializa ruta y consulta en todos sus cuerpos: es riesgo residual de AM-39, controlado por su escapado en HTML y, en RSC y acción, por `Content-Type: text/x-component` con `nosniff` (M-17), que PRUEBA-055 comprueba en cada actualización de Next; toda `Location` es del mismo origen, sin consulta, empieza por `/admin` o `/acceso` y no lleva testigo (m-46). La reserva del 404 fijo en el `proxy.ts` no cubre la ruta y queda descartada | H-1, M-15, M-17, m-46 |
+| T-P4 comprueba también qué refleja Next de la dirección (página, redirección, `not-found`, RSC) y si el 404 dinámico con un `not-found.tsx` propio lleva `lang` | H-1, V-1 |
+
+### Función 040 (fase 5)
+
+| Cambio | Motivo |
+| --- | --- |
+| La pantalla común `/acceso` no admite parámetros y empieza por `exigirDireccionLimpia()` (y por `exigirValorPolitica()` si hay `proxy.ts`) | H-1, M-14 |
+
+### Especificación de la 021 (para el `especificador`)
+
+| Cambio | Motivo |
+| --- | --- |
+| Escribir la enmienda de REQ-007 y CA-006 ya propuesta (14/11), con el umbral de REQ-024 y CA-017, solo cuando el responsable responda A-15 (abierta y reservada a él desde el 21/11/2026; ya no por D-036). Hasta entonces, ni se escribe ni se implementa lo que depende de ella | A-15, m-27 |
+
+### Coordinación y responsable
+
+| Asunto | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| A-13 | Anotar en `aclaraciones.md` y `docs/TECNOLOGIAS.md`: «decidida por delegación D-036, 21/11/2026: si fallan T-P2.12 o T-P2.13 no se acepta el riesgo y vuelve al arquitecto». Sustituye la anotación «reservado a una persona» de `aclaraciones.md` del 14/11 solo en cuanto a no aceptar; aceptar el riesgo seguiría reservado al responsable | A-13 |
+| A-15 | **Abierta, reservada al responsable** (cambio del 21/11/2026, `aclaraciones.md`): presentársela como decisión suya, umbral incluido, con el motivo de m-27 (la premisa original era falsa) y la contradicción con su respuesta a la cuestión 10. Vuelve a valer la fila A-15 de «Para el responsable» del 14/11 | m-27, m-33 |
+| A-11 y A-14 | Siguen reservadas al responsable (cuentas y secretos); no se decidieron | m-26 |
+| Tamaño (D-023) | `diseno.md` mide entre 47.500 y 48.000 caracteres (unos 49 KB; contado por bloques, sin terminal), por encima de los 40 KB. Opciones: (a) al escribir `plan.md`, llevar allí «Tareas previas» (T-P2 y T-P3) y el contenido de las pruebas, y dejar en el diseño solo la referencia; (b) dividir la función en 021-A (acceso, sesión, guardia y protección) y 021-B (gestión de administradores, recuperación y bloqueos); (c) aceptar el exceso hasta P1. Recomendada: (a), y (b) si aun así no cabe | D-023 |
+
+## Tras la 4.ª vuelta del auditor (21/11/2026)
+
+Autor: `arquitecto`. Salen de `dictamen-diseno-4.md`. Ninguna está aplicada.
+
+| Para | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| Coordinación | Dejar constancia en `docs/TECNOLOGIAS.md`, además de en `aclaraciones.md`, de A-13 (decidida por D-036 el 21/11/2026) y de A-15 (abierta y reservada al responsable desde el 21/11/2026); completa las filas A-13 y A-15 de «Coordinación y responsable» de arriba | m-43 |
+| Fase 2 (010) | PRUEBA-048 pasa a T-007 de la 021 y recorre `pg_proc` en todos los esquemas que no son del sistema para `PUBLIC`, `anon`, `authenticated` y `acceso`; su `04_funciones` cambia en esa tarea y cada migración lleva su `revoke` | m-40 |
+| Fase 1 (002) | La 021 amplía `scripts/patrones-secretos.mjs` en su T-017 (ruta reservada, la aprobación la nombra) con formas del acceso que hoy no se detectan | M-18 |
+| Función 020 | En RSC y acción Next no escapa la dirección (`text/x-component`); si su PRUEBA-034 o su cadena hostil llevan testigos en RSC, aplicar los criterios por tipo de respuesta de PRUEBA-055 de la 021 | M-17 |
+
+## Tras la revisión del 21/11 (plan y tareas)
+
+Autor: `arquitecto`. Texto de los menores, de `revision-plan.md` (resumen del orquestador de la revisión del `revisor`). Ninguno está aplicado fuera de esta carpeta.
+
+**Corregidos en esta carpeta** (tras la 5.ª vuelta, sin ver aún por el revisor): 7, 8, 10, 11, 12, 14 y 15; el 13, en parte (tabla de abajo). Quedan para la coordinación, con su texto:
+
+| Para | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| Coordinación | «m-43 sin hacer: A-13 y A-15 no constan en `docs/TECNOLOGIAS.md` (coordinación).» Completa las filas A-13 y A-15 de «Coordinación y responsable» y la de «Tras la 4.ª vuelta» | Revisión del 21/11, menor 6 |
+| Coordinación | «`@supabase/supabase-js` 2.119.0 sin entrada en `docs/TECNOLOGIAS.md` (coordinación).» Versión y licencia: `diseno.md`, «Dependencias nuevas»; T-010 (a) las relee al instalar | Revisión del 21/11, menor 17 |
+| Coordinación | Menor 13 («T-008 (36 REQ), T-012 (31 REQ, ~16 archivos) y T-011 (~25 pruebas) son grandes: valorar partirlas»). Hecho sin renumerar: T-008 (b), T-011 (b) y T-012 (c) pasan a «aparte» (D-029), con su propia revisión y dictamen. Partirlas en tareas nuevas (T-019 en adelante) no cabe en los 25 KB de `tareas.md` sin recortar otra cosa; si la coordinación lo quiere, encargarlo aparte | Revisión del 21/11, menor 13 |
+
+## Tras la 5.ª vuelta del auditor (21/11/2026)
+
+Autor: `arquitecto`. Salen de `dictamen-diseno-5.md` y de los menores 14 y 15 de la revisión. Ninguna está aplicada.
+
+| Para | Qué se pide | De dónde sale |
+| --- | --- | --- |
+| Coordinación | Añadir a la ficha de A-15 del relevo: sin marca, quien conozca la dirección de un administrador lo mantiene bloqueado (5 fallos cada 15 min) y, con uno solo, solo queda `levantar-bloqueo.mjs`; es riesgo mayor (AM-08a) que solo el responsable puede aceptar por escrito. Si no responde o rechaza la marca, ese riesgo queda pendiente y nunca figura como controlado; si la rechaza, el bloqueo por un tercero vuelve al arquitecto | M-20 |
+| Fase 1 (002) | Hasta A-15, `configuracion.ts` no declara ni exige `ACCESO_HMAC_DISPOSITIVO` y `registro.ts` acepta 13 códigos; la variable y `acceso_navegador_anulado_por_intentos` llegan con A-15 (corrige la fila de variables del 14/11) | m-50 |
+| Fase 2 (010) | PRUEBA-048 compara por firma (`regprocedure`), recorre todo esquema fuera de su lista N-1 más `privado`, y cada tarea de la 021 añade sus firmas; añadir la marca quita las firmas antiguas con `drop` y `revoke` | m-45, m-49 |
+| Función 024 | La 021 espera su A-1 (iv), I-42 a I-44, para los códigos `accion` de T-008 (b) y T-009 | Revisión, menor 14 |
+| Función 052 (fase 6) | Google Workspace en la lista de encargados (REQ-021, REQ-022): envía la invitación y el restablecimiento a direcciones de administradores; región y adenda, de T-003 de la 021. También en `docs/SEGURIDAD.md` si allí se lista | Revisión, menor 15 |
+
 ## Decisiones en VERIFICAR
 
 Ninguna se ha usado. V-108 (doble factor en las políticas) y V-113 (límite de intentos) son de la fase 2 y condicionan el diseño de la 021. Lo que admite el servicio de identidad (duración de sesión, cierre de otras sesiones, invitaciones, límite del segundo factor, rechazo de códigos ya usados) se comprueba en el diseño con la skill `verificar-decision`.

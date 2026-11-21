@@ -1,0 +1,15 @@
+# 021 · Dictamen de seguridad (quinta vuelta, confirmación)
+
+Autor: `auditor-seguridad` (solo lectura; resumido por el orquestador) · 21/11/2026. Comprobado en el texto: `comprobar-specs.mjs` SUPERADO; nada ejecutado contra el servicio ni Next.
+
+**Veredicto: 0 bloqueantes, 1 mayor (M-20), 6 menores (m-45 a m-50).** Cerrados: M-17, M-18, M-19, m-37 a m-42, m-44. m-43 sigue sin hacer (coordinación). Sin marca (A-15 abierta) las funciones cierran en fallo y añadir la marca después es incremental; no obliga a rehacer el diseño.
+
+- **M-20 · Riesgo sin marca no declarado** (`diseno.md` AM-08, 191, 449; `plan.md` 169, 195-201; art. 3, 10, 13). Sin marca, un tercero que conozca la dirección de un administrador repite 5 fallos cada 15 min y lo deja sin entrar de forma sostenida; con un solo administrador solo queda `levantar-bloqueo.mjs`, y se vuelve a bloquear. Aceptarlo es del responsable. Corrección: partir AM-08 en «sin marca: solo levantamiento y script; riesgo mayor: bloqueo sostenido» y «con marca»; la ficha de A-15 dice qué pasa si no responde o rechaza; T-016 y P7 muestran AM-08 sin marca como riesgo pendiente de aceptación escrita, nunca controlado. PRUEBA-029 sin marca: 5 fallos cada 15 min mantienen el bloqueo y queda `acceso_bloqueos_repetidos`.
+- **m-45:** T-007 (b) y T-008 (a) llevan la marca dentro; crear T-007 (d) y T-008 (c) «A-15, aparte» (PRUEBA-049, caso con marca de PRUEBA-029, PRUEBA-053); las firmas antiguas se quitan con `drop` y `revoke`; PRUEBA-048 por firma (`regprocedure`, como `arnes.ts` ~203).
+- **m-46:** PRUEBA-055 sobre `Location`: «del mismo origen, sin consulta, que empieza por `/admin` o `/acceso`, y sin testigo»; `propuestas.md` ~188 tiene texto viejo.
+- **m-47:** T-017: el secreto TOTP suelto (`"secret":"<base32>"` ≥16) no lo detecta ningún patrón; la forma de la alternativa de T-P1 (16 caracteres) debe entrar en (b); dar número de prueba a `patrones-acceso.test.ts` o citarla en AM-18.
+- **m-48 (sospecha):** T-018 (R): el fallo del cierre se fuerza desde el arnés (p. ej. `revoke` en una transacción que se deshace), nunca con una bandera o GUC en la función de producción; si no es factible en R, decir cómo se integra.
+- **m-49:** PRUEBA-048 en T-007 (a): «esquemas no del sistema» remite a la lista N-1 de la 010 (`auth`, `extensions`, `graphql`…) e incluye `privado`; el rol `acceso` lo crea T-008 (a): decir cómo se comporta la prueba hasta entonces; aclarar si la lista se carga entera o cada tarea añade lo suyo.
+- **m-50:** A-15 en `plan.md` 54, 65, 146; `diseno.md` 223; `tareas.md` 99, 140: «Lo que bloquea» no incluye T-010 (c) (variable y código `acceso_navegador_anulado_por_intentos`) ni el cupo por marca del levantamiento (T-008 b); hasta A-15 solo hacen falta dos `ACCESO_HMAC_*` (no poner ni exigir la tercera); códigos de registro «13 + 1 (A-15)»; T-016 dice que el cierre de los art. 4 y 14 depende de A-14.
+
+No comprobado: comportamiento real de las funciones sin marca, forma real de tokens y códigos, falsos positivos de los patrones, forzado del fallo en T-018 (R), `has_function_privilege` en el CI de Supabase.

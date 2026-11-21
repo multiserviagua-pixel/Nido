@@ -1,69 +1,37 @@
 # 021 · Diseño
 
-- **Autor:** `arquitecto`. Dictamen de `auditor-seguridad`: 1 B, 12 M y 16 m; en la 2.ª vuelta, 2 M y 13 m.
-- **Fechas:** 13/11/2026; corregido el 14/11; condensado el 19/11 (D-023).
-- **Estado:** especificación APROBADA (P0); P1 delegada (D-019). **El auditor no ha confirmado la 2.ª corrección y no se ha ejecutado ninguna prueba.**
-- **Fuentes:** `evidencias/verificacion-identidad-y-correo.md`.
+- **Autor:** `arquitecto`. Dictámenes del `auditor-seguridad` (`dictamen-diseno*.md`): 1.ª, 1 B, 12 M y 16 m; 2.ª, 2 M y 13 m; 3.ª, 2 M y 7 m; 4.ª, 3 M y 8 m; 5.ª, 1 M y 6 m.
+- **Fechas:** 13/11/2026; corregido el 14/11; condensado el 19/11 (D-023); 21/11, 3.ª a 5.ª vuelta corregidas.
+- **Estado:** especificación APROBADA (P0); P1 delegada (D-036). **El auditor no ha visto la corrección de la 5.ª vuelta; no se ha ejecutado ninguna prueba.**
+- **Fuentes:** `evidencias/verificacion-identidad-y-correo.md`, `plan.md` y `tareas.md`.
 - **Siglas:** servicio = Supabase Auth (D-002); BD = base de datos; adm. = administrador; 1F = sesión de un solo factor.
 
 ## Resumen
 
-- **Quién entra.** El servicio solo verifica credenciales; lo decide un **registro propio** en la BD. El servicio no corta al momento, no limita por cuenta y su API es pública.
-- **Sesión completa, un solo camino (B-1):** C-1 → contraseña → C-12 → código en la misma sesión. Depende de T-P2.12 y T-P2.13 (o de A-13).
+- **Quién entra:** lo decide un **registro propio** en la BD; el servicio solo verifica credenciales (no corta al momento, no limita por cuenta, API pública).
+- **Sesión completa, un solo camino (B-1):** C-1 → contraseña → C-12 → código en la misma sesión. Depende de T-P2.12 y T-P2.13; si fallan, vuelve al arquitecto (A-13).
 - **Regla:** `privado.es_admin()`. Cerrar la fila corta en la siguiente consulta (REQ-011, REQ-012).
-- **Guardia** como primera instrucción, sin `layout` ni `proxy.ts`.
-- **Accesos:** rol `acceso` para lo previo; en 1F, solo las cuatro funciones de sesión (m-23); la clave secreta, solo para S-1 a S-5.
-- **Orden:** T-P1 a T-P4 primero. D-019 decidió A-1 a A-10 y A-12; quedan abiertos A-11, A-13, A-14 y A-15.
+- **Guardia** como primera instrucción; ni el `layout` ni el `proxy.ts` deciden; antes, solo `exigirValorPolitica()` si hay `proxy.ts`.
+- **Accesos:** rol `acceso` para lo previo; en 1F, solo las cuatro funciones de sesión, que no devuelven datos (m-23); la clave secreta, solo para S-1 a S-5.
+- **Orden:** T-P1 a T-P4 primero (`plan.md`). D-019 decidió A-1 a A-10 y A-12; D-036, A-13 (21/11/2026); abiertos y del responsable, A-11, A-14 y A-15.
 
-## Hechos verificados y lo que el diseño hace con cada uno
-
-- **H-1:** el token lleva `aal`, que solo es segunda capa (ADR-0003).
-- **H-2:** los códigos son experimentales; T-P1 y alternativa.
-- **H-3:** la duración de sesión es solo de Pro; la impone el registro.
-- **H-4:** no hay corte inmediato; se usa el registro.
-- **H-5:** el límite es por origen; contador propio (V-113).
-- **H-6:** Workspace sin probar (V-111).
-- **H-7:** el veto no está documentado (T-P2).
-- **H-8:** las notas para agentes son datos (art. 7).
+**Hechos** (H-1 a H-8, en las fuentes): `aal` solo segunda capa; códigos experimentales (T-P1); duración solo en Pro y sin corte inmediato (registro); límite por origen (V-113); Workspace (V-111); veto (T-P2); notas = datos. H-1 y V-1 «de la 020» son otros.
 
 ## Supuestos y dependencias
 
-Depende de:
-- la 002: Next.js 16.4, `configuracion.ts`, `registro.ts`, `next.config.ts`, sin `proxy.ts`;
-- la 010: migraciones;
-- la 020: `Armazon`, `useAccion`, `leerResultadoAccion()`, `sin-acceso.ts`, `registrarFallo`, V-1 a V-7, PRUEBA-018;
-- la 024 y la 040.
-
-Faltan la preproducción (D-016) y un sitio para pgTAP. V-107, V-108 y V-113 están sin verificar.
-
-**Orden:** app → T-P1 a T-P3 → migraciones → V-107 → T-P4 y ADR → A-13. El correo depende de A-11. Antes, el auditor.
+Depende de la 002 (Next.js 16.4, sin `proxy.ts`), la 010 (M02 con cascada y M07 por `aal2`, que se cambian con migraciones nuevas), la 020 (componentes, `sin-acceso.ts`, `registrarFallo`, V-1 a V-7), la 024 (I-42 a I-44), la 040 y la 052 (encargados); detalle en `plan.md`, «Dependencias», y lo que se les pide, en `propuestas.md`. Faltan preproducción (D-016) y sitio para pgTAP; V-107, V-108 y V-113, sin verificar.
 
 ## Piezas y responsabilidades
 
 ### Quién decide qué
 
-El servicio dice si la credencial es válida. El registro, que solo escriben funciones de la BD, dice si el adm., el factor, la sesión y la invitación son válidos. La guardia y las políticas deciden si se atiende la petición. Ni el token, ni el navegador, ni el `layout`, ni las pantallas deciden.
+El servicio dice si la credencial es válida; el registro (solo lo escriben funciones de la BD), si lo son el adm., el factor, la sesión y la invitación; la guardia y las políticas, si se atiende la petición. Ni el token, ni el navegador, ni el `layout`, ni las pantallas deciden.
 
 ### Mapa de archivos
 
-(n) = no está en `docs/ESQUELETO.md`.
+Archivo por archivo y rutas críticas, en `plan.md`.
 
-| Ruta | Contenido |
-| --- | --- |
-| `src/lib/supabase/` | `servidor.ts` (publicable, sin almacenamiento; lo usan de la 022 a la 024 y la 040), `admin.ts` (clave secreta; S-1 a S-5), `acceso.ts` (n) |
-| `src/lib/acceso/` (n) | `guardia.ts` (+`leerEstadoAcceso()`), `lectura.ts`, `credencial.ts`, `navegador-reconocido.ts`, `origen.ts` (+`claveDeOrigen()`), `entradas.ts`, `intentos.ts`, `tiempo-fijo.ts`, `resultados.ts`, `operaciones/`, `politica.ts` (solo con `proxy.ts`) |
-| `src/app/` | `acceso/acciones.ts`, `acceso/renovar/route.ts`; `admin/`: `layout.tsx`, `not-found.tsx`, `[...resto]/page.tsx`, `ajustes/administradores/`, `cuenta/` (n) |
-| `src/components/acceso/` (n) | `AvisoCaducidad`, `CampoCodigo`, `CodigosRecuperacion`, `AltaFactor` |
-| Otros | `supabase/migrations/`, `supabase/tests/`, `supabase/plantillas-correo/` (n); `scripts/acceso/` (n) con `primer-administrador.mjs`, `retirar-factor-unico.mjs`, `levantar-bloqueo.mjs` y `comprobar-configuracion.mjs`; `guia-responsable.md` (m-25, m-28); `tests/unit/acceso/`, `tests/e2e/acceso/` |
-| Fase 1 | `next.config.ts`, `configuracion.ts`, `src/proxy.ts` (n, A-2) |
-
-- **Agentes:** backend, frontend, bd, `plataforma` y `qa`.
-- **Rutas críticas:**
-  - `src/lib/acceso/`, `src/lib/supabase/` y `src/app/acceso/`;
-  - las acciones de `admin`;
-  - las migraciones y `scripts/acceso/`;
-  - `next.config.ts` y `proxy.ts`;
-  - las plantillas.
+- **Scripts (m-28):** `primer-administrador.mjs` y `retirar-factor-unico.mjs` usan el propietario de la BD y la clave secreta; `levantar-bloqueo.mjs`, solo el propietario; `comprobar-configuracion.mjs`, el token de gestión.
 
 ### La credencial de sesión
 
@@ -72,13 +40,13 @@ El servicio dice si la credencial es válida. El registro, que solo escriben fun
   - `navegador.ts` no se usa en `/acceso` ni en `/admin`.
   - La firma cambia por entorno (REQ-066).
 - **Token nuevo tras C-4.** Su `iat` debe ser **estrictamente posterior** a `completada_con_token_de`, sin holgura (REQ-065, m-24). Si no lo es, se renueva una vez y, si sigue igual, se deniega.
-- **Borrar las cookies** no borra la marca (m-17) y solo se hace si llegó alguna (m-2).
+- **Borrar las cookies** es borrar solo las dos de la credencial, nunca la marca (m-17), y solo si llegó alguna (m-2).
 - **Renovación:** con menos de 60 s, en la acción o en `GET /acceso/renovar` (T-P2.9).
 - **Sin `@supabase/ssr`.**
 
 ### La guardia
 
-`exigirAdministrador()` en cada `page.tsx` de `src/app/admin/`; `exigirAdministradorEnAccion()` en cada acción, después de `comprobarOrigen()` (si falla, `no_permitida`); en `route.ts`, 404. Llama a `public.sesion_tocar()`: `completa` o `sin_acceso`. Las políticas comprueban otra vez `es_admin()` (REQ-003). Con `sin_acceso` (REQ-004), consulta el servicio y C-2:
+Orden fijo. **Página:** `exigirValorPolitica()` (si hay `proxy.ts`) → `exigirAdministrador({ searchParams })` en `/admin`, o `exigirDireccionLimpia()` en `/acceso`. **Acción:** `exigirValorPolitica()` → `comprobarOrigen()` (si falla, `no_permitida`) → `exigirAdministradorEnAccion()`. **`route.ts`:** lo mismo; si falla, 404. La guardia llama a `public.sesion_tocar()`: `completa` o `sin_acceso`. Las políticas comprueban otra vez `es_admin()` (REQ-003). Con `sin_acceso` (REQ-004), consulta el servicio y C-2:
 
 | Situación | Destino |
 | --- | --- |
@@ -91,13 +59,22 @@ El servicio dice si la credencial es válida. El registro, que solo escriben fun
 
 Una excepción equivale a sin acceso. `leerDelArea()` vuelve a consultar `sesion_estado()` y, si falla, `sesion_no_valida` (m-11). Sin `Suspense` sobre la guardia. V-4: `no-store` y `pageshow` (REQ-013).
 
-**PRUEBA-003** (estática, con trampas; M-9) falla si:
-- hay una acción fuera de los `acciones.ts` o en `src/lib/`;
-- un módulo sensible no es solo de servidor;
-- la primera instrucción no es la guardia o `comprobarOrigen()`;
-- se importa `admin.ts` o `acceso.ts` fuera de `operaciones/`;
-- hay rutas paralelas, `template`, `loading`, un `not-found` anidado o `generateMetadata` (V-1);
-- el `proxy.ts` no es el acotado o no empieza por `exigirValorPolitica()` (M-14).
+**`layout.tsx` de `/admin` (m-30).** Se pinta en paralelo a la página y no lo cubre la guardia: empieza por `exigirValorPolitica()` (si falla, armazón sin áreas ni cuenta y sin BD) y lee el estado solo con `leerEstadoAcceso()` y `sesion_estado()`; pinta áreas y cuenta solo con `completa`. No decide nada. `admin/not-found.tsx` no lee nada y solo pinta texto fijo (m-31).
+
+**Dirección reflejada (H-1 de la 020, M-15).** Next serializa ruta y consulta en todos sus cuerpos (página, 404, 307, RSC y acción: `c`, `q` y árbol de segmentos), las lea o no la aplicación; solo al incrustarlas en HTML las escapa (`htmlEscapeJsonString`); RSC y acción van en crudo como `text/x-component` (M-17). La política no protege lo que va dentro de sus guiones. Por eso:
+- **La aplicación no refleja:** nada lee ni repite consulta ni segmentos fuera de las listas de `entradas.ts`. Las rutas de la 021 no admiten parámetros (REQ-037 va en el fragmento); la 022 a la 024 añaden los suyos, de lista cerrada o UUID (V-3 de la 020); `_rsc` no cuenta. La comodín solo llama a `sinAcceso()`.
+- **Lo que serializa Next es R de AM-39**, controlado por su escapado (HTML) o por `text/x-component` con `nosniff` (RSC y acción), y comprobado por PRUEBA-055 en cada actualización de Next, acciones incluidas (llevan `q`; m-36).
+- **Redirección, opcional:** si sobra un parámetro, la guardia y `exigirDireccionLimpia()` redirigen, sin BD ni registro, a una ruta de tabla constante; no es el control de H-1. La reserva del 404 fijo en el `proxy.ts` no cubre la ruta: descartada.
+- Si PRUEBA-055 falla, no se integra y vuelve al arquitecto y al auditor.
+
+**Sin acceso en páginas dinámicas y en RSC (V-1 de la 020).** En `/admin` toda dirección la atiende una página o la comodín: `sinAcceso()` siempre pasa por un `notFound()` dinámico y por `admin/not-found.tsx`, nunca por el prerenderizado de la raíz (en la 020 salió sin `lang`). Para el mismo usuario, en denegado, inexistente y área de otra fase:
+- **carga completa:** 404, `lang="es"`, título fijo, `EstadoSinPermiso` y el mismo HTML crudo **salvo ruta pedida, árbol de segmentos y valores por petición** (M-15);
+- **RSC:** mismo código y marca, carga igual con esas salvedades, 0 testigos y, si hay 307, `Location` del mismo origen, sin consulta y que empieza por `/admin`. No se exige 404;
+- **oráculo de rutas aceptado** (M-15): el árbol de una ruta real denegada puede diferir del de la comodín; las rutas no son secretas.
+
+Lo prueba PRUEBA-034 (propuesta a la 020). Si la carga completa no cumple, no se integra ninguna vista de `/admin` y vuelve al arquitecto. Reserva no adoptada: `sinAcceso()` sin `notFound()` (cambia V-1 de la 020).
+
+**PRUEBA-003** (estática, con trampas; M-9) vigila este orden y las fronteras en páginas, acciones, `route.ts`, `layout.tsx` y `not-found.tsx` (lista en `plan.md`, «Pruebas»).
 
 ### El canal de acceso
 
@@ -118,8 +95,8 @@ Una excepción equivale a sin acceso. `leerDelArea()` vuelve a consultar `sesion
 | C-12 | `acceso_anotar_primer_paso` | Tras la contraseña: 10 min, un uso. Se niega si hay bloqueo sin marca, si la sesión es ajena o si no hubo contraseña |
 
 - **C-11 se suprime (M-1):** la retirada la autorizan `admin_confirmar_retirada` y el responsable.
-- **`sesion_presentar()` (m-23, m-24):** guarda `aal`, `iat` y `amr` en `privado.presentaciones_sesion`, solo para adm. activos y sin retroceder. Si falla T-P2.12, C-12, C-4 y C-9 la exigen; el resto, A-13.
-- **Privilegio (A-1):** R-A, el rol `acceso`, cuando se verifique V-107. R-B, la clave secreta, queda en reserva **sin activar**; activarla exige P1 (m-28).
+- **`sesion_presentar()` (m-23, m-24):** guarda `aal`, `iat` y `amr` en `privado.presentaciones_sesion`, una sola fila por sesión que se actualiza, solo para adm. activos y sin retroceder. Si falla T-P2.12, C-12, C-4 y C-9 la exigen y el resto vuelve al arquitecto (A-13).
+- **Privilegio (A-1):** R-A, el rol `acceso`, cuando se verifique V-107. R-B, la clave secreta, queda en reserva **sin activar**; activarla exige diseño propio, dictamen del auditor y P1 (m-28).
 - **Si roban `acceso`:** puede bloquear y escribir I-36, I-37 o I-38 falsas, pero no levantar bloqueos ni completar sesiones (T-P2.12, A-13).
 
 ### Operaciones con la clave secreta (REQ-036a)
@@ -132,18 +109,14 @@ Una excepción equivale a sin acceso. `leerDelArea()` vuelve a consultar `sesion
 | S-4 | `mfa.deleteFactor` | Retirada auditada | I-24 o I-30 |
 | S-5 | `deleteUser` para deshacer un alta | Rechazo en la misma operación | — (REQ-067) |
 
-Solo afectan a la cuenta que da la BD, nunca a datos (REQ-035); lo vigila PRUEBA-005. **Una operación nueva necesita P1 y dictamen** (M-10). Ningún agente usa la clave (art. 14). **REQ-036(b), lectura (b') (A-1):** C-1 a C-8, C-10 y C-12 comprueban en la BD después de que el servicio valide; falta anotarlo en la especificación.
+Solo afectan a la cuenta que da la BD, nunca a datos (REQ-035; PRUEBA-005). **Una operación nueva necesita dictamen del auditor antes de P1, también delegada** (M-10, m-28). Ningún agente la lee ni la copia; en pruebas, solo la de desarrollo, cargada del entorno (m-39). **REQ-036(b), lectura (b') (A-1):** C-1 a C-8, C-10 y C-12 comprueban en la BD después de que valide el servicio; falta en la especificación.
 
 ### Pantallas
 
-- `/acceso`, compartida con la 040.
-- `/acceso/segundo-factor`, sin «recordar» (REQ-007).
-- `/acceso/registro-factor`, con autorización (REQ-006).
-- `/acceso/invitacion`, `/acceso/enlace`, `/acceso/restablecer` y `/acceso/nueva-contrasena`.
+- `/acceso` (compartida con la 040), `/acceso/segundo-factor` sin «recordar» (REQ-007), `/acceso/registro-factor` con autorización (REQ-006), `/acceso/invitacion`, `/acceso/enlace`, `/acceso/restablecer`, `/acceso/nueva-contrasena` y `/admin/cuenta`.
 - `/admin/ajustes/administradores`, con `DialogoConfirmacion`:
   - para invitar: «Se enviará un correo a esta dirección con un enlace válido 24 horas. No tendrá acceso hasta que ponga su contraseña y registre su segundo factor»;
   - para dar de baja: «Perderá el acceso de inmediato y se cerrarán sus sesiones. Su cuenta se conserva, desactivada, y seguirá apareciendo en la auditoría como "dado de baja"».
-- `/admin/cuenta`.
 
 Abrir un enlace no lo consume. Los campos permiten `autocomplete` y pegar (REQ-043). El QR va en un `img` `data:`. La prueba viaja en el fragmento y se borra con `history.replaceState` (REQ-037); la clave del factor es la excepción A-8.
 
@@ -153,28 +126,23 @@ Solo TOTP (CA-006). Un factor inscrito por fuera no se propone nunca. Si T-P2.3 
 
 | Operación | Pasos |
 | --- | --- |
-| Primero | C-6 `anunciar` → servicio → C-6 `reconocer` → códigos → cierre |
+| Primero | C-6 `anunciar` → alta en el servicio → C-6 `reconocer` → códigos → cierre |
 | Verificar | C-3 → factor **del registro** → C-4 |
 | Reverificar | C-3 → C-9 |
-| Añadir | C-9 de menos de 5 min → `admin_anunciar_factor()` → `admin_reconocer_factor()` |
-| Sustituir | `admin_sustituir_factor()`; una sola I-26 |
-| Quitar | `admin_retirar_factor()`, solo si queda otro (REQ-009) |
+| Añadir | C-9 de menos de 5 min → `admin_anunciar_factor()` → alta → `admin_reconocer_factor()` (I-25) |
+| Sustituir | C-9 → `admin_anunciar_factor()` → alta → **verificar el nuevo en la sesión actual** (el borrado del anterior puede bajar `aal`; m-35) → `admin_sustituir_factor(nuevo, anterior)`, que anuncia el borrado del anterior antes de pedirlo; una sola I-26 |
+| Quitar | `admin_retirar_factor()` anuncia el borrado y después se borra; solo si queda otro (REQ-009) |
+
+**Anuncio (M-13, M-16):** fila de `privado.cambios_esperados` de tipo `factor`, de 5 min, que abre C-6 `anunciar` (sesión 1F del primer factor), `admin_anunciar_factor`, `admin_sustituir_factor` o `admin_retirar_factor`. La tabla del servicio no tiene sesión: **la ligadura a la sesión la comprueban las funciones del panel que abren y cierran, no el disparador.** «Casar» es:
+- **alta:** el anuncio se ata al primer `factor_id` que aparece y cubre su paso a `verified` y su borrado si se cancela, hasta que lo cierra C-6 `reconocer`, `admin_reconocer_factor` o `admin_sustituir_factor`, o pasan 5 min;
+- **borrado:** solo el `factor_id` anunciado;
+- un factor sin verificar que el registro no tiene (también el caducado que borre el servicio) nunca consume ni dispara;
+- si el anuncio se rechaza o caduca sin reconocerse, su factor cuenta como sin anuncio: cierra todo y (c) (m-37);
+- otro `factor_id` que aparece en la ventana cuenta como sin anuncio.
 
 ### Códigos de recuperación
 
-La función del servicio solo se usa si T-P1 cumple los 10 criterios:
-1. se entregan una vez (REQ-072);
-2. valen una vez, 20 de 20 (REQ-074, REQ-079);
-3. regenerar invalida los anteriores (REQ-076);
-4. la BD ve su uso (M-1);
-5. se pueden invalidar (REQ-040, REQ-067);
-6. la baja los invalida (REQ-083);
-7. no se obtienen con 1F ni con un token cerrado;
-8. no aparecen en los registros (REQ-073);
-9. existen en el plan gratuito y en Pro;
-10. tienen 64 bits o más.
-
-Si falla alguno o hay duda, alternativa. Si se adopta, PRUEBA-046 en cada batería (M-11).
+La función del servicio solo se usa si T-P1 cumple sus 10 criterios (`plan.md`, «Tareas previas»). Si falla alguno o hay duda, alternativa. Si se adopta, PRUEBA-046 en cada batería (M-11).
 
 **Alternativa, siempre construida:** 10 códigos de 16 caracteres (80 bits) con HMAC `ACCESO_HMAC_CODIGOS` en `privado.codigos_recuperacion`. Regenerar es una sola transacción (I-29). Los fallos cuentan en C-3.
 
@@ -195,12 +163,12 @@ El contador vive en la BD (propuesta para V-113).
 | | Primer factor | Segundo factor |
 | --- | --- | --- |
 | Clave | HMAC (`ACCESO_HMAC_CONTADOR`) de la dirección canónica y, aparte, del origen | La cuenta (REQ-025) |
-| Umbral | 5 fallos en 15 min (10 con marca) | 5 en 15 min |
+| Umbral | 5 fallos en 15 min (10 con marca, A-15) | 5 en 15 min |
 | Efecto | 15 min, **sin llamar al servicio**; I-37; termina por tiempo o levantamiento | Bloquea la gestión y cierra la sesión (m-22); I-38; solo por tiempo |
 
 - Dirección en ASCII y minúsculas; si no, `correo_no_valido` (m-8).
 - IPv6 por /64; sin cabecera fiable, se deniega (M-12).
-- Restablecimiento: 3 por cuenta y hora, 3 por marca, 5 por origen cada 15 min (m-18).
+- Restablecimiento: 3 por cuenta y hora; una solicitud con marca válida de esa cuenta no cuenta ahí sino en el cupo de su marca, 3 por hora; 5 por origen cada 15 min; al agotarse, `acceso_cupo_restablecimiento_agotado` (m-18).
 - Como mucho 5 llamadas al servicio por cuenta (M-6).
 - No se guarda lo tecleado (REQ-041).
 - Códigos: `acceso_fallo_primer_factor` y `acceso_fallo_segundo_factor`.
@@ -211,18 +179,18 @@ El contador vive en la BD (propuesta para V-113).
 Siempre se piden la contraseña y el código; la premisa de la cuestión 10 era falsa.
 
 1. **Navegador reconocido.**
-   - Cookie `__Host-nido-dispositivo` de 30 días y 256 bits, firmada con `ACCESO_HMAC_DISPOSITIVO` y guardada en `privado.dispositivos_reconocidos`.
-   - La emite C-4 con TOTP y solo salta el bloqueo de su cuenta.
-   - Se anula a los 10 fallos o con un cambio de credenciales; quien hace el cambio la conserva (m-19).
-   - «Cerrar sesión y olvidar este navegador» (m-17).
-   - Ante la duda, no hay marca.
+   - Cookie `__Host-nido-dispositivo` de 30 días y 256 bits, firmada con `ACCESO_HMAC_DISPOSITIVO` y guardada en `privado.dispositivos_reconocidos`; la emite C-4 con TOTP y solo salta el bloqueo de su cuenta.
+   - Se anula a los 10 fallos o con un cambio de credenciales; el navegador que hace el cambio conserva la suya, y C-8 anula las de los demás con la misma regla (m-19). Ante la duda, no hay marca.
+   - «Cerrar sesión y olvidar este navegador», ofrecido al cerrar sesión, con el aviso para ordenadores compartidos (m-17).
 2. **Otro adm.** con `public.admin_levantar_bloqueo(usuario)`.
    - No puede levantar el suyo (`no_puedes_levantar_tu_propio_bloqueo`); `sin_bloqueo_activo`.
    - Borra bloqueo, fallos y cupo (m-18); escribe (a) y `acceso_bloqueo_levantado` (m-29).
    - El bloqueo del segundo factor no se levanta.
 3. **El responsable:** `levantar-bloqueo.mjs` y fila (b).
 
-Afecta a REQ-024, CA-017, REQ-007, REQ-040 y REQ-041: **no se implementa hasta que esté en la especificación** (art. 5, A-15).
+Afecta a REQ-024, CA-017, REQ-007, CA-006, REQ-038, REQ-040 y REQ-041; contradice la respuesta del responsable a la cuestión 10 (5 fallos y 15 min; con marca, 10; m-33): A-15 es **suya y está abierta** (21/11/2026). Hasta que responda, la marca no entra en la especificación ni se implementa (art. 5).
+
+**Sin marca (M-20)** solo quedan 2 y 3: quien conozca la dirección de un adm. repite 5 fallos cada 15 min y lo deja fuera de forma sostenida; con un solo adm., solo el script, y se vuelve a bloquear. Es **riesgo mayor** (AM-08a), no controlado, que solo el responsable puede aceptar por escrito (A-15).
 
 ### Respuestas que no revelan nada (REQ-027, CA-019)
 
@@ -239,13 +207,13 @@ Afecta a REQ-024, CA-017, REQ-007, REQ-040 y REQ-041: **no se implementa hasta q
 - **REQ-028:** cabeceras de la 002.
 - **REQ-029:** `Strict`, `comprobarOrigen()` y solo `POST` (CA-021).
 - **REQ-030, no demostrado.** T-P4 mide P-1, `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'` con `experimental.sri`, y P-2, `script-src 'self' 'nonce-…' 'strict-dynamic'`. Nunca `'unsafe-inline'`.
-- **`proxy.ts` acotado (A-2):**
-  - solo `/acceso` y `/admin`;
-  - nonce de ≥128 bits en `x-nonce` y `Content-Security-Policy` (M-14);
-  - no lee cookies ni cuerpo, no registra, no redirige, no importa `src/lib/` y no decide;
-  - empieza por `exigirValorPolitica()`;
-  - las directivas fijas siguen en `next.config.ts`.
-- **Pendientes:** `arn1` (D-020) y CVE-2025-29927.
+- **Inventario de la 020** (T-009): con P-1, los guiones en línea de Next quedan bloqueados; lo esperable es P-2 con `proxy.ts`. Detalle y repetición en T-P4 (`plan.md`).
+- **`proxy.ts` acotado (A-2, M-14):**
+  - casa solo `/acceso` y `/admin`; no lee cookies ni cuerpo, no registra, no redirige, no importa `src/lib/` y no decide; el ADR dice que `Cookie` pasa por él aunque no la lea;
+  - genera un valor de ≥128 bits, **sobrescribe** (`set`) `x-nonce` y `Content-Security-Policy` de la petición, nunca usa los del cliente, y pone la política en la respuesta;
+  - sin un valor bien formado, `exigirValorPolitica()` da error sin datos (404 en página, `no_permitida` en acción): un navegador no añade `x-nonce` a una navegación, así que la víctima que no pase por `proxy.ts` no tiene página. Ese 404 lleva los guiones de Next sin `script-src` (m-31): `admin/not-found.tsx` solo pinta texto fijo;
+  - `next.config.ts` mantiene ahí una segunda cabecera fija: `frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'self'`.
+- **Pendientes:** `arn1` (D-020), CVE-2025-29927 y las vías que no pasan por `proxy.ts` (sospecha del auditor; T-P4, PRUEBA-051).
 - **REQ-068:** `TextoDato`.
 
 ### Aviso de caducidad y formularios
@@ -254,12 +222,7 @@ Afecta a REQ-024, CA-017, REQ-007, REQ-040 y REQ-041: **no se implementa hasta q
 
 ### Configuración y secretos
 
-Una persona pone en el gestor de cada entorno (art. 4):
-- la clave secreta (`admin.ts`);
-- la credencial `acceso`;
-- `ACCESO_HMAC_CONTADOR`, `ACCESO_HMAC_CODIGOS` y `ACCESO_HMAC_DISPOSITIVO`, distintas entre sí. La última solo la lee `navegador-reconocido.ts` y no se rota durante un ataque (m-25).
-
-La contraseña de aplicación de Workspace queda fuera del gestor (A-14, m-26). En el servicio: sin registro público, solo TOTP, enlaces de 24 h y plantillas propias; lo comprueba `comprobar-configuracion.mjs`, con un token que no es de solo lectura.
+Una persona pone en el gestor de cada entorno (art. 4) la clave secreta (`admin.ts`), la credencial `acceso` y `ACCESO_HMAC_CONTADOR`, `ACCESO_HMAC_CODIGOS` y, solo tras A-15, `ACCESO_HMAC_DISPOSITIVO` (m-50), distintas entre sí; la última solo la lee `navegador-reconocido.ts` y no se rota durante un ataque (m-25). La contraseña de envío de Workspace, fuera del gestor: A-14 (m-26). En el servicio: sin registro público, solo TOTP, enlaces de 24 h y plantillas propias; lo comprueba `comprobar-configuracion.mjs` (su token no es de solo lectura).
 
 ## Contratos
 
@@ -275,12 +238,12 @@ La contraseña de aplicación de Workspace queda fuera del gestor (A-14, m-26). 
 | Entradas | Lista cerrada por acción, en `entradas.ts` (REQ-032, REQ-064) |
 | Estados de la 020 | `administrador.` + `activo`, `invitacion_pendiente`, `invitacion_caducada`, `invitacion_anulada`, `baja`, `acceso_bloqueado`; `factor.registrado`, `factor.sin_registrar` |
 
-- **Contraseña:** de 12 a 128 caracteres, comprobada contra una lista local de contraseñas comunes **que aún hay que elegir** en el plan.
+- **Contraseña:** de 12 a 128 caracteres, comprobada contra una lista local de contraseñas comunes, sin llamadas externas; la fuente, en T-006.
 - **Correo:** ASCII, 254 caracteres como máximo, en minúsculas.
 
 ## Datos
 
-Las migraciones son de la fase 2, repartidas entre la 010 y la 021 según el plan. RLS en la misma migración, sin texto libre (art. 1), escritura solo por funciones y `privado` sin acceso por la API.
+Migraciones repartidas entre la 010 y la 021 según el plan. RLS en la misma migración, sin texto libre (art. 1), escritura solo por funciones y `privado` sin acceso por la API.
 
 | Tabla | Columnas |
 | --- | --- |
@@ -302,18 +265,7 @@ REQ-038: solo se guarda lo anterior; lo que guarda el servicio se declara en la 
 
 ### La regla de acceso
 
-`privado.es_admin()` exige seis condiciones:
-1. `activo`;
-2. sesión propia y abierta;
-3. menos de 24 h;
-4. menos de 60 min de inactividad;
-5. `iat` **estrictamente posterior** a `completada_con_token_de` (m-24);
-6. `aal2` si el método es `codigo_aplicacion`.
-
-- Un valor nulo cuenta como falso.
-- `sesion_tocar()` anota actividad; `sesion_estado()` no.
-- Nadie es a la vez adm. y `usuarios_cliente` (REQ-077).
-- El mínimo de adm. (REQ-021, REQ-056) se protege con cerrojo, recuento y una nueva comprobación (m-1).
+`privado.es_admin()` exige: (1) `activo`; (2) sesión propia y abierta; (3) menos de 24 h; (4) menos de 60 min de inactividad; (5) `iat` **estrictamente posterior** a `completada_con_token_de` (m-24); (6) `aal2` si el método es `codigo_aplicacion`. Un nulo es falso. `sesion_tocar()` anota actividad; `sesion_estado()` no. Nadie es a la vez adm. y `usuarios_cliente` (REQ-077). El mínimo de adm. (REQ-021, REQ-056) se protege con cerrojo, recuento y nueva comprobación (m-1).
 
 ### Funciones de operación con sesión completa
 
@@ -333,7 +285,7 @@ Usan la credencial del usuario y empiezan por `es_admin()`; si no, `no_permitida
 | `admin_anunciar_cambio_contrasena(marca)` (m-19) | I-35 |
 | `admin_anotar_regeneracion_codigos` / `admin_regenerar_codigos` | I-29 |
 
-- **Exposición:** la decide la 010 (su REQ-010), sin `anon` ni `PUBLIC` y con `search_path` vacío; PRUEBA-048 compara con la lista cerrada.
+- **Exposición:** la decide la 010 (su REQ-010), sin `anon` ni `PUBLIC` y con `search_path = pg_catalog, pg_temp` (D-035; m-32); PRUEBA-048 compara con la lista cerrada, que incluye las cuatro de sesión y comprueba que en 1F no devuelven datos (m-23).
 - **Sin disparador genérico** (m-6).
 - **Marcas:** cerrar todas las sesiones las anula todas; cerrar las demás conserva la propia (m-19, m-21).
 
@@ -343,35 +295,23 @@ Se propone un disparador (T-P2.13) que trabaja en la misma transacción:
 
 | Cambio | Con anuncio | Sin anuncio |
 | --- | --- | --- |
-| Contraseña | Cierra las demás; I-35 (I-36 si es restablecimiento) | Cierra todo; I-35 |
-| Borrado de un factor reconocido | Nada | Lo retira y cierra todo; I-27 |
-| Alta de factor | Fija `factor_id` | Cierra todo; (c) |
+| Contraseña | Cierra las demás y conserva la marca anunciada; I-35 (I-36 si es restablecimiento) | Cierra todo; I-35 |
+| Borrado de un factor reconocido | Del `factor_id` anunciado: nada | Lo retira y cierra todo; I-27. Si el registro ya lo da por retirado (baja, S-4), nada |
+| Alta de factor | Se ata al primer `factor_id`; su verificación o cancelación no cierra nada | Al pasar a `verified`, o si es otro `factor_id` en la ventana: cierra todo y anula las marcas; (c) |
+| Factor sin verificar que el registro no tiene | Nada; no consume | Nada (M-16) |
 | Correo | — | Cierra todo; (c) |
 
-- Solo mira las columnas que importan (PRUEBA-052).
-- Sin disparador: segundo factor si se puede (T-P2.14), la fila después del cambio, y A-13.
-- Si el cierre en el servicio falla, queda `cierre_servicio_pendiente` y se reintenta.
+- Solo actúa si cambia, de valor anterior a nuevo, la contraseña cifrada, el correo, el cambio de correo pendiente o el alta, estado o borrado de un factor (nombres de T-P2.13); nada más de la tabla de usuarios, que el servicio toca en cada inicio de sesión (M-13). Si el servicio recifra la contraseña al iniciar sesión, sería «contraseña sin anuncio»: se para y vuelve al arquitecto (m-35, A-13).
+- Sin disparador: segundo factor si se puede (T-P2.14) y la fila después del cambio; lo demás vuelve al arquitecto (A-13).
+- Si el cierre en el servicio falla, queda `cierre_servicio_pendiente` y se reintenta sin la clave secreta (T-018); si la necesitara, sería S-6: P1 no la cubre y se reabre el diseño (m-44).
 
 ### Matriz de acceso (CA-001, CA-004)
 
-- **Leen:** solo los adm. activos con sesión completa.
-- **Cero filas y `no_permitida`:** sin sesión, cliente, 1F, token antiguo, `aal2` sin fila o de baja. En 1F solo funcionan las cuatro de sesión.
-- **Rol `acceso`:** C-1 a C-10 y C-12.
-- **Clave secreta:** S-1 a S-5.
-- **Propietario:** las funciones del responsable.
+Leen solo los adm. activos con sesión completa. Cero filas y `no_permitida`: sin sesión, cliente, 1F (salvo las cuatro de sesión), token antiguo, `aal2` sin fila o de baja. Rol `acceso`: C-1 a C-10 y C-12. Clave secreta: S-1 a S-5. Propietario: las funciones del responsable.
 
 ### Migración y vuelta atrás
 
-| Migración | Vuelta atrás |
-| --- | --- |
-| M-1, tablas | Se borran |
-| M-2, `administradores` | Se restaura |
-| M-3, funciones y rol | Se revocan |
-| M-4, `es_admin()` | **Reabre por `aal2`**, así que va con la app |
-| M-5, `auditoria` | No en producción |
-| M-6, disparadores | Primero la salida |
-
-PRUEBA-031, sin sitio (A-10).
+M-1 (tablas) a M-6 (disparadores), con su vuelta atrás en `plan.md`, «Entornos y despliegue». La de M-4 restaura la `es_admin()` de M07, que **reabre por `aal2`**: va con la de la app. PRUEBA-031, sin sitio (A-10).
 
 ## Flujo
 
@@ -386,36 +326,22 @@ En todos los flujos: `comprobarOrigen()`, lista cerrada y, si falla, sin acceso 
 
 ## Auditoría de esta función
 
-La BD escribe cada fila en la misma transacción y sin datos personales. Qué función escribe cada I-19 a I-38 está en las tablas de las piezas. Hay tres entradas nuevas, que numerará la 024 (su inventario acaba en I-41):
+La BD escribe cada fila en la misma transacción y sin datos personales. Qué función escribe cada I-19 a I-38 está en las tablas de las piezas. Tres entradas nuevas; la 024 las propone como I-42 a I-44 (su A-1, abierta):
 - (a) «Levantó el bloqueo de acceso de otro administrador».
 - (b) «Levantó fuera del panel el bloqueo de acceso de un administrador».
 - (c) «Se detectó un cambio de credenciales hecho fuera del panel».
 
 I-32 no se escribe (A-4).
 
-## Tareas previas: lo que hay que comprobar antes de construir
+## Tareas previas, pruebas y cobertura
 
-- **T-P1:** los 10 criterios; si falla alguno, alternativa.
-- **T-P2:** el servicio, punto a punto.
-- **T-P3:** el correo (V-111); si falla, no hay correo.
-- **T-P4:** P-1 y, si no basta, P-2 (M-14); confirma A-2.
-
-**T-P2, 23 puntos**
-
-| Puntos | Qué se comprueba |
-| --- | --- |
-| 1-4 | Cookies propias; `session_id` estable e `iat` posterior (m-24); doble aceptación del código; veto |
-| 5-8 | Crear sin enviar (M-8); tipo de enlace; métodos S-1 a S-5; TOTP en SVG |
-| 9-11 | `localhost`; salida limpia; token cerrado |
-| 12-13 | **Leer las tablas del servicio** (B-1, M-1); **disparadores** (M-2, M-13) |
-| 14-18 | `insufficient_aal` (M-10); factor con solo contraseña (m-20); invalidar códigos; IP (M-6); IP de salida |
-| 19-23 | Registros; forma canónica; enlaces sin contraseña; marca de acción (M-9); cookie de 30 días |
-
-**T-P3, 12 puntos:** región; adenda; dos pasos; contradicción; envío real; `accesos@humannaia.com`; sin copias (M-3); cuenta dedicada; avisos; fallos; suplantación; cuotas.
+- **Tareas previas:** T-P1 (códigos), T-P2 (servicio), T-P3 (correo, V-111) y T-P4 (CSP, `proxy.ts`, H-1, V-1; confirma A-2): detalle en `plan.md`; son T-001 a T-004.
+- **Pruebas:** PRUEBA-001 a PRUEBA-055 (sin 036 a 040), con tipo, contenido y CA → prueba, en `plan.md`, «Pruebas». Sin pgTAP (A-10) ni preproducción, nada pasa a VERIFICADA (art. 13).
+- **Cobertura:** REQ-001 a REQ-083 y REQ-036a, por tarea, en `tareas.md`, «Cobertura».
 
 ## Amenazas de esta función
 
-Los números de la última columna son PRUEBA-NNN. **R** = riesgo residual.
+Pruebas: PRUEBA-NNN. **R**: riesgo residual.
 
 | AM | Amenaza → control | Pruebas |
 | --- | --- | --- |
@@ -426,7 +352,8 @@ Los números de la última columna son PRUEBA-NNN. **R** = riesgo residual.
 | 05 | Factor ajeno (REQ-054) → autorización | 009 |
 | 06 | Buzón (REQ-080) → retirada por otro (m-16) | 012, 016, 041 |
 | 07 | Fuerza bruta → contador (M-12, m-8, m-12) | 029 |
-| 08 | Bloqueo por tercero (M-5) → marca, levantamiento; **R** | 029, 044, 049, 050, 054 |
+| 08a | Bloqueo por tercero, sin marca (M-20) → levantamiento y script; **R mayor**: bloqueo sostenido, pendiente de aceptación escrita (A-15) | 029, 050 |
+| 08b | Con marca (A-15; M-5, m-18, m-20) → marca y cupo por marca; **R** | 029, 044, 049, 054 |
 | 09 | Enumeración → tiempo fijo (M-6) | 019, 044 |
 | 10 | Clave secreta → `admin.ts` (M-7, M-10, m-13) | 005, 023, 045 |
 | 11 | Canal con otro usuario → T-P2.12 | 023, 042 |
@@ -434,9 +361,9 @@ Los números de la última columna son PRUEBA-NNN. **R** = riesgo residual.
 | 13 | Alta por otra vía → propietario (M-7) | 008, 018, 045 |
 | 14 | CSRF → origen (m-2) | 021, 022 |
 | 15 | Incrustación → 002 | 020 |
-| 16 | XSS → CSP sin demostrar (M-14) | 020, 033, 051 |
+| 16 | XSS → CSP sin demostrar (M-14); no cubre H-1 (AM-39) | 020, 033, 051, 055 |
 | 17 | Robo de credencial → m-3, m-24 | 022 |
-| 18 | Secretos en registros → huellas (m-4, m-25); **sin comprobar** | 002, 005, 024, 032 |
+| 18 | Secretos en registros y evidencias → huellas (m-4, m-25), escáner ampliado (M-18, m-47; T-017, `patrones-acceso.test.ts`); **sin comprobar** | 002, 005, 024, 032 |
 | 19 | Fallo abierto → m-9, m-11 | 014, 026 |
 | 20 | Sin rastro → transacción (m-6, m-10) | 027, 043, 047, 050 |
 | 21 | Pantalla abandonada → inactividad | 013, 014 |
@@ -444,7 +371,7 @@ Los números de la última columna son PRUEBA-NNN. **R** = riesgo residual.
 | 23 | Agente en procedimientos → scripts | 018, 045 |
 | 24 | Primer paso externo (B-1) → C-12 | 041 |
 | 25 | `acceso` emite sesiones (M-1) → T-P2.12 | 042 |
-| 26 | Cambios directos (M-2, M-13) → disparador | 043, 052 |
+| 26 | Cambios directos (M-2, M-13, M-16) → disparador por columnas y anuncio atado al primer `factor_id` | 043, 052 |
 | 27 | Cuenta de envío (M-3) → dedicada; **R** | 032 |
 | 28 | Agotar cupos (M-6) → sin llamadas | 044 |
 | 29 | Fuerza bruta al reverificar (M-4) → m-22 | 029 |
@@ -453,93 +380,34 @@ Los números de la última columna son PRUEBA-NNN. **R** = riesgo residual.
 | 32 | Funciones `public` (m-5) → lista cerrada | 048 |
 | 33 | Robo de marca (M-5) → m-17, m-19, m-21 | 010, 049, 053 |
 | 34 | Abuso del levantamiento → m-29; **R** | 045, 050 |
-| 35 | `proxy.ts` crece (A-2) → lista cerrada | 003, 051 |
+| 35 | `proxy.ts` crece o no se ejecuta (A-2, M-14) → lista cerrada, sobrescritura, `exigirValorPolitica()` | 003, 051 |
 | 36 | Cupo de restablecimiento (m-18) → cupo por marca; **R** | 044 |
-| 37 | Página sin CSP (M-14) → `exigirValorPolitica()` | 003, 051 |
+| 37 | Página sin CSP (M-14) → `exigirValorPolitica()`, también en `layout.tsx` (m-30); 404 de respaldo → `not-found.tsx` fijo (m-31) | 003, 051 |
 | 38 | Cambios directos con la contraseña (m-20) → restablecer; **R** | 054 |
-
-## Pruebas
-
-Las de BD (pgTAP) todavía no tienen sitio (A-10) y la preproducción no existe. Las ayudas solo funcionan en desarrollo. Tipos: E estática, U unitaria, N navegador, B BD, P persona, R servicio real.
-
-| Bloque | Pruebas |
-| --- | --- |
-| Previas | PRUEBA-001 T-P1 (R); PRUEBA-002 T-P2 (R) |
-| Guardia | PRUEBA-003 guardia (E); PRUEBA-004 entradas y perfiles (N); PRUEBA-005 clave secreta y HMAC (E, N); PRUEBA-006 matriz en 1F (B); PRUEBA-007 caso positivo (N); PRUEBA-008 cliente (B) |
-| Factores | PRUEBA-009 primer factor (N, B); PRUEBA-010 código siempre; PRUEBA-011 factores; PRUEBA-012 recuperación; PRUEBA-013 duraciones (B, N); PRUEBA-014 credencial copiada; PRUEBA-015 tres sesiones; PRUEBA-016 restablecimiento; PRUEBA-017 alta y baja |
-| Robustez | PRUEBA-018 mínimo, 100 intentos (B, P); PRUEBA-019 tiempos; PRUEBA-020 incrustación; PRUEBA-021 otro origen; PRUEBA-022 credencial; PRUEBA-023 usuario de otro; PRUEBA-024 valores marcados; PRUEBA-025 privacidad (revisión); PRUEBA-026 caídas; PRUEBA-027 una fila (B, N); PRUEBA-028 accesibilidad (N, P); PRUEBA-029 límites (N, B); PRUEBA-030 códigos; PRUEBA-031 vuelta atrás (B); PRUEBA-032 T-P3 (P); PRUEBA-033 T-P4 |
-| Dictamen | PRUEBA-041 B-1; PRUEBA-042 M-1 (B); PRUEBA-043 M-2; PRUEBA-044 M-6 (N); PRUEBA-045 M-7 (B, U); PRUEBA-046 M-11 (R); PRUEBA-047 M-8; PRUEBA-048 m-5 (B); PRUEBA-049 marca; PRUEBA-050 levantamiento (B, N, P); PRUEBA-051 `proxy.ts` (N, E); PRUEBA-052 M-13; PRUEBA-053 m-17, m-19 y m-21; PRUEBA-054 m-20 |
-| De la 020 | PRUEBA-034, PRUEBA-035 |
-
-Si no se indica el tipo, es N, o N y B en los hallazgos del dictamen.
-
-### Cada criterio, con su prueba y dónde se ejecuta
-
-| Criterios | Pruebas |
-| --- | --- |
-| CA-001 / CA-002 / CA-003 | 006, 042, 048 (**aún no ejecutable**) / 004, 041 / 007 |
-| CA-004 / CA-005 / CA-006 | 004, 008, 048 / 009 / 010, 041, 049 |
-| CA-007 / CA-008 / CA-009 / CA-010 | 011, 052 / 012 / 013 / 014, 053 |
-| CA-011 / CA-012 | 015, 043, 052, 053 / 016, 032, 041, 043 |
-| CA-013 / CA-014 / CA-015 | 017, 032, 047 / 017 / 018, 045 (**aún no ejecutable**) |
-| CA-016 / CA-017 | 018, 045, 050 (**aún no ejecutable**) / 029, 044, 049, 050, 053, 054 |
-| CA-018 / CA-019 / CA-020 / CA-021 | 029 / 019, 044 / 020, 033, 051 / 021 |
-| CA-022 / CA-023 / CA-024 / CA-025 | 022 / 022 / 023 / 005, 042, 045 |
-| CA-026 / CA-027 / CA-028 / CA-029 | 024 / 025 / 026 / 027, 043, 047, 050, 052, 054 |
-| CA-030 / CA-031 / CA-032 / CA-033 | 028 / 028 / 015, 030, 046 / 008, 017 |
-| CA-034 / CA-035 | 015 / 017, 047 |
-
-Sin pgTAP ni preproducción, nada puede pasar a VERIFICADA (art. 13).
+| 39 | Dirección reflejada (H-1, M-15) → la aplicación no la lee ni repite; **R**: lo que serializa Next, acciones incluidas (m-36), con su escapado o su tipo (M-17) | 003, 055 |
+| 40 | «Sin acceso» distinguible o sin `lang` (V-1) → comodín, `not-found` único, «La guardia»; oráculo de rutas aceptado (M-15) | 003, 034 |
 
 ## Valores que fija este diseño
 
-Cada valor está explicado en su apartado.
 - **Plazos:** avisos 2 y 10 min; primer paso 10 min; cambio esperado 60 s (de factor, 5 min); reverificación 5 min; autorización 30 min; guardia 5 s; renovación con menos de 60 s; token 1 h.
-- **Límites:** restablecimiento 3 por hora y 5 por origen en 15 min; 3 I-37 en 24 h; marca de 30 días, 5 como máximo y 10 fallos.
+- **Límites:** restablecimiento 3 por hora (cuenta o marca) y 5 por origen en 15 min; 3 I-37 en 24 h; marca de 30 días, 5 como máximo y 10 fallos.
 - **Conservación:** 24 h; sesiones y marcas, 30 días.
 - **Formatos:** IPv6 /64; 128 bits o más; contraseña de 12 a 128; 10 códigos de 16; tiempo fijo de 1.000 y 1.500 ms.
-
-## Cobertura de requisitos
-
-| Requisitos | Apartado |
-| --- | --- |
-| REQ-001 / REQ-002, REQ-007 | Registro / entrar |
-| REQ-003, REQ-004, REQ-033, REQ-047, REQ-063 / REQ-034, REQ-048 | Guardia |
-| REQ-005, REQ-006, REQ-054 | Autorización |
-| REQ-008, REQ-009, REQ-015, REQ-057 | Segundo factor |
-| REQ-010, REQ-080, REQ-081 | Pérdida |
-| REQ-011, REQ-012, REQ-044 | Regla de acceso |
-| REQ-013, REQ-014, REQ-078 | Cerrar sesión |
-| REQ-016, REQ-058 | Restablecer |
-| REQ-017, REQ-018, REQ-019, REQ-070, REQ-071 | Invitar |
-| REQ-020, REQ-050, REQ-083 / REQ-021, REQ-056 | Baja / mínimo |
-| REQ-022, REQ-023, REQ-049 | Primer adm. |
-| REQ-024, REQ-025, REQ-026, REQ-051, REQ-052, REQ-053 | Límite |
-| REQ-027, REQ-055 | Respuestas |
-| REQ-028, REQ-029, REQ-030, REQ-031, REQ-059, REQ-060, REQ-065, REQ-066, REQ-068 | Protección |
-| REQ-032, REQ-064 / REQ-038 | Contratos / datos |
-| REQ-035, REQ-036 | Clave secreta y canal |
-| REQ-037, REQ-069, REQ-073 | Fragmento |
-| REQ-039, REQ-061, REQ-062 | Fallos |
-| REQ-040, REQ-041, REQ-067 | Auditoría |
-| REQ-042, REQ-043, REQ-045, REQ-046 | Pantallas |
-| REQ-072, REQ-073, REQ-074, REQ-075, REQ-076, REQ-079 | Códigos |
-| REQ-077, REQ-082 | Cuentas separadas |
 
 ## Comprobación de la constitución
 
 | Art. | Resultado |
 | --- | --- |
 | 1, 2, 7, 12 | Cumplen |
-| 3 | **Depende de T-P2.12 y T-P2.13; si fallan, BLOQUEANTE** (A-13) |
+| 3 | **Depende de T-P2.12, T-P2.13 y T-P4; si fallan los dos primeros, BLOQUEANTE** (A-13). M-15 y M-16, en el texto; dependen de PRUEBA-051, 052 y 055 |
 | 4 | **Pendiente de A-14** (m-26) |
-| 5 | Falta que la especificación recoja A-1, A-4, A-8, A-12 y A-15 |
-| 6 | Faltan el auditor y P1 |
+| 5 | Falta que la especificación recoja A-1, A-4, A-8 y A-12; A-15, abierta |
+| 6 | Falta que el auditor vea la corrección de la 5.ª vuelta; P1 por D-036 |
 | 8, 9 | No aplican |
-| 10 | Pendiente de T-P4 y A-11 |
+| 10 | Pendiente de T-P4, A-11 y PRUEBA-034 (`lang` y 404 iguales, V-1) |
 | 11 | Cumple; M-4 no se revierte sola |
-| 13 | Cumple; la 1.ª versión no (B-1, M-5, m-23, m-27) |
-| 14 | **Pendiente de A-14 y A-15** |
+| 13 | Cumple; antes no (B-1, M-5, m-23, m-27; PRUEBA-055 pedía lo imposible, M-15 y M-17; servicio real, M-19; riesgo sin marca no declarado, M-20) |
+| 14 | **Pendiente de A-14 y A-15**, del responsable (m-26, m-27) |
 
 ## Dependencias nuevas
 
@@ -551,76 +419,46 @@ Cada valor está explicado en su apartado.
 | --- | --- |
 | Autorización y sesión | Autorizar con `aal` (H-4); tokens cortos; guardia en `proxy.ts` o `layout` (N-1); `@supabase/ssr`; funciones con 1F; sesión completa al registrar el factor; `SameSite=Lax` |
 | Privilegios | R-B como primera opción; C-11 (M-1) |
-| Bloqueos | Solo por origen; reconocer el navegador por IP; desbloquear por correo; suspender la marca; igualar tiempos llamando al servicio (M-6); captcha |
-| Otras | `'unsafe-inline'`; cortafuegos; prueba en la ruta |
+| Bloqueos | Solo por origen; navegador por IP; desbloquear por correo; suspender la marca; igualar tiempos llamando al servicio (M-6); captcha |
+| Otras | `'unsafe-inline'`; cortafuegos; prueba en la ruta; 404 fijo del `proxy.ts` ante consulta (M-15) |
 
 ## Decisiones que requieren ADR
 
 1. «El servicio de identidad verifica, el registro propio autoriza», que cambia `docs/ARQUITECTURA.md` y ADR-0003.
 2. Ampliación de ADR-0003 para el rol `acceso`.
-3. La excepción de `proxy.ts` (A-2, M-14), solo si T-P4 la confirma.
+3. La excepción de `proxy.ts` (A-2), solo si T-P4 la confirma, con las condiciones de M-14 («Protección de la sesión») como parte del ADR.
 
-## Qué se pide a otras fases y a coordinación
+## Asuntos decididos por delegación (D-019 y D-036)
 
-- **Fase 1:**
-  - acciones y cookies;
-  - CSP y cabecera de origen;
-  - PRUEBA-043 y PRUEBA-046 en la batería;
-  - `arn1` y preproducción;
-  - en `registro.ts`, los códigos `acceso_` + `fallo_primer_factor`, `fallo_segundo_factor`, `registro_factor_rechazado`, `auditoria_pendiente`, `correo_no_enviado`, `servicio_no_disponible`, `servicio_pendiente`, `cierre_servicio_pendiente`, `cambio_fuera_del_panel`, `origen_no_disponible`, `navegador_anulado_por_intentos`, `bloqueo_levantado`, `bloqueos_repetidos` y `cupo_restablecimiento_agotado`.
-- **Fase 2:** V-107, V-108, V-113, «Datos», pgTAP (A-10), la recomendación 9 (A-6) y los disparadores.
-- **Especificador:** REQ-036, REQ-037, REQ-022, REQ-007 (A-15), REQ-024, CA-017, REQ-038, REQ-040 y REQ-041.
-- **Otras funciones:** la 020, estados y textos (m-17); la 024, (a), (b) y (c); la 040, el umbral (A-5).
-- **Fase 6:** plazos.
-- **Coordinación:** `docs/SEGURIDAD.md`, `docs/TECNOLOGIAS.md` y `aclaraciones.md`.
-
-## Asuntos decididos por delegación (D-019)
-
-No son respuestas del responsable, que puede revisarlas.
+No son respuestas del responsable, que puede revisarlas o revocarlas.
 
 | N.º | Decisión |
 | --- | --- |
-| A-1 | (b') con `acceso` si V-107; R-B inactiva (m-28) |
-| A-2 | `proxy.ts` acotado si T-P4 lo confirma |
-| A-3 | Riesgo del camino directo aceptado; se revisa en la fase 6 |
-| A-4 | Inventario; (c); acta |
-| A-5 | 5 por origen en `/acceso` |
-| A-6 | Manda la 021 |
-| A-7 | Lo escrito se pierde |
-| A-8 | 3.ª excepción de REQ-037 |
-| A-9 | Baja e invitación nueva |
-| A-10 | PGlite provisional; CI o Docker antes de verificar |
-| A-12 | Marca, levantamiento y responsable (M-5) |
+| A-1 a A-10, A-12 | Por D-019 (14/11): `aclaraciones.md` y los apartados que las citan |
+| A-13 | D-036, 21/11/2026: si fallan T-P2.12 o T-P2.13, **no se acepta el riesgo**; se para lo que dependa de ellos y vuelve al arquitecto (art. 3). Aceptarlo sigue siendo del responsable |
 
 ## Asuntos abiertos para el responsable
 
+Reservados a una persona (cuentas, secretos, o contrarios a una respuesta suya): no se deciden por delegación.
+
 | N.º | Asunto |
 | --- | --- |
-| A-11 | Correo, que decide una persona: dominio de `accesos@humannaia.com`, región, adenda y T-P3 (posible Amazon SES). No bloquea P1, pero sí la verificación de CA-012 y CA-013 |
-| A-14 | Excepción al art. 4 (m-26): la contraseña de aplicación queda fuera del gestor. Opciones: (a) aceptarla, (b) buscar otra vía, (c) enmendar |
-| A-15 | Enmienda de REQ-007 y CA-006 (m-27). Opciones: (a) aprobar, (b) rechazar, (c) otra redacción |
-| A-13 | Solo si fallan T-P2.12 o T-P2.13: aceptarlo por escrito o volver al arquitecto |
+| A-11 | Correo, que decide una persona: dominio de `accesos@humannaia.com`, región, adenda y T-P3 (posible Amazon SES). Bloquea T-P3, el envío real y la verificación de CA-012 y CA-013 |
+| A-14 | Excepción al art. 4 (m-26): la contraseña de aplicación queda fuera del gestor. Opciones: (a) aceptarla, (b) buscar otra vía, (c) enmendar. Bloquea el envío de correo y el cierre de los art. 4 y 14 |
+| A-15 | Marca (REQ-007, CA-006) y su umbral de REQ-024 y CA-017, contrario a su respuesta a la cuestión 10 (m-27, m-33; 21/11/2026). Bloquea la marca y el cierre del art. 14 en T-016 (`plan.md`, «Lo que bloquea»). Si no responde o la rechaza: sin marca y AM-08a, riesgo mayor hasta su aceptación escrita (M-20); si la rechaza, el bloqueo por un tercero vuelve al arquitecto |
 
 ## Lo que este diseño no ha podido comprobar
 
-Ningún comportamiento real del servicio:
-- sus tablas y disparadores (B-1, M-1, M-2);
-- la CSP y la región del `proxy.ts`;
-- el correo y V-107;
-- `__Host-` en `localhost`;
-- la marca y la lista de contraseñas.
-
-Tampoco se ha ejecutado `comprobar-specs.mjs`.
+Ningún comportamiento real: tablas, disparadores y escrituras del servicio (B-1, M-1, M-2, M-16, m-35); CSP y región del `proxy.ts`; correo y V-107; `__Host-` en `localhost`; la marca; la lista de contraseñas; `lang` del 404 dinámico (V-1). Lo que serializa Next (M-15, M-17) lo leyó el auditor, no este diseño. No se ha ejecutado `comprobar-specs.mjs`.
 
 ## Respuesta al dictamen
 
-Todo está corregido en el texto, pero sin probar; no se ha rechazado ningún hallazgo.
+Todo corregido en el texto, sin probar; ningún hallazgo rechazado. 1.ª y 2.ª vuelta: cada hallazgo, en su apartado y su fila AM (tabla en el historial). A medias: m-12 (T-006) y m-15 (fases 4 y 6). m-26 → A-14; m-27 → A-15; m-28 → A-1.
 
-| Vuelta | Hallazgo → dónde se atiende |
-| --- | --- |
-| 1.ª | B-1 → AM-24; M-1 → AM-25 (T-P2.12); M-2 → AM-26 (T-P2.13); M-3 → AM-27 (A-11); M-4 → AM-29; M-5 → AM-08; M-6 → AM-28; M-7 → AM-13; M-8 → AM-30; M-9 → AM-02; M-10 → AM-10; M-11 → AM-31; M-12 → AM-07; m-1 a m-16 → amenazas y apartados. Quedan a medias m-12 (falta elegir la lista de contraseñas) y m-15 (los plazos los fija la fase 6 y el aviso a una persona depende de la fase 4) |
-| 2.ª | M-13 → AM-26; M-14 → AM-37; m-17, m-19 y m-21 → AM-33; m-18 → AM-36; m-20 → AM-38; m-22 → AM-29; m-23 → AM-32; m-24 → AM-17; m-25 → AM-18; m-26 → A-14; m-27 → A-15; m-28 → A-1; m-29 → AM-34 |
+**3.ª vuelta:** M-15, m-36 → «La guardia», AM-39, AM-40; M-16, m-35 → «Segundo factor», «Cambios hechos directamente», AM-26; m-30, m-31 → «La guardia», «Protección», AM-37; m-32 → «Funciones de operación»; m-33 → «Bloqueo provocado», A-15; m-34 → `aclaraciones.md`.
 
-## Condensación D-023
+**4.ª vuelta:** M-17 → «La guardia», AM-39; M-18 → AM-18; m-37 → «Segundo factor»; m-39 → «Operaciones con la clave secreta»; m-44 → «Cambios hechos directamente»; M-19, m-38, m-40 a m-42, fuera del diseño; m-43, de la coordinación.
 
-El 19/11/2026 se pasó de 275 KB a unos 39 KB sin cambiar ninguna decisión, valor, contrato ni identificador. Se quitaron explicaciones, ejemplos y repeticiones. El original completo está en el historial de trabajo y es el que vale si hay dudas.
+**5.ª vuelta:** M-20 → «Bloqueo provocado», AM-08, A-15, art. 13; m-47 → AM-18; m-50 → «Configuración»; menor 7 de la revisión → «Cambios hechos directamente»; m-45, m-46, m-48 y m-49, fuera del diseño.
+
+Tabla de la 5.ª, en `tareas.md`; lo anterior a la condensación (D-023), en el historial.

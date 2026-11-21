@@ -122,4 +122,13 @@ Decididas por el orquestador de la fase 3 en nombre del responsable (D-019); el 
 - **A-4:** vale la regla de la columna «Propuesta», con la entrada nueva en la 024 para cambios hechos fuera del panel y el acta firmada para REQ-022 (la firma del acta es del responsable, no delegable).
 - **M-5:** cookie de dispositivo reconocido con contador propio, levantamiento del bloqueo por otro administrador y función fuera del panel. No relaja contraseña ni segundo factor.
 - **Enmienda 1 de la especificación (pendiente):** M-5 cambia REQ-007, REQ-024, REQ-038, REQ-040, REQ-041 y CA-017. Se encarga al `especificador` y, sin hallazgos bloqueantes, la apruebo por delegación.
-- **Reservado a una persona:** A-11 (dominio del correo, proveedor, V-107/V-111, prueba real T-P3) y A-13.
+- **Reservado a una persona:** A-11 (dominio del correo, proveedor, V-107/V-111, prueba real T-P3).
+- **A-13, decidida por delegación D-036 el 21/11/2026** (sustituye la anotación anterior, que la daba por reservada a una persona; hallazgo m-34 de `dictamen-diseno-3.md`): si fallan T-P2.12 o T-P2.13, no se acepta el riesgo; se para lo que dependa de ellos y vuelve al arquitecto (art. 3). Aceptar ese riesgo sigue reservado al responsable.
+
+## Cambio del 21/11/2026: A-15 vuelve al responsable
+
+Decisión de la coordinación tras la revisión del `revisor` de plan y tareas (hallazgo MAYOR-1). **No es una respuesta del responsable.**
+
+- **A-15** (marca de navegador reconocido: REQ-007, CA-006 y el umbral de REQ-024 y CA-017, 10 fallos con marca) **deja de estar decidida por D-036 y queda abierta, reservada al responsable.** Motivo: ese umbral contradice su respuesta expresa a la cuestión 10 («5 fallos, bloqueo de 15 min», 13/11/2026), y D-036, según la cita la revisión, no admite decidir por delegación lo que contradice una respuesta suya. Sustituye a la anotación de A-15 por D-036 del 21/11 en `diseno.md`, `plan.md`, `tareas.md` y `propuestas.md`.
+- Hasta que responda, la marca y su umbral ni se escriben en la especificación ni se implementan; lo que no depende de ellos sigue. La ficha para presentárselo va en el relevo de la coordinación.
+- **Añadido tras la 5.ª vuelta del auditor (M-20, 21/11/2026), sin respuesta del responsable:** sin marca, quien conozca la dirección de un administrador puede mantenerlo bloqueado (5 fallos cada 15 minutos); con uno solo, solo queda el script del responsable. Es un riesgo mayor (AM-08a de `diseno.md`) que no se da por controlado y que solo el responsable puede aceptar por escrito; se le presenta junto con A-15. Si no responde o rechaza la marca, sigue pendiente; si la rechaza, el bloqueo por un tercero vuelve al arquitecto.
