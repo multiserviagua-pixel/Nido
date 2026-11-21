@@ -31,6 +31,8 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 
 - **Noche del 21 al 22/11:** el responsable se fue a dormir con estas palabras: «Voy a dormir, tienes todo autorizado hasta las 8 de mañana». La coordinación sigue vigilando y relanzando chats. Se mantiene el equipo despierto hasta las 8:15 con un proceso en segundo plano (`despierto.ps1` en la carpeta temporal; no cambia ajustes del sistema). Siguen reservados los secretos, las cuentas y el gasto: los verificadores de contraseñas de T-114 esperan al responsable.
 
+- **Fase 2 B2 b** (`c27`, 20:45): B2 a terminó (016, 017 y 018 aprobadas; verificación de Gmail y Outlook con choques D1 a D7). La coordinación decidió D-041 (adaptar a Gmail, activación cerrada hasta el piloto) y B2 b enmienda, pasa el auditor y escribe el plan del piloto. Para el responsable por la mañana: D-042 (riesgo residual de la 018), cuestión 1 de la 017, cuenta de prueba de Google para el piloto, y la línea 111 de `marketing/LEEME.md` (habla de reglas de remitente; es de otro chat).
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
