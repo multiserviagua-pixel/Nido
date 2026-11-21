@@ -33,6 +33,9 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 
 - **Fase 2 B2 b** (`c27`, 20:45): B2 a terminó (016, 017 y 018 aprobadas; verificación de Gmail y Outlook con choques D1 a D7). La coordinación decidió D-041 (adaptar a Gmail, activación cerrada hasta el piloto) y B2 b enmienda, pasa el auditor y escribe el plan del piloto. Para el responsable por la mañana: D-042 (riesgo residual de la 018), cuestión 1 de la 017, cuenta de prueba de Google para el piloto, y la línea 111 de `marketing/LEEME.md` (habla de reglas de remitente; es de otro chat).
 
+- **Chats a las 22:55 (21/11):** Fase 1 o (`c28`), Fase 2 k (`c29`), Fase 3 h (`c30`, 020 T-010 c), Fase 3 i (`c31`, carril C2: A-15 en la 021, D-040 en la 022, después 023 a 025) y Fase 2 B2 b (`c27`). Relanzados porque 1 n y 2 j esperaban permiso por memoria desde las 19:57, 3 f y 3 g se quedaron sin contexto, y el límite de uso cortó todo de 21:30 a 22:40. Encargos con la **regla D** nueva: `bash scripts/esperar-memoria.sh 4000` tras el candado y antes de suite, build o Playwright; sustituye al aviso del sistema de no relanzar. Pestaña vieja `c23` (Fase 3 g, proceso matado): la cierra el responsable.
+- **Lección:** `node scripts/comprobar-specs.mjs | tail … && git commit` no detiene el commit si falla (el código de salida es el de `tail`). Usar `node scripts/comprobar-specs.mjs >/dev/null 2>&1 && …`. Así se subió 23abb80 con un estado no válido, corregido en 393eaae.
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
