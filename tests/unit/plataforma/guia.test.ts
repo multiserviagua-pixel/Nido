@@ -86,6 +86,43 @@ describe("docs/operacion/GUIA.md", () => {
     expect(t).toContain("added");
   });
 
+  it("npm run start solo junto a un entorno no de desarrollo ficticio (T-011)", () => {
+    const t = guia();
+    const apariciones = [...t.matchAll(/npm run start/g)];
+    expect(apariciones.length).toBeGreaterThan(0);
+    for (const a of apariciones) {
+      const inicio = a.index ?? 0;
+      const ventana = t.slice(Math.max(0, inicio - 800), inicio + 1800);
+      expect(ventana).toContain("VERCEL_REGION");
+      expect(ventana).toContain("arn1");
+      expect(ventana).toMatch(/distinto de `desarrollo`/);
+      expect(ventana).toContain("NODE_ENV=production");
+      expect(ventana).toContain("503");
+      expect(ventana).toMatch(/cierre en fallo/);
+      expect(ventana).toContain("ficticios");
+    }
+    expect(t).toContain("valores ficticios");
+  });
+
+  it("nombra VERCEL_ENV=preview y la forma que exige la configuración (T-011)", () => {
+    const t = guia();
+    const inicio = t.indexOf("npm run start` solo se prueba");
+    expect(inicio).toBeGreaterThan(-1);
+    const ventana = t.slice(inicio, inicio + 2500);
+    expect(ventana).toContain("VERCEL_ENV=preview");
+    expect(ventana).toMatch(/32 caracteres hexadecimales/);
+    expect(ventana).toMatch(/ingest\.de\.sentry\.io/);
+    expect(ventana).toMatch(/de 7 a 40 caracteres hexadecimales/);
+  });
+
+  it("anota los hashes del primer commit integrado y de la carpeta obligatoria (T-011)", () => {
+    const t = guia();
+    expect(t).toContain("f9f0494");
+    expect(t).toContain("0d8fd6d");
+    expect(t).not.toContain("su hash se anota aquí cuando exista");
+    expect(t).toContain("primer commit integrado por este procedimiento");
+  });
+
   it("no contiene secretos, URL con credenciales ni direcciones de correo", () => {
     const t = guia();
     expect(buscarSecretos(t)).toEqual([]);
