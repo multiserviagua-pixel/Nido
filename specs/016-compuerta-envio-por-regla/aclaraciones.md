@@ -1,6 +1,6 @@
 # 016 · Aclaraciones
 
-Cuestiones abiertas de `especificacion.md`, pendientes de respuesta del responsable. **Ninguna tiene respuesta.** Una respuesta supuesta no vale: mientras la columna «Respuesta» esté vacía, la cuestión sigue abierta y la función sigue en PROPUESTA.
+Cuestiones abiertas de `especificacion.md`. **Respondidas el 21/11/2026** (tabla abajo); la 1 depende de una enmienda del artículo 8 aún no ratificada. Una respuesta supuesta no vale: mientras la columna «Respuesta» esté vacía, la cuestión sigue abierta y la función sigue en PROPUESTA.
 
 Las opciones y su consecuencia están en «Cuestiones abiertas» de la especificación.
 
@@ -15,10 +15,10 @@ Relación con «Qué queda por decidir» de `docs/propuesta-enmienda-articulo-8.
 
 | N.º | Cuestión | Respuesta | Quién y cuándo | Efecto en la especificación |
 | --- | --- | --- | --- | --- |
-| 1 | Si se añade alguna categoría a la lista mínima de excluidas | | | REQ-002, CA-002 |
-| 2 | Número de candidatos en rodaje por regla | | | REQ-006, CA-006 |
-| 3 | Si se construye el interruptor de HumanaIA que solo desactiva, y qué hace la compuerta si no puede consultarlo | | | REQ-010, REQ-014, REQ-023, CA-010, CA-023 |
-| 4 | Si se acepta el riesgo residual descrito en la especificación, con las recomendaciones del auditor ya incluidas | | | Sin cambios si se acepta; si no, requisitos nuevos antes de la P0 |
+| 1 | Si se añade alguna categoría a la lista mínima de excluidas | «Debe aprender a responder y responder por sí solo, menos a correos de organismos públicos, bancos, reclamaciones, temas personales o médicos». Preguntado después por el modelo, eligió «B: responde a todos salvo excluidos», sin lista de remitentes. **Choca con el artículo 8 (1.3)**: exige enmendarlo (versión 1.4, propuesta en `docs/propuesta-enmienda-articulo-8-v14.md`). Hasta que el responsable ratifique ese texto, rige la 1.3 | Responsable, 21/11/2026, en el chat de coordinación | Si se ratifica la 1.4: REQ-001, REQ-002, REQ-019 y la función 017 cambian; la lista excluida pasa a ser la del responsable (sin «otros») |
+| 2 | Número de candidatos en rodaje por regla | «Aprende de los correos enviados y recibidos, 100 últimos». El rodaje por regla se sustituye por el aprendizaje inicial con los 100 últimos correos enviados y recibidos (en la cuenta del cliente; nada de contenido llega a HumanaIA, artículo 1) | Responsable, 21/11/2026 | REQ-006, CA-006; función 018 |
+| 3 | Si se construye el interruptor de HumanaIA que solo desactiva, y qué hace la compuerta si no puede consultarlo | El responsable delega: «Decide tú, siempre y cuando haga la app más práctica de usar». Decisión de la coordinación por D-036: **se construye**; si la compuerta no puede consultarlo, no envía y la respuesta queda como borrador (cierre en fallo, artículo 3). Motivo: con envío a cualquier remitente, cortar todos los envíos de un cliente desde el panel ante un incidente es la palanca operativa más práctica; el coste para el dueño es nulo mientras HumanaIA responda | Coordinación por delegación expresa, 21/11/2026 | REQ-010, REQ-014, REQ-023, CA-010, CA-023 |
+| 4 | Si se acepta el riesgo residual descrito en la especificación, con las recomendaciones del auditor ya incluidas | «Añadir más controles». De los propuestos eligió: **resumen diario al dueño** de lo enviado solo, dentro de su propia cuenta. No eligió envío diferido, bloqueo por dinero o enlaces ni topes más bajos | Responsable, 21/11/2026 | Requisito nuevo del resumen diario; el riesgo residual con el modelo B lo dictamina el `auditor-seguridad` sobre la enmienda 1.4 |
 
 ## Decisiones que salen de aquí
 
