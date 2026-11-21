@@ -56,6 +56,9 @@ function procesar(urgencia: Urgencia): void {
 
 /** Anuncia un texto. Una cadena vacía no anuncia nada. */
 export function anunciar(texto: string, urgencia: Urgencia = "cortes"): void {
+  // Sin documento (en el servidor) no hay a quién anunciar: no se guarda el texto ni se crean
+  // temporizadores. Lo contrario dejaría el texto de una petición en memoria para otra (art. 2 y 3).
+  if (typeof document === "undefined") return;
   const limpio = textoPlano(texto).trim();
   if (limpio === "") return;
   const canal = canales[urgencia];

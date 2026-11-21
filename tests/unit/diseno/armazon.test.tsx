@@ -122,35 +122,54 @@ describe("PRUEBA-012 · áreas en el menú", () => {
     expect(cuenta(nav, /<svg[^>]*aria-hidden="true"/g)).toBe(5);
   });
 
-  it("el punto de montaje del menú sustituye a la lista y deja la región nav", () => {
+  it("el menú lo pone Armazon a partir de las áreas: no admite un ReactNode que lo sustituya", () => {
     const html = renderToStaticMarkup(
       <Armazon
         areas={AREAS_SUPERADMIN}
         areaActual="resumen"
         titulo="x"
-        menu={<p id="menu-de-b">menú</p>}
+        // @ts-expect-error la lista cerrada de áreas no se puede sustituir por un nodo libre
+        menu={<p id="menu-de-otro">menú ajeno</p>}
       >
         <p>c</p>
       </Armazon>,
     );
-    expect(html).toContain('id="menu-de-b"');
+    expect(html).not.toContain("menu-de-otro");
+    expect(html).not.toContain("menú ajeno");
     expect(cuenta(html, /<nav[\s>]/g)).toBe(1);
-    expect(html).not.toContain('href="/admin/ordenes"');
+    expect(html).toContain('href="/admin/ordenes"');
   });
 
-  it("el punto de montaje de la cabecera va dentro de la región header, tras el h1", () => {
+  it("MenuLateral y CajonMenu: el menú fijo y el botón del cajón, con las mismas áreas", () => {
+    const html = pintar("clientes");
+    expect(html).toContain("data-menu-lateral");
+    expect(html).toContain(`aria-label="${TEXTOS.armazon.abrirMenu}"`);
+    // El cajón cerrado no pinta enlaces: los cinco del documento son los del menú lateral.
+    expect(cuenta(/<nav[\s\S]*?<\/nav>/.exec(html)![0], /<a\b/g)).toBe(5);
+    expect(cuenta(html, /<nav[\s>]/g)).toBe(1);
+  });
+
+  it("el botón del cajón va dentro de la cabecera, antes del h1", () => {
+    const cabecera = /<header[\s\S]*?<\/header>/.exec(pintar())![0];
+    expect(cabecera.indexOf(TEXTOS.armazon.abrirMenu)).toBeGreaterThan(-1);
+    expect(cabecera.indexOf(TEXTOS.armazon.abrirMenu)).toBeLessThan(cabecera.indexOf("<h1"));
+  });
+
+  it("la cabecera sigue provisional: solo el h1 y el botón; no admite contenido libre hasta T-010 (c)", () => {
     const html = renderToStaticMarkup(
       <Armazon
         areas={AREAS_SUPERADMIN}
         areaActual="resumen"
         titulo="x"
-        cabecera={<div id="cabecera-de-c" />}
+        // @ts-expect-error la cuenta y el periodo los tipa T-010 (c); hasta entonces, nada
+        cabecera={<div id="cabecera-ajena" />}
       >
         <p>c</p>
       </Armazon>,
     );
+    expect(html).not.toContain("cabecera-ajena");
     const cabecera = /<header[\s\S]*?<\/header>/.exec(html)![0];
-    expect(cabecera.indexOf("<h1")).toBeLessThan(cabecera.indexOf("cabecera-de-c"));
+    expect(cuenta(cabecera, /<h1[\s>]/g)).toBe(1);
   });
 });
 

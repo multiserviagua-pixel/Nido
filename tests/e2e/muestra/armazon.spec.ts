@@ -1,9 +1,9 @@
 // PRUEBA-012 (diseño 020 §Pruebas), parte de T-010 (a): estructura del armazón, áreas, enlace de
 // salto, regiones y orden del cuerpo, sobre las entradas `armazon-*` del inventario. CA-001,
 // CA-002, CA-004 (título), CA-005 (orden), CA-007, CA-031, CA-033.
-// Lo que depende de MenuLateral, CajonMenu, Cabecera, CuentaUsuario y SelectorPeriodo (cajón en
-// 320, 375 y 768 px, cuenta en un paso, selector de periodo) lo añaden T-010 (b) y (c): aquí no
-// se simula y queda anotado como «no ejecutada».
+// El menú y el cajón (320, 375 y 768 px, Escape, foco, objetivos) los prueba `cajon-menu.spec.ts`
+// (T-010 (b)). Lo que depende de Cabecera, CuentaUsuario y SelectorPeriodo (cuenta en un paso,
+// selector de periodo) lo añade T-010 (c): aquí no se simula y queda anotado como «no ejecutada».
 import { expect, test, type Page } from "@playwright/test";
 import { AREAS_CLIENTE_MUESTRA, AREAS_SUPERADMIN } from "../../../src/components/armazon/areas";
 import { TEXTOS } from "../../../src/components/textos";
@@ -215,16 +215,20 @@ for (const estado of ARMAZONES) {
       await expect(cortes).toHaveText("");
       await expect(urgente).toHaveText("");
     });
-
-    test("lo que añaden (b) y (c) queda anotado, no simulado", async () => {
-      anotarPendiente(
-        test.info(),
-        "cajón de menú en 320, 375 y 768 px, menú visible en 1024 o más, Escape y foco; cuenta en un paso a 320 px; selector de periodo y su anuncio",
-        "T-010 (b) y (c)",
-      );
-    });
   });
 }
+
+test.describe("PRUEBA-012 · lo que añade T-010 (c)", () => {
+  // Una sola prueba, fuera del bucle por estado (menor 5 de T-010 (a)). Lo de (b) (menú fijo,
+  // cajón en 320, 375 y 768 px, Escape y foco) ya no se anota: lo ejecuta `cajon-menu.spec.ts`.
+  test("la cuenta en un paso a 320 px y el selector de periodo quedan anotados, no simulados", async () => {
+    anotarPendiente(
+      test.info(),
+      "cuenta en un paso a 320 px; selector de periodo y su anuncio",
+      "T-010 (c)",
+    );
+  });
+});
 
 test.describe("PRUEBA-012 · entre vistas", () => {
   test("el menú tiene el mismo orden en todas las vistas de superadmin y el título no se repite en ninguna", async ({

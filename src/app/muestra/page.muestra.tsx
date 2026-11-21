@@ -1,8 +1,12 @@
 // Índice de la muestra (020 T-005), generado a partir del inventario. Se pinta en el servidor en
 // cada petición: la comprobación lee `Host` con `headers()`. Sin datos reales ni de la petición.
 // Es una página suelta, fuera del armazón: pone su propio `main` (el layout raíz ya no lo trae).
+import type { Metadata } from "next";
 import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";
 import { INVENTARIO, rutaDeEstado } from "./inventario";
+
+/** Título propio del índice (distinto del de todos los estados; lo comprueba titulos-muestra). */
+export const metadata: Metadata = { title: "Muestra de componentes" };
 
 export default async function IndiceDeLaMuestra() {
   await comprobarAccesoMuestra();

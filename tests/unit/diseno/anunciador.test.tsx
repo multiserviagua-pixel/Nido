@@ -130,13 +130,17 @@ describe("anunciar · cola por región", () => {
     expect(regiones["cortes"]!.textContent).toBe("<img src=x onerror=1>");
   });
 
-  it("sin documento (en el servidor) no falla y deja el texto en la cola", () => {
+  it("sin documento (en el servidor) no guarda texto ni crea temporizadores (art. 2 y 3)", () => {
     vi.unstubAllGlobals();
     expect(() => {
       anunciar("Algo");
-      vi.advanceTimersByTime(200);
+      anunciar("Otro", "urgente");
     }).not.toThrow();
-    expect(leerAnuncio("cortes")).toBe("Algo");
+    expect(vi.getTimerCount(), "temporizadores creados").toBe(0);
+    vi.advanceTimersByTime(2000);
+    // Nada queda en memoria del servidor: un texto de una petición no llegaría a otra.
+    expect(leerAnuncio("cortes")).toBe("");
+    expect(leerAnuncio("urgente")).toBe("");
   });
 
   it("una región que no está en el documento no rompe la cola", () => {

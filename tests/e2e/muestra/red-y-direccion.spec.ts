@@ -110,6 +110,15 @@ async function enlacesIndebidos(page: Page): Promise<string[]> {
   return page.evaluate((saltar) => {
     const malos: string[] = [];
     for (const a of document.querySelectorAll<HTMLAnchorElement>("a[href]")) {
+      const href = a.getAttribute("href")!;
+      if (href.trim() === "") {
+        // Un href vacío apunta a la propia dirección, con su consulta y su fragmento.
+        if (location.search !== "")
+          malos.push(`consulta: ${(a.textContent ?? "").trim().slice(0, 30)} → (vacío)`);
+        if (location.hash !== "")
+          malos.push(`fragmento: ${(a.textContent ?? "").trim().slice(0, 30)} → (vacío)`);
+        continue;
+      }
       // Se resuelve contra la ruta sin consulta: «#otro» en una página con consulta no es un enlace con consulta.
       const u = new URL(a.getAttribute("href")!, location.origin + location.pathname);
       const nombre = `${(a.textContent ?? "").trim().slice(0, 30)} → ${a.getAttribute("href")}`;
@@ -424,6 +433,32 @@ test.describe("PRUEBA-018 · controles: la medida detecta lo que debe", () => {
       document.body.append(a);
     });
     expect(await enlacesIndebidos(page)).toHaveLength(1);
+  });
+
+  test("un enlace con href vacío apunta a la propia dirección: con consulta o fragmento, se detecta", async ({
+    page,
+  }) => {
+    const sembrar = () =>
+      page.evaluate(() => {
+        const a = document.createElement("a");
+        a.setAttribute("href", "");
+        a.textContent = "vacío";
+        document.body.append(a);
+      });
+    // Sin consulta ni fragmento, apuntar a sí mismo no lleva nada (control positivo).
+    await page.goto("/muestra");
+    await sembrar();
+    expect(await enlacesIndebidos(page)).toEqual([]);
+    await page.goto("/muestra?usuario=otro-usuario");
+    await sembrar();
+    const conConsulta = await enlacesIndebidos(page);
+    expect(conConsulta).toHaveLength(1);
+    expect(conConsulta[0]).toContain("consulta: vacío");
+    await page.goto("/muestra#otro");
+    await sembrar();
+    const conFragmento = await enlacesIndebidos(page);
+    expect(conFragmento).toHaveLength(1);
+    expect(conFragmento[0]).toContain("fragmento: vacío");
   });
 
   test("una página que pinta lo recibido por mensaje o fragmento la detecta la comprobación", async ({

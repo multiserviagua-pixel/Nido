@@ -1,0 +1,35 @@
+{
+  "totales": 607,
+  "esperadas": 607,
+  "inesperadas": 0,
+  "saltadas": 0,
+  "intermitentes": 0,
+  "sin_anotacion_comprueban_lo_que_dicen": 548,
+  "solo_anotan": 3,
+  "parciales": 56,
+  "anotaciones_no_ejecutada_en_parciales": 57,
+  "por_archivo": {
+    "muestra/accesibilidad.spec.ts": 49,
+    "muestra/anchos.spec.ts": 71,
+    "muestra/armazon.spec.ts": 87,
+    "muestra/cajon-menu.spec.ts": 192,
+    "muestra/combinaciones.spec.ts": 29,
+    "muestra/medidas.spec.ts": 11,
+    "muestra/red-y-direccion.spec.ts": 86,
+    "muestra/tema-y-movimiento.spec.ts": 82
+  },
+  "solo_anotan_titulos": [
+    "PRUEBA-013 · indice/unico › ancho máximo del contenido en 1920 y 2560 px",
+    "PRUEBA-013 · casos con entrada propia en el inventario › cobertura: lo que aún no tiene entrada en el inventario",
+    "PRUEBA-012 · lo que añade T-010 (c) › la cuenta en un paso a 320 px y el selector de periodo quedan anotados, no simulados"
+  ],
+  "parciales_por_motivo": {
+    "pares de color de fill y stroke de SVG, con opacity y con fondos de hermanos posicionados (límites de apoyo/pa": 22,
+    "dirección tras escribir texto": 11,
+    "tras activar todas las vistas de /muestra/servidor/, 0 líneas nuevas en el registro y 0 envíos a la supervisió": 1,
+    "cambio de tema con la tabla ordenada": 11,
+    "cambio de tema con el cajón abierto": 1,
+    "desplazamiento del texto de 0,1 o menos al llegar la fuente real (CA-023): no se mide; hoy la pila es de siste": 11
+  },
+  "fallos": []
+}

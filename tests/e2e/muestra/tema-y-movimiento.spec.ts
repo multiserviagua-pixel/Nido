@@ -37,7 +37,7 @@ for (const estado of ESTADOS) {
         await campos.nth(i).fill("texto ficticio de prueba");
       }
       // «Tabla ordenada» y «cajón abierto» (PRUEBA-020): se ejercitan si el estado los trae; si no,
-      // quedan anotados como no ejecutados hasta que T-010 los añada al inventario.
+      // quedan anotados como no ejecutados. El cajón existe desde T-010 (b) en todo armazón.
       const columna = page.locator("th[aria-sort] button, [role='columnheader'][aria-sort] button");
       if ((await columna.count()) > 0) {
         await columna.first().click();
@@ -48,9 +48,16 @@ for (const estado of ESTADOS) {
           "T-010 (tabla)",
         );
       }
-      const cajon = page.locator("[aria-expanded][aria-controls]");
-      if ((await cajon.count()) > 0) {
+      // El botón del cajón: `aria-controls` solo aparece con el cajón abierto, así que se le
+      // reconoce por anunciar un diálogo y llevar `aria-expanded` (un selector con `aria-controls`
+      // no lo encontraba y dejaba la prueba sin ejercitar el cajón).
+      const cajon = page.locator('[aria-haspopup="dialog"][aria-expanded]');
+      const conCajon = (await cajon.count()) > 0;
+      if (conCajon) {
+        // El botón del cajón solo se ve por debajo de 1024 px: se estrecha la ventana y se abre.
+        await page.setViewportSize({ width: 375, height: 667 });
         await cajon.first().click();
+        await expect(page.getByRole("dialog")).toBeVisible();
       } else {
         anotarPendiente(
           test.info(),
@@ -80,6 +87,17 @@ for (const estado of ESTADOS) {
         entradasAntes,
       );
       expect(await fotoDelEstado(page), "el estado sigue igual").toEqual(antes);
+      if (conCajon) {
+        // Abierto antes, abierto después, con el foco todavía dentro (sin recarga ni cierre).
+        await expect(page.getByRole("dialog")).toBeVisible();
+        expect(
+          await page.evaluate(
+            () =>
+              document.querySelector("[role=dialog]")?.contains(document.activeElement) ?? false,
+          ),
+          "el foco sigue dentro del cajón",
+        ).toBe(true);
+      }
     });
 
     test("colores forzados: 0 degradados y bordes presentes", async ({ page }) => {

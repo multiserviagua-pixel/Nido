@@ -64,6 +64,7 @@ export const TEXTOS = {
 
   armazon: {
     saltarAlContenido: "Saltar al contenido",
+    menu: "Menú",
     abrirMenu: "Abrir menú",
     cerrarMenu: "Cerrar menú",
     navegacionPrincipal: "Navegación principal",
