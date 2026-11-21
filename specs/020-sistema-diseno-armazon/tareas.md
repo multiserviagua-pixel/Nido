@@ -100,7 +100,7 @@ Cada parte cierra con su prueba escrita y en verde. (f) a (j) pueden escribirse 
 - (j) `tc/`: acceso indistinguible, respuestas sin almacenamiento, título sin datos; lo escrito, solo en el cuerpo. Prueba: PRUEBA-034, PRUEBA-035.
 
 ### T-010 · Armazón y componentes de la propuesta
-`ingeniero-frontend` · R · pendiente · Depende de: T-001 (primitiva), T-006, T-007, T-009 · REQ-001 a REQ-018, REQ-024, REQ-030, REQ-035, REQ-037, REQ-038, REQ-040 a REQ-042, REQ-045, REQ-050 a REQ-055, REQ-065 a REQ-067, REQ-073 a REQ-076, REQ-078, REQ-081 a REQ-083 · CA-001 a CA-015, CA-017, CA-024, CA-025, CA-027, CA-028, CA-031 a CA-033, CA-039, CA-043 a CA-046, CA-049 a CA-053, CA-056, CA-057
+`ingeniero-frontend` · R · (a) integrada en 9b54ae5 (21/11/2026); (b) a (j) pendientes · Depende de: T-001 (primitiva), T-006, T-007, T-009 · REQ-001 a REQ-018, REQ-024, REQ-030, REQ-035, REQ-037, REQ-038, REQ-040 a REQ-042, REQ-045, REQ-050 a REQ-055, REQ-065 a REQ-067, REQ-073 a REQ-076, REQ-078, REQ-081 a REQ-083 · CA-001 a CA-015, CA-017, CA-024, CA-025, CA-027, CA-028, CA-031 a CA-033, CA-039, CA-043 a CA-046, CA-049 a CA-053, CA-056, CA-057
 
 Cada parte añade sus entradas a `m/inventario.ts` y sus textos a `c/textos.ts` en el mismo commit.
 
@@ -224,6 +224,9 @@ Cada parte añade sus entradas a `m/inventario.ts` y sus textos a `c/textos.ts` 
 7. No se arranca `next dev` en la carpeta principal (lo arregla T-124 de la 001); si cambia `AGENTS.md`, `git checkout -- AGENTS.md` sin commitear; tras `npm run dev`, borrar `.next` de esa copia si `npm run tipos` falla.
 8. `tests/unit/diseno/acceso-muestra.test.ts` agota 30 s bajo carga (hallazgo del carril A2): si es de este carril, arreglarlo sin relajar el control, con revisor y `auditor-seguridad`.
 9. T-009 (a)(b)(c) integradas (a47b28a). H-1 (la consulta de la dirección dentro de los guiones de Next) anotado en `plan.md`; pendiente de dictamen del `auditor-seguridad` antes de la 021. Pendientes de T-009 para T-010 y T-020 en `evidencias/T-009/resultado.md`. La orden oficial `npm run navegador` queda sin ejecutar (puerto 3100 ocupado por un `next start` que no se pudo parar); se ejecuta en CI o con el puerto libre antes de P7.
+
+10. **T-010 (a) integrada** (9b54ae5; revisor APTO, 7 menores). Menores que pasan a T-010 (b) y siguientes: (1) `anunciar()` sin `document` no debe guardar texto ni crear temporizadores (art. 2 y 3; cambiar su prueba para exigir `leerAnuncio()` vacío y sin temporizadores); (2) `menu` y `cabecera` de `Armazon` son `ReactNode` provisionales: tiparlos o quitarlos en (b)/(c) con prueba; (3) título propio del índice de la muestra y unicidad de títulos sobre todo el inventario; (4) caso sembrado con `href=""` en el control de enlaces de `red-y-direccion.spec.ts`; (5) una sola prueba «lo que añaden (b) y (c)» fuera del bucle por estado; (6) `leerAnuncio`/`reiniciarAnunciosParaPruebas` solo si las partes siguientes los usan; (7) adjuntar el JSON resumido de Playwright a `evidencias/T-010/`.
+11. **«Sí» de la coordinación por D-036 a `paquetes-de-cliente.ts` (A-12)** para T-010 (b): añadir solo los paquetes de cliente que `CajonMenu` y la primitiva de T-001 necesitan (`react` y lo que declare la prueba PRUEBA-037), nombrados en el commit y revisados por el `revisor` (`auditor-seguridad` no hace falta salvo que cambie una lista de bloqueo). Las páginas de la muestra son fijas por estado (no hay ruta dinámica por PRUEBA-008 R7): cada estado nuevo del inventario necesita su carpeta de página.
 
 ## Escalados
 
