@@ -208,6 +208,14 @@ Cada parte añade sus entradas a `m/inventario.ts` y sus textos a `c/textos.ts` 
 | T-011 | T-041 a T-043 | T-022 | T-064, T-072 |
 | Retiradas (D-025) | T-005, T-071 (aprobar con firma) | | |
 
+## Decisiones de la coordinación por D-036 (21/11/2026)
+
+1. **Dominio de preproducción: `pre-nido.humannaia.com`**, ya resuelto por CNAME al proyecto `pre-nido` de Vercel (equipo `humana-ia`, sin Git, solo `arn1`, variables de sistema expuestas, `ENTORNO=preproduccion`). Se sirve como despliegue Production de ese proyecto: `VERCEL_ENV` vale `production` con `ENTORNO=preproduccion`. La muestra sigue cerrada en preproducción hasta comprobarlo en el primer despliegue real (T-117 de la 001); no se añade `pre-nido.humannaia.com` a `NOMBRES_DE_SERVIDOR` antes (aviso de T-005, punto 1, vigente).
+2. **Enmienda 1 del diseño (avisos propios): aprobada por D-036**, con la opción recomendada del arquitecto (no toca cuentas, secretos, gasto ni producción; ya era decisión del responsable del 20/11/2026). **A-11 y A-14 de la 021** (dominio y proveedor del correo; contraseña de aplicación fuera del gestor, excepción al art. 4) son cuentas y secretos: **reservadas al responsable**, no bloquean la 020. **A-15** (enmienda de REQ-007 y CA-006): el arquitecto recomienda presentársela expresamente al responsable y no aprobarla solo por delegación (hallazgo m-27); queda **pendiente para el responsable**, sin bloquear la 020.
+3. **T-013 y T-019 son de una persona.** Se prepara lo que necesite ver (capturas o dirección local y una lista corta de qué mirar) y se sigue con lo que no dependa de ellas.
+4. Copia `c-020-t005` y rama `tarea/020-T-005` retiradas (ya integradas).
+5. **Evidencia de integración con la máquina cargada:** `npx vitest run --maxWorkers=3` en verde y tipos, estilo, aislamiento, arnés y build en 0 por separado.
+
 ## Escalados
 
 Tareas que han subido de nivel de modelo o de esfuerzo, y por qué (`docs/EQUIPO.md`).
