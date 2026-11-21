@@ -23,7 +23,29 @@ Reescrito entero (regla «Relevo auténtico»). Historia en `git log` y `docs/TE
 6. T-114: pasos de la persona preparados abajo.
 
 ## Pasos de la persona para T-114 (AR-05 y AR-06, Supabase `Nido`) — por preparar
-Pendiente de redactar al llegar a T-114 a partir de `supabase/conector-prueba/LEEME.md` (SQL a ejecutar, roles y contraseñas a crear sin mostrarlas, comprobaciones: `postgres` sin superusuario ni `bypassrls`, `log_parameter_max_length_on_error = 0`, rol propietario `NOLOGIN`) y del endurecimiento de T-123 (b) (`t.tipo = 'acceso'` en `registrar_suceso`, con la reaplicación de SQL, R-2).
+Ejecuta la coordinación en el editor SQL de `Nido` (eu-north-1); las contraseñas las pone el responsable. Fuente: `supabase/conector-prueba/LEEME.md`. Nada de contraseñas en claro en el editor, en chat ni en evidencias (art. 4).
+
+**0. Previo.** Comprobar que el proyecto es `Nido` (no otro). Antes del paso 1, aplicar T-123 (b) en `001_estado.sql` (una línea: en `registrar_suceso`, el `join` de `tokens` añade `and t.tipo = 'acceso'`, como ya hacen las otras funciones). Es un cambio de migración: tarea aparte `T-123 (b)`, con revisor y auditor, **antes** de la primera aplicación en `Nido` (así no hace falta reaplicar). Si no está integrada, no se ejecuta el paso 1.
+
+**1. Estado (SQL, en este orden).**
+1. Pegar y ejecutar `supabase/conector-prueba/001_estado.sql` entero (una transacción; se detiene si hay dueños o concesiones ajenas: no forzar, avisar).
+2. Pegar y ejecutar `supabase/conector-prueba/semilla.sql`.
+3. Comprobación: `select tipo, estado from conector_prueba.licencias order by tipo;` → dos filas, `A` y `B`, ambas `activa`.
+4. Comprobación de roles: `select rolname, rolcanlogin, rolsuper, rolbypassrls, rolcreaterole, rolcreatedb, rolreplication, rolconnlimit from pg_roles where rolname in ('conector_prueba_mcp','conector_prueba_gestion','postgres') order by 1;` → los dos del conector: login `true`, el resto `false`, límite 10; `postgres`: `rolsuper = false` y `rolbypassrls = false` (si `postgres` sale `true` en alguno, parar y avisar al responsable).
+5. Comprobación de que sus tablas tienen RLS y ninguna política: `select c.relname, c.relrowsecurity, (select count(*) from pg_policies p where p.schemaname='conector_prueba' and p.tablename=c.relname) as politicas from pg_class c where c.relnamespace='conector_prueba'::regnamespace and c.relkind='r' order by 1;` → todas `true` y `0`.
+6. Registro de errores (decisión A-12 del responsable, D-040; `specs/022-clientes-licencias-conexiones/aclaraciones.md`). Supabase deniega estos ajustes a nivel de base de datos (`42501`), solo valen por rol. Ejecutar: `alter role conector_prueba_mcp set log_min_messages = panic, log_min_error_statement = panic, log_parameter_max_length = 0, log_parameter_max_length_on_error = 0;` y lo mismo con `conector_prueba_gestion`. Comprobación: `select rolname, rolconfig from pg_roles where rolname in ('conector_prueba_mcp','conector_prueba_gestion') order by 1;` → en ambos, `rolconfig` contiene los cuatro ajustes (`log_min_messages=panic`, `log_min_error_statement=panic`, `log_parameter_max_length=0`, `log_parameter_max_length_on_error=0`). Si el editor no permite el `alter role`, parar y avisar.
+7. Comprobación del rol propietario: `select rolname, rolcanlogin from pg_roles where rolname = current_user;` y `select distinct pg_get_userbyid(relowner) from pg_class where relnamespace='conector_prueba'::regnamespace;` → un solo dueño; si ese rol permite inicio de sesión y no es el del editor, anotarlo (decisión del responsable). Esperado: ningún objeto del esquema pertenece a los roles `conector_prueba_mcp` ni `conector_prueba_gestion`.
+
+**2. Contraseñas (el responsable, en su máquina; AR-05).**
+1. Generar dos contraseñas distintas de 20 o más caracteres ASCII imprimibles.
+2. Para cada una: `node scripts/conector/verificador-scram.mjs` y escribir la contraseña en la entrada sin eco (nunca como argumento ni como `CONTRASENA_CONECTOR=` en la línea de órdenes). Copiar solo la línea `SCRAM-SHA-256$4096:…`.
+3. Pasar a la coordinación **solo los verificadores** (no las contraseñas). Ella ejecuta: `alter role conector_prueba_mcp password '<verificador 1>';` y `alter role conector_prueba_gestion password '<verificador 2>';`.
+4. Comprobación: `select rolname, rolpassword is not null as tiene from pg_authid where rolname like 'conector_prueba_%';` (si el editor no deja leer `pg_authid`, usar `select usename, passwd is not null from pg_shadow where usename like 'conector_prueba_%';`) → `true` en ambos. Y `select query from pg_stat_statements where query ilike '%conector_prueba%password%';` solo puede mostrar `SCRAM-SHA-256$…`; **no copiar esa salida a ninguna evidencia**.
+5. El responsable pone las contraseñas en Vercel `pre-nido` (Production y Preview): `CONECTOR_BD_URL` (rol `mcp`) y `AUTORIZACION_BD_URL` (rol `gestion`), ambas con puerto 6543 del agrupador, `sslmode` verificado con `raiz-supabase.crt`. Nunca en chat ni en el repositorio.
+
+**3. Qué se anota (sin valores).** En `ev/T-114/`: resultado de cada comprobación (esperado/obtenido, sin contraseñas, sin URL, sin salida de `pg_stat_statements`), fecha y quién lo ejecutó. Con AR-05 hecha, T-114 (a) y (b) arrancan; con AR-06 (revertir, reaplicar y comprobar que la contraseña vieja ya no conecta), (c).
+
+**4. Vuelta atrás.** `LEEME.md` §Revertir: `pg_terminate_backend` de las sesiones de los dos roles y `001_estado.reversion.sql`; los roles renacen sin contraseña (repetir 2.1 a 2.4).
 
 ## Condiciones abiertas que no son código
 - T-108 (auditor): WAF de límite de peticiones en `/api/operacion` (coordinación); exportación de sucesos paginada (un día de 20 001 sucesos ≈ 4 MB). `/api/operacion` usa el predicado de entorno del conector; origen IPv6 agrupado por /64.
@@ -37,5 +59,7 @@ Pendiente de redactar al llegar a T-114 a partir de `supabase/conector-prueba/LE
 - Espera de dependencias: revalorar en T-117 (`min-release-age`).
 - `specs/016-…` y `marketing/` son de otro chat: no se tocan; `git add` con rutas explícitas.
 
-## Siguiente paso
-Parada por memoria baja de la máquina (no por decisión pendiente). Con la máquina libre: evidencia completa de T-124 (receta arriba), integrarla, y seguir con T-111.
+## Siguiente paso (21/11/2026, tarde)
+- T-124: la copia `t-124` está rebasada sobre `main` y con `npm ci` hecho (antes no tenía `node_modules`: por eso fallaban `build` y `trazado.test.ts`). Añadido el commit 2001742 (prettier de `supabase/tests/pglite/m08_m10.test.ts`, de la 010, solo formato; avisar a ese chat). Primera pasada: vitest 3230/3231 (el fallo era el build), tipos, aislamiento, arnés y AGENTS.md en 0; estilo y build en 1 por las dos causas dichas.
+- Segunda pasada lanzada con el candado (`salida/` en `evidencias/T-124/`). Un vigilante en segundo plano fue parado por memoria baja (1,6 GB libres); el sistema pide no relanzar nada sin que haya memoria. Al reanudar: mirar `salida/codigos.txt` (si no existe y no hay candado, la pasada murió: soltar candado, esperar 10 min y repetir con `--maxWorkers=2`), borrar `salida/` antes de repetir, y si todo da 0, `resultado.md`, tareas.md, commit e integrar (regla C).
+- Después: T-123 (b) (una línea en `001_estado.sql`, revisor y auditor, antes de aplicar en `Nido`), T-111, T-112, T-113, T-117 (a), y anotar en `plan.md` las decisiones de arriba.
