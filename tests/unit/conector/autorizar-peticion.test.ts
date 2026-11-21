@@ -209,9 +209,13 @@ describe("T-110 (b): solicitud correcta y cookie", () => {
     expect(await r.text()).toContain("<strong>ChatGPT</strong>");
   });
 
-  it("state vacío (presente): se admite", async () => {
-    const { atender, cliente } = await montar();
-    expect((await atender(get(url(cliente, { state: "" })))).status).toBe(200);
+  it("state vacío (presente): se rechaza sin abrir solicitud", async () => {
+    const { atender, cliente, bd } = await montar();
+    const r = await atender(get(url(cliente, { state: "" })));
+    expect(r.status).toBe(400);
+    expect(r.headers.get("location")).toBeNull();
+    expect(r.headers.get("set-cookie")).toBeNull();
+    expect(await solicitudes(bd)).toBe(0);
   });
 
   it("scope, parámetros desconocidos y fragmento se descartan sin efecto ni eco", async () => {

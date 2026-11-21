@@ -1,0 +1,115 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-110
+
+ ❯ tests/unit/conector/registro-clientes.test.ts (63 tests | 1 failed) 243390ms
+   ❯ T-110 (a): cierre en fallo (7)
+     × resultado de la base que no es de la lista (también con forma de éxito): ni 201 ni cliente 25077ms
+ ❯ supabase/tests/pglite/m06.test.ts (36 tests | 1 failed) 137998ms
+   ❯ CA-018, REQ-022, REQ-046: lo que no debe poder escribirse se rechaza con 0 filas (19)
+     × la forma de problemas la fija el check, aun sin disparadores (modo réplica) 867ms
+[vitest-pool]: Timeout terminating forks worker for test files C:/dev/agentes-correo-humanaia/.claude/worktrees/t-110/tests/unit/conector/autorizar-peticion.test.ts.
+ ❯ tests/unit/conector/servidor.test.ts (21 tests | 1 failed) 149549ms
+   ❯ punto MCP: initialize y descubrimiento (2)
+     × 2025-11-25: initialize negocia 2025-11-25 con el SDK 60080ms
+(node:24592) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  supabase/tests/pglite/m06.test.ts > CA-018, REQ-022, REQ-046: lo que no debe poder escribirse se rechaza con 0 filas > la forma de problemas la fija el check, aun sin disparadores (modo réplica)
+RangeError: Array buffer allocation failed
+ ❯ Cr node_modules/@electric-sql/pglite/src/initdb.ts:87:39
+ ❯ St node_modules/@electric-sql/pglite/src/initdb.ts:272:3
+ ❯ pgliteForInitDb node_modules/@electric-sql/pglite/src/pglite.ts:598:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBase supabase/tests/pglite/arnes.ts:22:3
+     20| export async function crearBase(): Promise<Base> {
+     21|   const db = new PGlite();
+     22|   await db.exec(readFileSync(RUTA_PREAMBULO, "utf8"));
+       |   ^
+     23|   return db;
+     24| }
+ ❯ supabase/tests/pglite/m06.test.ts:61:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  supabase/tests/pglite/m06.test.ts > CA-018, REQ-022, REQ-046: lo que no debe poder escribirse se rechaza con 0 filas > la forma de problemas la fija el check, aun sin disparadores (modo réplica)
+Error: PGlite is closed
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:936:13
+ ❯ q.close node_modules/@electric-sql/pglite/src/pglite.ts:832:16
+ ❯ supabase/tests/pglite/m06.test.ts:64:12
+     62| });
+     63| afterEach(async () => {
+     64|   await db.close();
+       |            ^
+     65| });
+     66|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/unit/conector/registro-clientes.test.ts > T-110 (a): cierre en fallo > resultado de la base que no es de la lista (también con forma de éxito): ni 201 ni cliente
+Error: PGlite failed to initialize properly
+ ❯ q.Ze node_modules/@electric-sql/pglite/src/pglite.ts:1392:13
+ ❯ q.Ee node_modules/@electric-sql/pglite/src/pglite.ts:634:17
+ ❯ q._checkReady node_modules/@electric-sql/pglite/src/pglite.ts:941:7
+ ❯ q.exec node_modules/@electric-sql/pglite/src/base.ts:238:5
+ ❯ crearBd tests/conector/apoyo/bd.ts:366:3
+    364|   const sqlExtra = (opciones.sqlExtra ?? []).map(reescribirReloj);
+    365|   const db = new PGlite();
+    366|   await db.exec(PREAMBULO);
+       |   ^
+    367|   await db.exec(SESION);
+    368|
+ ❯ abrir tests/unit/conector/bd/comun.ts:29:14
+ ❯ montar tests/unit/conector/registro-clientes.test.ts:45:14
+ ❯ tests/unit/conector/registro-clientes.test.ts:373:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/unit/conector/servidor.test.ts > punto MCP: initialize y descubrimiento > 2025-11-25: initialize negocia 2025-11-25 con el SDK
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/unit/conector/servidor.test.ts:253:3
+    251|
+    252| describe("punto MCP: initialize y descubrimiento", () => {
+    253|   it("2025-11-25: initialize negocia 2025-11-25 con el SDK", async () …
+       |   ^
+    254|     const { servidor, s } = await montar();
+    255|     const r = await servidor.atender(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+RangeError: WebAssembly.instantiate(): Out of memory: Cannot allocate Wasm memory for new instance
+ ❯ Object.b node_modules/@electric-sql/pglite/dist/chunk-BD5WXLQO.js:1:906
+ ❯ instantiateWasm node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:65315
+ ❯ node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:1:15488
+ ❯ createWasm node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:1:15472
+ ❯ br node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:62348
+ ❯ Cr node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:65133
+ ❯ St node_modules/@electric-sql/pglite/dist/chunk-N66TTF7B.js:2:66771
+ ❯ q.Ee node_modules/@electric-sql/pglite/dist/chunk-CTPU3OXM.js:3:206065
+ ❯ q._checkReady node_modules/@electric-sql/pglite/dist/chunk-CTPU3OXM.js:3:199274
+
+This error originated in "tests/unit/conector/servidor.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "2025-11-25: initialize negocia 2025-11-25 con el SDK". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  3 failed | 92 passed (95)
+      Tests  3 failed | 3069 passed (3072)
+     Errors  1 error
+   Start at  17:37:03
+   Duration  1225.56s (tests 99%, import 1%)
+
+    Isolate  95 workers spawned · ~825ms startup each (spawn + environment, per file)
+             at least ~25.30s faster with isolate: false — reuses workers across files instead of one per file
+

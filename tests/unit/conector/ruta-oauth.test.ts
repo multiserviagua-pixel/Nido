@@ -5,6 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { capturarConsola, entornoConector, URL_PUBLICA } from "./apoyo-oauth";
 
 const estado = vi.hoisted(() => ({ llamadas: 0, caido: true, respuesta: undefined as unknown }));
+const eventos = vi.hoisted(() => ({ enviados: [] as unknown[] }));
+vi.mock("../../../src/lib/plataforma/supervision", () => ({
+  enviarEvento: (evento: unknown) => {
+    eventos.enviados.push(evento);
+    return Promise.resolve();
+  },
+}));
 vi.mock("../../../src/lib/supabase/autorizacion", async (original) => {
   const real = await original<typeof import("../../../src/lib/supabase/autorizacion")>();
   return {
@@ -28,6 +35,7 @@ beforeEach(() => {
   estado.llamadas = 0;
   estado.caido = true;
   estado.respuesta = undefined;
+  eventos.enviados = [];
   consola = capturarConsola();
 });
 afterEach(() => {
@@ -142,6 +150,11 @@ describe("/oauth/autorizar por manejador.ts", () => {
     expect(r.headers.get("set-cookie")).toBeNull();
     expect(estado.llamadas).toBe(1);
     expect(consola.join("\n")).toContain("almacen_no_disponible");
+    // Supervisión (art. 10): una vez, con ruta, código y método; registro de nivel error.
+    expect(eventos.enviados).toEqual([
+      { ruta: "/oauth/autorizar", codigo: "almacen_no_disponible", metodo: "GET" },
+    ]);
+    expect(consola.join("\n")).toContain('"nivel":"error","codigo":"almacen_no_disponible"');
   });
 
   it("solicitud errónea sin base: pantalla 400 con su CSP (la CSP la pone la ruta, no la configuración)", async () => {
@@ -211,6 +224,10 @@ describe("POST /oauth/autorizar por manejador.ts (T-110 c)", () => {
     expect(r.headers.get("set-cookie")).toBeNull();
     expect(estado.llamadas).toBe(1);
     expect(consola.join("\n")).toContain("almacen_no_disponible");
+    expect(eventos.enviados).toEqual([
+      { ruta: "/oauth/autorizar", codigo: "almacen_no_disponible", metodo: "POST" },
+    ]);
+    expect(consola.join("\n")).toContain('"nivel":"error","codigo":"almacen_no_disponible"');
   });
 
   it("Origin ajeno: pantalla 400 con su CSP y sin llamar a la base", async () => {

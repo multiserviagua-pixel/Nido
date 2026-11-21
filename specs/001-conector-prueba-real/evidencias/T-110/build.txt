@@ -1,0 +1,35 @@
+
+> nido@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 102ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 4.9s ...
+  Collecting page data using 12 workers ...
+  Generating static pages using 12 workers (0/4) ...
+  Generating static pages using 12 workers (1/4) 
+  Generating static pages using 12 workers (2/4) 
+  Generating static pages using 12 workers (3/4) 
+✓ Generating static pages using 12 workers (4/4) in 1564ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /.well-known/oauth-authorization-server
+├ ƒ /.well-known/oauth-protected-resource/[[...ruta]]
+├ ƒ /api/mcp
+├ ƒ /api/operacion
+├ ƒ /api/salud
+├ ƒ /oauth/autorizar
+├ ƒ /oauth/registro
+└ ƒ /oauth/token
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

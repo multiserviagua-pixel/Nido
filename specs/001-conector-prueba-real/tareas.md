@@ -100,7 +100,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `oauth/pantalla.ts`, prueba.
 
 ### T-110 · Registro, autorización y tokens
-`ingeniero-backend` · C · implementada, en integración · Depende de: T-108, T-109 · REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-014 · CA-003, CA-004, CA-005, CA-006, CA-007, CA-014
+`ingeniero-backend` · C · hecha (integrada el 21/11/2026 por delegación D-036: revisor APTO CON MENORES y auditor-seguridad APTO CON CONDICIONES, mayor de supervisión y menores corregidos en eaff1bb y comprobados en vuelta corta; condición abierta: regla WAF en `/oauth/*`, antes de T-117 y comprobación de T-119) · Depende de: T-108, T-109 · REQ-003, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-014 · CA-003, CA-004, CA-005, CA-006, CA-007, CA-014
 - (a) `clientes.ts` y `/oauth/registro`. Prueba: PRUEBA-005 (DCR).
 - (b) `peticion.ts` y `GET /oauth/autorizar`. Prueba: PRUEBA-005 (sin redirigir; `state` e `iss`), PRUEBA-009 (parte: solicitud y cookie).
 - (c) `activacion.ts` y `POST /oauth/autorizar`. Prueba: PRUEBA-006, PRUEBA-009 (`Origin` ajeno o `null` sin contar intento), PRUEBA-018 (parte: no disponible).
@@ -207,6 +207,11 @@ Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten a
 - (b) Decidido el 21/11/2026 (D-036): el endurecimiento (`t.tipo = 'acceso'`) NO se aplica por ahora; exigiría reaplicar SQL en `Nido` (R-2, persona).
 - (c) Condición del auditor (21/11/2026): prueba o comentario de que la gestión pasa siempre `p_token_hmac` nulo. Con (b) pendiente de la próxima reaplicación de SQL en `Nido`.
 - Archivos: `tu/bd/validar.test.ts`; `sql`, solo con (b).
+
+### T-124 · `agentRules: false` en `next.config.ts`
+`plataforma` · C · pendiente · Depende de: T-110 · REQ-015 · CA-015
+- `next dev`, `next build` y `next start` escriben un bloque en `AGENTS.md` (hallazgo del carril A2). Fijar `agentRules: false` en `next.config.ts` y comprobar que tras `next build` `AGENTS.md` no cambia. Decisión de la coordinación, 21/11/2026 (D-036).
+- Revisión: `revisor`. Archivos: `next.config.ts`, prueba en `tests/unit/plataforma`.
 
 ## Equivalencias (numeración del 19/11 → actual)
 

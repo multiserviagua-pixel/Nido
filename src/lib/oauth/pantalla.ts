@@ -91,7 +91,7 @@ function esAsistente(valor: unknown): valor is AsistenteCallback {
 const esTexto = (valor: unknown): valor is string => typeof valor === "string";
 
 // `state` opaco del asistente: ASCII imprimible, hasta 512 caracteres (descarta también sustitutos sueltos).
-const STATE_VALIDO = /^[ -~]{0,512}$/;
+const STATE_VALIDO = /^[ -~]{1,512}$/;
 const esState = (valor: unknown): valor is string => esTexto(valor) && STATE_VALIDO.test(valor);
 
 // Identificadores generados por el servidor: alfabeto no reservado de URL, 1 a 256 caracteres.

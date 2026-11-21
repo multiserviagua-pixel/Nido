@@ -15,7 +15,7 @@
 //     generador criptográfico, distinta en cada solicitud): ni el valor de la cookie ni `state` se guardan.
 //     `abierta` -> formulario (200) con el identificador de la solicitud en el campo oculto y la cookie;
 //     `no_valida` -> pantalla `solicitud_no_valida`; `cerrada` -> `no_disponible` (estado fijo); un
-//     resultado desconocido lo deniega `autorizacion.ts` (`almacen_no_disponible`, 503 por el manejador).
+//     resultado desconocido lo deniega `autorizacion.ts` (`almacen_no_disponible`: pantalla 503 propia con evento de supervisión).
 // La pantalla la construye `renderizarPantalla` (T-109): sus formatos están en su cabecera. Una excepción suya
 // da 503 fijo sin registrar valores. Se registra ruta, resultado y código; nunca la consulta, ni `state`,
 // ni la cookie, ni el cliente (art. 1 y 4).
@@ -26,6 +26,7 @@ import {
 } from "../plataforma/configuracion";
 import { analizarUrl } from "../plataforma/entrada";
 import { ErrorDeAplicacion } from "../plataforma/errores";
+import { enviarEvento } from "../plataforma/supervision";
 import { registrar } from "../registro/registro";
 import { autorizacionDelConector, type Autorizacion } from "../supabase/autorizacion";
 import { asistenteDeCallback, type AsistenteCallback } from "./callbacks";
@@ -40,9 +41,9 @@ export const DURACION_SOLICITUD_S = 600;
 const MAXIMO_CONSULTA = 4096;
 const MAXIMO_CLIENT_ID = 300;
 
-// `state` opaco: ASCII imprimible, 0 a 512 (mismo criterio que la pantalla). Desafío S256: SHA-256 en
+// `state` opaco, obligatorio y no vacío: ASCII imprimible, 1 a 512 (mismo criterio que la pantalla). Desafío S256: SHA-256 en
 // base64url sin relleno = 43 caracteres (abrir_solicitud exige exactamente 43).
-export const RE_STATE = /^[ -~]{0,512}$/;
+export const RE_STATE = /^[ -~]{1,512}$/;
 const RE_DESAFIO = /^[A-Za-z0-9_-]{43}$/;
 const PARAMETROS = [
   "client_id",
@@ -291,7 +292,13 @@ export function crearAutorizar(dependencias: DependenciasPeticion): Funcion {
       // Almacén caído o respuesta inválida: pantalla fija (503, sin cookie); lo demás sube al manejador.
       if (!(error instanceof ErrorDeAplicacion) || error.codigo !== "almacen_no_disponible")
         return Promise.reject(error); // se relanza tal cual (la regla de lint solo admite lanzar ErrorDeAplicacion nuevos)
-      registrar("aviso", "almacen_no_disponible", RUTA_AUTORIZAR);
+      registrar("error", "almacen_no_disponible", RUTA_AUTORIZAR);
+      // Sin esperar y sin datos del cliente (art. 1); nunca rechaza (supervision.ts).
+      void enviarEvento({
+        ruta: RUTA_AUTORIZAR,
+        codigo: "almacen_no_disponible",
+        metodo: peticion.method,
+      });
       return pantalla({ tipo: "no_disponible" });
     }
   };

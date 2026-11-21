@@ -15,7 +15,7 @@
 //     puede tener (cuenta como fallo, y así `codigo_no_valido` solo sale tras validar cookie y `state`).
 //     `activada` -> «aceptado» con el código de autorización (256 bits, solo su HMAC va a la base), `state` e
 //     `iss`; `solicitud_no_valida` -> 400; `origen_bloqueado` -> 429; `codigo_no_valido` -> formulario con el
-//     error; `cerrada` -> 503. Un resultado desconocido lo deniega `autorizacion.ts` (503 por el manejador).
+//     error; `cerrada` -> 503. Un resultado desconocido lo deniega `autorizacion.ts` (pantalla 503 propia con evento de supervisión).
 // Se registra ruta, resultado y código; nunca el cuerpo, la cookie, `state`, el código ni el origen (art. 1 y 4).
 import { randomBytes } from "node:crypto";
 import {
@@ -24,6 +24,7 @@ import {
   type ConfiguracionConector,
 } from "../plataforma/configuracion";
 import { ErrorDeAplicacion } from "../plataforma/errores";
+import { enviarEvento } from "../plataforma/supervision";
 import { registrar } from "../registro/registro";
 import { autorizacionDelConector, type Autorizacion } from "../supabase/autorizacion";
 import { asistenteDeCallback, type AsistenteCallback } from "./callbacks";
@@ -230,7 +231,13 @@ export function crearActivar(dependencias: DependenciasActivacion): Funcion {
       // Almacén caído o respuesta inválida: pantalla fija (503); lo demás sube al manejador.
       if (!(error instanceof ErrorDeAplicacion) || error.codigo !== "almacen_no_disponible")
         return Promise.reject(error); // se relanza tal cual (la regla de lint solo admite lanzar ErrorDeAplicacion nuevos)
-      registrar("aviso", "almacen_no_disponible", RUTA_ACTIVACION);
+      registrar("error", "almacen_no_disponible", RUTA_ACTIVACION);
+      // Sin esperar y sin datos del cliente (art. 1); nunca rechaza (supervision.ts).
+      void enviarEvento({
+        ruta: RUTA_ACTIVACION,
+        codigo: "almacen_no_disponible",
+        metodo: peticion.method,
+      });
       return pantalla({ tipo: "no_disponible" });
     }
   };
