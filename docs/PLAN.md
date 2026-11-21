@@ -117,6 +117,11 @@ Fases 4 a 6 esperan: 030 necesita 015 y 020; 032, 013; 033, la prueba real y 011
 - Conector sobre la base de datos, con rol de Postgres propio.
 - Prompt 1.3: sustituye el apartado «Panel de salud» por el conector y añade el arranque local con cierre en fallo.
 - Latido de ejecuciones, límite de intentos de activación y auditoría.
+- **Envío sin revisión por regla** (D-037, artículo 8 de la constitución 1.3), en tres funciones. El agente sigue sin permiso de enviar en todas ellas.
+  - **016 · Compuerta de envío por regla:** código instalado en la cuenta del cliente que decide el envío. Responde solo en el mismo hilo al remitente autenticado cuya dirección exacta figura en una regla del dueño. Lleva rodaje, topes, filtro de contenido e historial. Especificación PROPUESTA, con 4 cuestiones del responsable abiertas.
+  - **017 · Reglas e interfaz del dueño** (P-14 de la 016, sin escribir): crear y borrar reglas, activar y desactivar, ver el historial e instalar o reinstalar la compuerta. Protegida contra ingeniería social y peticiones falsificadas. Sin ella la 016 no se activa para ningún cliente (REQ-019 de la 016).
+  - **018 · Aprendizaje de reglas** (R30 y R31 de NestAdmin 2, sin escribir): emparejar correos recibidos con la respuesta propia, proponer reglas y seguir aprendiendo de lo que envía el dueño. El cálculo se hace en la cuenta del cliente y nada de contenido llega a HumanaIA (artículo 1). Las reglas propuestas solo valen cuando el dueño las escribe o las confirma completas en la interfaz de la 017. Ninguna se activa sola (artículo 8). El aprendizaje de estilo que ya hace el agente (paso 7 del prompt) no cambia.
+  - Dependencias: 016 necesita la 012 (marca y categoría del candidato, P-10 y P-11) y la 017, y las comprobaciones de la vía de Gmail y de Outlook (D-037, VERIFICAR). La 018 va después de la 016 y la 017.
 
 **Criterios de aceptación**
 
@@ -126,6 +131,7 @@ Fases 4 a 6 esperan: 030 necesita 015 y 020; 032, 013; 033, la prueba real y 011
 - [ ] Una ejecución sin informe genera alerta en el plazo previsto.
 - [ ] La reutilización de un token de renovación fuera de la ventana de gracia revoca esa conexión y genera alerta.
 - [ ] Los registros del servidor no contienen valores recibidos (revisión de privacidad).
+- [ ] La batería de instrucciones ocultas (016 y 012) termina con cero envíos no autorizados, y ninguna regla creada o cambiada fuera de la vía del dueño produce un envío.
 
 ## Fase 3. Dashboard superadmin
 
