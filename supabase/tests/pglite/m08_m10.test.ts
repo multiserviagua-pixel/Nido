@@ -809,7 +809,7 @@ describe("enviar_informe (REQ-014, REQ-020, REQ-021; N-6)", () => {
       );
       expect("codigo" in crudo, JSON.stringify(malo)).toBe(false);
       const texto = JSON.stringify((crudo as { datos: unknown[] }).datos);
-      expect((crudo as { datos: { r: unknown }[] }).datos).toEqual([
+      expect((crudo as unknown as { datos: { r: unknown }[] }).datos).toEqual([
         { r: { autorizado: true, guardado: false, motivo: "informe_invalido" } },
       ]);
       expect(texto).not.toMatch(/secreto|987654|Failing row|DETAIL/);
@@ -835,7 +835,7 @@ describe("enviar_informe (REQ-014, REQ-020, REQ-021; N-6)", () => {
     ]);
     expect("codigo" in r).toBe(false);
     const texto = JSON.stringify((r as { datos: unknown[] }).datos);
-    expect((r as { datos: { r: unknown }[] }).datos).toEqual([
+    expect((r as unknown as { datos: { r: unknown }[] }).datos).toEqual([
       { r: { autorizado: true, guardado: false, motivo: "error_interno" } },
     ]);
     expect(texto).not.toMatch(/secreto|ficticia/);
