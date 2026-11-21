@@ -20,6 +20,20 @@ vi.mock("../../../src/lib/supabase/conector", () => ({
   },
 }));
 
+// Prompt ficticio ilegible o con huella distinta (C-2): el lector falla con `prompt_no_valido`.
+const prompt = vi.hoisted(() => ({ fallar: false }));
+vi.mock("../../../src/mcp/prompt-ficticio", async (original) => {
+  const real = await original<typeof import("../../../src/mcp/prompt-ficticio")>();
+  const { ErrorDeAplicacion } = await import("../../../src/lib/plataforma/errores");
+  return {
+    ...real,
+    obtenerPromptFicticio: () => {
+      if (prompt.fallar) throw new ErrorDeAplicacion("prompt_no_valido");
+      return real.obtenerPromptFicticio();
+    },
+  };
+});
+
 const URL_PUBLICA = "http://localhost:3000";
 const SECRETO = randomBytes(32).toString("base64url");
 const urlBd = (rol: string): string =>
@@ -42,9 +56,13 @@ function entorno(valido: boolean): void {
 
 beforeEach(() => {
   estado.almacen = null;
+  prompt.fallar = false;
   entorno(true);
 });
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 const llamada = (nombre: string, argumentos: unknown) =>
   JSON.stringify({
@@ -170,5 +188,84 @@ describe("/api/mcp (hito de T-105)", () => {
     const falso = `hia_a_${randomBytes(32).toString("base64url")}`;
     const r = await ruta.POST(peticion(falso, "{}"));
     expect(r.status).toBe(500);
+  });
+
+  it("prompt ficticio no válido: 503, {estado:error}, no-store, código propio y ninguna ejecución", async () => {
+    const ruta = await import("../../../src/app/api/mcp/route");
+    const claves = derivarClaves(SECRETO);
+    const fabrica = crearFabrica({
+      hmac: (m) => createHmac("sha256", claves.guardado).update(m).digest("hex"),
+    });
+    const bd = await abrir();
+    estado.almacen = crearAlmacen(await crearAlmacenPglite(bd, ROL_MCP));
+    const s = await sembrar(bd, "A", "claude", fabrica, `${URL_PUBLICA}/api/mcp`);
+    prompt.fallar = true;
+    const salida: string[] = [];
+    for (const metodo of ["log", "error", "warn", "info", "debug"] as const) {
+      vi.spyOn(console, metodo).mockImplementation((...a: unknown[]) => {
+        salida.push(a.map((x) => (typeof x === "string" ? x : JSON.stringify(x))).join(" "));
+      });
+    }
+    const r = await ruta.POST(peticion(s.acceso.valor, llamada("obtener_instrucciones", {})));
+    expect(r.status).toBe(503);
+    expect(r.headers.get("cache-control")).toBe("no-store");
+    expect(await r.text()).toBe('{"estado":"error"}');
+    const registro = salida.join(" | ");
+    expect(registro).toContain("prompt_no_valido");
+    expect(registro).not.toContain("configuracion_conector_invalida");
+    const e = await bd.db.query<{ n: number }>(
+      `select count(*)::int as n from ${ESQUEMA}.ejecuciones`,
+    );
+    expect(e.rows[0]?.n).toBe(0);
+  });
+
+  it("prompt con huella distinta y texto canario: 503, sin el canario en cuerpo, consola ni sucesos", async () => {
+    const { crearPuntoMcp } = await import("../../../src/mcp/entrada");
+    const { crearLectorPrompt } = await vi.importActual<
+      typeof import("../../../src/mcp/prompt-ficticio")
+    >("../../../src/mcp/prompt-ficticio");
+    const { manejador } = await import("../../../src/lib/plataforma/manejador");
+    const { cargarConfiguracionConector } =
+      await import("../../../src/lib/plataforma/configuracion");
+    const claves = derivarClaves(SECRETO);
+    const fabrica = crearFabrica({
+      hmac: (m) => createHmac("sha256", claves.guardado).update(m).digest("hex"),
+    });
+    const bd = await abrir();
+    estado.almacen = crearAlmacen(await crearAlmacenPglite(bd, ROL_MCP));
+    const s = await sembrar(bd, "A", "claude", fabrica, `${URL_PUBLICA}/api/mcp`);
+    const salida: string[] = [];
+    for (const metodo of ["log", "error", "warn", "info", "debug"] as const) {
+      vi.spyOn(console, metodo).mockImplementation((...a: unknown[]) => {
+        salida.push(a.map((x) => (typeof x === "string" ? x : JSON.stringify(x))).join(" "));
+      });
+    }
+    const tareas: Promise<void>[] = [];
+    const punto = crearPuntoMcp({
+      configuracion: cargarConfiguracionConector,
+      almacen: () => estado.almacen as Almacen,
+      prompt: crearLectorPrompt({ leer: () => new TextEncoder().encode("TEXTO-CANARIO-123") }),
+      despues: (tarea) => {
+        tareas.push(tarea().catch(() => undefined));
+      },
+    });
+    const r = await manejador(
+      "/api/mcp",
+      punto,
+    )(peticion(s.acceso.valor, llamada("obtener_instrucciones", {})));
+    await Promise.all(tareas);
+    expect(r.status).toBe(503);
+    const cuerpo = await r.text();
+    expect(cuerpo).toBe('{"estado":"error"}');
+    expect(cuerpo).not.toContain("TEXTO-CANARIO-123");
+    expect(salida.join(" | ")).not.toContain("TEXTO-CANARIO-123");
+    const sucesos = await bd.db.query<{ t: string }>(
+      `select s::text as t from ${ESQUEMA}.sucesos s`,
+    );
+    expect(sucesos.rows.map((f) => f.t).join(" | ")).not.toContain("TEXTO-CANARIO-123");
+    const e = await bd.db.query<{ n: number }>(
+      `select count(*)::int as n from ${ESQUEMA}.ejecuciones`,
+    );
+    expect(e.rows[0]?.n).toBe(0);
   });
 });

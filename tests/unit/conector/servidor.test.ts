@@ -323,7 +323,7 @@ describe("punto MCP: cierre en fallo (PRUEBA-017 y 018, partes)", () => {
     });
   });
 
-  it("prompt no disponible: la llamada falla con configuracion_conector_invalida (503 en HTTP)", async () => {
+  it("prompt no disponible: la llamada falla con prompt_no_valido (503 en HTTP)", async () => {
     const { servidor, s } = await montar({
       prompt: crearLectorPrompt({
         ruta: "x.md",
@@ -336,7 +336,7 @@ describe("punto MCP: cierre en fallo (PRUEBA-017 y 018, partes)", () => {
       servidor.atender(
         peticion("2026-07-28", "tools/call", { name: "obtener_instrucciones", arguments: {} }, s),
       ),
-    ).rejects.toMatchObject({ codigo: "configuracion_conector_invalida" });
+    ).rejects.toMatchObject({ codigo: "prompt_no_valido" });
   });
 
   it("excepción inesperada en la herramienta: rechaza con error_no_controlado (500), sin su mensaje en la consola", async () => {

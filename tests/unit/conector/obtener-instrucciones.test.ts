@@ -164,13 +164,13 @@ describe("obtener_instrucciones: prompt no disponible -> 503 (PRUEBA-016)", () =
     ],
     ["archivo vacío", lectorCon(() => new Uint8Array())],
   ] as const) {
-    it(`${nombre}: configuracion_conector_invalida y el almacén ni se toca (ni ejecución ni orden marcada)`, async () => {
+    it(`${nombre}: prompt_no_valido y el almacén ni se toca (ni ejecución ni orden marcada)`, async () => {
       const { bd, almacen } = await montar();
       const a = await sembrar(bd, "A");
       const orden = await sembrarOrden(bd, a.licenciaId, "pausar", "pendiente");
       const h = crearObtenerInstrucciones({ almacen, prompt: lector });
       await expect(h({ tokenHmac: a.acceso.hmac, recurso: RECURSO })).rejects.toMatchObject({
-        codigo: "configuracion_conector_invalida",
+        codigo: "prompt_no_valido",
       });
       const e = await una<{ n: number }>(
         bd,

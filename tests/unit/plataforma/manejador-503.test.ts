@@ -21,8 +21,12 @@ afterEach(() => vi.restoreAllMocks());
 const peticion = () =>
   new Request(`http://localhost/x?q=${MARCA}`, { method: "POST", body: MARCA });
 
-describe("manejador: 503 para configuración del conector y almacén caído", () => {
-  for (const codigo of ["configuracion_conector_invalida", "almacen_no_disponible"] as const) {
+describe("manejador: 503 para configuración del conector, prompt no válido y almacén caído", () => {
+  for (const codigo of [
+    "configuracion_conector_invalida",
+    "prompt_no_valido",
+    "almacen_no_disponible",
+  ] as const) {
     it(`${codigo}: 503, cuerpo fijo, no-store, solo el código en el registro`, async () => {
       const r = await manejador("/api/mcp", () => {
         throw new ErrorDeAplicacion(codigo);
@@ -40,7 +44,10 @@ describe("manejador: 503 para configuración del conector y almacén caído", ()
 
   it("cualquier otro código sigue en 500, y un error sin código también", async () => {
     const otros: Codigo[] = CODIGOS.filter(
-      (c) => c !== "configuracion_conector_invalida" && c !== "almacen_no_disponible",
+      (c) =>
+        c !== "configuracion_conector_invalida" &&
+        c !== "prompt_no_valido" &&
+        c !== "almacen_no_disponible",
     );
     for (const codigo of otros) {
       const r = await manejador("/x", () => {

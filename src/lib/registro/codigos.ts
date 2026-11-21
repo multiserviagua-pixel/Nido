@@ -11,6 +11,7 @@ export const CODIGOS = [
   "salida_no_estructurada",
   "almacen_no_disponible",
   "configuracion_conector_invalida",
+  "prompt_no_valido",
   "metodo_no_permitido",
   "origen_no_permitido",
   "cuerpo_demasiado_grande",

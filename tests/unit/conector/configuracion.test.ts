@@ -78,9 +78,10 @@ describe("configuración del conector: lista y códigos", () => {
     }
   });
 
-  it("C-2: los dos códigos nuevos están en la lista cerrada", () => {
+  it("C-2: los tres códigos nuevos están en la lista cerrada", () => {
     expect(CODIGOS).toContain("almacen_no_disponible");
     expect(CODIGOS).toContain("configuracion_conector_invalida");
+    expect(CODIGOS).toContain("prompt_no_valido");
   });
 });
 

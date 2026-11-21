@@ -5,7 +5,7 @@
 //
 // Cierre en fallo (art. 3):
 // - El prompt se lee (y se comprueba su huella) ANTES de llamar al almacén: si no está o no coincide,
-//   se lanza `configuracion_conector_invalida` (503 en la capa HTTP) sin abrir ejecución ni marcar la
+//   se lanza `prompt_no_valido` (503 en la capa HTTP) sin abrir ejecución ni marcar la
 //   orden como entregada.
 // - Almacén caído o con forma inesperada -> `error_temporal`. Token no válido -> `no_autorizado`.
 // - La salida se valida con el contrato; si no valida -> `error_interno`.
@@ -17,7 +17,7 @@ import type { ContextoHerramienta, ResultadoHerramienta } from "./resultado";
 
 export interface DependenciasObtenerInstrucciones {
   readonly almacen: Almacen;
-  /** Lectura única con huella (`obtenerPromptFicticio`); lanza `configuracion_conector_invalida`. */
+  /** Lectura única con huella (`obtenerPromptFicticio`); lanza `prompt_no_valido`. */
   readonly prompt: () => PromptFicticio;
 }
 

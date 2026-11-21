@@ -7,10 +7,11 @@ type Funcion = (peticion: Request) => Response | Promise<Response>;
 
 const CABECERAS = { "Cache-Control": "no-store" } as const;
 
-// Cierre en fallo (art. 3): sin configuración válida del conector o con el almacén caído, el servicio
+// Cierre en fallo (art. 3): sin configuración válida del conector, con el prompt ilegible o con huella distinta, o con el almacén caído, el servicio
 // no está disponible (503); el resto de errores, 500. Mismo cuerpo fijo en los dos casos.
 const NO_DISPONIBLES: readonly Codigo[] = [
   "configuracion_conector_invalida",
+  "prompt_no_valido",
   "almacen_no_disponible",
 ];
 

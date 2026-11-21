@@ -8,7 +8,7 @@
 //   y `mcp-*`), con el cuerpo ya analizado por `entrada.ts`. El HMAC del token y el recurso viajan en
 //   un contexto asíncrono de la propia llamada; el token nunca entra.
 // - Cierre en fallo (art. 3): si una herramienta lanza (`error_no_controlado`, prompt no disponible ->
-//   `configuracion_conector_invalida`), el SDK solo ve un `isError` genérico y esta capa vuelve a
+//   `prompt_no_valido`), el SDK solo ve un `isError` genérico y esta capa vuelve a
 //   lanzar el código cerrado para que `manejador.ts` responda 500 o 503 sin cuerpo de error propio.
 // - Nota (revisión 7): el SDK emite por su cuenta un `console.warn` de texto fijo (sin valores
 //   recibidos); fuera de `desarrollo`, `sustituirConsola` lo reduce a una línea cerrada. No se silencia.
@@ -26,7 +26,7 @@ import { filtrarRespuestaConEstado } from "./salida";
 
 export interface DependenciasServidor {
   readonly almacen: Almacen;
-  /** Lectura única con huella (`obtenerPromptFicticio`); lanza `configuracion_conector_invalida`. */
+  /** Lectura única con huella (`obtenerPromptFicticio`); lanza `prompt_no_valido`. */
   readonly prompt: () => PromptFicticio;
 }
 

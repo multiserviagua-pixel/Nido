@@ -49,13 +49,13 @@ export function crearLectorPrompt(opciones: OpcionesLector = {}): () => PromptFi
     try {
       bytes = leer(ruta);
     } catch {
-      throw new ErrorDeAplicacion("configuracion_conector_invalida");
+      throw new ErrorDeAplicacion("prompt_no_valido");
     }
-    if (bytes.length === 0) throw new ErrorDeAplicacion("configuracion_conector_invalida");
+    if (bytes.length === 0) throw new ErrorDeAplicacion("prompt_no_valido");
     const huella = createHash("sha256").update(bytes).digest();
     const esperada = Buffer.from(HUELLA_PROMPT_FICTICIO, "hex");
     if (huella.length !== esperada.length || !timingSafeEqual(huella, esperada))
-      throw new ErrorDeAplicacion("configuracion_conector_invalida");
+      throw new ErrorDeAplicacion("prompt_no_valido");
     valido = Object.freeze({
       version: VERSION_PROMPT_FICTICIO,
       texto: Buffer.from(bytes).toString("utf8"),

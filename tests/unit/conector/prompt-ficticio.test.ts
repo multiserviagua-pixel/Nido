@@ -32,7 +32,7 @@ const falla = (f: () => unknown): void => {
     f();
   } catch (e) {
     expect(e).toBeInstanceOf(ErrorDeAplicacion);
-    expect((e as ErrorDeAplicacion).codigo).toBe("configuracion_conector_invalida");
+    expect((e as ErrorDeAplicacion).codigo).toBe("prompt_no_valido");
     return;
   }
   throw new Error("no falló");

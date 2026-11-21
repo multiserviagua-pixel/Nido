@@ -74,6 +74,7 @@ const CODIGOS_ESPERADOS = [
   "diagnostico_provocado",
   "entrada_invalida",
   "error_no_controlado",
+  "prompt_no_valido",
   "region_no_permitida",
 ];
 
@@ -169,6 +170,7 @@ describe("supervision.ts (PRUEBA-046)", () => {
     for (const c of CODIGOS_SUPERVISADOS) expect(CODIGOS).toContain(c);
     expect(CODIGOS_SUPERVISADOS).toContain("almacen_no_disponible");
     expect(CODIGOS_SUPERVISADOS).toContain("configuracion_conector_invalida");
+    expect(CODIGOS_SUPERVISADOS).toContain("prompt_no_valido");
     expect(CODIGOS_SUPERVISADOS).not.toContain("supervision_no_disponible");
     expect(CODIGOS_SUPERVISADOS).not.toContain("salida_no_estructurada");
   });
