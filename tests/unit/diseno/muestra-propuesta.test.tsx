@@ -66,10 +66,15 @@ describe("inventario · las dos páginas nuevas", () => {
     }
     // Páginas propias de la muestra: toda carpeta con `page.muestra.tsx` que no sea `componentes/`
     // ni `_*` está en el inventario como página.
-    const enDisco = readdirSync(MUESTRA, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && d.name !== "componentes" && !d.name.startsWith("_"))
-      .map((d) => `/muestra/${d.name}`)
-      .sort();
+    // Recorre también las carpetas anidadas (T-010 (e2): `servidor/periodo`).
+    const carpetasDePagina = (dir: string, prefijo: string): string[] =>
+      readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
+        if (!d.isDirectory() || d.name === "componentes" || d.name.startsWith("_")) return [];
+        const ruta = `${prefijo}/${d.name}`;
+        const propia = existsSync(join(dir, d.name, "page.muestra.tsx")) ? [ruta] : [];
+        return [...propia, ...carpetasDePagina(join(dir, d.name), ruta)];
+      });
+    const enDisco = carpetasDePagina(MUESTRA, "/muestra").sort();
     const enInventario = INVENTARIO.filter((e) => e.tipo === "pagina" && e.ruta !== "/muestra")
       .map((e) => (e.tipo === "pagina" ? e.ruta : ""))
       .sort();

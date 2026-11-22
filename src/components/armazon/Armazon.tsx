@@ -6,6 +6,7 @@ import { Cabecera } from "./Cabecera";
 import type { DatosDeCuenta } from "./CuentaUsuario";
 import { EnlaceSaltar } from "./EnlaceSaltar";
 import { MenuLateral } from "./MenuLateral";
+import { ProveedorDeTransicion } from "./TransicionDePeriodo";
 import type { ConfiguracionDePeriodo } from "./periodo";
 
 /** Identificador del contenido principal: destino del enlace de salto. */
@@ -40,7 +41,7 @@ export function Armazon({
   children,
 }: PropiedadesArmazon) {
   return (
-    <>
+    <ProveedorDeTransicion>
       <EnlaceSaltar destino={ID_CONTENIDO} />
       <div className="flex min-h-dvh flex-col lg:flex-row">
         <MenuLateral areas={areas} areaActual={areaActual} />
@@ -63,6 +64,6 @@ export function Armazon({
         </div>
         <Anunciador />
       </div>
-    </>
+    </ProveedorDeTransicion>
   );
 }

@@ -87,6 +87,8 @@ export const TEXTOS = {
   periodo: {
     etiqueta: "Periodo",
     anuncio: "Periodo cambiado a",
+    /** Sin conexión al elegir: no se navega y el periodo se queda como estaba. */
+    sinConexion: "Sin conexión. El periodo no ha cambiado.",
     ultimos7Dias: "Últimos 7 días",
     ultimos30Dias: "Últimos 30 días",
     ultimos90Dias: "Últimos 90 días",

@@ -59,6 +59,16 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
     ruta: "/muestra/valores",
     estados: [{ clave: "unico", nombre: "Único" }],
   },
+  // T-010 (e2): la vista cuyas cifras pinta el servidor a partir de `?periodo=`. Es la que mide el
+  // cambio de periodo con `router.replace` (PRUEBA-012, 016 y 034). Ruta y carpeta fijas (R7); la
+  // clave empieza por `vista-` para entrar en los casos de ancho máximo de anchos.spec.ts.
+  {
+    tipo: "pagina",
+    clave: "vista-servidor-periodo",
+    nombre: "Periodo pintado en el servidor",
+    ruta: "/muestra/servidor/periodo",
+    estados: [{ clave: "unico", nombre: "Único" }],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

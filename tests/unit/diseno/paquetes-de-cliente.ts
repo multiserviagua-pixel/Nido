@@ -13,6 +13,12 @@
 // `@radix-ui/react-alert-dialog` hasta T-010 (j). Cada tarea que añada un módulo de cliente vuelve
 // a escribirla con lo que pida la prueba. `next`, `react` y `react-dom` cuentan como paquetes
 // del marco: se listan, pero no se despliega lo que arrastran (los cubre la 002).
+//
+// T-010 (e) (22/11/2026): entra `next` (paquete del marco, sin su árbol) porque `SelectorPeriodo`
+// importa `next/navigation` para el cambio de periodo con `router.replace` (diseño 020, «Una vista
+// en uso», «Cambio de periodo», y «Coste»). Es la única importación de `next` en `src/components/`
+// (PRUEBA-008). El marco ya está en el navegador: no llega código nuevo. Cambio hecho con el «sí»
+// de la coordinación por D-036 (22/11/2026) que nombra esta ruta; lo revisa el `revisor`.
 
 export const paquetesDeCliente: readonly string[] = [
   "@radix-ui/primitive",
@@ -34,6 +40,7 @@ export const paquetesDeCliente: readonly string[] = [
   "aria-hidden",
   "detect-node-es",
   "get-nonce",
+  "next",
   "react",
   "react-dom",
   "react-remove-scroll",

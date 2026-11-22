@@ -22,6 +22,10 @@ const PROHIBIDAS_DE_LIB = ["supabase", "oauth", "licencias", "stripe"];
 const NOMBRES_DE_RED = ["fetch", "XMLHttpRequest", "WebSocket", "EventSource", "sendBeacon"];
 const PAQUETES_DE_PRUEBA =
   /^(web-vitals|playwright|playwright-core|@playwright\/.+|axe-core|@axe-core\/.+)$/;
+// Incluye la extensión (`next/navigation.js`) y las rutas internas del paquete
+// (`next/dist/client/components/navigation`, `next/dist/client/router`).
+const ES_ENRUTADOR_DE_NEXT = /^next\/(?:[\w./-]+\/)?(?:navigation|router)(?:\.[cm]?js)?$/;
+export const SELECTOR_DE_PERIODO = "src/components/armazon/SelectorPeriodo.tsx";
 const ES_RADIX = /^(radix-ui|@radix-ui\/.+)$/;
 
 const enCarpetas = (ruta: string, carpetas: readonly string[]): boolean =>
@@ -257,6 +261,27 @@ function reglaLibrerias(grafo: Grafo, salida: Hallazgo[]): void {
           regla: "R3 Recharts fuera de graficos/",
           archivo: m.ruta,
           detalle: a.paquete,
+        });
+      }
+      // Cambio de periodo (T-010 (e2)): dentro de `src/components/`, el enrutador de Next solo lo
+      // importa `armazon/SelectorPeriodo`. Ningún otro componente navega ni lee la dirección por esta vía.
+      if (
+        m.ruta.startsWith("src/components/") &&
+        ES_ENRUTADOR_DE_NEXT.test(a.especificador) &&
+        m.ruta !== SELECTOR_DE_PERIODO
+      ) {
+        salida.push({
+          regla: "R3 next/navigation fuera de SelectorPeriodo",
+          archivo: m.ruta,
+          detalle: a.especificador,
+        });
+      }
+      // Ni siquiera SelectorPeriodo usa el enrutador antiguo (`next/router`).
+      if (m.ruta === SELECTOR_DE_PERIODO && a.especificador === "next/router") {
+        salida.push({
+          regla: "R3 next/navigation fuera de SelectorPeriodo",
+          archivo: m.ruta,
+          detalle: a.especificador,
         });
       }
       if (m.ruta.startsWith("src/components/avisos/") && !LIBRERIAS_DE_AVISOS.has(a.paquete)) {

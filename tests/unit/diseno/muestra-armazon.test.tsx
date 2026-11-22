@@ -15,6 +15,11 @@ import { TEXTOS } from "../../../src/components/textos";
 vi.setConfig({ testTimeout: 60_000 });
 
 const estado = vi.hoisted(() => ({ host: "localhost:3000" as string | null }));
+vi.mock("next/navigation", async (original) => ({
+  ...(await original<typeof import("next/navigation")>()),
+  // El enrutador de la aplicación no está montado al pintar en el servidor de pruebas.
+  useRouter: () => ({ replace: () => {}, push: () => {}, refresh: () => {} }),
+}));
 vi.mock("next/headers", () => ({
   headers: async () => ({ get: (n: string) => (n.toLowerCase() === "host" ? estado.host : null) }),
 }));

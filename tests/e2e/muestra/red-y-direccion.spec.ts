@@ -5,9 +5,12 @@
 // como mensaje entre ventanas que no aparece en la página; e inventario de infracciones de una
 // política de contenido estricta en modo de solo informe, sobre todos los estados (se entrega a la
 // 021). CA-024, CA-043, CA-044, CA-046. Las cadenas de prueba son ficticias e inertes.
-import { writeFileSync } from "node:fs";
+import { existsSync, readdirSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 import { TEXTOS } from "../../../src/components/textos";
+import { FALLO_SERVIDOR, REGISTRO } from "../../unit/diseno/apoyo/fronteras";
+import { alcanzables, construirGrafo } from "../../unit/diseno/apoyo/grafo";
 import { ESTADOS, abrirEstado, anotarPendiente } from "./apoyo/estados";
 
 /** Origen de la aplicación: el de `baseURL` de la configuración, nunca uno escrito aquí. */
@@ -508,20 +511,153 @@ test.describe("PRUEBA-018 · controles: la medida detecta lo que debe", () => {
       .poll(() => page.evaluate(() => (window as unknown as { __n: number }).__n))
       .toBeGreaterThan(0);
   });
+});
 
-  test("las vistas de /muestra/servidor/ no existen aún", async () => {
-    // Registro, supervisión y vistas de servidor: no hay rutas de servidor en la muestra (T-008 (c),
-    // T-009 (i)). Queda anotado, no comprobado.
+// Registro y supervisión de las vistas de `/muestra/servidor/` (diseño 020, «Protección de lo que
+// decide el resultado», punto 3; PRUEBA-008 y PRUEBA-018; CA-043, CA-044). Qué se observa:
+//  - desde el navegador: 0 peticiones a otros dominios, 0 peticiones a un ingreso de supervisión y
+//    0 envíos con `sendBeacon` mientras se activa cada vista (contadores de la propia prueba, con
+//    control sembrado);
+//  - en el código: ningún módulo que alcanzan esas rutas llega a `registro.ts`, `fallo-servidor.ts`
+//    ni `supervision.ts` (el sentido de PRUEBA-008 para «0 líneas de registro»).
+// No observable desde aquí: el conteo de líneas escritas por el proceso del servidor y los envíos
+// que hace el propio servidor a la supervisión (no pasan por el navegador). Se anota como «no
+// ejecutada». El centinela falla si aparece una vista de servidor que no esté listada.
+const SUPERVISION = "src/lib/plataforma/supervision.ts";
+const VETADOS_EN_SERVIDOR = [REGISTRO, FALLO_SERVIDOR, SUPERVISION] as const;
+/** Cada vista de servidor y cómo se activa: añadir una vista nueva exige listarla aquí. */
+const VISTAS_DE_SERVIDOR: Record<string, (page: Page) => Promise<void>> = {
+  "/muestra/servidor/periodo": async (page) => {
+    const selector = page.getByLabel(TEXTOS.periodo.etiqueta, { exact: true });
+    for (const clave of ["ultimos-7-dias", "ultimos-90-dias", "ultimos-30-dias"]) {
+      await selector.selectOption(clave);
+      await expect(selector).toHaveValue(clave);
+      await page.waitForLoadState("networkidle");
+    }
+  },
+};
+const ES_INGRESO_DE_SUPERVISION = /sentry|\/envelope|\/ingest/i;
+
+/** Páginas que hay en disco bajo `src/app/muestra/servidor/`, como rutas. */
+function vistasDeServidorEnDisco(): string[] {
+  const raiz = resolve(process.cwd(), "src/app/muestra/servidor");
+  if (!existsSync(raiz)) return [];
+  const rutas: string[] = [];
+  const recorrer = (dir: string, ruta: string): void => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory()) recorrer(resolve(dir, e.name), `${ruta}/${e.name}`);
+      else if (/^page(\.muestra)?\.(tsx|ts|jsx|js)$/.test(e.name)) rutas.push(ruta);
+    }
+  };
+  recorrer(raiz, "/muestra/servidor");
+  return rutas.sort();
+}
+
+function observarSalidas(
+  page: Page,
+  origenPropio: string,
+): { ajenas: string[]; ingreso: string[] } {
+  const registro = { ajenas: [] as string[], ingreso: [] as string[] };
+  page.on("request", (peticion) => {
+    const url = peticion.url();
+    if (new URL(url).origin !== origenPropio) registro.ajenas.push(url);
+    if (ES_INGRESO_DE_SUPERVISION.test(url)) registro.ingreso.push(url);
+  });
+  return registro;
+}
+
+test.describe("vistas de /muestra/servidor/: 0 peticiones ajenas, 0 envíos a supervisión, 0 llegadas al registro", () => {
+  test("centinela: toda vista de servidor, del inventario y de disco, está listada con su activación", () => {
+    const listadas = Object.keys(VISTAS_DE_SERVIDOR).sort();
+    const delInventario = [
+      ...new Set(ESTADOS.filter((e) => e.ruta.startsWith("/muestra/servidor/")).map((e) => e.ruta)),
+    ].sort();
+    expect(delInventario, "vistas de servidor del inventario sin listar aquí").toEqual(listadas);
+    expect(vistasDeServidorEnDisco(), "páginas de servidor en disco sin listar aquí").toEqual(
+      listadas,
+    );
+  });
+
+  test("al activar cada vista: 0 peticiones a otros dominios, 0 a un ingreso de supervisión y 0 envíos con sendBeacon", async ({
+    page,
+    baseURL,
+  }) => {
+    const origenPropio = origenDe(baseURL);
+    for (const [ruta, activar] of Object.entries(VISTAS_DE_SERVIDOR)) {
+      const salidas = observarSalidas(page, origenPropio);
+      await page.addInitScript(() => {
+        const w = window as unknown as { __balizas: number };
+        w.__balizas = 0;
+        const original = navigator.sendBeacon.bind(navigator);
+        navigator.sendBeacon = (...a: Parameters<typeof original>): boolean => {
+          w.__balizas += 1;
+          return original(...a);
+        };
+      });
+      await page.goto(ruta);
+      await expect(page.locator("h1")).toBeVisible();
+      await page.waitForLoadState("networkidle");
+      await activar(page);
+      expect(salidas.ajenas, `${ruta}: peticiones a otros dominios`).toEqual([]);
+      expect(salidas.ingreso, `${ruta}: peticiones a un ingreso de supervisión`).toEqual([]);
+      expect(
+        await page.evaluate(() => (window as unknown as { __balizas: number }).__balizas),
+        `${ruta}: envíos con sendBeacon`,
+      ).toBe(0);
+    }
+  });
+
+  test("ningún módulo de esas rutas llega a registro.ts, fallo-servidor.ts ni supervision.ts", () => {
+    const grafo = construirGrafo(process.cwd());
+    const origenes = [...grafo.modulos.keys()].filter((r) =>
+      r.startsWith("src/app/muestra/servidor/"),
+    );
+    expect(origenes.length, "módulos de servidor encontrados").toBeGreaterThan(0);
+    const alcance = alcanzables(grafo, origenes, { incluirTipos: true });
+    const llegan = VETADOS_EN_SERVIDOR.filter((v) => alcance.modulos.has(v));
+    expect(llegan, "módulos vetados alcanzables desde las rutas de servidor").toEqual([]);
+  });
+
+  test("controles sembrados: el contador ve una petición ajena, un ingreso y un sendBeacon; el grafo ve el registro desde la supervisión", async ({
+    page,
+    baseURL,
+  }) => {
+    const origenPropio = origenDe(baseURL);
+    await page.route("https://ajeno.example/**", (ruta) => ruta.fulfill({ status: 204 }));
+    await page.addInitScript(() => {
+      const w = window as unknown as { __balizas: number };
+      w.__balizas = 0;
+      const original = navigator.sendBeacon.bind(navigator);
+      navigator.sendBeacon = (...a: Parameters<typeof original>): boolean => {
+        w.__balizas += 1;
+        return original(...a);
+      };
+    });
+    const salidas = observarSalidas(page, origenPropio);
+    await page.goto("/muestra/servidor/periodo");
+    await page.waitForLoadState("networkidle");
+    await page.evaluate(async () => {
+      await fetch("https://ajeno.example/api/1/envelope/", { mode: "no-cors" }).catch(
+        () => undefined,
+      );
+      navigator.sendBeacon("https://ajeno.example/baliza", "x");
+    });
+    expect(salidas.ajenas.length).toBeGreaterThan(0);
+    expect(salidas.ingreso.length).toBeGreaterThan(0);
+    expect(await page.evaluate(() => (window as unknown as { __balizas: number }).__balizas)).toBe(
+      1,
+    );
+    const grafo = construirGrafo(process.cwd());
+    expect(alcanzables(grafo, [SUPERVISION], { incluirTipos: true }).modulos.has(REGISTRO)).toBe(
+      true,
+    );
+  });
+
+  test("no observable desde el navegador: líneas escritas por el servidor y envíos del propio servidor", async () => {
     anotarPendiente(
       test.info(),
-      "tras activar todas las vistas de /muestra/servidor/, 0 líneas nuevas en el registro y 0 envíos a la supervisión",
-      "la muestra de servidor (T-008, T-016) y su registro sustituido por un contador",
+      "conteo de líneas de registro y de envíos a la supervisión hechos por el proceso del servidor al activar las vistas",
+      "el registro del servidor sustituido por un contador (T-008); aquí solo se comprueban el navegador y el grafo de importaciones",
     );
-    // Cuando el inventario traiga esas vistas, esta prueba falla a propósito: hay que escribir
-    // entonces la comprobación real en vez de dejar el aviso.
-    expect(
-      ESTADOS.some((e) => e.ruta.startsWith("/muestra/servidor/")),
-      "el inventario ya tiene vistas de servidor: falta escribir su comprobación de registro y supervisión",
-    ).toBe(false);
   });
 });

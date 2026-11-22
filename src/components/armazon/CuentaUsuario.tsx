@@ -7,6 +7,7 @@
 // misma del cajón): foco atrapado y devuelto al botón, Escape, fondo inerte. El nombre es un dato: pasa por
 // `textoPlano`/`TextoDato`. En el botón puede acortarse con CSS (el texto sigue entero en el
 // documento); el panel lo parte en líneas (`bdi`), nunca lo recorta.
+import { esRutaInterna } from "../direccion/rutas";
 import { PanelModal } from "../dialogo/PanelModal";
 import { IconoUsuario } from "../iconos";
 import { textoPlano } from "../formato/texto-plano";
@@ -28,15 +29,6 @@ export type DatosDeCuenta = {
   /** Acciones del panel. Enlaces con texto fijo: el tipo no admite nodos libres. */
   readonly acciones?: readonly AccionDeCuenta[];
 };
-
-/** Cierra en fallo: solo rutas internas (`/…`); ni `//host` (mismo esquema, otro sitio), ni
- * `https:`, ni `javascript:`, ni relativas. */
-function esRutaInterna(ruta: unknown): boolean {
-  if (typeof ruta !== "string" || !ruta.startsWith("/") || ruta.startsWith("//")) return false;
-  // Ni `\` (los navegadores lo tratan como `/`) ni caracteres de control (se eliminan al analizar
-  // la dirección y convertirían `/\t/host` en `//host`).
-  return !/[\\\p{Cc}]/u.test(ruta);
-}
 
 export function CuentaUsuario({ cuenta }: { cuenta: DatosDeCuenta }) {
   const nombre = textoPlano(cuenta.nombre).trim() || TEXTOS.cuenta.sinNombre;

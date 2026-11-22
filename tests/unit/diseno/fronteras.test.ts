@@ -265,6 +265,65 @@ export default async function P() {
     },
     regla: "R3 avisos/ importa una librería",
   },
+  // R3 (T-010 (e2)): `next/navigation` dentro de `src/components/` solo en SelectorPeriodo
+  {
+    nombre: "next/navigation en un componente que no es SelectorPeriodo",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `"use client";
+import { useRouter } from "next/navigation";
+export const O = useRouter;
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
+  {
+    nombre: "next/navigation en una tarjeta",
+    cambios: {
+      "src/components/cifras/Tarjeta.tsx": `"use client";
+import { usePathname } from "next/navigation";
+export const T = usePathname;
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
+  {
+    nombre: "next/navigation por importación dinámica en un componente",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `export const cargar = () => import("next/navigation");
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
+  {
+    nombre: "next/navigation.js con extensión en un componente",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `"use client";
+import { useRouter } from "next/navigation.js";
+export const O = useRouter;
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
+  {
+    nombre: "next/dist/client/components/navigation en un componente",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `"use client";
+import { useRouter } from "next/dist/client/components/navigation";
+export const O = useRouter;
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
+  {
+    nombre: "next/router en el propio SelectorPeriodo",
+    cambios: {
+      "src/components/armazon/SelectorPeriodo.tsx": `"use client";
+import { useRouter } from "next/router";
+export const S = useRouter;
+`,
+    },
+    regla: "R3 next/navigation fuera de SelectorPeriodo",
+  },
   // R4: lo que llega al navegador
   {
     nombre: "módulo de cliente que reexporta sin-acceso.ts a través de un puente",

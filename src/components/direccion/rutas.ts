@@ -15,6 +15,16 @@ export function esIdentificador(valor: unknown): valor is string {
   return typeof valor === "string" && FORMATO_DE_IDENTIFICADOR.test(valor);
 }
 
+/** Cierra en fallo: solo rutas internas (`/…`); ni `//host` (mismo esquema, otro sitio), ni
+ * `https:`, ni `javascript:`, ni relativas. Ni `\` (los navegadores lo tratan como `/`) ni
+ * caracteres de control (se eliminan al analizar la dirección y convertirían `/<tab>/host` en
+ * `//host`). Lo usan `CuentaUsuario` (enlaces del panel) y el cambio de periodo (`router.replace`):
+ * una ruta que no pasa por aquí no se navega (art. 3). */
+export function esRutaInterna(ruta: unknown): ruta is string {
+  if (typeof ruta !== "string" || !ruta.startsWith("/") || ruta.startsWith("//")) return false;
+  return !/[\\\p{Cc}]/u.test(ruta);
+}
+
 const MARCA_DE_IDENTIFICADOR = "{id}";
 
 export const PLANTILLAS = {
@@ -49,7 +59,7 @@ export type OpcionesDeRuta<E extends Esquema = Esquema> = {
 
 // Un campo identificador no viaja en las direcciones del panel (art. 2: el cliente sale de la
 // sesión, nunca de la dirección). Se quitan del esquema antes de escribir.
-function esquemaSinIdentificadores(esquema: Esquema): Esquema {
+export function esquemaSinIdentificadores(esquema: Esquema): Esquema {
   return Object.fromEntries(
     Object.entries(esquema).filter(([, campo]) => campo?.tipo !== "identificador"),
   );

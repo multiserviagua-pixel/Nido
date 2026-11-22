@@ -9,6 +9,7 @@ import {
   type Esquema,
   type OrigenDeParametros,
 } from "../direccion/estado-direccion";
+import { esquemaSinIdentificadores, esRutaInterna } from "../direccion/rutas";
 import { formatearPeriodo } from "../formato/fechas";
 import { TEXTOS } from "../textos";
 
@@ -29,6 +30,10 @@ export type ConfiguracionDePeriodo = {
   readonly porDefecto: string;
   /** Clave activa, ya leída de la dirección por la vista (`valorDePeriodo`). */
   readonly valor: string;
+  /** Esquema de dirección de la propia vista (`orden`, `pagina`…): datos puros que pasan del
+   * servidor al cliente. Al cambiar el periodo, `rutaParaCambiarPeriodo` conserva sus listas e
+   * identificadores válidos, devuelve los enteros a su valor por defecto y pierde lo demás. */
+  readonly esquemaDeLaVista?: Esquema;
 };
 
 /** Nombre del parámetro de la dirección. */
@@ -110,4 +115,49 @@ export function rutaConPeriodo(
     escribirEstadoDireccion(esquema, { [CAMPO_PERIODO]: clave }),
   ).toString();
   return consulta === "" ? base : `${base}?${consulta}`;
+}
+
+/** El esquema de la vista sin `periodo` (manda el elegido) y sin enteros (vuelven a su valor por
+ * defecto: con otro periodo, la página del anterior no significa nada). Solo quedan listas e
+ * identificadores. Un esquema que no sea un objeto no aporta nada. */
+function esquemaConservable(esquema: unknown): Esquema {
+  if (typeof esquema !== "object" || esquema === null) return {};
+  const campos = Object.entries(esquema as Esquema).filter(
+    ([nombre, campo]) =>
+      nombre !== CAMPO_PERIODO &&
+      typeof campo === "object" &&
+      campo !== null &&
+      (campo.tipo === "lista" || campo.tipo === "identificador"),
+  );
+  return Object.fromEntries(campos);
+}
+
+/** La ruta que recibe `router.replace` al cambiar de periodo, o `null` si no se debe navegar.
+ * Parte del `pathname` de la página, que debe ser una ruta interna: `location.pathname` puede
+ * empezar por `//` (`http://host//otro.example/x`) y eso resolvería a otro servidor. La consulta
+ * se lee de `search` SOLO a través del esquema de la vista (diseño, «Cambio de periodo», punto 2):
+ * listas e identificadores válidos se conservan, los enteros vuelven a su valor por defecto y lo
+ * que el esquema no declara se pierde; el fragmento no pasa. Sin `esquemaDeLaVista`, solo
+ * `periodo`. Cierra en fallo (art. 3): sin ruta válida no se navega. El valor de `periodo` sale
+ * siempre de la lista. */
+export function rutaParaCambiarPeriodo(
+  pathname: unknown,
+  search: unknown,
+  configuracion: ConfiguracionDePeriodo,
+  clave: string,
+): string | null {
+  if (!esRutaInterna(pathname)) return null;
+  const base = pathname.split(/[?#]/)[0] ?? "";
+  const esquema: Esquema = {
+    ...esquemaDePeriodo(configuracion.periodos, configuracion.porDefecto),
+    // En el panel el cliente sale de la sesión: ningún identificador viaja en la dirección
+    // (art. 2; misma regla que `construirRuta`).
+    ...(base.startsWith("/panel")
+      ? esquemaSinIdentificadores(esquemaConservable(configuracion.esquemaDeLaVista))
+      : esquemaConservable(configuracion.esquemaDeLaVista)),
+  };
+  const actual = leerEstadoDireccion(esquema, typeof search === "string" ? search : "");
+  const consulta = escribirEstadoDireccion(esquema, { ...actual, [CAMPO_PERIODO]: clave });
+  const ruta = `${base}${consulta}`;
+  return esRutaInterna(ruta) ? ruta : null;
 }

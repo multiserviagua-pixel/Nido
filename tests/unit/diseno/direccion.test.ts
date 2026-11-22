@@ -13,6 +13,7 @@ import {
   PLANTILLAS,
   construirRuta,
   esIdentificador,
+  esRutaInterna,
 } from "../../../src/components/direccion/rutas";
 
 const UUID = "123e4567-e89b-12d3-a456-426614174000";
@@ -439,5 +440,33 @@ describe("PRUEBA-009 · rutas", () => {
       expect(d).not.toContain("..");
       expect(d).not.toContain("//");
     }
+  });
+});
+
+// T-010 (e2), PRUEBA-009: una ruta interna empieza por una sola `/`; nada que otro servidor, un
+// esquema o el propio navegador pueda leer como otro sitio (`//`, `\`, caracteres de control).
+describe("PRUEBA-009 · esRutaInterna", () => {
+  it("admite rutas propias", () => {
+    for (const ruta of ["/", "/muestra", "/muestra/x?periodo=ultimos-7-dias", "/admin/clientes"]) {
+      expect(esRutaInterna(ruta), ruta).toBe(true);
+    }
+  });
+
+  it("descarta //host, /\host, esquemas, relativas, controles y lo que no es texto", () => {
+    for (const ruta of [
+      "//otro.example/x",
+      "/\\otro.example",
+      "/\t/otro.example",
+      "/\r/otro.example",
+      "/\u0000x",
+      "javascript:alert(1)",
+      "https://otro.example",
+      "x/y",
+      "",
+      " /x",
+    ]) {
+      expect(esRutaInterna(ruta), JSON.stringify(ruta)).toBe(false);
+    }
+    for (const raro of [undefined, null, 1, {}, ["/x"]]) expect(esRutaInterna(raro)).toBe(false);
   });
 });

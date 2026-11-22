@@ -2,10 +2,10 @@
 // REQ-083; CA-004, CA-044, CA-049). Aquí, lo que se comprueba sin navegador: el marcado del servidor
 // y las garantías que se leen en el código. El panel abierto, el cambio de periodo y el foco los
 // mide `cabecera.spec.ts` en Chromium.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { AREAS_SUPERADMIN } from "../../../src/components/armazon/areas";
 import { Armazon } from "../../../src/components/armazon/Armazon";
 import { Cabecera } from "../../../src/components/armazon/Cabecera";
@@ -13,6 +13,12 @@ import { CuentaUsuario } from "../../../src/components/armazon/CuentaUsuario";
 import type { ConfiguracionDePeriodo } from "../../../src/components/armazon/periodo";
 import { SelectorPeriodo } from "../../../src/components/armazon/SelectorPeriodo";
 import { TEXTOS } from "../../../src/components/textos";
+
+vi.mock("next/navigation", async (original) => ({
+  ...(await original<typeof import("next/navigation")>()),
+  // El enrutador de la aplicación no está montado al pintar en el servidor de pruebas.
+  useRouter: () => ({ replace: () => {}, push: () => {}, refresh: () => {} }),
+}));
 
 const RAIZ = resolve(import.meta.dirname, "..", "..", "..");
 const leer = (ruta: string): string => readFileSync(resolve(RAIZ, ruta), "utf8");
@@ -217,19 +223,50 @@ describe("PRUEBA-012 · SelectorPeriodo: control nativo, etiqueta visible, lista
     );
   });
 
-  it("anuncia el cambio, escribe el valor solo en la dirección y no guarda nada en el navegador", () => {
+  it("cambia el periodo con router.replace dentro de una transición, sin replaceState, sin evento y sin guardar nada", () => {
     const f = leer("src/components/armazon/SelectorPeriodo.tsx");
     expect(f.trimStart().startsWith('"use client"')).toBe(true);
+    // T-010 (e2), diseño «Una vista en uso», «Cambio de periodo», puntos 1 a 5.
+    expect(f).toMatch(/from "next\/navigation"/);
+    expect(f).toMatch(/useRouter\(\)/);
+    expect(f).toMatch(/\.replace\([^)]*\{\s*scroll:\s*false\s*\}\s*\)/);
+    expect(f).not.toMatch(/\.push\(/);
+    expect(f).toMatch(/useOptimistic\(/);
     expect(f).toMatch(/anunciar\(/);
-    expect(f).toMatch(/rutaConPeriodo\(/);
-    // Forma documentada por Next 16: `null`, para que su `replaceState` parcheado copie el estado
-    // interno del enrutador (MAYOR 1 de la revisión).
-    expect(f).toMatch(/history\.replaceState\(\s*null,/);
-    expect(f).not.toMatch(/replaceState\(\s*window\.history\.state/);
+    expect(f).toMatch(/rutaParaCambiarPeriodo\(/);
+    // La dirección sale de `pathname` y de `search` (que `rutaParaCambiarPeriodo` lee solo a través
+    // del esquema de la vista), nunca de `href`.
+    expect(f).toMatch(/location\.pathname/);
+    expect(f).toMatch(
+      /rutaParaCambiarPeriodo\(\s*window\.location\.pathname,\s*window\.location\.search/,
+    );
+    expect(f).not.toMatch(/location\.href/);
+    // Retirado: el cambio por replaceState, el evento y el gancho que volvía a pedir datos.
+    expect(f).not.toMatch(/replaceState|dispatchEvent|EVENTO_DE_PERIODO|usePeriodo/);
     expect(f).not.toMatch(/location\.(assign|replace|reload|href\s*=)/);
-    const gancho = leer("src/components/armazon/usePeriodo.ts");
-    expect(gancho).toMatch(/useSyncExternalStore/);
-    expect(gancho).not.toMatch(/localStorage|sessionStorage|indexedDB|document\.cookie|next\//);
-    expect(f).not.toMatch(/next\/|localStorage|sessionStorage|indexedDB|document\.cookie/);
+    expect(f).not.toMatch(/localStorage|sessionStorage|indexedDB|document\.cookie|\bfetch\b/);
+    expect(existsSync(resolve(RAIZ, "src/components/armazon/usePeriodo.ts"))).toBe(false);
+  });
+
+  it("sin conexión no se navega: se comprueba navigator.onLine antes de iniciar la transición, con aviso visible y anunciado una vez, y se retira con `online`", () => {
+    const f = leer("src/components/armazon/SelectorPeriodo.tsx");
+    expect(TEXTOS.periodo.sinConexion).toBe("Sin conexión. El periodo no ha cambiado.");
+    expect(f).toMatch(/navigator\.onLine\s*===\s*false/);
+    // La comprobación va antes que `iniciar(` y que `router.replace(`.
+    const onLine = f.search(/if \(navigator\.onLine\s*===\s*false/);
+    expect(onLine).toBeGreaterThan(-1);
+    expect(onLine).toBeLessThan(f.lastIndexOf("iniciar(() =>"));
+    expect(onLine).toBeLessThan(f.lastIndexOf("router.replace(ruta"));
+    expect(f).toMatch(/anunciar\(TEXTOS\.periodo\.sinConexion\)/);
+    expect(f).toMatch(/addEventListener\("online"/);
+    expect(f).toMatch(/removeEventListener\("online"/);
+    // El texto visible no es región viva (se anuncia por la región cortés, una vez).
+    expect(f).not.toMatch(/aria-live|role="(status|alert)"/);
+  });
+
+  it("el valor del select sale de la vista y, mientras dura la transición, del elegido", () => {
+    const f = leer("src/components/armazon/SelectorPeriodo.tsx");
+    expect(f).toMatch(/useOptimistic\(\s*periodo\.valor/);
+    expect(f).toMatch(/iniciar\(/);
   });
 });

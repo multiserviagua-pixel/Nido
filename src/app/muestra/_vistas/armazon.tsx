@@ -18,12 +18,17 @@ import {
 import { RejillaCuerpo } from "@/components/armazon/RejillaCuerpo";
 import { TextoDato } from "@/components/texto/TextoDato";
 import { TEXTOS } from "@/components/textos";
-import { buscarEstado, rutaDeEstado } from "../inventario";
+import { buscarEstado, INVENTARIO, rutaDeEstado } from "../inventario";
 import { CifrasDeMuestra } from "./CifrasDeMuestra";
+
+/** Entrada del inventario de la vista cuyas cifras pinta el servidor desde `?periodo=`. */
+export const CLAVE_SERVIDOR_PERIODO = "vista-servidor-periodo";
 
 const JUEGOS: ReadonlyMap<string, readonly Area[]> = new Map([
   ["armazon-superadmin", AREAS_SUPERADMIN],
   ["armazon-cliente", AREAS_CLIENTE_MUESTRA],
+  // T-010 (e2): la vista de servidor del periodo usa el juego de cliente de la muestra.
+  [CLAVE_SERVIDOR_PERIODO, AREAS_CLIENTE_MUESTRA],
 ]);
 
 /** Nombre ficticio de 120 caracteres sin un solo espacio: el peor caso para partir líneas. */
@@ -122,12 +127,18 @@ export function VistaDeArmazon({
   if (encontrado === undefined || areas === undefined) notFound();
   const largo = estado === CUENTA_LARGA_SIN_ESPACIOS;
   // Los enlaces del menú llevan a los estados de esta misma entrada.
+  // La vista de servidor es una página con ruta fija: su menú lleva a los estados del armazón de
+  // cliente de la muestra, no a sí misma.
+  const entradaDelMenu =
+    encontrado.entrada.tipo === "pagina"
+      ? (INVENTARIO.find((e) => e.clave === "armazon-cliente") ?? encontrado.entrada)
+      : encontrado.entrada;
   const areasDeMuestra = areas.map((a) => ({
     ...a,
-    ruta: rutaDeEstado(encontrado.entrada, a.clave),
+    ruta: rutaDeEstado(entradaDelMenu, a.clave),
   }));
   const periodo: ConfiguracionDePeriodo | undefined =
-    estado === CON_PERIODO
+    estado === CON_PERIODO || clave === CLAVE_SERVIDOR_PERIODO
       ? {
           periodos: PERIODOS_MUESTRA,
           porDefecto: PERIODO_POR_DEFECTO,

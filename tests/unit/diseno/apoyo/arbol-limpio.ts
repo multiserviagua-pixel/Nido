@@ -15,6 +15,10 @@ export const ARBOL_LIMPIO: Record<string, string> = {
   "src/components/armazon/CajonMenu.tsx": `"use client";\nimport * as D from "@radix-ui/react-dialog";\nexport const CajonMenu = D;\n`,
   "src/components/graficos/Linea.tsx": `"use client";\nimport { LineChart } from "recharts";\nexport const Linea = LineChart;\n`,
   "src/components/avisos/Aviso.tsx": `"use client";\nimport { useState } from "react";\nexport const Aviso = () => useState(0);\n`,
+  "src/components/armazon/SelectorPeriodo.tsx": `"use client";
+import { useRouter } from "next/navigation";
+export const SelectorPeriodo = useRouter;
+`,
   "src/components/cifras/Tarjeta.tsx": `import type { ReactNode } from "react";\nexport const Tarjeta = (p: { hijos: ReactNode }) => p.hijos;\n`,
   "src/app/muestra/_datos/acceso-muestra.ts": `import { leerEntorno } from "../../../lib/plataforma/configuracion";\nexport async function comprobarAccesoMuestra(): Promise<void> { leerEntorno(); }\n`,
   "src/app/muestra/layout.muestra.tsx": `import { comprobarAccesoMuestra } from "./_datos/acceso-muestra";\nexport default async function Capa(p: { children: unknown }) {\n  await comprobarAccesoMuestra();\n  return p.children;\n}\n`,

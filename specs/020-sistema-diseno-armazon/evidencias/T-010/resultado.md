@@ -281,3 +281,105 @@ No se ejecutaron: `npm run aislamiento` (no toca la base de datos) ni vitest com
 - Toda vista que muestre cifras de un periodo **debe** usar `usePeriodo` (o leer el periodo de la dirección) y volver a pedir los datos: el selector ya no recarga la página.
 - La excepción de `medirRecortes` es una sola y está comprobada con control sembrado.
 - Vuelta atrás: `git revert` del commit de `T-010 (c) (020)`; sin datos ni migraciones; `paquetes-de-cliente.ts` no cambia.
+
+
+## T-010 (e2): cambio de periodo con `router.replace` (22/11/2026)
+
+Rama `tarea/020-T-010e` sobre `main` (la base cambia con cada rebase: `git merge-base main tarea/020-T-010e`). «Sí» de la coordinación por D-036 que nombra `tests/unit/diseno/paquetes-de-cliente.ts`. No cambia ningún REQ ni CA; cambia las cabeceras de las pruebas de PRUEBA-008, 009, 012, 016, 034 y 037.
+
+### Qué
+
+- Diseño y plan: se aplica `propuesta-router-replace.patch` (`git apply --reject`: seis trozos limpios y la fila `SelectorPeriodo` a mano, porque había derivado).
+- `SelectorPeriodo`: `router.replace(ruta, { scroll: false })` dentro de la transición del armazón, `select` con `useOptimistic`, anuncio del periodo. Retirados `history.replaceState`, el evento y `usePeriodo.ts`.
+- `TransicionDePeriodo.tsx` (proveedor con `useTransition`; anuncia «Cargando» una vez y el aviso a los 10 s) y `ZonaDeDatos.tsx` (zonas de cifras y contenido de `RejillaCuerpo`: `aria-busy="true"` y `carga` mientras está pendiente; los hijos quedan montados y ocultos). `Armazon` envuelve cabecera y cuerpo en el proveedor.
+- `rutaParaCambiarPeriodo` (`periodo.ts`) y `esRutaInterna` (`direccion/rutas.ts`, movida desde `CuentaUsuario`): la ruta sale de `location.pathname` y, para la consulta, del esquema de la vista (la regla «se escribe solo `periodo`» de esta primera versión quedó sustituida por la regla por tipo de campo de la vuelta del arquitecto, abajo y en `tareas.md`, puntos 13 y 14). Sin `new URL` (regla de estilo). Discrepancia con el parche anotada en `tareas.md`, punto 13.
+- `/muestra/servidor/periodo` (entrada `vista-servidor-periodo`, carpeta fija, `comprobarAccesoMuestra()` primero, sin registro ni supervisión); `CifrasDeMuestra` pasa a componente de servidor y los estados `con-periodo` existentes siguen igual.
+- `paquetes-de-cliente.ts`: entra `next` (paquete del marco, sin su árbol).
+
+### Rojo observado (antes de escribir el código)
+
+`vitest` sobre los archivos nuevos o cambiados: 8 pruebas fallaban (`esRutaInterna` y `rutaParaCambiarPeriodo` no existían; `SelectorPeriodo` sin `router.replace` ni `useOptimistic`) y 3 archivos no cargaban (`TransicionDePeriodo`, `servidor/periodo/page.muestra`). No se observó rojo de las reglas sembradas de PRUEBA-008 (la regla `next/navigation` se escribió junto con sus casos) ni de `periodo-servidor.spec.ts` (se escribió antes del código, pero no se ejecutó sin él).
+
+### Órdenes y resultado
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 33 archivos, 1128 pruebas en verde |
+| `npx tsc --noEmit` | 0 | sin errores |
+| `npx eslint src tests` | 0 | sin hallazgos |
+| `npx prettier --check src tests` | 1 | solo `tests/unit/plataforma/acciones-fijadas.test.ts` (ajeno, ya fallaba en `main`) |
+| Playwright con configuración derivada fuera del repo (puerto 3117, compila dentro, candado de suite): `periodo-servidor.spec.ts` y `cabecera.spec.ts` | 1 | 106 en verde, **1 en rojo** (PRUEBA-016, red cortada) |
+| Lo mismo con `-g servidor-periodo` sobre `accesibilidad`, `anchos`, `red-y-direccion`, `tema-y-movimiento`, `combinaciones` y `medidas` | 0 | 26 en verde: la vista nueva pasa `axe` (320 y 1280, claro y oscuro), anchos, red, tema y movimiento |
+
+No se ejecutaron: Playwright completo, `next build` suelto (lo compila el servidor de la configuración derivada), vitest completo, Firefox y WebKit, lector de pantalla.
+
+### PRUEBA-016: no cerrada
+
+- **Red cortada: falla.** Tras `context.setOffline(true)` y cambiar el periodo, Next 16 hace una carga completa del documento y Chromium acaba en `chrome-error://chromewebdata/`. Es el caso que el diseño dejaba «sin verificar» (punto 7): la tarea vuelve al arquitecto. La prueba se deja en rojo, sin `test.fail` (la comprobación estática lo prohíbe y escondería el hallazgo).
+- Respuesta de navegación en 500: pasa, probablemente porque Next recarga y el servidor responde bien al documento (no verificado; no se probó con el documento también en 500).
+- Dos cambios en menos de 300 ms: pasa (el primero, retenido 1,8 s, no pisa al segundo).
+
+### Qué no se comprobó
+
+- (Corregido en la vuelta de revisión, más abajo.) El error con reintento a los 30 s sí está implementado en las zonas y probado con reloj simulado; ya no se aplaza a los bloques de datos.
+- La `Suspense` con `key` por periodo del punto 4: la muestra no tiene fuente asíncrona; lo estrenará la primera vista real.
+- (Corregido en la vuelta de revisión.) Los 10 s y los 30 s tienen prueba en navegador con `page.clock`.
+
+### Vuelta atrás
+
+`git revert` de los commits de T-010 (e2) (los de `git log main..tarea/020-T-010e` antes de integrar; tras integrar, el único commit de integración «020 T-010 (e2)» en `main`): vuelta de revisión…», que sigue a `cd8c178` en la rama `tarea/020-T-010e`; `git log --oneline` da su huella), en orden inverso: vuelve `replaceState` con evento y `usePeriodo`, desaparece `/muestra/servidor/periodo` y `next` sale de `paquetes-de-cliente.ts`. Sin datos ni migraciones.
+
+### Vuelta tras la decisión del arquitecto (22/11/2026; `tareas.md` punto 14, `diseno.md` «Cambio de periodo» puntos 2 y 7, «Corrección 3»)
+
+**Qué.** (1) `SelectorPeriodo`: con `navigator.onLine === false` al elegir no se llama a la transición ni a `router.replace` ni a `fijarElegido`; el `select` conserva el valor de la vista (control con valor fijado: React lo restituye) y el foco; aviso `TEXTOS.periodo.sinConexion` («Sin conexión. El periodo no ha cambiado.») pintado junto al selector (no es región viva), anunciado una vez por la región cortés; se retira al siguiente cambio o con `online` (escuchador en un efecto, solo mientras se ve el aviso). No se anuncia el periodo. (2) `periodo.ts`: `esquemaDeLaVista?: Esquema` y `rutaParaCambiarPeriodo(pathname, search, configuracion, clave)`: listas e identificadores válidos se conservan, los enteros vuelven a su valor por defecto, lo no declarado, repetido o inválido se pierde, un `periodo` de la vista no pisa el elegido, sin esquema solo `periodo`; sigue validando con `esRutaInterna` y `SelectorPeriodo` pasa `window.location.search`. Orden de la consulta resultante: `periodo` primero y después los campos de la vista en el orden de su esquema. `rutaConPeriodo` se mantiene (la usa la prueba y cubre el caso sin esquema). (3) `periodo-servidor.spec.ts`: sustituido `comprobarEstadoFinal` por los cuatro casos exactos de la fila de PRUEBA-016 y un control sembrado.
+
+**Rojo observado.** `periodo.test.ts`: 9 pruebas en rojo contra la firma antigua antes de tocar `periodo.ts`; `cabecera.test.tsx`: 2 en rojo (la lectura de `location.search` y el aviso sin conexión) antes de tocar `SelectorPeriodo.tsx`. Reglas sembradas de PRUEBA-008: mutada la regla R3 de `next/navigation` en `apoyo/fronteras.ts` (nombre de regla cambiado), fallaron las 3 sembradas que la esperan; revertida (`git diff` sin cambios en ese archivo). E2E (1): con la comprobación `navigator.onLine === false` anulada, la prueba falla («toBeVisible» del aviso no encontrado); revertida. Un hallazgo propio de la prueba (4): la primera ejecución dio rojo por `page.unroute` con una función nueva (Playwright compara por identidad y el corte seguía puesto: `reload` y `goto` fallaban con `ERR_INTERNET_DISCONNECTED`); diagnosticado con un archivo temporal ya borrado y corregido con un `esLaRuta` único. No fue un fallo del código ni de la decisión.
+
+**Órdenes y resultado**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 33 archivos, 1136 pruebas en verde |
+| `npx tsc --noEmit` | 0 | sin errores |
+| `npx eslint src tests` | 0 | sin hallazgos |
+| `npx prettier --check src tests` | 1 | solo `tests/unit/plataforma/acciones-fijadas.test.ts` (ajeno, ya fallaba en `main`) |
+| Playwright con configuración derivada fuera del repo (puerto 3118, candado de suite): `periodo-servidor.spec.ts` y `cabecera.spec.ts` | 0 | **110 en verde** (la anterior a corregir la prueba 4: 109 y 1 en rojo por el `unroute`) |
+
+**PRUEBA-016: cuatro casos ejecutados, todos en verde.** (1) sin conexión (0 peticiones a la ruta, dirección e historial iguales, `select` en 30 días y con el foco, mismas cifras, zonas sin `aria-busy`, aviso visible y anunciado una vez, sin anuncio del periodo; al volver la conexión el aviso se retira y el cambio navega); (2) navegación abortada con `internetdisconnected` y el navegador en línea, y (3) navegación en 500: una sola carga completa del documento a la dirección con la clave nueva, cifras y `select` del periodo nuevo, marca de `window` perdida (documento nuevo) e historial igual; (4) navegación y documento abortados: 0 cifras en la página y, tras quitar el corte, `reload` desde la página de error vuelve a `?periodo=ultimos-7-dias` con sus cifras. Control sembrado: con la red cortada, una petición a la ruta hecha desde la página la cuenta el mismo contador (1).
+
+**No ejecutado.** El documento en 500 real (las rutas de `/muestra/servidor/` capturan su error, regla 3); la caída de red real sin que el navegador lo sepa (se simula abortando la petición con el navegador en línea; es el caso aceptado, asunto A-14 de la 020; no confundir con el A-14 de `docs/SEGURIDAD.md`); Firefox y WebKit (el `navigator.onLine` y el `reload` desde la página de error pueden comportarse distinto); Playwright completo, `next build` suelto y vitest completo (a cargo de la coordinación); lector de pantalla (el anuncio se mide en la región cortés, no se oye). `navigator.onLine` verdadero con red caída y el cambio de `online` con un navegador que no lo emita no se prueban.
+
+### Vuelta de revisión (22/11/2026): error a los 30 s, vistas de servidor sin registro, menores
+
+El `revisor` dio NO APTO por un MAYOR (falta el error con reintento a los 30 s: REQ-069, CA-048, «Cambio de periodo» punto 4) y 7 menores; la evidencia completa dio 977 en verde y 1 en rojo (el centinela «las vistas de /muestra/servidor/ no existen aún», que falla a propósito al aparecer `/muestra/servidor/periodo`).
+
+**Qué.**
+1. **Error a los 30 s (MAYOR 1).** `TransicionDePeriodo.tsx` añade `fallida`, `referencia` y `reintentar` al contexto. A los 10 s pendiente, `lenta` (aviso, ya existía); a los 30 s, `fallida`: referencia `N-` de `crearReferencia("navegador")` (si no hay generador, el error se pinta sin referencia) y anuncio una sola vez por la región urgente con el motivo `tarda_demasiado` y la referencia. `ZonaDeDatos.tsx` pinta en cifras y contenido un estado `error` (texto «No se ha podido cargar», motivo de `TEXTOS.motivosDeError`, «Referencia: N-…» solo si cumple el formato exacto y botón «Reintentar»), quita `aria-busy` y mantiene ocultos los hijos: 0 cifras visibles. «Reintentar» repite la última acción (`router.replace` con la misma ruta) dentro de una transición nueva, anuncia «Cargando» y reinicia los plazos. Sin mensajes libres: solo `TEXTOS` y la lista de motivos. Se usa la región urgente porque el error interrumpe lo que se estaba leyendo y el diseño no fija otra; si el arquitecto prefiere la cortés, es cambiar un argumento.
+   - **Decisión que el diseño no recogía y se deja al arquitecto para confirmar.** Una transición de React no se puede cancelar: a los 30 s la petición original sigue pendiente. Si su respuesta llega después, la transición termina, el error se retira y se pinta la vista con el periodo elegido (nunca se ven a la vez error y cifras). «Reintentar» lanza una navegación nueva a la misma dirección; con la respuesta de la primera retenida, Next la sirvió con una petición nueva (observado: 2 peticiones).
+2. **Centinela de servidor (fallo de la evidencia completa).** `red-y-direccion.spec.ts`: el centinela sustituido por una comprobación real. Lista cerrada `VISTAS_DE_SERVIDOR` (ruta y cómo se activa); el centinela falla si el inventario o el disco (`src/app/muestra/servidor/`) traen una vista no listada. Al activar cada vista (en `/muestra/servidor/periodo`, los tres periodos): 0 peticiones a otros dominios, 0 a un ingreso de supervisión (`sentry`, `/envelope`, `/ingest`) y 0 envíos con `sendBeacon` (contadores de la propia prueba). En el código: ningún módulo que alcanzan esas rutas llega a `registro.ts`, `fallo-servidor.ts` ni `supervision.ts` (grafo de PRUEBA-008). Control sembrado: el contador ve una petición ajena, un ingreso y un `sendBeacon`, y el grafo ve `registro.ts` desde `supervision.ts`. **No ejecutado (no observable desde el navegador):** el conteo de líneas que escribe el proceso del servidor y los envíos que hace el propio servidor a la supervisión; queda anotado como «no ejecutada» en la propia prueba.
+3. **MENOR 1.** `rutaParaCambiarPeriodo` aplica `esquemaSinIdentificadores` (ahora exportada de `direccion/rutas.ts`) cuando la ruta empieza por `/panel`, como `construirRuta`; caso en `periodo.test.ts` (panel sin identificador, admin con él).
+4. **MENOR 2.** La regla R3 `ES_ENRUTADOR_DE_NEXT` admite extensión y rutas internas del paquete (`next/navigation.js`, `next/dist/client/components/navigation`, `next/dist/client/router`); dos casos sembrados en `fronteras.test.ts`.
+5. **MENOR 3.** `vigilarAnuncios` cuenta como anuncio nuevo cada texto no vacío que llega tras un vacío, aunque sea igual al anterior; ahora vigila también la región urgente. Control sembrado: «X», vacío, «X» da dos anuncios; «X» sin vaciar entre medias da uno. Las comprobaciones de «una vez» pueden fallar.
+6. **MENOR 4, 5, 6 y 7.** Vuelta atrás con los commits nombrados (arriba); nota de la regla sustituida; el aplazamiento de los 30 s retirado; asunto A-14 «de la 020» en `diseno.md`, `plan.md` y aquí; la parte nueva de T-010 pasa a llamarse (e2) en `tareas.md`, `diseno.md`, `plan.md`, pruebas y comentarios (la (e) de `tareas.md` sigue siendo `TarjetaCifra`).
+7. **Lo que se acepta en el asunto A-14 de la 020** (decidido por el arquitecto por D-036, revocable): si la red cae a mitad de un cambio de periodo con el navegador en línea, Next 16.4.6 pasa a una carga completa de la dirección nueva; si el documento llega, se ve el periodo elegido pero **se pierde el foco en el `select`**; si el documento tampoco llega, **queda la página de error del navegador**, sin cifras y con una dirección que solo lleva claves de la lista, y al recargar con conexión se ve la vista correcta.
+
+**Rojo observado.**
+- Vitest: `fronteras.test.ts` (2 casos sembrados nuevos) y `periodo.test.ts` (1) fallaban antes de tocar `fronteras.ts` y `periodo.ts`; `periodo-transicion.test.tsx`, 3 en rojo antes de tocar el proveedor y la zona.
+- Playwright: con `ERROR_MS` puesto a 30 000 000 (error imposible), la prueba de REQ-069 falla en `toHaveCount(2)` de los estados `error`; restituido.
+- Los controles de `vigilarAnuncios` y de los contadores de servidor son pruebas de la propia medida: se ejecutaron en verde y no se observó su rojo sin código porque no hay código bajo prueba.
+
+**Órdenes y resultado.**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 33 archivos, 1144 pruebas en verde |
+| `npx tsc --noEmit` | 0 | sin errores |
+| `npx eslint src tests` | 0 | sin hallazgos |
+| `npx prettier --check src tests specs/020-sistema-diseno-armazon` | 1 | solo `tests/unit/plataforma/acciones-fijadas.test.ts` (ajeno, ya fallaba en `main`) |
+| Playwright con configuración derivada fuera del repo (puerto 3119, candado de suite): `periodo-servidor.spec.ts`, `cabecera.spec.ts` y `red-y-direccion.spec.ts` | 0 | **244 en verde** (incluye la prueba de REQ-069, los controles de anuncios y las cinco de servidor sin registro) |
+
+No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Firefox y WebKit, lector de pantalla (el anuncio urgente se mide en la región, no se oye).
+
+## T-010 (e2) · Ejecución final del orquestador (22/11/2026, sobre la rama rebasada en `main`, tras la vuelta de revisión)
+
+`npx playwright test --config playwright.config.ts` (oficial, puerto 3100, `tests/e2e` completo, compila dentro), Chromium, 1 worker: **984 ejecutadas sin fallo**, 0 saltadas, 0 intermitentes, 243 s. `npx vitest run tests/unit/diseno --maxWorkers=2`: 33 archivos, 1144 en verde. Tipos, `eslint` (`src` y `tests`) y `comprobar-specs` en 0. La pasada completa anterior (977 en verde y 1 fallo: el centinela de `/muestra/servidor/`) no cuenta como final. Vitest completo, a cargo de la coordinación. Quedan por confirmar por el arquitecto: la transición de 30 s no cancelable, la región urgente para el error y el botón «Reintentar» duplicado por zona.
