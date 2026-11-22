@@ -1,38 +1,23 @@
 # Relevo · carril B2 (016, 017, 018)
 
-Actualizado: 21/11/2026 (noche) · Orquestador del carril B2 (documentación del envío sin revisión). Se reescribe entero al cerrar cada puerta.
+Actualizado: 22/11/2026 · Orquestador del carril B2 (documentación del envío sin revisión). Se reescribe entero al cerrar cada puerta.
 
 ## Estado
 
 | Paso | Función | Estado |
 | --- | --- | --- |
-| Enmienda 1 | 016 compuerta | **PROPUESTA (P0 de la enmienda NO abierta).** 27 REQ, 30 CA. Vuelta de corrección 3 aplicada (M-1, M-2, m-1, m-2 de la vuelta 2). Auditor vuelta 3 (`dictamen-enmienda-3.md`): APTO CON CONDICIONES, **1 MAYOR (N-1) y 1 MENOR (N-2)**, ambos sobre M-1 |
-| Enmienda 1 | 017 vía protegida | **PROPUESTA.** 24 REQ, 23 CA. m-1 y m-2 cerrados en la vuelta 3. Sin hallazgos propios nuevos; depende de cerrar N-1 de la 016 |
-| Enmienda 1 | 018 aprendizaje de estilo | **PROPUESTA.** 21 REQ, 21 CA. m-1 y m-2 cerrados. Sin hallazgos nuevos. Aceptación del riesgo residual pendiente del responsable |
-| Piloto | `piloto-gmail.md` | **ESCRITO, sin ejecutar.** No se ajusta hasta que la enmienda esté aprobada (queda también por incorporar P-26, P-17 y P-11 en sus NC) |
+| Enmienda 1 | 016 compuerta | **APROBADA el 22/11/2026 (P0 de la enmienda, aprobado por delegación D-036).** 27 REQ, 30 CA. Auditor, vuelta 4 de confirmación: APTO CON UN MENOR; N-1 (MAYOR) y N-2 cerrados; N-3 (la constancia de ausencia no puede venir del agente ni del conector) aplicado en REQ-026, CA-029 y P-25. Commit `738a6aa` |
+| Enmienda 1 | 017 vía protegida | **APROBADA el 22/11/2026 (D-036).** 24 REQ, 23 CA. Sin hallazgos abiertos. Cuestión 1 para el responsable, no bloquea |
+| Enmienda 1 | 018 aprendizaje de estilo | **PROPUESTA, P0 NO abierta.** 21 REQ, 21 CA. La propia sección de aprobación exige que el responsable acepte de forma expresa el riesgo residual (D-042); no lo decido |
+| Piloto | `piloto-gmail.md` | Ajuste a la enmienda encargado al arquitecto el 22/11 (P-26, P-17, P-11, NC-5 b y c, pruebas de REQ-026 por cuenta, dudas D-2 a D-7). Sin ejecutar. Ver el final de este relevo si ya se integró |
 
-Comprobador: `node scripts/comprobar-specs.mjs` → SUPERADO el 21/11/2026 tras la vuelta de corrección (solo avisos de tamaño D-023, previos).
+Comprobador: `node scripts/comprobar-specs.mjs` → SUPERADO el 22/11/2026 (solo avisos de tamaño D-023, previos).
 
-## Por qué no se abre la P0 (regla D-036: sin bloqueantes ni mayores)
+## Qué se hizo el 22/11/2026
 
-Queda **N-1 (MAYOR)** y la orden de la coordinación prohíbe más vueltas si quedaba algún mayor. Se para aquí.
+Texto mínimo del auditor aplicado sin la alternativa B (decisión D-036 de la coordinación). Vuelta 4 acotada a N-1 y N-2: sin bloqueantes ni mayores. Coste operativo conocido: la vuelta atrás desde la primera versión con la 016 deja el canal sin instrucciones mientras haya cuentas con la compuerta instalada o no se pueda saber. Riesgo residual aceptado por el auditor: un dueño de un canal que sirve la 1.2 puede instalar la compuerta desde el repositorio; el control es la condición de activación de REQ-026 (0 activaciones con esa versión).
 
-- **N-1:** M-1 protege el canal pero no la cuenta. La 030 (requisitos 13, 16, 17, 20) permite al superadmin cambiar de canal a un cliente, publicar y volver atrás, y P-25 solo se dirige a la 015. Escenario: cliente en `prueba` con la compuerta instalada, pasado a `estable`, que sirve la 1.2 (navegador con la sesión y envío en conversación): vuelve B-1.
-- **N-2 (MENOR):** «si no se puede saber…, se trata como si la hubiera» debe aclarar que no consultar el interruptor ni enviar cifra no prueba que no haya compuerta; solo vale una constancia positiva de ausencia.
-
-### Alternativa recomendada (texto mínimo, ya redactado por el auditor)
-
-**Recomiendo aplicar tal cual la corrección del auditor** (solo texto, no cambia ninguna decisión de la coordinación):
-
-1. REQ-026: «La condición del prompt rige por cuenta: una cuenta con la compuerta instalada no recibe una versión que pida navegador con la sesión del dueño en Google o envío en conversación, ni por publicación o vuelta atrás en su canal (015 y 030), ni por cambio de canal del cliente (requisito 13 de la 030). Ese cambio de canal se rechaza. No se ofrece la guía de instalación a una cuenta cuyo canal sirva una versión así. Que una cuenta no consulte el interruptor ni envíe la cifra no prueba que no tenga la compuerta; una cuenta de Gmail cuenta como sin compuerta solo con una constancia positiva que no dependa de esa falta de señales; si no, se trata como instalada».
-2. CA-029: cuenta de prueba con la compuerta instalada en `prueba` y la 1.2 vigente en `estable`: pasar el cliente a `estable` rechazado y anotado; con la 1.2 vigente, 0 guías de instalación ofrecidas; compuerta instalada sin activar y sin consulta ni cifra (simulada): paso a la 1.2 rechazado.
-3. `propuestas.md` P-25: ampliarla a la 030 (requisitos 13, 16, 17 y 20).
-
-Alternativa B, más drástica: no ofrecer la compuerta a ningún canal hasta que exista una versión del prompt sin navegador ni envío en conversación vigente en todos los canales. Es más simple de probar pero retrasa el piloto; no la recomiendo.
-
-**Siguiente paso para quien siga:** una edición mínima de texto por el especificador (punto 1 a 3) y comprobación mecánica del orquestador. Como el auditor dejó la corrección redactada y N-1 es solo un alcance que faltaba, la coordinación puede decidir por D-036 si basta con esa verificación del texto (sin vuelta 4 del auditor) para abrir la P0, o si quiere una vuelta de confirmación. No la decido yo.
-
-Coste operativo que la coordinación debe conocer: con esta regla, la vuelta atrás desde la primera versión con la 016 dejará el canal sin instrucciones mientras haya cuentas con la compuerta instalada o no se pueda saber.
+Pendiente para otros chats: la 030 (cuestiones 1, 3, 6 y 7 abiertas) debe recoger P-25 (requisitos 13, 16, 17 y 20); el auditor no pudo comprobar si hay otras vías de asignar canal (alta de cliente directo en `estable`).
 
 ## Decisiones de la coordinación ya aplicadas (D-036, 21/11/2026)
 
