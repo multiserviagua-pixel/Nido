@@ -144,6 +144,10 @@ describe("manifiesto (package.json)", () => {
       arnes: "node scripts/comprobar-specs.mjs",
       navegador: "playwright test --config playwright.config.ts",
       aislamiento: "node scripts/probar-modelo.mjs",
+      operar: "node scripts/conector/operar.mjs",
+      "conector:ciclo": "node scripts/conector/ciclo-local.mjs",
+      "conector:comprobar": "node scripts/conector/comprobar-conector.mjs",
+      "pruebas-bd": "node --env-file-if-exists=.env.local scripts/conector/pruebas-bd.mjs",
       verificar:
         "npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build",
     });

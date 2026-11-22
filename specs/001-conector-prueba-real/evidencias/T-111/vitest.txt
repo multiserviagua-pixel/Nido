@@ -1,0 +1,51 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-111
+
+ ❯ tests/unit/plataforma/manifiesto.test.ts (17 tests | 1 failed) 262ms
+   ❯ manifiesto (package.json) (13)
+     × solo define las órdenes directas, con la cadena del diseño 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/plataforma/manifiesto.test.ts > manifiesto (package.json) > solo define las órdenes directas, con la cadena del diseño
+AssertionError: expected { dev: 'next dev', …(13) } to deeply equal { dev: 'next dev', …(9) }
+
+- Expected
++ Received
+
+  {
+    "aislamiento": "node scripts/probar-modelo.mjs",
+    "arnes": "node scripts/comprobar-specs.mjs",
+    "build": "next build",
++   "conector:ciclo": "node scripts/conector/ciclo-local.mjs",
++   "conector:comprobar": "node scripts/conector/comprobar-conector.mjs",
+    "dev": "next dev",
+    "estilo": "prettier --check . --config .prettierrc.json --ignore-path .prettierignore && eslint --config eslint.config.mjs --max-warnings 0 .",
+    "navegador": "playwright test --config playwright.config.ts",
++   "operar": "node scripts/conector/operar.mjs",
++   "pruebas-bd": "node --env-file-if-exists=.env.local scripts/conector/pruebas-bd.mjs",
+    "start": "next start",
+    "test": "vitest run --config vitest.config.ts",
+    "tipos": "next typegen && tsc --noEmit -p tsconfig.json",
+    "verificar": "npm run tipos && npm run estilo && npm run test && npm run aislamiento && npm run arnes && npm run build",
+  }
+
+ ❯ tests/unit/plataforma/manifiesto.test.ts:136:29
+    134|
+    135|   it("solo define las órdenes directas, con la cadena del diseño", () …
+    136|     expect(paquete.scripts).toEqual({
+       |                             ^
+    137|       dev: "next dev",
+    138|       build: "next build",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 110 passed (111)
+      Tests  1 failed | 3494 passed (3495)
+   Start at  02:32:12
+   Duration  1083.50s (tests 99%, import 1%)
+
+    Isolate  111 workers spawned · ~397ms startup each (spawn + environment, per file)
+             at least ~21.62s faster with isolate: false — reuses workers across files instead of one per file
+

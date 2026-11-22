@@ -21,7 +21,7 @@ Estados: pendiente · en curso · en revisión · hecha · bloqueada.
 ## Bloque 1 · Base del conector
 
 ### T-101 `[P]` · Dependencias y escáner
-`plataforma` · C, Res. · hecha · Depende de: 002·T-003 · REQ-001, REQ-009, REQ-015 · CA-001, CA-009, CA-015
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: 002·T-003 · REQ-001, REQ-009, REQ-015 · CA-001, CA-009, CA-015
 - (a) Dependencias exactas de diseño §Dependencias nuevas, con fecha (7 días o más) y licencia verificadas; detalle en `plan.md`, «T-101, dimensionada». Prueba: `tu/humo-sdk.test.ts` (V-1; PRUEBA-002, parte; V-4, parte); `npm audit` sin altas ni críticas.
 - (b) Escáner: `hia_a_`, `hia_r_` y `hia_op_` con 43 base64url; código de activación (12 Crockford en tres grupos). Prueba: `tp/patrones-conector.test.ts`, PRUEBA-019 (parte: cada forma detectada sin imprimir el valor); `arnes` en verde.
 - Archivos: `package.json`, `package-lock.json`, `scripts/patrones-secretos.mjs`, pruebas.
@@ -70,7 +70,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `sb/{almacen,conector}.ts`, `src/lib/registro/sucesos.ts`, `mcp/herramientas/{obtener-instrucciones,enviar-informe,confirmar-orden}.ts`, `mcp/esquemas/sanear-informe.ts`, `mcp/{servidor,salida,entrada}.ts`, `src/app/api/mcp/route.ts`, `eslint.config.mjs`, pruebas.
 
 ### T-106 · Trazado y región
-`plataforma` · C, Res. · hecha · Depende de: T-105 · REQ-002, REQ-009, REQ-012 · CA-002, CA-009, CA-012
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: T-105 · REQ-002, REQ-009, REQ-012 · CA-002, CA-009, CA-012
 - (a) C-4: trazar `prompts/agente-prueba/`, `contratos/` y `bd/raiz-supabase.crt` en las rutas del conector; `headers()` no se toca. Prueba: `tp/trazado.test.ts`, PRUEBA-016 (parte V-3: la traza de `next build` los incluye).
 - (b) `vercel.json` y `.vercelignore` (002 diseño §Batería, «Región»): `regions` `["arn1"]`, sin conmutación ni regiones en `functions`, `installCommand` `npm ci --ignore-scripts`. Prueba: `tp/region.test.ts`: casos de archivo de «Región» (PRUEBA-012 de la 002, parte).
 - Archivos: `next.config.ts`, `vercel.json`, `.vercelignore`, pruebas.
@@ -108,11 +108,12 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `oauth/{clientes,peticion,activacion,tokens}.ts`, `src/app/oauth/{registro,autorizar,token}/route.ts`, pruebas; añadidos en la implementación: `next.config.ts`, `tests/unit/plataforma/{cabeceras,trazado}.test.ts`, `src/lib/oauth/cuerpo.ts`, `src/lib/oauth/pantalla.ts`.
 
 ### T-111 · Órdenes de la persona
-`plataforma` · C, Res. · pendiente · Depende de: T-110 · REQ-001, REQ-002, REQ-006, REQ-015, REQ-017 · CA-001, CA-002, CA-008, CA-015, CA-017
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: T-110 · REQ-001, REQ-002, REQ-006, REQ-015, REQ-017 · CA-001, CA-002, CA-008, CA-015, CA-017
 - (a) `operar.mjs` y `npm run operar` (C-3 sin carpeta sellada: la persona, desde un clon limpio de `main`; solo `preproduccion`). Prueba: `tp/operar.test.ts`, PRUEBA-020 (parte: sin eco ni guardado; otro entorno, rechazo antes de pedir la credencial).
 - (b) `ciclo-local.mjs` (`npm run conector:ciclo`; tokens solo en memoria). Prueba: `tp/ciclo.test.ts`, PRUEBA-004 (parte: salida sin tokens ni código).
 - (c) `pruebas-bd.mjs` y `comprobar-conector.mjs` (`conector:comprobar`: metadatos, reto, 405, cabeceras, `arn1`, V-3). Prueba: `tp/conector.test.ts`, PRUEBA-019 (parte: sin URL ni credencial en la salida), PRUEBA-001 (parte, en local).
-- Archivos: `sc/{operar,ciclo-local,pruebas-bd,comprobar-conector}.mjs`, `package.json`, pruebas.
+- Archivos: `sc/{operar,ciclo-local,pruebas-bd,comprobar-conector}.mjs`, `package.json`, pruebas; añadido en la implementación: `sc/entrada.mjs` (entrada sin eco y validación de la dirección, compartidos). Pruebas: `tp/{operar,ciclo,conector}.test.ts`.
+- Decisiones más restrictivas tomadas ante lo ambiguo (para el revisor): `operar` y `conector:ciclo` aceptan solo `https://host` (sin puerto ni ruta) y piden dirección y credencial sin eco, nunca por argumentos ni entorno; `operar` exige clon limpio de `main` (git) y la confirmación escrita `CERRAR` en `cerrar_prueba`; `conector:comprobar` admite además `http://localhost[:puerto]` (solo lecturas, sin credencial); `pruebas-bd` lee solo `PRUEBAS_CONECTOR_BD_URL` y `PRUEBAS_AUTORIZACION_BD_URL` (las de `entornos.md`), exige agrupador de `eu-north-1`, puerto 6543 y sin consulta; también se añadió `npm run pruebas-bd` (lo usa T-114 (a)). `conector:comprobar` pide, con eco, la «huella» del §8 de `despliegue-preproduccion.md` = SHA completo del commit desplegado, y la compara con `git rev-parse HEAD` de un clon sin cambios: si no coincide, V-3 sobre el repositorio sale NO COMPROBADO, y la traza `.nft.json` solo vale con origen local (en un despliegue se compila en Vercel). `operar` y `conector:ciclo` exigen una terminal real (PowerShell o Windows Terminal; en mintty Node no ve TTY). `conector:ciclo` hace una pausa tras el canje para revocar la conexión de Claude (CA-008, paso 11). Desviación del diseño (l.309): el ciclo usa JSON-RPC directo con `fetch` en lugar de `@modelcontextprotocol/client` (menos dependencias en una orden que maneja tokens; PRUEBA-004 con el cliente del SDK sigue pendiente de T-114). V-3 «suceso tras responder» sale NO COMPROBADO (necesita una conexión; T-114 (b)).
 
 ## Bloque 4 · Transversales en local y `Nido`
 
@@ -150,7 +151,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Archivos: `src/lib/plataforma/supervision.ts`, `src/lib/plataforma/manejador.ts`, `src/app/api/salud/route.ts`, `src/instrumentation.ts`, pruebas.
 
 ### T-117 · Despliegue en `pre-nido`
-`plataforma` · C, Res. · (a) **hecha, corregida tras el dictamen del revisor (NO APTO: 1 MAYOR y 11 menores), pendiente de nueva revisión** (21/11/2026: `docs/operacion/despliegue-preproduccion.md`; propone `framework` y `buildCommand` en `vercel.json` y `min-release-age` en `.npmrc` sin aplicarlos, a decidir con dictamen del auditor); (b) **bloqueada** · Depende de: (a) T-106, **DP-1**; (b) T-113, T-114, T-115, T-116, AR-02, AR-06, AR-07 · REQ-001, REQ-002, REQ-019 · CA-001, CA-002, CA-024
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: (a) T-106, **DP-1**; (b) T-113, T-114, T-115, T-116, AR-02, AR-06, AR-07 · REQ-001, REQ-002, REQ-019 · CA-001, CA-002, CA-024
 - (a) Procedimiento de despliegue y vuelta atrás de preproducción para la persona: clon limpio de `main`, CLI de Vercel verificada (versión, opciones, fuente), `COMMIT_DESPLEGADO`, sin `--regions`, `vercel rollback`; nombres de variables, nunca valores. Prueba: revisión (cada orden con fuente oficial; ningún valor); `arnes` en verde.
 - (b) Primer despliegue: **lo hace una persona** (AR-06, AR-07); el agente comprueba desde fuera. Vuelta atrás: dos despliegues del mismo commit, `rollback` al primero y vuelta. Prueba: `conector:comprobar`: PRUEBA-047 (`arn1`), PRUEBA-001 (V), V-3; PRUEBA-013 y 027 de la 002; vuelta atrás en 10 min.
 - Archivos: `docs/operacion/despliegue-preproduccion.md`, `ev/T-117/`.
@@ -177,7 +178,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 7 · Condiciones de plataforma (carril A)
 
 ### T-120 · Condiciones de la retirada de fechas
-`plataforma` · C, Res. · hecha · Depende de: 002·T-003, T-101 integrada · sin REQ propio; D-030, D-034 y diseño 002 §Suministro
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: 002·T-003, T-101 integrada · sin REQ propio; D-030, D-034 y diseño 002 §Suministro
 - (a) B-1: `.npmrc` con `ignore-scripts=true` y lista cerrada de paquetes con `hasInstallScript` (hoy solo `fsevents`). Prueba: `tp/npmrc.test.ts`.
 - (b) B-2: en `arnes.yml`, `npm ci`, `npm audit` y `npm audit signatures`, también en un diario programado sobre `main` (D-030), con `contents: read`. Prueba: `tp/ci-npm.test.ts` (estática; el CI no se ha ejecutado, sin remoto).
 - Archivos: `.npmrc`, `.github/workflows/arnes.yml`, `tp/npmrc.test.ts`, `tp/ci-npm.test.ts`.
@@ -189,7 +190,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten archivos con T-105 a T-114 ni T-117 salvo los que citan; T-122 rebasa sobre lo que haya en `main`.
 
 ### T-121 `[P]` · Patrón de DSN de Sentry en el escáner
-`plataforma` · C, Res. · hecha (revisor sin bloqueantes ni mayores y auditor APTO; 21/11/2026, D-036; menores abiertos para una tarea aparte: patrón `sentry_key=<32 hex>` de la cabecera X-Sentry-Auth y de la URL del SDK, que hoy no se detecta; regla de retaguardia `(?<=[0-9a-f]{32})(?:@|%40)…` más barata en tiradas largas; caso de JSON con barras escapadas) · Depende de: T-101, T-116 · REQ-015 · CA-015
+`plataforma` · C, Res. · hecha e integrada (22/11/2026; revisor y auditor aplicados, evidencia en `ev/T-111/`) · Depende de: T-101, T-116 · REQ-015 · CA-015
 - Entrada nueva en `PATRONES`: nombre «DSN de Sentry», `/[0-9a-f]{32}(?::[0-9a-f]{32})?(?:@|%40)(?:[a-z0-9-]+\.)*sentry\.io/i` (clave pública, con o sin la secreta antigua, `@` o `%40`, cualquier subdominio de `sentry.io`), sin exclusión por la izquierda, como las del conector. El gancho y `comprobar-specs.mjs` la toman sin más cambios.
 - Prueba (primero, en rojo): `tp/patrones-supervision.test.ts`, con el DSN compuesto en ejecución: se detecta suelto, en `SUPERVISION_DSN=…`, en JSON, codificado en URL y con la parte secreta; solo devuelve el nombre, nunca el valor. No se detectan la URL de ingreso sin clave (`/api/<n>/envelope/`), 31 hexadecimales ni otro dominio. `arnes` en verde en todo el árbol (las pruebas actuales componen el DSN en ejecución; Grep de `[0-9a-f]{32}@` sin coincidencias el 21/11/2026).
 - Archivos: `scripts/patrones-secretos.mjs`, `tp/patrones-supervision.test.ts`.

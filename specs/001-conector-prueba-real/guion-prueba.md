@@ -92,7 +92,7 @@ Informe esperado (RD-059): `tratados` igual a los mensajes de prueba de la bande
 
 - CA: CA-008
 - Quién: persona
-- Qué se hace: la persona abre una segunda conexión de A con `conector:ciclo -- preproduccion` (toma el `code` del enlace de la pantalla sin seguir el callback; los tokens quedan solo en memoria, sin imprimir). Se revoca la conexión de Claude: su revisión siguiente se rechaza; la otra completa y después se revoca. «Otro asistente»: no ejecutado hasta tener ChatGPT.
+- Qué se hace: la persona abre una segunda conexión de A con `conector:ciclo -- preproduccion` (toma el `code` del enlace de la pantalla sin seguir el callback; los tokens quedan solo en memoria, sin imprimir). El ciclo hace una pausa tras el canje («Revoca ahora la conexión de Claude y pulsa Intro»): la persona revoca la de Claude con `operar` (en otra terminal PowerShell) y pulsa Intro; el ciclo sigue entonces con la suya (lista, llama a una herramienta y renueva), lo que demuestra que la otra conexión sigue funcionando. La revisión siguiente de Claude se rechaza; la otra completa y después se revoca. Aviso: la llamada de prueba a la herramienta abre una ejecución real sin informe (queda abierta hasta que caduque o se cierre la prueba). «Otro asistente»: no ejecutado hasta tener ChatGPT.
 - Evidencia: resultado de cada revisión (rechazada, completada) y `listar_conexiones` después.
 
 ## Paso 12 · Bloque sin buzón
