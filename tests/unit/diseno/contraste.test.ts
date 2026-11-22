@@ -7,7 +7,12 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { COMBINACIONES, PROHIBIDAS, type Par } from "../../../src/components/estilos/combinaciones";
+import {
+  COMBINACIONES,
+  PARES_CON_VELO,
+  PROHIBIDAS,
+  type Par,
+} from "../../../src/components/estilos/combinaciones";
 import {
   contraste,
   formatoEs,
@@ -21,7 +26,9 @@ import {
 } from "./apoyo/contraste";
 import {
   cifrasDeProhibidasDelDocumento,
+  hexARgb,
   leerValores,
+  rgbAHex,
   papelesDeTema,
   resolver,
   tablasDeSeccion,
@@ -328,5 +335,72 @@ describe("PRUEBA-006 · los degradados usan colores de la escala y se miden con 
         expect(papelesDeTema(valores, tema).get(p)).toMatch(/^linear-gradient\(/);
       }
     }
+  });
+});
+
+describe.each(TEMAS)("PRUEBA-006 · el velo del cajón y del panel (%s)", (tema) => {
+  const papeles = papelesDeTema(valores, tema);
+  const velo = /^rgb\((\d+) (\d+) (\d+) \/ ([\d.]+)\)$/.exec(papeles.get("--sombra-velo")!);
+  /** Fondo que resulta de pintar el velo sobre un papel, mezclado en sRGB. */
+  const bajoElVelo = (papel: string): string => {
+    const [r, g, b, a] = [1, 2, 3, 4].map((i) => Number(velo![i]));
+    const base = hexARgb(papeles.get(papel)!);
+    return rgbAHex(
+      [r!, g!, b!].map((c, i) => c * a! + base[i]! * (1 - a!)) as [number, number, number],
+    );
+  };
+
+  it("el velo es un rgb con alfa, del color de la sombra del tema", () => {
+    expect(velo).not.toBeNull();
+    const color = rgbAHex([Number(velo![1]), Number(velo![2]), Number(velo![3])]);
+    expect(color).toBe(tema === "claro" ? "#0F172A" : "#0B1120");
+    expect(Number(velo![4])).toBeGreaterThanOrEqual(0.5);
+  });
+
+  it("cada par con velo llega a 3:1 sobre el fondo que queda debajo del velo", () => {
+    expect(PARES_CON_VELO[tema].length).toBeGreaterThanOrEqual(4);
+    const fallos: string[] = [];
+    for (const p of PARES_CON_VELO[tema]) {
+      const razon = contraste(papeles.get(p.delante)!, bajoElVelo(p.sobre));
+      if (razon < UMBRAL_NO_TEXTO) {
+        fallos.push(`${p.delante} sobre ${p.sobre} con velo: ${formatoEs(razon)} (${p.donde})`);
+      }
+    }
+    expect(fallos).toEqual([]);
+  });
+
+  it("control: sin velo, el borde de control del panel en claro no llegaría a 3:1 con el velo", () => {
+    // Por eso en claro el panel se separa por su superficie y no por su borde (ver combinaciones.ts).
+    if (tema === "claro") {
+      expect(contraste(papeles.get("--borde-control")!, bajoElVelo("--fondo-pagina"))).toBeLessThan(
+        3,
+      );
+    }
+    expect(contraste(papeles.get("--superficie")!, papeles.get("--fondo-pagina")!)).toBeLessThan(3);
+  });
+});
+
+describe("PRUEBA-006 · la tabla «Velo» de docs/DISENO.md dice lo que mide la prueba", () => {
+  it.each(TEMAS)("cada cifra de %s coincide con el cálculo", (tema) => {
+    const papeles = papelesDeTema(valores, tema);
+    const m = /^rgb\((\d+) (\d+) (\d+) \/ ([\d.]+)\)$/.exec(papeles.get("--sombra-velo")!)!;
+    const a = Number(m[4]);
+    const filas = tablasDeSeccion(documento, "Velo")[0] ?? [];
+    const esperadas = PARES_CON_VELO[tema].map((p) => {
+      const base = hexARgb(papeles.get(p.sobre)!);
+      const bajo = rgbAHex(
+        [1, 2, 3].map((i, k) => Number(m[i]) * a + base[k]! * (1 - a)) as [number, number, number],
+      );
+      return `${p.delante}|${p.sobre}|${formatoEs(contraste(papeles.get(p.delante)!, bajo))}`;
+    });
+    const columna = tema === "claro" ? 3 : 4;
+    const enTabla = filas
+      .filter((f) => f[columna] !== "—")
+      .map((f) => {
+        const d = /`(--[a-z0-9-]+)`/.exec(f[0]!)![1]!;
+        const s = /`(--[a-z0-9-]+)`/.exec(f[1]!)![1]!;
+        return `${d}|${s}|${f[columna]}`;
+      });
+    expect(enTabla.sort()).toEqual(esperadas.sort());
   });
 });

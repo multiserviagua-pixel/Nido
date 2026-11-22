@@ -38,6 +38,8 @@ for (const estado of ESTADOS) {
         page,
         papelesDe(tema),
         declaradosDe(tema),
+        // Marcos de tema de las páginas de propuesta y de valores (T-012): cada uno, con su tabla.
+        { claro: declaradosDe("claro"), oscuro: declaradosDe("oscuro") },
       );
       expect(medidos, "se ha medido al menos un par").toBeGreaterThan(0);
       expect(sinDeclarar, "pares usados y no declarados en combinaciones.ts").toEqual([]);

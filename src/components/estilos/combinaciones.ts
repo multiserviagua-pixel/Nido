@@ -140,3 +140,32 @@ export const PROHIBIDAS: readonly Prohibida[] = [
     motivo: "--foco no es un fondo",
   },
 ];
+
+/** Un papel de delante sobre un fondo que lleva encima el velo (`--sombra-velo`). El fondo que se
+ * mide es el que resulta de pintar el velo sobre `sobre`, mezclado en sRGB. Todos son no texto: lo
+ * que se separa es el borde del cajón o del panel, no un texto. */
+export type ParConVelo = {
+  delante: string;
+  /** Papel de fondo que queda debajo del velo. */
+  sobre: string;
+  donde: string;
+};
+
+/** Pares del velo (020 T-011 (a)). El velo oscurece en claro (0,5 de neutro 900) y casi no cambia un
+ * fondo ya oscuro en oscuro (0,7 de neutro 950); por eso el borde del cajón es `--menu-texto` en los
+ * dos temas, y el panel de la cuenta se separa por su superficie en claro y por su borde de control
+ * en oscuro. Lo comprueba PRUEBA-006 (`contraste.test.ts`); la tabla «Velo» de `docs/DISENO.md` lo repite. */
+export const PARES_CON_VELO: Record<Tema, readonly ParConVelo[]> = {
+  claro: [
+    { delante: "--menu-texto", sobre: "--fondo-pagina", donde: "Borde del cajón del menú" },
+    { delante: "--menu-texto", sobre: "--superficie", donde: "Borde del cajón del menú" },
+    { delante: "--superficie", sobre: "--fondo-pagina", donde: "Panel de la cuenta" },
+    { delante: "--superficie", sobre: "--superficie", donde: "Panel de la cuenta" },
+  ],
+  oscuro: [
+    { delante: "--menu-texto", sobre: "--fondo-pagina", donde: "Borde del cajón del menú" },
+    { delante: "--menu-texto", sobre: "--superficie", donde: "Borde del cajón del menú" },
+    { delante: "--borde-control", sobre: "--fondo-pagina", donde: "Borde del panel de la cuenta" },
+    { delante: "--borde-control", sobre: "--superficie", donde: "Borde del panel de la cuenta" },
+  ],
+};

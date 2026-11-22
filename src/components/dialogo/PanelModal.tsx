@@ -27,9 +27,10 @@ export function PanelModal({
     <Dialog.Root>
       <Dialog.Trigger asChild>{disparador}</Dialog.Trigger>
       <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-velo" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed inset-x-0 top-0 z-50 max-h-dvh overflow-y-auto rounded-b-grande border border-borde-decorativo bg-superficie p-4 text-texto shadow-elevada sm:inset-x-auto sm:right-0 sm:w-menu-ancho"
+          className="fixed inset-x-0 top-0 z-50 max-h-dvh overflow-y-auto rounded-b-grande border border-borde-control bg-superficie p-4 text-texto shadow-elevada sm:inset-x-auto sm:right-0 sm:w-menu-ancho"
         >
           <div className="flex items-center justify-between gap-3 pb-3">
             <Dialog.Title className="text-subtitulo font-seminegrita">{titulo}</Dialog.Title>

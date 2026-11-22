@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img">
+  <title>HumanaIA, Nido de capas</title>
+  <defs><linearGradient id="fondo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7344F0"/><stop offset="1" stop-color="#5B2BD6"/></linearGradient></defs>
+  <rect width="64" height="64" rx="14" fill="url(#fondo)"/>
+  <g transform="translate(7 7) scale(0.78)"><circle cx="32" cy="17" r="10" fill="#FFFFFF"/>
+  <rect x="8" y="30" width="48" height="9" rx="4.5" fill="#FFFFFF"/>
+  <rect x="14" y="41" width="36" height="9" rx="4.5" fill="#EFE9FF"/>
+  <rect x="20" y="52" width="24" height="9" rx="4.5" fill="#FFFFFF"/></g>
+</svg>

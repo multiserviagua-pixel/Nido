@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img">
+  <title>HumanaIA, Pájaro en el nido</title>
+  <path d="M8 38 Q32 70 56 38" fill="none" stroke="#6C3CE9" stroke-width="6" stroke-linecap="round"/>
+  <path d="M17 45 Q32 54 47 45" fill="none" stroke="#4A1FB8" stroke-width="6" stroke-linecap="round"/>
+  <polygon points="19,26 5,15 10,31" fill="#4A1FB8"/>
+  <ellipse cx="30" cy="27" rx="14" ry="10" fill="#6C3CE9"/>
+  <circle cx="42" cy="17" r="7" fill="#6C3CE9"/>
+  <polygon points="47,14 58,18 47,21" fill="#4A1FB8"/>
+  <circle cx="43" cy="16" r="2" fill="#0F172A"/>
+</svg>

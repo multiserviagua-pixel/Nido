@@ -42,6 +42,23 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
     ruta: "/muestra",
     estados: [{ clave: "unico", nombre: "Único" }],
   },
+  // T-012: la propuesta visual para el responsable (T-013) y la escala de valores pintada. Páginas
+  // propias, no componentes. La clave empieza por `vista-` para entrar en los casos del armazón
+  // de anchos.spec.ts (ancho máximo del contenido); ruta y carpeta fijas (PRUEBA-008, R7).
+  {
+    tipo: "pagina",
+    clave: "vista-propuesta-visual",
+    nombre: "Propuesta visual",
+    ruta: "/muestra/propuesta-visual",
+    estados: [{ clave: "unico", nombre: "Único" }],
+  },
+  {
+    tipo: "pagina",
+    clave: "vista-valores",
+    nombre: "Valores de diseño",
+    ruta: "/muestra/valores",
+    estados: [{ clave: "unico", nombre: "Único" }],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

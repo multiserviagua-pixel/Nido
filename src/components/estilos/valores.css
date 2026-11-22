@@ -104,6 +104,10 @@
   --escala-sombra-tarjeta-oscuro: 0 1px 2px 0 rgb(11 17 32 / 0.4);
   --escala-sombra-elevada-claro: 0 8px 24px -4px rgb(15 23 42 / 0.16);
   --escala-sombra-elevada-oscuro: 0 8px 24px -4px rgb(11 17 32 / 0.6);
+  /* Velo: lo que oscurece el fondo detrás del cajón del menú y del panel de la cuenta. Mismo color
+     de la escala que las sombras (neutro 900 en claro, neutro 950 en oscuro). */
+  --escala-sombra-velo-claro: rgb(15 23 42 / 0.5);
+  --escala-sombra-velo-oscuro: rgb(11 17 32 / 0.7);
 
   /* Texto: tamaño y altura de línea */
   --escala-texto-pequeno: 12px;
@@ -170,6 +174,7 @@
 
   --sombra-tarjeta: var(--escala-sombra-tarjeta-claro);
   --sombra-elevada: var(--escala-sombra-elevada-claro);
+  --sombra-velo: var(--escala-sombra-velo-claro);
 
   --foco-grosor: var(--escala-tamano-foco-grosor);
   --foco-separacion: var(--escala-tamano-foco-separacion);
@@ -207,6 +212,7 @@
 
     --sombra-tarjeta: var(--escala-sombra-tarjeta-oscuro);
     --sombra-elevada: var(--escala-sombra-elevada-oscuro);
+    --sombra-velo: var(--escala-sombra-velo-oscuro);
   }
 }
 
@@ -244,6 +250,7 @@
 
     --sombra-tarjeta: none;
     --sombra-elevada: none;
+    --sombra-velo: none;
   }
 }
 
@@ -272,8 +279,8 @@
 }
 
 /* Variante por alto de ventana (T-010 (c)): la cabecera solo es fija si cabe sin comerse la vista
-   (hasta ~240 px a 320 px de ancho; 38 rem = 608 px, menos del 40 %). Umbral por validar por
-   `disenador-ui`. */
+   (hasta ~240 px a 320 px de ancho; 38 rem = 608 px, menos del 40 %). Umbral validado por
+   `disenador-ui` en T-011 (propuesta-visual.md, «Cabecera fija»). */
 @custom-variant alto-suficiente (@media (min-height: 38rem));
 
 @theme inline {
@@ -342,6 +349,12 @@
 
   --container-menu-ancho: var(--escala-tamano-menu-ancho);
   --container-contenido-maximo: var(--escala-tamano-contenido-maximo);
+}
+
+/* Velo: fondo del Overlay de los diálogos. Con colores forzados el papel vale none, el valor no es
+   un color válido y el fondo queda transparente: el borde del diálogo es el que lo separa. */
+@utility bg-velo {
+  background-color: var(--sombra-velo);
 }
 
 /* Degradados: una utilidad por papel (Tailwind no tiene espacio de nombres para ellos). */

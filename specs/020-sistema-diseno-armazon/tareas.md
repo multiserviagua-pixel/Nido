@@ -119,13 +119,13 @@ Cada parte añade sus entradas a `m/inventario.ts` y sus textos a `c/textos.ts` 
 ## Bloque 4 · Propuesta visual y validación
 
 ### T-011 · Paleta, tipografía y logotipos
-`disenador-ui` · R · pendiente · Depende de: (a) y (b) T-010; (c) T-003 (puede hacerse ya; cierra con todas) · REQ-029, REQ-030, REQ-031, REQ-033, REQ-070, REQ-085 a REQ-088 · CA-022, CA-023, CA-024, CA-027, CA-030, CA-034, CA-046, CA-054 a CA-057
+`disenador-ui` · R · (a)(b)(c) hechas el 22/11/2026, revisor APTO CON MENORES (menores en evidencias/T-011/resultado.md); (c) T-003 sigue abierta · Depende de: (a) y (b) T-010; (c) T-003 (puede hacerse ya; cierra con todas) · REQ-029, REQ-030, REQ-031, REQ-033, REQ-070, REQ-085 a REQ-088 · CA-022, CA-023, CA-024, CA-027, CA-030, CA-034, CA-046, CA-054 a CA-057
 - (a) Paleta de los dos temas, degradados y escala (color, espaciado, radios, sombras, tamaños) en `valores.css`, `combinaciones.ts` y `docs/DISENO.md`, con las diferencias; el texto, en `propuesta-visual.md`. Prueba: PRUEBA-005, PRUEBA-006, PRUEBA-022.
 - (b) Tipografía: pila del sistema o fuente abierta con `next/font/local` y su licencia; cifras tabulares. Prueba: PRUEBA-020 (fuente bloqueada, cifras del mismo ancho).
 - (c) Tres logotipos o más: nido de aves con estética tecnológica; tres SVG cada uno (menú oscuro, fondo claro, icono), en `propuesta-visual/`. Prueba: PRUEBA-008 (SVG limpios); PRUEBA-006 (tres variantes).
 
 ### T-012 · Páginas de propuesta y de valores
-`ingeniero-frontend` · R · pendiente · Depende de: T-010, T-011 · REQ-061, REQ-086 · CA-006, CA-025, CA-028, CA-032, CA-049, CA-050, CA-053, CA-057
+`ingeniero-frontend` · R · hecha el 22/11/2026 como MAQUETA estática de las tres vistas (revisor APTO CON MENORES); los componentes reales son T-010 (e) a (j) · Depende de: T-010, T-011 · REQ-061, REQ-086 · CA-006, CA-025, CA-028, CA-032, CA-049, CA-050, CA-053, CA-057
 - `/muestra/propuesta-visual` (paleta, degradados, logotipos a 16, 32 y 128 px sobre claro y oscuro; Resumen de superadmin, tabla con el diálogo abierto y Resumen de cliente a 375 px) y `/muestra/valores`. Prueba: PRUEBA-025; PRUEBA-013.
 
 ### T-013 · Validación de la propuesta visual (una persona)

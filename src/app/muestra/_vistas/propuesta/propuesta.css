@@ -1,0 +1,348 @@
+/*
+ * Hoja de la propuesta visual y de la página de valores (020 T-012). Solo la lee la muestra.
+ * Todo valor sale de `valores.css` por `var(--...)`; ningún color ni medida es nueva. Cuatro partes:
+ *   1. Temas de la muestra: `.tema-claro` y `.tema-oscuro` repiten los papeles que cambian entre
+ *      temas para enseñar los dos a la vez (una prueba los compara con `valores.css`). Con colores
+ *      forzados no se aplican: manda el sistema.
+ *   2. Colores del logotipo: relleno y trazo por paso de la escala (los SVG se dibujaron con ellos).
+ *   3. Escala de `valores.css` pintada: una clase por paso (generada; una prueba la comprueba).
+ *   4. Medidas de la maqueta.
+ */
+
+/* ---------- 1. Temas de la muestra */
+@media (forced-colors: none) {
+  .tema-claro {
+    color-scheme: light;
+    --fondo-pagina: var(--escala-neutro-50);
+    --superficie: var(--escala-neutro-0);
+    --texto: var(--escala-neutro-900);
+    --texto-secundario: var(--escala-neutro-600);
+    --borde-decorativo: var(--escala-neutro-200);
+    --borde-control: var(--escala-neutro-500);
+    --acento: var(--escala-acento-600);
+    --enlace: var(--escala-acento-600);
+    --texto-sobre-acento: var(--escala-neutro-0);
+    --acento-suave: var(--escala-acento-50);
+    --foco: var(--escala-acento-500);
+    --correcto: var(--escala-correcto-700);
+    --aviso: var(--escala-aviso-700);
+    --error: var(--escala-error-700);
+    --serie-1: var(--escala-acento-600);
+    --serie-2: var(--escala-neutro-700);
+    --serie-3: var(--escala-neutro-500);
+    --serie-4: var(--escala-acento-800);
+    --degradado-acento: var(--escala-degradado-acento-claro);
+    --degradado-grafico: var(--escala-degradado-grafico-claro);
+    --sombra-tarjeta: var(--escala-sombra-tarjeta-claro);
+    --sombra-elevada: var(--escala-sombra-elevada-claro);
+    --sombra-velo: var(--escala-sombra-velo-claro);
+  }
+  .tema-oscuro {
+    color-scheme: dark;
+    --fondo-pagina: var(--escala-neutro-950);
+    --superficie: var(--escala-neutro-850);
+    --texto: var(--escala-neutro-100);
+    --texto-secundario: var(--escala-neutro-400);
+    --borde-decorativo: var(--escala-neutro-800);
+    --borde-control: var(--escala-neutro-450);
+    --acento: var(--escala-acento-400);
+    --enlace: var(--escala-acento-400);
+    --texto-sobre-acento: var(--escala-neutro-900);
+    --acento-suave: var(--escala-acento-900);
+    --foco: var(--escala-acento-400);
+    --correcto: var(--escala-correcto-400);
+    --aviso: var(--escala-aviso-400);
+    --error: var(--escala-error-400);
+    --serie-1: var(--escala-acento-400);
+    --serie-2: var(--escala-neutro-300);
+    --serie-3: var(--escala-neutro-450);
+    --serie-4: var(--escala-acento-200);
+    --degradado-acento: var(--escala-degradado-acento-oscuro);
+    --degradado-grafico: var(--escala-degradado-grafico-oscuro);
+    --sombra-tarjeta: var(--escala-sombra-tarjeta-oscuro);
+    --sombra-elevada: var(--escala-sombra-elevada-oscuro);
+    --sombra-velo: var(--escala-sombra-velo-oscuro);
+  }
+}
+
+/* ---------- 2. Colores del logotipo */
+.lg-relleno-neutro-0 {
+  fill: var(--escala-neutro-0);
+}
+.lg-trazo-neutro-0 {
+  stroke: var(--escala-neutro-0);
+}
+.lg-relleno-neutro-100 {
+  fill: var(--escala-neutro-100);
+}
+.lg-relleno-neutro-900 {
+  fill: var(--escala-neutro-900);
+}
+.lg-relleno-acento-50 {
+  fill: var(--escala-acento-50);
+}
+.lg-trazo-acento-50 {
+  stroke: var(--escala-acento-50);
+}
+.lg-relleno-acento-300 {
+  fill: var(--escala-acento-300);
+}
+.lg-trazo-acento-300 {
+  stroke: var(--escala-acento-300);
+}
+.lg-relleno-acento-400 {
+  fill: var(--escala-acento-400);
+}
+.lg-trazo-acento-400 {
+  stroke: var(--escala-acento-400);
+}
+.lg-relleno-acento-600 {
+  fill: var(--escala-acento-600);
+}
+.lg-trazo-acento-600 {
+  stroke: var(--escala-acento-600);
+}
+.lg-relleno-acento-800 {
+  fill: var(--escala-acento-800);
+}
+.lg-trazo-acento-800 {
+  stroke: var(--escala-acento-800);
+}
+.lg-fondo-acento-550-acento-700 {
+  background-image: linear-gradient(to bottom, var(--escala-acento-550), var(--escala-acento-700));
+}
+
+/* ---------- 3. Escala pintada */
+.m-neutro-0 {
+  background-color: var(--escala-neutro-0);
+}
+.m-neutro-50 {
+  background-color: var(--escala-neutro-50);
+}
+.m-neutro-100 {
+  background-color: var(--escala-neutro-100);
+}
+.m-neutro-200 {
+  background-color: var(--escala-neutro-200);
+}
+.m-neutro-300 {
+  background-color: var(--escala-neutro-300);
+}
+.m-neutro-400 {
+  background-color: var(--escala-neutro-400);
+}
+.m-neutro-450 {
+  background-color: var(--escala-neutro-450);
+}
+.m-neutro-500 {
+  background-color: var(--escala-neutro-500);
+}
+.m-neutro-600 {
+  background-color: var(--escala-neutro-600);
+}
+.m-neutro-700 {
+  background-color: var(--escala-neutro-700);
+}
+.m-neutro-800 {
+  background-color: var(--escala-neutro-800);
+}
+.m-neutro-850 {
+  background-color: var(--escala-neutro-850);
+}
+.m-neutro-900 {
+  background-color: var(--escala-neutro-900);
+}
+.m-neutro-950 {
+  background-color: var(--escala-neutro-950);
+}
+.m-noche-300 {
+  background-color: var(--escala-noche-300);
+}
+.m-noche-700 {
+  background-color: var(--escala-noche-700);
+}
+.m-noche-800 {
+  background-color: var(--escala-noche-800);
+}
+.m-noche-900 {
+  background-color: var(--escala-noche-900);
+}
+.m-acento-50 {
+  background-color: var(--escala-acento-50);
+}
+.m-acento-200 {
+  background-color: var(--escala-acento-200);
+}
+.m-acento-300 {
+  background-color: var(--escala-acento-300);
+}
+.m-acento-400 {
+  background-color: var(--escala-acento-400);
+}
+.m-acento-450 {
+  background-color: var(--escala-acento-450);
+}
+.m-acento-500 {
+  background-color: var(--escala-acento-500);
+}
+.m-acento-550 {
+  background-color: var(--escala-acento-550);
+}
+.m-acento-600 {
+  background-color: var(--escala-acento-600);
+}
+.m-acento-700 {
+  background-color: var(--escala-acento-700);
+}
+.m-acento-800 {
+  background-color: var(--escala-acento-800);
+}
+.m-acento-900 {
+  background-color: var(--escala-acento-900);
+}
+.m-correcto-400 {
+  background-color: var(--escala-correcto-400);
+}
+.m-correcto-700 {
+  background-color: var(--escala-correcto-700);
+}
+.m-aviso-400 {
+  background-color: var(--escala-aviso-400);
+}
+.m-aviso-700 {
+  background-color: var(--escala-aviso-700);
+}
+.m-error-400 {
+  background-color: var(--escala-error-400);
+}
+.m-error-700 {
+  background-color: var(--escala-error-700);
+}
+.m-degradado-menu {
+  background-image: var(--escala-degradado-menu);
+}
+.m-degradado-acento-claro {
+  background-image: var(--escala-degradado-acento-claro);
+}
+.m-degradado-acento-oscuro {
+  background-image: var(--escala-degradado-acento-oscuro);
+}
+.m-degradado-grafico-claro {
+  background-image: var(--escala-degradado-grafico-claro);
+}
+.m-degradado-grafico-oscuro {
+  background-image: var(--escala-degradado-grafico-oscuro);
+}
+.m-espaciado-0 {
+  inline-size: var(--escala-espaciado-0);
+}
+.m-espaciado-1 {
+  inline-size: var(--escala-espaciado-1);
+}
+.m-espaciado-2 {
+  inline-size: var(--escala-espaciado-2);
+}
+.m-espaciado-3 {
+  inline-size: var(--escala-espaciado-3);
+}
+.m-espaciado-4 {
+  inline-size: var(--escala-espaciado-4);
+}
+.m-espaciado-5 {
+  inline-size: var(--escala-espaciado-5);
+}
+.m-espaciado-6 {
+  inline-size: var(--escala-espaciado-6);
+}
+.m-espaciado-8 {
+  inline-size: var(--escala-espaciado-8);
+}
+.m-espaciado-10 {
+  inline-size: var(--escala-espaciado-10);
+}
+.m-espaciado-12 {
+  inline-size: var(--escala-espaciado-12);
+}
+.m-espaciado-16 {
+  inline-size: var(--escala-espaciado-16);
+}
+.m-radio-pequeno {
+  border-radius: var(--escala-radio-pequeno);
+}
+.m-radio-medio {
+  border-radius: var(--escala-radio-medio);
+}
+.m-radio-grande {
+  border-radius: var(--escala-radio-grande);
+}
+.m-radio-completo {
+  border-radius: var(--escala-radio-completo);
+}
+.m-sombra-tarjeta-claro {
+  box-shadow: var(--escala-sombra-tarjeta-claro);
+}
+.m-sombra-tarjeta-oscuro {
+  box-shadow: var(--escala-sombra-tarjeta-oscuro);
+}
+.m-sombra-elevada-claro {
+  box-shadow: var(--escala-sombra-elevada-claro);
+}
+.m-sombra-elevada-oscuro {
+  box-shadow: var(--escala-sombra-elevada-oscuro);
+}
+/* El velo es un color con transparencia, no una sombra: se pinta como fondo. */
+.m-sombra-velo-claro {
+  background-color: var(--escala-sombra-velo-claro);
+}
+/* El velo es un color con transparencia, no una sombra: se pinta como fondo. */
+.m-sombra-velo-oscuro {
+  background-color: var(--escala-sombra-velo-oscuro);
+}
+.m-texto-pequeno {
+  font-size: var(--escala-texto-pequeno);
+  line-height: var(--escala-texto-pequeno-altura);
+}
+.m-texto-cuerpo-menor {
+  font-size: var(--escala-texto-cuerpo-menor);
+  line-height: var(--escala-texto-cuerpo-menor-altura);
+}
+.m-texto-cuerpo {
+  font-size: var(--escala-texto-cuerpo);
+  line-height: var(--escala-texto-cuerpo-altura);
+}
+.m-texto-subtitulo {
+  font-size: var(--escala-texto-subtitulo);
+  line-height: var(--escala-texto-subtitulo-altura);
+}
+.m-texto-titulo {
+  font-size: var(--escala-texto-titulo);
+  line-height: var(--escala-texto-titulo-altura);
+}
+.m-texto-cifra {
+  font-size: var(--escala-texto-cifra);
+  line-height: var(--escala-texto-cifra-altura);
+}
+.m-peso-normal {
+  font-weight: var(--escala-peso-normal);
+}
+.m-peso-medio {
+  font-weight: var(--escala-peso-medio);
+}
+.m-peso-seminegrita {
+  font-weight: var(--escala-peso-seminegrita);
+}
+
+/* ---------- 4. Medidas de la maqueta */
+/* Ancho de un móvil pequeño; en una ventana más estrecha, el marco se encoge. */
+.marco-movil {
+  inline-size: 375px;
+  max-inline-size: 100%;
+}
+/* Fondo claro fijo para enseñar los logotipos «sobre claro» en los dos temas. */
+.lienzo-claro {
+  background-color: var(--escala-neutro-0);
+}
+/* Icono de aplicación: la caja redondeada del SVG (radio 14 de 64) con su degradado. */
+.lg-icono {
+  border-radius: 21.875%;
+}

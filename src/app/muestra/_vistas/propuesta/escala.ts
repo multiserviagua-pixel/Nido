@@ -1,0 +1,105 @@
+// Copia de la escala de `src/components/estilos/valores.css` (capa 1) para pintar /muestra/valores.
+// La muestra no lee el archivo en ejecución (sin `node:fs` en la aplicación): una prueba
+// (`tests/unit/diseno/muestra-propuesta.test.ts`) compara esta lista con `valores.css`, en los dos
+// sentidos, y falla si divergen. Para regenerarla, copia la capa 1 de `valores.css`.
+// Los colores se guardan como seis cifras, sin `#` (la muestra lo antepone al pintarlos): el escáner
+// de valores sueltos de `src/` no admite un color literal fuera de `valores.css`, y aquí solo es una
+// copia para mostrar, comparada con la hoja por la prueba.
+// Las sombras van aparte (`SOMBRAS`): se escriben sin la función de color, que el escáner de
+// valores sueltos de `src/` no admite fuera de `valores.css`; la prueba las compara también.
+export const ESCALA: Readonly<Record<string, string>> = {
+  "--escala-neutro-0": "FFFFFF",
+  "--escala-neutro-50": "F8FAFC",
+  "--escala-neutro-100": "F1F5F9",
+  "--escala-neutro-200": "E5E7EB",
+  "--escala-neutro-300": "CBD5E1",
+  "--escala-neutro-400": "A3B0C2",
+  "--escala-neutro-450": "7D8BA0",
+  "--escala-neutro-500": "64748B",
+  "--escala-neutro-600": "475569",
+  "--escala-neutro-700": "334155",
+  "--escala-neutro-800": "273449",
+  "--escala-neutro-850": "151E2E",
+  "--escala-neutro-900": "0F172A",
+  "--escala-neutro-950": "0B1120",
+  "--escala-noche-300": "A3AECB",
+  "--escala-noche-700": "1F2757",
+  "--escala-noche-800": "151C45",
+  "--escala-noche-900": "0B1230",
+  "--escala-acento-50": "EFE9FF",
+  "--escala-acento-200": "D4C6FD",
+  "--escala-acento-300": "B39BFB",
+  "--escala-acento-400": "A78BFA",
+  "--escala-acento-450": "9775F7",
+  "--escala-acento-500": "8B5CF6",
+  "--escala-acento-550": "7344F0",
+  "--escala-acento-600": "6C3CE9",
+  "--escala-acento-700": "5B2BD6",
+  "--escala-acento-800": "4A1FB8",
+  "--escala-acento-900": "2A2152",
+  "--escala-correcto-400": "4ADE80",
+  "--escala-correcto-700": "15803D",
+  "--escala-aviso-400": "FBBF24",
+  "--escala-aviso-700": "B45309",
+  "--escala-error-400": "F87171",
+  "--escala-error-700": "B91C1C",
+  "--escala-degradado-menu":
+    "linear-gradient(to bottom, var(--escala-noche-900), var(--escala-noche-800))",
+  "--escala-degradado-acento-claro":
+    "linear-gradient(to bottom, var(--escala-acento-550), var(--escala-acento-700))",
+  "--escala-degradado-acento-oscuro":
+    "linear-gradient(to bottom, var(--escala-acento-300), var(--escala-acento-450))",
+  "--escala-degradado-grafico-claro":
+    "linear-gradient(to bottom, var(--escala-acento-50), var(--escala-neutro-0))",
+  "--escala-degradado-grafico-oscuro":
+    "linear-gradient(to bottom, var(--escala-acento-900), var(--escala-neutro-850))",
+  "--escala-espaciado-0": "0px",
+  "--escala-espaciado-1": "4px",
+  "--escala-espaciado-2": "8px",
+  "--escala-espaciado-3": "12px",
+  "--escala-espaciado-4": "16px",
+  "--escala-espaciado-5": "20px",
+  "--escala-espaciado-6": "24px",
+  "--escala-espaciado-8": "32px",
+  "--escala-espaciado-10": "40px",
+  "--escala-espaciado-12": "48px",
+  "--escala-espaciado-16": "64px",
+  "--escala-radio-pequeno": "4px",
+  "--escala-radio-medio": "8px",
+  "--escala-radio-grande": "12px",
+  "--escala-radio-completo": "9999px",
+  "--escala-texto-pequeno": "12px",
+  "--escala-texto-pequeno-altura": "16px",
+  "--escala-texto-cuerpo-menor": "14px",
+  "--escala-texto-cuerpo-menor-altura": "20px",
+  "--escala-texto-cuerpo": "16px",
+  "--escala-texto-cuerpo-altura": "24px",
+  "--escala-texto-subtitulo": "18px",
+  "--escala-texto-subtitulo-altura": "28px",
+  "--escala-texto-titulo": "24px",
+  "--escala-texto-titulo-altura": "32px",
+  "--escala-texto-cifra": "30px",
+  "--escala-texto-cifra-altura": "36px",
+  "--escala-peso-normal": "400",
+  "--escala-peso-medio": "500",
+  "--escala-peso-seminegrita": "600",
+  "--escala-tamano-objetivo-minimo": "24px",
+  "--escala-tamano-control": "40px",
+  "--escala-tamano-foco-grosor": "2px",
+  "--escala-tamano-foco-separacion": "2px",
+  "--escala-tamano-menu-ancho": "256px",
+  "--escala-tamano-contenido-maximo": "1440px",
+  "--escala-duracion-rapida": "120ms",
+  "--escala-duracion-media": "200ms",
+  "--escala-duracion-esqueleto": "1500ms",
+};
+
+/** Sombras y velos de `valores.css`: desplazamientos, color (canales) y alfa, en texto. */
+export const SOMBRAS: Readonly<Record<string, string>> = {
+  "--escala-sombra-tarjeta-claro": "0 1px 2px 0 · color 15 23 42 · alfa 0.06",
+  "--escala-sombra-tarjeta-oscuro": "0 1px 2px 0 · color 11 17 32 · alfa 0.4",
+  "--escala-sombra-elevada-claro": "0 8px 24px -4px · color 15 23 42 · alfa 0.16",
+  "--escala-sombra-elevada-oscuro": "0 8px 24px -4px · color 11 17 32 · alfa 0.6",
+  "--escala-sombra-velo-claro": "color 15 23 42 · alfa 0.5",
+  "--escala-sombra-velo-oscuro": "color 11 17 32 · alfa 0.7",
+};

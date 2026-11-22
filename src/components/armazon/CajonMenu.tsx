@@ -48,7 +48,7 @@ export function CajonMenu({ areas, areaActual }: { areas: readonly Area[]; areaA
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-velo" />
         <Dialog.Content
           aria-describedby={undefined}
           // Radix mueve el foco sin desplazar (al dar la vuelta con el tabulador). Con poca altura
@@ -62,7 +62,7 @@ export function CajonMenu({ areas, areaActual }: { areas: readonly Area[]; areaA
             evento.preventDefault();
             enlaceDelMenuLateral()?.focus();
           }}
-          className="fixed inset-y-0 left-0 z-50 flex w-menu-ancho max-w-full flex-col overflow-y-auto bg-menu-fondo bg-degradado-menu py-4 text-menu-texto shadow-elevada"
+          className="fixed inset-y-0 left-0 z-50 flex w-menu-ancho max-w-full flex-col overflow-y-auto border-r border-menu-texto bg-menu-fondo bg-degradado-menu py-4 text-menu-texto shadow-elevada"
         >
           <div className="flex items-center justify-between gap-3 px-4 pb-4">
             <Dialog.Title className="text-subtitulo font-seminegrita text-menu-texto">

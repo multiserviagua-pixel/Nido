@@ -1,6 +1,6 @@
 # Diseño: sistema visual, páginas y accesibilidad
 
-Estado: PROPUESTA de referencia. La escala y los papeles de «Escala y papeles» son los valores de partida de la función 020 (T-006, parte a), con el contraste calculado; los definitivos salen de la propuesta visual que valida el responsable (REQ-086) y esta tabla cambia con ellos.
+Estado: PROPUESTA para validar. La escala y los papeles de «Escala y papeles» son los de la propuesta visual de la función 020 (T-011, razonada en `specs/020-sistema-diseno-armazon/propuesta-visual.md`), con el contraste calculado; los definitivos son los que valide el responsable (REQ-086, T-013) y esta tabla cambia con ellos.
 
 ## Referencia
 
@@ -176,6 +176,8 @@ Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto 
 | `--serie-2` a `--serie-4` | Solo existía la serie principal | `#334155`, `#64748B`, `#4A1FB8` (nuevos) | REQ-038 pide distinguir series sin depender del color: cada serie lleva además su trazo y su marcador. Cada color llega a 3:1 sobre `--superficie` y sobre `--degradado-grafico` (4,03:1 la tercera, la más justa) |
 | `--degradado-menu`, `--degradado-acento`, `--degradado-grafico` | Colores planos | Degradados de dos colores de la escala (nuevos) | REQ-085 los pide como recurso de estilo. Cada texto sobre ellos se mide en el peor de 33 puntos; con colores forzados valen `none` y queda el color plano del papel |
 | Tema oscuro | No existía | Columna «Oscuro» | Nuevo por REQ-088. Mismo tono de acento en pasos más claros |
+| `--sombra-velo` | — | Velo de `rgb(15 23 42 / 0.5)` en claro y `rgb(11 17 32 / 0.7)` en oscuro (nuevo, T-011) | El cajón del menú y el panel de la cuenta no oscurecían el fondo. Se declara como sombra porque es la otra capa con alfa; sus pares están en la tabla «Velo». El cajón gana un borde derecho `--menu-texto` y el panel pasa a borde `--borde-control` para separarse con el velo puesto |
+| Umbral de alto de la cabecera fija | `38rem`, por validar | Se mantiene | Ver `propuesta-visual.md`, «Cabecera fija»: la de peor caso ocupa el 39 % de 608 px |
 
 ### Espaciado
 
@@ -212,10 +214,26 @@ Solo informan de elevación; la separación la dan los bordes. En colores forzad
 | --- | --- | --- | --- |
 | `tarjeta` | `0 1px 2px 0 rgb(15 23 42 / 0.06)` | `0 1px 2px 0 rgb(11 17 32 / 0.4)` | Tarjetas |
 | `elevada` | `0 8px 24px -4px rgb(15 23 42 / 0.16)` | `0 8px 24px -4px rgb(11 17 32 / 0.6)` | Diálogo, cajón del menú, avisos |
+| `velo` | `rgb(15 23 42 / 0.5)` | `rgb(11 17 32 / 0.7)` | Velo (`--sombra-velo`, utilidad `bg-velo`): oscurece lo que queda detrás del cajón del menú y del panel de la cuenta. Es la única capa con alfa que cubre la página y no lleva texto |
+
+### Velo
+
+Contraste del borde del cajón y del panel con el fondo que queda debajo del velo (el velo pintado sobre `--fondo-pagina` o sobre `--superficie`, mezclado en sRGB). Es no texto: 3:1. Con colores forzados el velo vale `none` y el borde del diálogo (`CanvasText`) lo separa. Lo repite `tests/unit/diseno/contraste.test.ts`; los pares viven en `PARES_CON_VELO` de `combinaciones.ts`.
+
+| Delante | Sobre | Dónde | Claro | Oscuro |
+| --- | --- | --- | --- | --- |
+| `--menu-texto` | `--fondo-pagina` | Borde derecho del cajón del menú | 3,21 | 17,19 |
+| `--menu-texto` | `--superficie` | Borde derecho del cajón del menú | 3,11 | 16,65 |
+| `--superficie` | `--fondo-pagina` | Panel de la cuenta, por su superficie | 3,51 | — |
+| `--superficie` | `--superficie` | Panel de la cuenta, por su superficie | 3,41 | — |
+| `--borde-control` | `--fondo-pagina` | Panel de la cuenta, por su borde | — | 5,45 |
+| `--borde-control` | `--superficie` | Panel de la cuenta, por su borde | — | 5,27 |
+
+En claro el panel se separa por su superficie blanca (el borde de control no llega a 3:1 sobre el velo: 1,36); en oscuro, por su borde, porque la superficie y el velo son casi iguales (1,13). Un fondo oscuro no se puede oscurecer más: en oscuro el velo atenúa sobre todo las tarjetas y lo demás lo hace el borde.
 
 ### Texto
 
-Tipografía sin remates del sistema o una fuente abierta alojada en nuestro dominio (no se cargan fuentes de terceros en tiempo de ejecución); la elige la propuesta visual. Cifras con números tabulares.
+Tipografía sin remates del sistema (T-011 (b)): ninguna fuente se descarga, ni de terceros ni propia, así que no hay licencia que añadir ni petición que bloquear (PRUEBA-020). Cifras con números tabulares: `base.css` aplica `font-variant-numeric: tabular-nums` a las tablas y a todo `[data-cifra]`.
 
 | Nombre | Tamaño | Altura de línea | Uso |
 | --- | --- | --- | --- |
