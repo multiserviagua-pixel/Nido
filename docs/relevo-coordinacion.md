@@ -42,6 +42,10 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 - 22/11 09:30: relanzados Fase 1 p (suite en main, T-112 (a), menores de T-124, diseno de T-107, preparar T-119), Fase 2 l (correccion de T-010 de la 010), Fase 2 B2 d (texto minimo del auditor para N-1 y N-2, vuelta de confirmacion y P0 de la enmienda; el trabajo de B2 c estaba sin commit en main), Fase 3 j (auditor sobre D-039 en la 021, luego 023 a 025) y Fase 3 k (correcciones sin commit de T-010 (c) de la 020). Encargos con reglas-dia.txt (sin la autorizacion nocturna).
 - Leccion: los chats terminan turno y quedan en el prompt sin reescribir el relevo; el vigia ahora sale tambien cada 45 min para revisar las pestanas.
 
+- 22/11 10:35, peticion del responsable: hoy toda la energia a la fase 3 para ensenar la interfaz a sus jefes. Parados Fase 1 p (sin tareas sin personas), Fase 2 l (010, T-010 en correccion en su copia, sin relevo nuevo), Fase 2 B2 d (terminado: P0 de la enmienda de 016 y 017 y piloto ajustado, ab9c282) y la suite de main. Siguen Fase 3 j (021 a 025, documentacion) y Fase 3 l (020: T-010 (c), T-011, T-012 y preparar T-013).
+- Decision por D-036: si a propuesta-router-replace.patch de la 020 (tests/unit/diseno/paquetes-de-cliente.ts admite next), como parte T-010 (e) despues de T-012. Evidencia de la 020 por hoy sin suite completa de vitest (la pasa la coordinacion); pruebas en primer plano porque el sistema mata los procesos en segundo plano con poca memoria.
+- Al acabar el dia: relanzar 001 (suite en main y T-112 (a)), 010 (T-010 desde su copia y relevo) y la suite completa de main.
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
