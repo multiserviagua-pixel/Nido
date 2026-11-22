@@ -1,7 +1,7 @@
 # 025 · Reglas por cliente
 
-Estado: APROBADA
-Fase: 3 · Fecha: 13/11/2026 · Revisada: 13/11/2026, con las respuestas de `aclaraciones.md` · Autor: `especificador`
+Estado: PLANIFICADA
+Fase: 3 · Fecha: 13/11/2026 · Revisada: 13/11/2026, con las respuestas de `aclaraciones.md` · Autor: `especificador` · Enmienda mecánica del 22/11/2026 en CA-010 (ver «Registro de cambios»); enmienda E-1 pedida (`propuestas.md`, P25-01)
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.
 
@@ -155,7 +155,7 @@ Las pruebas de base de datos se ejecutan en CI (no hay Docker en la máquina de 
 | CA-007 | Con agente de prueba: un cliente con las 5 reglas distintas de las de por defecto se restablece con confirmación; el diálogo enumera los 5 cambios; la sección muestra 30, 3, Sí, Sí, Sí y la palabra de valores por defecto; la siguiente revisión recibe esos valores. 10 de 10 repeticiones correctas | REQ-012 |
 | CA-008 | Con agente de prueba: el agente recibe sus instrucciones, se cambian las reglas a mitad de su revisión y la revisión termina. Esa revisión no recibe nada nuevo por ninguna vía (0 mensajes) y su informe es coherente con las reglas que recibió al empezar; la revisión siguiente recibe las nuevas. 5 de 5 repeticiones | REQ-014 |
 | CA-009 | Pruebas automáticas con los clientes A y B: tras cambiar y restablecer las reglas de A, la respuesta a la petición de instrucciones de A es idéntica a la anterior salvo en las reglas (estado, versión, huella, prompt, orden y canal iguales), y la de B es idéntica por completo, en el 100 % de 20 repeticiones | REQ-015 |
-| CA-010 | Con agente de prueba: con el cliente en pausa efectiva y con la licencia suspendida, se cambian las reglas; las revisiones siguientes reciben `pausada` o `suspendida` sin reglas (100 %); con el cliente dado de baja, 0 revisiones reciben reglas; al reanudar, reactivar la licencia o reactivar el cliente, la primera revisión con `activa` recibe las reglas cambiadas (3 de 3 casos) | REQ-016, REQ-047 |
+| CA-010 | Con agente de prueba: con el cliente en pausa efectiva y con la licencia suspendida, se cambian las reglas; las revisiones siguientes reciben `pausada` o `suspendida` sin reglas (100 %); con el cliente dado de baja, 0 revisiones reciben reglas; al reanudar o reactivar la licencia, la primera revisión con `activa` recibe las reglas cambiadas (2 de 2 casos) [Enmienda mecánica 22/11/2026, D-040] | REQ-016, REQ-047 |
 | CA-011 | Pruebas de base de datos en CI y de extremo a extremo con 5 sesiones (sin sesión, usuario sin rol, usuario de un cliente sobre su propio cliente y sobre otro, superadmin sin doble factor): 0 filas de reglas y 0 filas de historial leídas, el 100 % de las escrituras rechazadas, y «sin permiso» o paso de inicio de sesión o de doble factor en la sección, el historial y las acciones. Una acción cuya sesión pierde el rol o el doble factor antes de confirmar se rechaza con 0 cambios y 0 filas de auditoría (2 de 2). Control positivo: con superadmin con doble factor, leer y cambiar funcionan | REQ-017, REQ-031, REQ-032, REQ-033 |
 | CA-012 | La revisión del código y una comprobación automática confirman que ninguna pieza de esta función usa la clave secreta; las pruebas de integración de esta función pasan con la clave secreta ausente del entorno de esas operaciones | REQ-018 |
 | CA-013 | Peticiones con el identificador de un cliente inexistente y con uno de formato inválido se rechazan con 0 cambios, 0 filas de historial y el mismo mensaje que «sin permiso» (100 %); con superadmin con doble factor, cambiar el identificador en la dirección solo cambia la ficha mostrada, una acción solo cambia las reglas del cliente elegido (0 cambios en los demás clientes del juego de prueba) y el historial de cada ficha contiene 0 filas de otros clientes | REQ-019, REQ-038 |
@@ -230,6 +230,15 @@ Texto original:
   3. «Y eso se ve», para un cliente con los valores por defecto, queda como la palabra de REQ-003: dice si las cinco reglas guardadas coinciden con los valores por defecto. Es la consecuencia anotada en la opción elegida de la cuestión 3.
   4. Los clientes que existan antes de esta función (datos ficticios de la función 010 y clientes migrados desde la carpeta `panel` en la función 053) también tienen que tener sus reglas guardadas, para cumplir REQ-049.
 - **Modelo de referencia:** `docs/MODELO-DATOS.sql`, en estado PROPUESTA. Esta especificación no lo toma como solución.
+
+## Registro de cambios
+
+| Fecha | Quién | Cambio | Motivo |
+| --- | --- | --- | --- |
+| 22/11/2026 | `arquitecto`, enmienda mecánica | CA-010: se quita «reactivar el cliente»; queda «al reanudar o reactivar la licencia» y «2 de 2 casos». Se mantiene que con el cliente dado de baja 0 revisiones reciben reglas | D-040 (A-10): la baja es definitiva (REQ-011 de la 022); P-50 de la 022 y P24-13 de la 024. No cambia ningún requisito |
+| 22/11/2026 | `arquitecto` | Estado DISEÑADA, con `diseno.md` puesto al día con D-040 y la constitución 1.5 | Paso 3 del ciclo |
+
+Pendiente, no aplicada: E-1 (texto del aviso de REQ-009 y CA-006 para un cliente dado de baja, que ya no volverá a recibir instrucciones), pedida al `especificador` en `propuestas.md`, P25-01.
 
 ## Aprobación
 
