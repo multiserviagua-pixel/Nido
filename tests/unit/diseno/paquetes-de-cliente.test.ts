@@ -53,7 +53,7 @@ describe("PRUEBA-037 · la prueba puede fallar", () => {
     }
     expect(lista.some((n) => n.startsWith("d3-"))).toBe(true);
     expect(lista.some((n) => n.startsWith("@types/"))).toBe(false);
-    // La lista declarada hoy (vacía) ya no coincide: el paquete nuevo hace fallar la prueba.
+    // La lista declarada hoy (27 paquetes, sin recharts) no lo trae: el paquete nuevo hace fallar la prueba.
     const diferencia = comparar(paquetesDeCliente, lista);
     expect(diferencia.faltan).toContain("recharts");
   });

@@ -11,7 +11,12 @@ import { TEXTOS } from "../../../src/components/textos";
 
 function pintar(areaActual = "resumen", areas = AREAS_SUPERADMIN, titulo = "Vista de prueba") {
   return renderToStaticMarkup(
-    <Armazon areas={areas} areaActual={areaActual} titulo={titulo}>
+    <Armazon
+      areas={areas}
+      areaActual={areaActual}
+      titulo={titulo}
+      cuenta={{ nombre: "Usuario Ficticio" }}
+    >
       <p>cuerpo</p>
     </Armazon>,
   );
@@ -128,6 +133,7 @@ describe("PRUEBA-012 · áreas en el menú", () => {
         areas={AREAS_SUPERADMIN}
         areaActual="resumen"
         titulo="x"
+        cuenta={{ nombre: "Usuario Ficticio" }}
         // @ts-expect-error la lista cerrada de áreas no se puede sustituir por un nodo libre
         menu={<p id="menu-de-otro">menú ajeno</p>}
       >
@@ -153,23 +159,6 @@ describe("PRUEBA-012 · áreas en el menú", () => {
     const cabecera = /<header[\s\S]*?<\/header>/.exec(pintar())![0];
     expect(cabecera.indexOf(TEXTOS.armazon.abrirMenu)).toBeGreaterThan(-1);
     expect(cabecera.indexOf(TEXTOS.armazon.abrirMenu)).toBeLessThan(cabecera.indexOf("<h1"));
-  });
-
-  it("la cabecera sigue provisional: solo el h1 y el botón; no admite contenido libre hasta T-010 (c)", () => {
-    const html = renderToStaticMarkup(
-      <Armazon
-        areas={AREAS_SUPERADMIN}
-        areaActual="resumen"
-        titulo="x"
-        // @ts-expect-error la cuenta y el periodo los tipa T-010 (c); hasta entonces, nada
-        cabecera={<div id="cabecera-ajena" />}
-      >
-        <p>c</p>
-      </Armazon>,
-    );
-    expect(html).not.toContain("cabecera-ajena");
-    const cabecera = /<header[\s\S]*?<\/header>/.exec(html)![0];
-    expect(cuenta(cabecera, /<h1[\s>]/g)).toBe(1);
   });
 });
 

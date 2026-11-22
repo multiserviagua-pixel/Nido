@@ -161,3 +161,45 @@ describe("título del documento de cada estado", () => {
     for (const t of titulos) expect(t).not.toContain(TEXTOS.marca.nombreProducto);
   });
 });
+
+describe("T-010 (c) · cabecera en la muestra: cuenta en todos los estados, periodo solo donde se declara", () => {
+  it("la cuenta ficticia está en todas las páginas y no sale de la dirección", async () => {
+    for (const [c, e] of CASOS) {
+      const html = await pintar(c, e);
+      expect(html, `${c}/${e}`).toContain(TEXTOS.cuenta.abrir);
+    }
+  });
+
+  it("solo los estados con-periodo pintan el selector, con las tres cifras ficticias", async () => {
+    for (const [c, e] of CASOS) {
+      const html = await pintar(c, e);
+      expect(html.match(/<select\b/g)?.length ?? 0, `${c}/${e}`).toBe(e === "con-periodo" ? 1 : 0);
+    }
+    const html = await pintar("armazon-superadmin", "con-periodo");
+    expect(html.match(/data-cifra/g)).toHaveLength(3);
+  });
+
+  it("el periodo sale de la dirección solo si es de la lista; lo demás vuelve al valor por defecto", async () => {
+    vi.stubEnv("ENTORNO", "preproduccion");
+    const m = (await cargar("armazon-cliente", "con-periodo")) as unknown as {
+      default: (p: { searchParams: Promise<Record<string, string>> }) => Promise<ReactElement>;
+    };
+    const con = async (q: Record<string, string>) =>
+      renderToStaticMarkup(await m.default({ searchParams: Promise.resolve(q) }));
+    expect(await con({ periodo: "ultimos-7-dias" })).toMatch(/value="ultimos-7-dias"[^>]*selected/);
+    for (const malo of ["<script>", "otro", "ULTIMOS-7-DIAS"]) {
+      expect(await con({ periodo: malo })).toMatch(/value="ultimos-30-dias"[^>]*selected/);
+    }
+    expect(await con({ usuario: "x", cuenta: "Otra Persona" })).not.toContain("Otra Persona");
+  });
+
+  it("las cuentas de 120 caracteres: sin espacios en el nombre largo y con espacios en el otro estado", async () => {
+    const a = await pintar("armazon-superadmin", "nombre-largo-120");
+    const b = await pintar("armazon-cliente", "cuenta-120-con-espacios");
+    const nombre = /data-nombre-acortable="true"[^>]*>([^<]*)<\/span>/;
+    expect(nombre.exec(a)![1]).toHaveLength(120);
+    expect(nombre.exec(a)![1]).not.toMatch(/\s/);
+    expect(nombre.exec(b)![1]).toHaveLength(120);
+    expect(nombre.exec(b)![1]).toMatch(/\s/);
+  });
+});

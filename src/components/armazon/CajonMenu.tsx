@@ -1,12 +1,13 @@
 "use client";
 
 // Cajón del menú (diseño 020, «Armazón» y «Diálogo, cajón y avisos»; REQ-004, REQ-035, REQ-037):
-// con 1023 px o menos, el menú no está en el documento y el botón «Abrir menú» lo abre como
-// diálogo modal. La primitiva es la de T-001 (PRUEBA-011): `@radix-ui/react-dialog`, que atrapa el
-// foco, deja inerte el fondo, cierra con Escape y devuelve el foco al botón. Aquí no hay código de
-// foco propio salvo un caso: si la ventana pasa a 1024 px o más con el cajón abierto, el botón
-// queda oculto y el foco no puede volver a él, así que va al menú lateral (nunca queda en un
-// elemento oculto). El cajón no recuerda su estado: no escribe nada en el navegador (REQ-058).
+// con 1023 px o menos, el menú lateral queda oculto con `display: none` y el cajón no pinta su
+// lista hasta abrirlo: el botón «Abrir menú» la abre como diálogo modal. Sin JavaScript no hay
+// menú por debajo de 1024 px (menor 6, pendiente). La primitiva es la de T-001 (PRUEBA-011),
+// `@radix-ui/react-dialog`: atrapa el foco, deja inerte el fondo, cierra con Escape y devuelve el
+// foco al botón. Aquí no hay código de foco propio salvo un caso: si la ventana pasa a 1024 px o
+// más con el cajón abierto, el botón queda oculto y el foco va al menú lateral (nunca queda en un
+// elemento oculto). No recuerda su estado: no escribe nada en el navegador (REQ-058).
 // Radix solo se importa aquí y en `dialogo/` (PRUEBA-008).
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState } from "react";

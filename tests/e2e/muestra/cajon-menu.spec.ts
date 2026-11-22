@@ -4,7 +4,7 @@
 // Cajón en 320, 375 y 768 px; menú fijo en 1024, 1280 y 1920 px; Escape y foco; 50 tabuladores y
 // 50 con Mayúsculas sin sacar el foco; nada tapado; objetivos de 24 por 24 px; al ensanchar con el
 // cajón abierto, se cierra. Los controles sembrados de abajo hacen fallar cada medida a propósito.
-// Lo que depende de Cabecera, CuentaUsuario y SelectorPeriodo lo añade T-010 (c).
+// Cuenta, periodo y cabecera fija (T-010 (c)): `cabecera.spec.ts`.
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { AREAS_CLIENTE_MUESTRA, AREAS_SUPERADMIN } from "../../../src/components/armazon/areas";
 import { TEXTOS } from "../../../src/components/textos";
@@ -347,10 +347,37 @@ for (const estado of ARMAZONES) {
         // diálogo modal abierto, el foco no puede salir de él: sus «sin contorno» son los de los
         // elementos inertes del fondo. El contorno del foco dentro del cajón lo mide la prueba
         // «el foco se ve en…»; aquí se miden los pares de texto y de borde.
+        // Menor 1 de T-010 (b): solo se descartan los «sin contorno de foco» (los elementos inertes
+        // del fondo); un par de foco no declarado o mal traducido sigue contando.
         expect(
-          sinDeclarar.filter((p) => p.que !== "foco"),
+          sinDeclarar.filter((p) => p.que !== "foco" || p.motivo !== "sin contorno de foco"),
           "pares sin declarar con el cajón abierto",
         ).toEqual([]);
+        // Y dentro del cajón, cada elemento que recibe el foco lo muestra con el papel --foco.
+        const contornos = await page.evaluate((selector) => {
+          const sonda = document.createElement("div");
+          sonda.style.color = "var(--foco)";
+          document.body.appendChild(sonda);
+          const esperado = getComputedStyle(sonda).color;
+          sonda.remove();
+          return [
+            ...document.querySelectorAll<HTMLElement>(`${selector} a[href], ${selector} button`),
+          ].map((e) => {
+            e.focus({ focusVisible: true } as FocusOptions);
+            const s = getComputedStyle(e);
+            return {
+              esperado,
+              color: s.outlineColor,
+              estilo: s.outlineStyle,
+              grosor: s.outlineWidth,
+            };
+          });
+        }, SELECTOR_CAJON);
+        expect(contornos.length, "elementos enfocables del cajón").toBeGreaterThan(0);
+        for (const c of contornos) {
+          expect(c.estilo).not.toBe("none");
+          expect(c.color, "contorno de foco del cajón = --foco").toBe(c.esperado);
+        }
         // Sin desplazamiento horizontal de la página (REQ-044).
         expect(
           await page.evaluate(

@@ -56,6 +56,8 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "auditoria", nombre: "Auditoría" },
       { clave: "ajustes", nombre: "Ajustes" },
       { clave: "nombre-largo-120", nombre: "Nombre largo de 120 caracteres" },
+      // T-010 (c): cabecera con selector de periodo (la cuenta, cerrada o abierta, está en todos).
+      { clave: "con-periodo", nombre: "Con selector de periodo" },
     ],
   },
   {
@@ -67,6 +69,8 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "actividad", nombre: "Actividad" },
       { clave: "suscripcion", nombre: "Suscripción" },
       { clave: "cuenta", nombre: "Cuenta" },
+      { clave: "con-periodo", nombre: "Con selector de periodo" },
+      { clave: "cuenta-120-con-espacios", nombre: "Cuenta de 120 caracteres con espacios" },
     ],
   },
 ]);

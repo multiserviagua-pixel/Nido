@@ -1,0 +1,23 @@
+{
+  "totales": 863,
+  "esperadas": 863,
+  "inesperadas": 0,
+  "saltadas": 0,
+  "intermitentes": 0,
+  "con_anotacion_no_ejecutada": 73,
+  "sin_anotacion_comprueban_lo_que_dicen": 790,
+  "anotaciones_no_ejecutada_total": 75,
+  "por_archivo": {
+    "arranque.spec.ts": 1,
+    "muestra/accesibilidad.spec.ts": 61,
+    "muestra/anchos.spec.ts": 90,
+    "muestra/armazon.spec.ts": 111,
+    "muestra/cabecera.spec.ts": 97,
+    "muestra/cajon-menu.spec.ts": 246,
+    "muestra/combinaciones.spec.ts": 35,
+    "muestra/medidas.spec.ts": 12,
+    "muestra/red-y-direccion.spec.ts": 107,
+    "muestra/tema-y-movimiento.spec.ts": 103
+  },
+  "commit": "5060bd2"
+}

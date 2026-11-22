@@ -2,9 +2,11 @@ import type { ReactNode } from "react";
 import { TEXTOS } from "../textos";
 import { Anunciador } from "../texto/Anunciador";
 import type { Area } from "./areas";
-import { CajonMenu } from "./CajonMenu";
+import { Cabecera } from "./Cabecera";
+import type { DatosDeCuenta } from "./CuentaUsuario";
 import { EnlaceSaltar } from "./EnlaceSaltar";
 import { MenuLateral } from "./MenuLateral";
+import type { ConfiguracionDePeriodo } from "./periodo";
 
 /** Identificador del contenido principal: destino del enlace de salto. */
 export const ID_CONTENIDO = "contenido-principal";
@@ -16,10 +18,10 @@ export type PropiedadesArmazon = {
   areaActual: string;
   /** Título de la vista: el único `h1`. Texto fijo de la vista, sin datos (A-10). */
   titulo: string;
-  /** Hasta T-010 (c) la cabecera solo lleva el título y el botón del cajón. `Cabecera` tipará aquí
-   * la cuenta y el periodo (`cuenta`, `periodo`); mientras tanto no admite nada, ni un nodo libre.
-   * El menú no se pasa: lo pone Armazon a partir de `areas`. */
-  cabecera?: undefined;
+  /** Cuenta con sesión iniciada: sale de la sesión (la 021), nunca de la dirección (REQ-083). */
+  cuenta: DatosDeCuenta;
+  /** Solo las vistas que declaran un selector de periodo lo pasan (REQ-006). */
+  periodo?: ConfiguracionDePeriodo;
   children: ReactNode;
 };
 
@@ -27,24 +29,29 @@ export type PropiedadesArmazon = {
  * regiones de anuncios. Solo presentación: no lee la sesión ni la dirección (V-1).
  *
  * El menú es `MenuLateral` (desde 1024 px) y `CajonMenu` (por debajo), hechos de `areas`: no hay
- * forma de sustituir la lista cerrada. Hasta T-010 (c), la cabecera es solo el botón del cajón y
- * el `h1`; `Cabecera`, `CuentaUsuario` y `SelectorPeriodo` la sustituirán. */
-export function Armazon({ areas, areaActual, titulo, children }: PropiedadesArmazon) {
+ * forma de sustituir la lista cerrada. La cabecera es `Cabecera` (título, cuenta y periodo): no
+ * admite un nodo libre. */
+export function Armazon({
+  areas,
+  areaActual,
+  titulo,
+  cuenta,
+  periodo,
+  children,
+}: PropiedadesArmazon) {
   return (
     <>
       <EnlaceSaltar destino={ID_CONTENIDO} />
       <div className="flex min-h-dvh flex-col lg:flex-row">
         <MenuLateral areas={areas} areaActual={areaActual} />
         <div className="mx-auto flex w-full min-w-0 max-w-contenido-maximo flex-1 flex-col">
-          <header
-            aria-label={TEXTOS.armazon.cabecera}
-            className="border-b border-borde-decorativo bg-superficie px-4 py-4 md:px-6"
-          >
-            <div className="flex items-center gap-3">
-              <CajonMenu areas={areas} areaActual={areaActual} />
-              <h1 className="min-w-0 text-titulo font-seminegrita text-texto">{titulo}</h1>
-            </div>
-          </header>
+          <Cabecera
+            areas={areas}
+            areaActual={areaActual}
+            titulo={titulo}
+            cuenta={cuenta}
+            periodo={periodo}
+          />
           <main
             id={ID_CONTENIDO}
             tabIndex={-1}

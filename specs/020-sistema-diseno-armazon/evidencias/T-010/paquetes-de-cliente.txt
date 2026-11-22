@@ -1,0 +1,31 @@
+Paquetes de cliente declarados en tests/unit/diseno/paquetes-de-cliente.ts (27), sin cambios en T-010 (c)
+Comprobados por PRUEBA-037 (tests/unit/diseno/paquetes-de-cliente.test.ts), que los compara con el grafo y el archivo de bloqueo.
+Menor 4 de T-010 (b).
+
+ 1. @radix-ui/primitive
+ 2. @radix-ui/react-compose-refs
+ 3. @radix-ui/react-context
+ 4. @radix-ui/react-dialog
+ 5. @radix-ui/react-dismissable-layer
+ 6. @radix-ui/react-focus-guards
+ 7. @radix-ui/react-focus-scope
+ 8. @radix-ui/react-id
+ 9. @radix-ui/react-portal
+10. @radix-ui/react-presence
+11. @radix-ui/react-primitive
+12. @radix-ui/react-slot
+13. @radix-ui/react-use-callback-ref
+14. @radix-ui/react-use-controllable-state
+15. @radix-ui/react-use-effect-event
+16. @radix-ui/react-use-layout-effect
+17. aria-hidden
+18. detect-node-es
+19. get-nonce
+20. react
+21. react-dom
+22. react-remove-scroll
+23. react-remove-scroll-bar
+24. react-style-singleton
+25. tslib
+26. use-callback-ref
+27. use-sidecar

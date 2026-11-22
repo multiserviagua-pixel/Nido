@@ -36,7 +36,12 @@ export async function medirDesborde(page: Page): Promise<Desborde> {
   })()`) as Promise<Desborde>;
 }
 
-/** Elementos cuyo texto queda recortado (overflow oculto con contenido que no cabe). */
+/** Elementos cuyo texto queda recortado (overflow oculto con contenido que no cabe).
+ * Única excepción (diseño 020, «Nombres largos»; REQ-065): el nombre de la cuenta dentro del botón
+ * de la cuenta de la cabecera (`header button[aria-haspopup="dialog"] [data-nombre-acortable]`)
+ * puede acortarse, y solo si el `aria-label` del botón contiene el nombre entero del `span` (el
+ * nombre completo está en el nombre accesible y en el panel que abre; `cabecera.spec.ts` lo
+ * comprueba). Cualquier otro recorte cuenta, también dentro de ese botón. */
 export async function medirRecortes(page: Page): Promise<string[]> {
   return page.evaluate(`(() => {
     const nombre = ${nombreCorto};
@@ -46,6 +51,11 @@ export async function medirRecortes(page: Page): Promise<string[]> {
       const oculta = (v) => v === "hidden" || v === "clip";
       const tieneTexto = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim() !== "");
       if (!tieneTexto) continue;
+      if (e.matches("[data-nombre-acortable]")) {
+        const boton = e.closest('header button[aria-haspopup="dialog"]');
+        const entero = e.textContent.trim();
+        if (boton !== null && entero !== "" && (boton.getAttribute("aria-label") || "").includes(entero)) continue;
+      }
       if (
         (oculta(s.overflowX) && e.scrollWidth > e.clientWidth + 1) ||
         (oculta(s.overflowY) && e.scrollHeight > e.clientHeight + 1) ||

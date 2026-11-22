@@ -56,6 +56,8 @@ for (const estado of ESTADOS) {
       if (conCajon) {
         // El botón del cajón solo se ve por debajo de 1024 px: se estrecha la ventana y se abre.
         await page.setViewportSize({ width: 375, height: 667 });
+        // Menor 2 de T-010 (b): el cajón se hidrata tras pintarse; se espera antes de pulsarlo.
+        await page.waitForLoadState("networkidle");
         await cajon.first().click();
         await expect(page.getByRole("dialog")).toBeVisible();
       } else {

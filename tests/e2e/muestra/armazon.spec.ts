@@ -2,12 +2,12 @@
 // salto, regiones y orden del cuerpo, sobre las entradas `armazon-*` del inventario. CA-001,
 // CA-002, CA-004 (título), CA-005 (orden), CA-007, CA-031, CA-033.
 // El menú y el cajón (320, 375 y 768 px, Escape, foco, objetivos) los prueba `cajon-menu.spec.ts`
-// (T-010 (b)). Lo que depende de Cabecera, CuentaUsuario y SelectorPeriodo (cuenta en un paso,
-// selector de periodo) lo añade T-010 (c): aquí no se simula y queda anotado como «no ejecutada».
+// (T-010 (b)). La cuenta en un paso, el selector de periodo y la cabecera fija (T-010 (c)) los
+// mide `cabecera.spec.ts`.
 import { expect, test, type Page } from "@playwright/test";
 import { AREAS_CLIENTE_MUESTRA, AREAS_SUPERADMIN } from "../../../src/components/armazon/areas";
 import { TEXTOS } from "../../../src/components/textos";
-import { abrirEstado, anotarPendiente, estadosDe, type EstadoDePrueba } from "./apoyo/estados";
+import { abrirEstado, estadosDe, type EstadoDePrueba } from "./apoyo/estados";
 import { ALTO_POR_DEFECTO } from "./configuracion-interfaz";
 
 const ID_CONTENIDO = "contenido-principal";
@@ -15,9 +15,11 @@ const ARMAZONES = estadosDe(/^armazon/);
 const SUPERADMIN = ARMAZONES.filter((e) => e.entrada === "armazon-superadmin");
 const CLIENTE = ARMAZONES.filter((e) => e.entrada === "armazon-cliente");
 
-/** El área que debe figurar como actual en un estado: el nombre largo es una ficha de Clientes. */
+/** El área que debe figurar como actual en un estado: el nombre largo es una ficha de Clientes y los
+ * estados de cabecera (con periodo, cuenta larga) cuelgan del Resumen. */
 function areaEsperada(e: EstadoDePrueba): string {
-  return e.estado.startsWith("nombre-largo") ? "clientes" : e.estado;
+  if (e.estado.startsWith("nombre-largo")) return "clientes";
+  return areasDe(e).some((a) => a.clave === e.estado) ? e.estado : "resumen";
 }
 const areasDe = (e: EstadoDePrueba) =>
   e.entrada === "armazon-superadmin" ? AREAS_SUPERADMIN : AREAS_CLIENTE_MUESTRA;
@@ -218,15 +220,19 @@ for (const estado of ARMAZONES) {
   });
 }
 
-test.describe("PRUEBA-012 · lo que añade T-010 (c)", () => {
-  // Una sola prueba, fuera del bucle por estado (menor 5 de T-010 (a)). Lo de (b) (menú fijo,
-  // cajón en 320, 375 y 768 px, Escape y foco) ya no se anota: lo ejecuta `cajon-menu.spec.ts`.
-  test("la cuenta en un paso a 320 px y el selector de periodo quedan anotados, no simulados", async () => {
-    anotarPendiente(
-      test.info(),
-      "cuenta en un paso a 320 px; selector de periodo y su anuncio",
-      "T-010 (c)",
-    );
+test.describe("PRUEBA-012 · lo que añaden (b) y (c)", () => {
+  // Una sola prueba, fuera del bucle por estado (menor 5 de T-010 (a)). El menú fijo y el cajón los
+  // ejecuta `cajon-menu.spec.ts` (b); la cuenta en un paso a 320 px y el selector de periodo, con
+  // su anuncio, `cabecera.spec.ts` (c; ahí también se comprueba que el selector solo está en los
+  // estados con periodo). Aquí solo se comprueba que la cuenta está en todos los armazones.
+  test("la cuenta está en todos los armazones", async ({ page }) => {
+    for (const estado of ARMAZONES) {
+      await abrirEstado(page, estado);
+      await expect(
+        page.getByRole("button", { name: new RegExp(`^${TEXTOS.cuenta.abrir}:`) }),
+        estado.etiqueta,
+      ).toHaveCount(1);
+    }
   });
 });
 

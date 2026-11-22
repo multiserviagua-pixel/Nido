@@ -271,6 +271,11 @@
   --default-font-family: var(--font-sans);
 }
 
+/* Variante por alto de ventana (T-010 (c)): la cabecera solo es fija si cabe sin comerse la vista
+   (hasta ~240 px a 320 px de ancho; 38 rem = 608 px, menos del 40 %). Umbral por validar por
+   `disenador-ui`. */
+@custom-variant alto-suficiente (@media (min-height: 38rem));
+
 @theme inline {
   /* Una utilidad de color por papel: `bg-superficie`, `text-texto-secundario`, `border-borde-control`... */
   --color-fondo-pagina: var(--fondo-pagina);

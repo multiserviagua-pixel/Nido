@@ -54,6 +54,43 @@ test.describe("controles de las medidas de anchura y texto", () => {
     expect(await medirRecortes(page)).toContain("div");
   });
 
+  test("la excepción del nombre acortable de la cuenta es solo para el botón de la cabecera", async ({
+    page,
+  }) => {
+    const recortado = `width:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`;
+    // Dentro del botón de la cuenta de la cabecera, el nombre marcado se admite…
+    await page.setContent(
+      pagina(
+        `<header><button aria-haspopup="dialog" aria-label="Cuenta: Nombre largo"><span data-nombre-acortable style="${recortado}">Nombre largo</span></button></header>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toEqual([]);
+    // …pero no si el nombre accesible del botón no lleva el nombre entero, ni si no abre un diálogo.
+    await page.setContent(
+      pagina(
+        `<header><button aria-haspopup="dialog" aria-label="Cuenta"><span data-nombre-acortable style="${recortado}">Nombre largo</span></button></header>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toContain("span");
+    await page.setContent(
+      pagina(
+        `<header><button aria-label="Cuenta: Nombre largo"><span data-nombre-acortable style="${recortado}">Nombre largo</span></button></header>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toContain("span");
+    // …pero la misma marca fuera de ese botón no exime, ni otro recorte dentro de él.
+    await page.setContent(
+      pagina(`<p><span data-nombre-acortable style="${recortado}">Nombre largo</span></p>`),
+    );
+    expect(await medirRecortes(page)).toContain("span");
+    await page.setContent(
+      pagina(
+        `<header><button aria-haspopup="dialog" aria-label="Cuenta: Otro texto"><span style="${recortado}">Otro texto</span></button></header>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toContain("span");
+  });
+
   test("el solape de textos se detecta", async ({ page }) => {
     await page.setContent(pagina(`<p>Uno</p><p>Dos</p>`));
     expect(await medirSolapes(page)).toEqual([]);

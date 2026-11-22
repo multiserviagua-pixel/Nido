@@ -188,3 +188,96 @@ Configuración de Playwright: la misma derivada fuera del repositorio que en (a)
 - El cajón usa `scrollIntoView` en `onFocus`; con `scroll-behavior: smooth` heredado de una hoja posterior sería animado. Hoy no hay ninguno.
 - Radix inyecta un `<style>` y estilos en línea al abrir (T-001 lo midió); la política de contenido de la 021 debe contarlo (PRUEBA-018, inventario para la 021).
 - Vuelta atrás: `git revert` de los commits `T-010 (b) (020)`; no hay datos ni migraciones. La lista de `paquetes-de-cliente.ts` vuelve a `[]` con el mismo revert.
+
+---
+
+# T-010 (c) · Resultado
+
+Rama `tarea/020-T-010c`, sobre `660f785` (rebasada sobre `main`). Entorno: local (Windows 11, Node 26, Chromium de Playwright, 1 worker, puerto 3111). Autor: `ingeniero-frontend`. Datos ficticios. Revisada por un revisor independiente: NO APTO en la primera pasada, corregido en dos vueltas.
+
+## Qué entrega
+
+- `src/components/armazon/Cabecera.tsx`: `header` con nombre, fija arriba solo con 38 rem (608 px) de alto o más (`sticky top-0` a partir de ese alto), con el botón del cajón, el único `h1` (título sin datos, A-10), la cuenta y, solo si la vista lo declara, el selector de periodo en una línea propia. Orden del documento: cajón, `h1`, cuenta, selector.
+- `ReservaDeCabecera.tsx` (cliente, solo `react`): pone `scroll-padding-top` en la raíz con el alto real de la cabecera (`ResizeObserver`, más 4 px para el contorno del foco) por el modelo de objetos de CSS, no con un atributo `style`.
+- `CuentaUsuario.tsx` (cliente): botón siempre visible (icono y, desde 640 px, el nombre acortado con CSS; nombre accesible `Cuenta: <nombre completo>`) que abre un panel con el nombre completo (`TextoDato`, se parte en líneas) y las acciones que reciba (`{clave, etiqueta, ruta}`, enlaces; el tipo no admite nodos). Nombre vacío o de solo caracteres de control: «Cuenta sin nombre».
+- `src/components/dialogo/PanelModal.tsx` (cliente): envoltorio de `@radix-ui/react-dialog` (la primitiva de T-001, la misma del cajón). **Motivo:** PRUEBA-008 R3 solo deja importar Radix en `dialogo/` y `CajonMenu`; así `CuentaUsuario` no lo importa. Sin código de foco propio.
+- `periodo.ts` (puro): lista cerrada (`periodosValidos`, `esquemaDePeriodo`, `valorDePeriodo`, `periodoActivo`, `textoDePeriodo`, `rutaConPeriodo`). `usePeriodo.ts` (cliente): `useSyncExternalStore` sobre la dirección y un evento; en el servidor y en la hidratación vale el valor leído por la vista. `SelectorPeriodo.tsx` (cliente): `select` nativo con etiqueta visible, junto a él «Últimos 30 días · 14 oct – 12 nov 2026»; al cambiar escribe `?periodo=` con `history.replaceState`, avisa con el evento y anuncia «Periodo cambiado a …». Sin recarga, el foco se queda en el selector.
+- `Armazon`: `cuenta` obligatoria y `periodo` opcional, tipados; **se quita `cabecera?: undefined`** (menor 3 del punto 12): un nodo libre ya no compila (`@ts-expect-error` en la prueba).
+- Textos en `c/textos.ts`: `cuenta` y `periodo`.
+- Muestra: estados `armazon-superadmin/con-periodo`, `armazon-cliente/con-periodo` y `armazon-cliente/cuenta-120-con-espacios`, cada uno con su carpeta de página fija; `nombre-largo-120` lleva ahora también la cuenta de 120 caracteres sin espacios. `_vistas/CifrasDeMuestra.tsx` (cliente): tres cifras ficticias que siguen al selector (el papel de la vista real, que vuelve a pedir sus datos con `usePeriodo`). La cuenta abierta se prueba con teclado, no tiene página propia.
+- `tests/e2e/muestra/apoyo/medidas.ts`: `medirRecortes` admite **una** excepción (REQ-065, diseño «Nombres largos»): `header button [data-nombre-acortable]`. Control sembrado en `medidas.spec.ts`: la misma marca fuera del botón de la cabecera, u otro recorte dentro de él, siguen contando.
+- **Paquetes de cliente: ninguno nuevo.** `paquetes-de-cliente.ts` sin cambios (27); los módulos de cliente nuevos solo importan `react` y, vía `PanelModal`, `@radix-ui/react-dialog`. No se usa `next/navigation` (habría añadido `next` a la lista).
+
+## Pruebas, primero en rojo
+
+| Requisito | Prueba |
+| --- | --- |
+| REQ-005; CA-004 (título único, h1, cuenta) | `cabecera.test.tsx` (marcado), `cabecera.spec.ts` (h1 único en la cabecera, título del documento = h1 + producto, sin datos) |
+| REQ-005, REQ-065, REQ-083; CA-004, CA-049, CA-044 (cuenta) | `cabecera.spec.ts`: en un paso a 320 px dentro de la ventana; panel con el nombre completo de 120 caracteres con y sin espacios; Escape y botón de cerrar devuelven el foco; foco atrapado; sin desplazamiento horizontal a 320, 375 y 1280 px; parámetros `usuario`, `cuenta`, `cliente` y `rol` en la dirección no cambian nada |
+| REQ-006; CA-004 (periodo) | `periodo.test.ts` (lista cerrada, valor, texto, dirección); `cabecera.test.tsx`; `cabecera.spec.ts`: solo en los estados que lo declaran, cambio con teclado (ArrowUp) que cambia las tres cifras, escribe solo `?periodo=`, se anuncia (observador de mutaciones desde el inicio) y deja el foco; sin recarga (marca en `window`); valor por defecto sin parámetro; a 320 px entero |
+| REQ-036; CA-027 (foco bajo la cabecera fija) | `cabecera.spec.ts`: Mayúsculas+Tab hacia arriba entre 30 botones a 320 y 1280 px, 0 tapados; **control sembrado**: sin `scroll-padding-top` la misma medida ve botones tapados |
+| REQ-058, REQ-059; PRUEBA-018 | `cabecera.spec.ts`: valor fuera de la lista, texto, parámetro repetido o vacío vuelven al por defecto y no se pintan (sin los guiones de datos de Next, hallazgo H-1); `localStorage`, `sessionStorage`, cookies e `indexedDB` vacíos tras abrir la cuenta y cambiar el periodo; los estados nuevos pasan además los casos de red y dirección ya existentes de `red-y-direccion.spec.ts` |
+| REQ-065; CA-049 | `anchos.spec.ts` (ya existente) sobre los estados nuevos y viejos: sin solapes, recortes ni desplazamiento a 320 y 1280 px, zum 200 % y 400 %, espaciado de texto |
+
+Rojo observado: la primera ejecución de `cabecera.test.tsx` dio 1 archivo fallido (módulos que no existían; `periodo.ts` ya estaba escrito, así que `periodo.test.ts` nació en verde). `cabecera.spec.ts` dio en la primera ejecución 78 verdes y 6 rojos (la medida de ancho cogía el botón del cajón en vez del de la cuenta; la consulta en el HTML de los guiones de Next; y el foco tras el cambio, ver abajo).
+
+Dos decisiones forzadas por una medida real:
+
+1. **El cambio de periodo no recarga.** La primera versión recargaba la página (`location.assign`) y recuperaba anuncio y foco mirando `document.referrer`; `next.config.ts` fija `Referrer-Policy: no-referrer`, así que no había referente y el foco se perdía. Se cambió a `history.replaceState` + evento + `usePeriodo`: el foco no se mueve y el anuncio sale en el acto. Las vistas reales vuelven a pedir sus datos al cambiar la clave de `usePeriodo` (diseño, «Una vista en uso», punto 3).
+2. **`sr-only` con texto y `truncate` hacían saltar `medirRecortes`** (CA-049, 42 fallos en la primera pasada completa). El nombre del botón de la cuenta pasó a `aria-label` completo, el texto visible a `hidden sm:inline` con `truncate` y la excepción de arriba.
+
+## Menores del punto 12 y del punto 10
+
+| Menor | Qué se hizo |
+| --- | --- |
+| 12.1 filtro de foco en `cajon-menu.spec.ts` | Ya no se descarta todo `foco`: solo «sin contorno de foco» (el fondo inerte); un par de foco no declarado cuenta. Además, cada enlace y botón del cajón abierto debe mostrar el contorno con el papel `--foco` |
+| 12.2 `networkidle` antes de pulsar el cajón | Hecho en `tema-y-movimiento.spec.ts` |
+| 12.3 `cabecera?: undefined` | Quitado, con prueba de tipos |
+| 12.4 los 27 paquetes | `evidencias/T-010/paquetes-de-cliente.txt` |
+| 12.5 comentarios | `CajonMenu.tsx` y `paquetes-de-cliente.test.ts` corregidos |
+| 12.6 velo del cajón | **Pendiente, no es de esta parte**: sigue faltando un papel de velo en `valores.css` (al `disenador-ui`). El panel de la cuenta tampoco lo lleva |
+| 10.3 título propio del índice y unicidad | Ya estaba hecho en (b) (`titulos-muestra.test.tsx`); ahora cubre también los estados nuevos |
+| 10.4 caso sembrado con `href=""` | Ya estaba en `red-y-direccion.spec.ts` (control «un enlace con href vacío…») |
+| 10.5 prueba «lo que añaden (b) y (c)» fuera del bucle | Hecha: ya no anota, comprueba que la cuenta está en todos los armazones y el selector solo en `con-periodo` |
+| 10.7 JSON resumido de Playwright | `playwright-resumen-c.json` |
+| 10.1, 10.2, 10.6 | Sin cambios aquí (10.1 y 10.2 ya aplicados antes; 10.6: `leerAnuncio` y `reiniciarAnunciosParaPruebas` solo los usan sus pruebas y las de (c) tampoco los necesitan, así que siguen como estaban) |
+
+## Órdenes y resultado
+
+Ejecución final del 22/11/2026 sobre `5060bd2` (vuelta 2 de revisión), rama rebasada sobre `main` (`3b06654`), en primer plano y con el candado de suite. Las ejecuciones anteriores (con `262319e` y con `7e04063`) no cuentan como evidencia final. La suite completa de vitest la pasa la coordinación aparte (decisión D-036 del 22/11/2026): aquí no se ejecuta.
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 29 archivos, 1032 pruebas en verde |
+| `npm run tipos` | 0 | sin errores |
+| `eslint` sobre `src` y `tests` (`--max-warnings 0`) | 0 | sin hallazgos |
+| `prettier --check src tests specs/020-sistema-diseno-armazon` | 1 | **no es de este cambio**: solo `tests/unit/plataforma/acciones-fijadas.test.ts` (de otro chat). Prettier sobre `src`, `tests/unit/diseno` y `tests/e2e/muestra`: limpio |
+| `node scripts/comprobar-specs.mjs` | 0 | SUPERADO |
+| `npm run build` | 0 | compilado |
+| `npx playwright test --config playwright.config.ts` (oficial, puerto 3100, compila dentro; `tests/e2e` completo), Chromium, 1 worker | 0 | **863 ejecutadas sin fallo**, 0 saltadas, 0 intermitentes, 224 s. Antes, una tanda previa de 5 archivos dio 501 en verde |
+
+No se ejecutaron: `npm run aislamiento` (no toca la base de datos) ni vitest completo (lo pasa la coordinación).
+
+### Cuenta de Playwright (`playwright-resumen-c.json`)
+
+- **863 ejecutadas sin fallo.** 790 comprueban lo que dicen; **73 llevan alguna anotación «no ejecutada»** (75 anotaciones en total): pares de color de SVG, fuente real, dirección tras escribir texto, cambio de tema con tabla ordenada, el cajón en el índice, ancho máximo del índice, diálogo bajo, cifra 999.999.999 y registro de `/muestra/servidor/`.
+- `cabecera.spec.ts`: 97 pruebas (la vuelta añade el refresco del enrutador, los cuatro altos de ventana con control sembrado y el caso de `?q=` que el selector descarta).
+- Sigue sin ejecutarse lo de (d) a (j), Firefox y WebKit (T-018), lectores de pantalla y la revisión manual (PRUEBA-028).
+- Rojo observado en esta vuelta: `periodo.test.ts` («escribe solo el periodo…») y `cuenta-acciones.test.tsx` («descarta toda ruta…») fallaron sin la corrección. El e2e nuevo no se observó en rojo.
+
+
+## Qué no se pudo comprobar
+
+- Firefox y WebKit; lectores de pantalla (el anuncio se mide en la región, no se oye).
+- El panel de la cuenta abierto no pasa por PRUEBA-022 ni por `axe`: no está abierto en ningún estado de la muestra. Usa solo papeles ya declarados (`--texto`, `--texto-secundario`, `--enlace` sobre `--superficie`; borde y foco).
+- El panel no tiene velo: el diseño no lo define (menor 12.6).
+- La sesión real y las acciones reales de la cuenta («Cerrar sesión» por POST, por ejemplo) son de la 021; aquí las acciones son enlaces.
+
+## Riesgos y vuelta atrás
+
+- `usePeriodo` lee `window.location.search` y `SelectorPeriodo` escribe con `history.replaceState(null, …)`, la forma documentada por Next 16: su `replaceState` parcheado copia el estado interno del enrutador (`__NA`, `__PRIVATE_NEXTJS_INTERNALS_TREE`) y actualiza su dirección canónica, de modo que una actualización del enrutador (`router.refresh()`, acción de servidor) conserva `?periodo=`. El componente no importa el enrutador ni pide datos al servidor. (La frase anterior, «se integra con el enrutador de Next 16», era inexacta: la primera versión pasaba `history.state`, lo que se salta ese parche y deja la dirección canónica vieja; corregido en la vuelta de revisión.) Si una versión futura de Next lo cambiase, fallarían las pruebas de `cabecera.spec.ts`.
+- **Pregunta abierta para el arquitecto:** con `replaceState` sin navegación, una vista de servidor real no vuelve a pedir datos al cambiar el periodo (el diseño dice que las vistas leen en servidor y que los componentes no llaman a `fetch`). Ver `tareas.md`, punto 13.
+- La cabecera es fija solo con 38 rem (608 px) de alto de ventana o más (variante `alto-suficiente` en `valores.css`); por debajo se desplaza con la página y `scroll-padding-top` no reserva nada. **El `disenador-ui` debe validar el umbral y la variante** (medido a 320 px de ancho: con selector de periodo la cabecera mide ~240 px, 0,46 de una ventana de 512 px, 0,39 de una de 608 px; con el nombre de 120 caracteres, ~193 px). En móviles de menos de 608 px de alto (con barra del navegador) la cabecera no queda fija: es el precio de no comerse la vista; el rediseño de una cabecera más baja es del `disenador-ui`.
+- Toda vista que muestre cifras de un periodo **debe** usar `usePeriodo` (o leer el periodo de la dirección) y volver a pedir los datos: el selector ya no recarga la página.
+- La excepción de `medirRecortes` es una sola y está comprobada con control sembrado.
+- Vuelta atrás: `git revert` del commit de `T-010 (c) (020)`; sin datos ni migraciones; `paquetes-de-cliente.ts` no cambia.

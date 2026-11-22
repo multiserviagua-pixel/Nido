@@ -72,6 +72,26 @@ export const TEXTOS = {
     contenidoPrincipal: "Contenido principal",
   },
 
+  /** Cuenta del usuario en la cabecera (T-010 (c)). El nombre llega de la sesión y se pinta como
+   * dato; los textos fijos salen de aquí. */
+  cuenta: {
+    abrir: "Cuenta",
+    titulo: "Cuenta",
+    sesionIniciadaComo: "Sesión iniciada como",
+    cerrar: "Cerrar el panel de la cuenta",
+    sinNombre: "Cuenta sin nombre",
+    cerrarSesion: "Cerrar sesión",
+  },
+
+  /** Selector de periodo (REQ-006). */
+  periodo: {
+    etiqueta: "Periodo",
+    anuncio: "Periodo cambiado a",
+    ultimos7Dias: "Últimos 7 días",
+    ultimos30Dias: "Últimos 30 días",
+    ultimos90Dias: "Últimos 90 días",
+  },
+
   /** Áreas del menú: las de superadmin (fase 3) y el juego de cliente de la muestra. */
   areas: {
     resumen: "Resumen",
