@@ -1,0 +1,22 @@
+# 024 · Dictamen de seguridad del diseño (vuelta 2, última)
+
+Autor: `auditor-seguridad` · 22/11/2026. Guardado por el orquestador a partir del informe del auditor. Contrastado con `supabase/seed.sql`, `supabase/procedimientos/administradores.sql`, M02 y M04. Ejecutado: `node scripts/comprobar-specs.mjs` (SUPERADO, documental) y, en PGlite 0.5.17 (PostgreSQL 18.7), la consulta de D-12 sobre `pg_roles` en una tabla nueva: el único rol no superusuario con `INSERT, UPDATE, DELETE, TRUNCATE` es `pg_write_all_data`; `has_table_privilege('public', …)` responde bien.
+
+**Veredicto: APTO. 0 bloqueantes, 0 mayores, 4 menores nuevos.** P1 se puede abrir con MN-5 a MN-8 como condiciones de tarea.
+
+## Hallazgos de la vuelta 1
+
+- **MA-1: corregido** (D-12, DD-38, PRUEBA-033, T-009; falta MN-5 para que la guarda funcione).
+- **MA-2: corregido** (D-11, DD-39, AM-10, F-1, PRUEBA-032, P24-02, P24-10 (g), T-014 (c)). No abre vía nueva: el origen `responsable_fuera_del_panel` solo pasa con `contexto_peticion()` = `propietario_directo` (`role` a `none` y sesión del dueño); una función `security definer` llamada desde la API conserva `role = authenticated` y no puede hacer `set role`; la lista local no tiene concesiones; `seed.sql` necesita tres I-19 con la auxiliar (compatible). Efecto no declarado: `administradores.usuario_id` tiene `on delete cascade` desde `auth.users`, así que borrar en `auth` a un administrador también queda rechazado (falla cerrado, coherente con `on delete restrict` de `actor`); anotarlo en P24-10.
+- **MN-1, MN-2, MN-3, MN-4: corregidos** (MN-4 pendiente de que la 022 responda P24-17).
+
+## Menores nuevos (condiciones de tarea)
+
+- **MN-5 · D-12 siempre falla en Postgres 14 o posterior** (arts. 3 y 11; AM-12). Condición de T-009. `pg_write_all_data` sale en `pg_roles`, no es dueño ni superusuario y `has_table_privilege` da verdadero en todas las tablas: la guarda no dejaría retirar nunca la barrera de `administradores` (021) ni de `versiones_prompt` (015). Falla cerrado. Corrección: excluir roles predefinidos (`oid < 16384`); fallar si algún rol que no sea el dueño ni superusuario es `MEMBER` de `pg_write_all_data` o del dueño (sustituye a excluir a los miembros del dueño, que deja pasar el peor caso); en T-004 (b), comprobar qué roles de la plataforma son miembros del dueño en `Nido`. Prueba (PRUEBA-033): sin concesiones se aplica; con un rol de prueba miembro de `pg_write_all_data` o del dueño, falla sin cambiar nada.
+- **MN-6 · El orden del dueño directo puede dar `40P01`** (art. 3; AM-11). Condición de P24-10 (g) y T-014 (c). El dueño anota (cerrojo global) y luego actualiza la fila de `administradores`, que otra transacción (función de la 021) tiene con `for no key update` esperando el cerrojo global. Corrección: los procedimientos del dueño en `administradores` toman primero `select … for no key update` de la fila, luego anotan y luego actualizan; nunca cambian una columna única. Prueba: caso nuevo en PRUEBA-013, dos conexiones, sin `40P01`.
+- **MN-7 · La principal del dueño no está atada a la operación** (arts. 3 y 13; AM-10). Condición de D-11 y P24-10 (g). Con una I-43 el dueño puede hacer cualquier `update` sobre ese `usuario_id` y la auditoría dice otra cosa. Corrección: I-19 solo justifica un `insert`; I-43 solo un `update` de las columnas de bloqueo que fije la 021. Prueba (PRUEBA-032): I-43 seguida de un `insert` o de un `update` de otra columna, rechazo.
+- **MN-8 · `contextos` deja entradas sin contexto pese a la regla «no vacía»** (art. 3; AM-14). Condición de T-009 y P24-10 (h). I-37, I-38, `marca_anulacion_intentos` (origen `sistema`) e I-33 y vinculadas no reciben contexto hasta P24-10 (h); ambigüedad sobre `api_autenticada` en I-27 e I-35. Corrección: admitir `contextos` vacío con el significado «no admite nada» hasta P24-10 (h), o asignarlas provisionalmente y declararlo; fijar I-27 e I-35 a `{api_autenticada, servicio_identidad}`. Prueba (PRUEBA-035): una entrada sin contextos rechazada en los ocho contextos.
+
+## No comprobado
+
+Nada con dos conexiones (MN-2, MN-6, agrupador); roles y pertenencias de Supabase en `Nido`; si `lock_timeout` de 2 s corta las esperas del cerrojo global con carga; si PostgREST aplica el `rolconfig` de `authenticated` (P24-17); `contexto_peticion()` dentro de `security definer`, en disparadores diferidos y con `pg_cron` (T-P3); si el disparador de cambios directos de la 021 escribe en `administradores` (quedaría rechazado mientras exista la barrera). Nada ejecutado en pgTAP ni en CI.

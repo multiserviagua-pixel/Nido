@@ -1,6 +1,6 @@
 # 024 · Auditoría visible de las acciones de superadmin
 
-Estado: APROBADA
+Estado: PLANIFICADA
 Fase: 3 · Fecha: 12/11/2026 · Revisada con las aclaraciones: 13/11/2026 · Autor: `especificador`
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.
