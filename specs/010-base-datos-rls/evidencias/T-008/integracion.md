@@ -9,6 +9,6 @@ Rama `tarea/010-T-008` rebasada sobre `main` (c53728f), en su copia de trabajo, 
 | `npm run estilo` | 0 |
 | `npm run aislamiento` | 45 de 45 |
 | `node scripts/comprobar-specs.mjs` | SUPERADO |
-| Build (carpeta principal, tras el squash ce2f70c) | salida 0. Un primer intento lo mató el sistema por memoria baja; reintento con `esperar-memoria.sh` (regla D) |
+| Build (carpeta principal, tras el squash ce2f70c) | FALLÓ en el primer intento (salida 1): `pgtap.ts` no encuentra `@electric-sql/pglite-pgtap`, que falta en el `node_modules` de la carpeta principal. Se instala con `npm ci --ignore-scripts` y se reintenta (resultado abajo) |
 
 pgTAP en CI (`supabase test db`): NO ejecutado, queda para T-013. Lo ejecutado es el mismo SQL de 01 (36) y 07 (30) contra PGlite con `@electric-sql/pglite-pgtap` 0.0.18.
