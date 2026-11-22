@@ -38,6 +38,10 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 
 - **T-114, paso 1 (SQL en `Nido`), pendiente de sesión (21/11, 23:05):** T-123 (b) ya está en `main` (75b1c2f) y los pasos están en `specs/001-…/relevo.md` (incluye los ajustes de registro por rol de A-12). La sesión de Supabase del navegador caducó y pide correo y contraseña: lo hace el responsable. Delegación expresa para que lo ejecute la coordinación pese a «lo aplica una persona» de `LEEME.md`: «revisa tu acceso a supabase, que te o deje en el navegador, no necesitas de mi intervención». **Método probado:** en la página del editor, `fetch` del archivo desde `raw.githubusercontent.com/multiserviagua-pixel/Nido/<commit>/supabase/conector-prueba/…` fijado al commit, huella SHA-256 comparada con la local (`001_estado.sql` = `a476628f…` en 079b989) y `monaco.editor.getEditors()[0].setValue(...)`. Ni el portapapeles ni un servidor en `localhost` funcionan desde esa página.
 
+- 22/11 madrugada: integradas y subidas T-111, T-112, T-113 de la 001; T-008 y T-009 de la 010; 022 PLANIFICADA con P1 abierta (D-040); A-15 en la 021. main subido hasta b3e4cab.
+- 22/11 09:30: relanzados Fase 1 p (suite en main, T-112 (a), menores de T-124, diseno de T-107, preparar T-119), Fase 2 l (correccion de T-010 de la 010), Fase 2 B2 d (texto minimo del auditor para N-1 y N-2, vuelta de confirmacion y P0 de la enmienda; el trabajo de B2 c estaba sin commit en main), Fase 3 j (auditor sobre D-039 en la 021, luego 023 a 025) y Fase 3 k (correcciones sin commit de T-010 (c) de la 020). Encargos con reglas-dia.txt (sin la autorizacion nocturna).
+- Leccion: los chats terminan turno y quedan en el prompt sin reescribir el relevo; el vigia ahora sale tambien cada 45 min para revisar las pestanas.
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
