@@ -1,6 +1,6 @@
 # 017 · Vía protegida del dueño para la compuerta de envío
 
-Estado: PROPUESTA
+Estado: APROBADA
 Fase: 2 · Fecha: 21/11/2026 · Autor: `especificador` · Enmienda 1 en curso (APROBADA antes el 21/11/2026; ver «Enmienda 1»)
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.
@@ -165,3 +165,4 @@ Puerta P0. La abre el responsable, o la coordinación por delegación (D-036), c
 | --- | --- | --- |
 | 21/11/2026 | Coordinación, aprobado por delegación D-036 | APROBADA. `auditor-seguridad`, 4.ª vuelta: APTO CON CONDICIONES, sin bloqueantes ni MAYOR (`dictamen-especificacion-2.md`). R-1 a R-4 pasan al diseño como condiciones vinculantes. Cuestión 1 pendiente del responsable: no bloquea, rige el valor por defecto seguro |
 | 21/11/2026 | Enmienda 1 (coordinación, D-036) | PROPUESTA. `auditor-seguridad`, vuelta 1: APTO CON CONDICIONES, 3 MAYOR (`dictamen-enmienda-1.md`); vuelta de corrección aplicada el 21/11/2026. Vuelta 2: APTO CON CONDICIONES, sin bloqueantes ni MAYOR, 2 MENOR (`dictamen-enmienda-2.md`); vuelta de corrección 3 aplicada el 21/11/2026. Pendiente de la puerta P0. La cuestión 1 sigue igual |
+| 22/11/2026 | Enmienda 1 (coordinación, D-036) | APROBADA la enmienda 1. Sin hallazgos propios abiertos tras la vuelta de corrección 3; la dependencia de N-1 de la 016 queda cerrada (vuelta 4 del auditor sobre la 016). La cuestión 1 queda para el responsable y no bloquea. Aprobado por delegación D-036 |
