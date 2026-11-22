@@ -9,13 +9,17 @@ Actualizado: 22/11/2026 · Orquestador del carril B2 (documentación del envío 
 | Enmienda 1 | 016 compuerta | **APROBADA el 22/11/2026 (P0 de la enmienda, aprobado por delegación D-036).** 27 REQ, 30 CA. Auditor, vuelta 4 de confirmación: APTO CON UN MENOR; N-1 (MAYOR) y N-2 cerrados; N-3 (la constancia de ausencia no puede venir del agente ni del conector) aplicado en REQ-026, CA-029 y P-25. Commit `738a6aa` |
 | Enmienda 1 | 017 vía protegida | **APROBADA el 22/11/2026 (D-036).** 24 REQ, 23 CA. Sin hallazgos abiertos. Cuestión 1 para el responsable, no bloquea |
 | Enmienda 1 | 018 aprendizaje de estilo | **PROPUESTA, P0 NO abierta.** 21 REQ, 21 CA. La propia sección de aprobación exige que el responsable acepte de forma expresa el riesgo residual (D-042); no lo decido |
-| Piloto | `piloto-gmail.md` | Ajuste a la enmienda encargado al arquitecto el 22/11 (P-26, P-17, P-11, NC-5 b y c, pruebas de REQ-026 por cuenta, dudas D-2 a D-7). Sin ejecutar. Ver el final de este relevo si ya se integró |
+| Piloto | `piloto-gmail.md` | **AJUSTADO a la enmienda el 22/11/2026, sin ejecutar.** Incorpora P-26, P-17, P-11, NC-5 (b) y (c) obligatorias, pruebas R26-* de REQ-026 por cuenta (fase B, preproducción, dependen de P-25 en 015 y 030), D-2 resuelta (`piloto/` con sondas, generador, guías, evidencias; tareas TP-1 a TP-4) |
 
 Comprobador: `node scripts/comprobar-specs.mjs` → SUPERADO el 22/11/2026 (solo avisos de tamaño D-023, previos).
 
 ## Qué se hizo el 22/11/2026
 
 Texto mínimo del auditor aplicado sin la alternativa B (decisión D-036 de la coordinación). Vuelta 4 acotada a N-1 y N-2: sin bloqueantes ni mayores. Coste operativo conocido: la vuelta atrás desde la primera versión con la 016 deja el canal sin instrucciones mientras haya cuentas con la compuerta instalada o no se pueda saber. Riesgo residual aceptado por el auditor: un dueño de un canal que sirve la 1.2 puede instalar la compuerta desde el repositorio; el control es la condición de activación de REQ-026 (0 activaciones con esa versión).
+
+## Dudas abiertas del piloto (apartado 9)
+
+D-1 (coordinación): añadir NC-5 (b) y (c) al texto de REQ-026; el plan ya lo aplica, no bloquea. D-3 y D-9 (responsable): gasto, cuentas, Workspace, dominio no ASCII, suscripciones, conector S-MCP opcional, quién prepara preproducción y el superadmin de prueba. D-4 (coordinación y auditor): si la huella puede llamar a la API de Apps Script con REQ-014; NC-9 (b) da datos. D-5: definición de «intento» propuesta, falta confirmar por el auditor en A6. D-6: repetir R17 y NC-13 (e) al cambiar un conector y todo cada 6 meses (propuesto). D-7: fila en TECNOLOGIAS (P-16), de la coordinación. D-8 (015 y 030 con auditor): qué es una constancia positiva de ausencia; puede que no exista y entonces toda cuenta de Gmail se trata como instalada. Dictámenes del auditor pendientes sobre el plan: A6, F, NC-2, NC-12, D-5. Los autores de sondas y R26-* tocan rutas críticas: revisor y auditor.
 
 Pendiente para otros chats: la 030 (cuestiones 1, 3, 6 y 7 abiertas) debe recoger P-25 (requisitos 13, 16, 17 y 20); el auditor no pudo comprobar si hay otras vías de asignar canal (alta de cliente directo en `estable`).
 
