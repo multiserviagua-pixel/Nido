@@ -3,14 +3,14 @@
 Reescrito entero (regla «Relevo auténtico»). Historia en `git log` y `docs/TECNOLOGIAS.md`. Sin push (lo hace la coordinación). Cada rama vive en su copia de `.claude/worktrees/`. Autorización: encargo de la coordinación (D-036, autonomía total, sin pausas). Prioridad: la prueba real del conector; la prueba Pro de Vercel acaba el 27/11.
 
 ## Estado (comprobado por el orquestador al reescribir)
-- Integradas en `main`: T-101 a T-111, T-115, T-116, T-117 (a), T-118 (a), T-120 a T-124 (T-110 = 9c0faac; T-123 (b) = 75b1c2f; T-117 (a) = 1690947; T-124 = c53728f; T-111 = f5af7ab). El carril A2 terminó (`relevo-paralelo.md`).
+- Integradas en `main`: T-101 a T-111, T-115, T-116, T-117 (a), T-118 (a), T-120 a T-124 (T-110 = 9c0faac; T-123 (b) = 75b1c2f; T-117 (a) = 1690947; T-124 = c53728f; T-111 = f5af7ab; T-112 = d420e84; T-113 = ver `git log`). El carril A2 terminó (`relevo-paralelo.md`).
 - T-124: evidencia completa en verde (3231 pruebas). T-111: suite 3494 de 3495 y el fallo (manifiesto) corregido; tipos, estilo, aislamiento, arnés y build en 0. Candado de suite y espera de memoria (regla D): el sistema mató una pasada por memoria; se repitió con el script.
 - T-123 (b): en el repositorio, falta aplicar el SQL en `Nido` (una vez, con el paso 1 de T-114).
 - T-117 (a): `docs/operacion/despliegue-preproduccion.md`; no se ha ejecutado nada contra Vercel. Propuestas sin aplicar (apartado 10): `framework` y `buildCommand` en `vercel.json` y `min-release-age=7` en `.npmrc` (ambas con dictamen del auditor y cambio de `region.test.ts` y `npmrc.test.ts`). Riesgo abierto: dónde se compila (fuera de la UE).
 - T-111: `operar` y `conector:ciclo` solo en PowerShell o Windows Terminal (no Git Bash); confirman el destino (`issuer` y `SI`); `conector:comprobar` pide la dirección y la huella del commit desplegado. Menores aceptados: la confirmación solo protege si la persona lee el host.
 
 ## Falta, por orden
-1. T-112 (`qa`; (a) necesita `next start`, o sea build y candado), T-113 (`disenador-ui`), T-117 (b) (persona), T-119 (`qa`, navegador real; añadida la prueba de ráfaga del WAF), T-114 (`qa`, necesita AR-05 y AR-06: personas).
+1. T-112 (a) contra `next start` (`INVENTARIO_BASE_URL`; con la máquina libre, en T-114 o antes del despliegue), T-117 (b) (persona), T-119 (`qa`, navegador real; añadidas la ráfaga del WAF, PRUEBA-010 y los menores M1 a M5 de T-113), T-114 (`qa`, necesita AR-05 y AR-06: personas). Suite completa sin ejecutar en T-112 (tres intentos muertos por memoria): repetirla cuando haya RAM.
 2. Un solo subagente opus a la vez; candado de suite antes de suite completa o build; `bash scripts/esperar-memoria.sh 4000` después del candado.
 3. Coordinación: actualizar `docs/TECNOLOGIAS.md` (V-115 «CERRADA»), regla WAF (`/api/*` y `/oauth/*` con «Starts with», acción 429; el gasto lo acepta una persona), aplicar SQL en `Nido` (T-114), decidir las propuestas del apartado 10 del doc de despliegue.
 4. Menores abiertos de T-124: línea `* @multiserviagua-pixel` primera en CODEOWNERS y exigirla en la prueba; escanear `.github/` entero en `acciones-fijadas.test.ts`; `cooldown` de Dependabot. Personas: activar la protección de rama con revisión de propietarios; confirmar `@multiserviagua-pixel`; comprobar Dependabot.
@@ -53,4 +53,4 @@ Ejecuta la coordinación en el editor SQL de `Nido` (eu-north-1); las contraseñ
 - `specs/016-…` y `marketing/` son de otro chat: no se tocan; `git add` con rutas explícitas.
 
 ## Siguiente paso (22/11/2026)
-- Lanzar T-112 con `qa` (copia propia, rama `tarea/T-112`), después T-113. Cada integración: rebasar, evidencia con candado y memoria, un solo comando `git merge --squash` más `git commit -- rutas`.
+- Carril A sin tareas ejecutables por agentes hasta AR-05/AR-06 (T-114) y el primer despliegue (T-117 b, persona). Repetir la suite completa en `main`. Cada integración: rebasar, evidencia con candado y memoria, un solo comando `git merge --squash` más `git commit -- rutas`.
