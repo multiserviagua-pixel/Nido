@@ -237,7 +237,7 @@ Residual: el SQL dinámico troceado (`'func' || 'tion'`) no lo ve el detector; l
 
 ## Flujo
 
-1. **Local**: `npm run aislamiento` aplica, revierte y reaplica en PGlite (SQL válido, no criterios) y, si `pglite-pgtap` pasa su VERIFICAR (P1-b), pgTAP.
+1. **Local**: `npm run aislamiento` aplica, revierte y reaplica en PGlite (SQL válido, no criterios) y, si `@electric-sql/pglite-pgtap` pasa su VERIFICAR (P1-b), pgTAP.
 2. **CI** (`bd.yml`): `npx supabase start`; `app.entorno = 'ci'` y seed con `psql`; `npx supabase test db`, `ciclo-migraciones.mjs`, `concurrencia-licencia.sh`, el procedimiento de administradores y el escáner de secretos; número comparado con `declaradas.json`. Base que no arranca, prueba que falta o número distinto: falla (REQ-051). La protección de rama, una persona (CA-022).
 3. **`Nido`**: una persona, con `npx supabase db push` (T-012), tras P1, CI en verde y el «sí» del responsable (D-025); después `app.entorno = 'desarrollo'`, seed y volumen con `psql`, y CA-027. No se toca `conector_prueba` de la 001.
 4. **Producción**: no existe en la fase 2; `--simulacion` sin aprobación no aplica nada (CA-026).

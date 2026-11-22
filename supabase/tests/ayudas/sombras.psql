@@ -1,0 +1,60 @@
+-- =====================================================================
+-- Sombras de nombres (N-3 del dictamen del diseño, vuelta 2; T-008). Se incluye con
+-- `\ir ayudas/sombras.psql` al principio de cada archivo de 01 a 09, dentro de la transacción
+-- y después de `perfiles.psql`.
+--
+-- Qué hace: por cada tabla, vista y vista materializada de `public` y `privado`, crea una VISTA
+-- homónima en `pg_temp`, y por cada tipo enumerado y dominio de esos esquemas, un DOMINIO
+-- homónimo en `pg_temp`. Como `pg_temp` va el primero para relaciones y tipos, cualquier nombre
+-- SIN calificar que una función, una restricción o la propia prueba use se resuelve contra la
+-- sombra, y la sombra falla con `sombra_usada` (una vista no admite escrituras; leerla o
+-- convertir un valor al dominio ejecuta una función que lanza el error). Una prueba o una
+-- función de la base que dependa de la ruta de búsqueda deja de pasar en silencio y falla.
+--
+-- Se generan desde el catálogo, no a mano: una tabla o un tipo nuevo queda cubierto sin
+-- tocar este archivo. Todo vive en `pg_temp` y desaparece con el `rollback` del archivo.
+--
+-- Cada nombre de las pruebas va, por tanto, calificado (`public.clientes`, `privado.es_admin()`),
+-- también el de las funciones de ayuda (`pg_temp.como`). Las funciones no se sombrean: `pg_temp`
+-- se mira el último para ellas.
+-- =====================================================================
+
+create function pg_temp.sombra_usada() returns pg_catalog.bool
+language plpgsql
+as $f$
+begin
+  raise exception 'sombra_usada';
+end;
+$f$;
+
+do $f$
+declare
+  r pg_catalog.record;
+begin
+  for r in
+    select distinct c.relname
+      from pg_catalog.pg_class c
+     where c.relnamespace in ('public'::pg_catalog.regnamespace, 'privado'::pg_catalog.regnamespace)
+       and c.relkind in ('r', 'p', 'v', 'm', 'f')
+     order by 1
+  loop
+    execute pg_catalog.format(
+      'create view pg_temp.%I as select pg_temp.sombra_usada() as sombra', r.relname);
+  end loop;
+  -- Tipos: enumerados y dominios (los compuestos y las listas nacen con sus tablas y tipos).
+  for r in
+    select distinct t.typname
+      from pg_catalog.pg_type t
+     where t.typnamespace in ('public'::pg_catalog.regnamespace, 'privado'::pg_catalog.regnamespace)
+       and t.typtype in ('e', 'd')
+       and not exists (
+         select 1 from pg_catalog.pg_class c
+          where c.relnamespace in ('public'::pg_catalog.regnamespace, 'privado'::pg_catalog.regnamespace)
+            and c.relname operator(pg_catalog.=) t.typname)
+     order by 1
+  loop
+    execute pg_catalog.format(
+      'create domain pg_temp.%I as pg_catalog.text check (pg_temp.sombra_usada())', r.typname);
+  end loop;
+end
+$f$;

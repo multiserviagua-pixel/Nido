@@ -1,0 +1,151 @@
+-- =====================================================================
+-- Ayuda de las pruebas pgTAP de la 010 (T-008; diseño, «Piezas»): perfiles, identificadores
+-- del seed y huella de una tabla. Se incluye con `\ir ayudas/perfiles.psql` DENTRO de la
+-- transacción de cada archivo (después de `begin;`): todo vive en `pg_temp` y desaparece con
+-- el `rollback`. Nada de esto se instala en la base.
+--
+-- Si `pg_prove` no admite `\ir` (VERIFICAR en la primera ejecución de T-013), se repite este
+-- texto en cada archivo, sin cambios.
+--
+-- Datos 100 % ficticios (artículos 1 y 4): los identificadores son los de supabase/seed.sql.
+-- Ningún secreto, ninguna contraseña. Los perfiles no usan `user_metadata`: la sesión es la
+-- que lee la base (`request.jwt.claims`: sub, role y aal).
+--
+-- Uso:
+--   select pg_temp.como('UA');      -- usuario del cliente A, sesión de un factor
+--   select pg_temp.como('DUENO');   -- vuelve al dueño (postgres)
+--   select pg_temp.id('CA');        -- uuid del cliente A
+--   select pg_temp.huella('public.auditoria');
+--
+-- Perfiles (los de la especificación y D-6):
+--   SS    anon                         UA, UB, UAB  usuarios de cliente (UAB: A y B)
+--   USV   usuario sin vínculo          AD1   superadmin sin doble factor, no vinculado
+--   AD2   superadmin con doble factor  AD1A  superadmin sin doble factor, vinculado a A
+--   AD3   usuario que no es administrador (alta y baja por el procedimiento)
+--   CON   conector                     SR    service_role                   DUENO  postgres
+-- =====================================================================
+
+create function pg_temp.id(p_nombre pg_catalog.text) returns pg_catalog.uuid
+language plpgsql immutable
+as $f$
+declare
+  v_hex pg_catalog.text;
+begin
+  select v.hex into v_hex
+    from (values
+      ('CA', 'a'), ('CB', 'b'), ('CC', 'c'),
+      ('UA', '1a'), ('UB', '1b'), ('UAB', '1c'), ('USV', '1d'),
+      ('AD1', '1e'), ('AD2', '1f'), ('AD1A', '20'), ('AD3', '21'),
+      ('LA', 'a1'), ('LB', 'b1'), ('LC', 'c1'),
+      ('XA', 'a2'), ('XB', 'b2'), ('XC', 'c2'),
+      ('EA', 'a5'), ('EB', 'b5'), ('EC', 'c5'),
+      ('IA', 'a6'), ('IB', 'b6'), ('IC', 'c6'),
+      ('OA', 'f2'), ('VP', 'f1'),
+      ('N1', 'd1'), ('N2', 'd2'), ('N3', 'd3'), ('N4', 'd4')
+    ) as v (nombre, hex)
+   where v.nombre operator(pg_catalog.=) p_nombre;
+  -- Falla cerrado: un nombre desconocido nunca da un uuid nulo (que haría pasar una comparación).
+  if v_hex is null then
+    raise exception 'perfil_desconocido';
+  end if;
+  return pg_catalog.format('00000000-0000-4000-8000-%s', pg_catalog.lpad(v_hex, 12, '0'))::pg_catalog.uuid;
+end;
+$f$;
+
+create function pg_temp.como(p_perfil pg_catalog.text) returns void
+language plpgsql
+as $f$
+declare
+  v_rol pg_catalog.text;
+  v_sub pg_catalog.text;
+  v_aal pg_catalog.text := 'aal1';
+begin
+  execute 'reset role';
+  perform pg_catalog.set_config('request.jwt.claims', '', true);
+  if p_perfil operator(pg_catalog.=) 'DUENO' then
+    return;
+  end if;
+  case p_perfil
+    when 'SS'   then v_rol := 'anon';
+    when 'CON'  then v_rol := 'conector';
+    when 'SR'   then v_rol := 'service_role';
+    when 'UA'   then v_rol := 'authenticated'; v_sub := pg_temp.id('UA')::pg_catalog.text;
+    when 'UB'   then v_rol := 'authenticated'; v_sub := pg_temp.id('UB')::pg_catalog.text;
+    when 'UAB'  then v_rol := 'authenticated'; v_sub := pg_temp.id('UAB')::pg_catalog.text;
+    when 'USV'  then v_rol := 'authenticated'; v_sub := pg_temp.id('USV')::pg_catalog.text;
+    when 'AD1'  then v_rol := 'authenticated'; v_sub := pg_temp.id('AD1')::pg_catalog.text;
+    when 'AD2'  then v_rol := 'authenticated'; v_sub := pg_temp.id('AD2')::pg_catalog.text; v_aal := 'aal2';
+    when 'AD1A' then v_rol := 'authenticated'; v_sub := pg_temp.id('AD1A')::pg_catalog.text;
+    when 'AD3'  then v_rol := 'authenticated'; v_sub := pg_temp.id('AD3')::pg_catalog.text;
+    else raise exception 'perfil_desconocido';
+  end case;
+  execute pg_catalog.format('set local role %I', v_rol);
+  perform pg_catalog.set_config(
+    'request.jwt.claims',
+    case when v_sub is null
+      then pg_catalog.jsonb_build_object('role', v_rol)::pg_catalog.text
+      else pg_catalog.jsonb_build_object('sub', v_sub, 'role', v_rol, 'aal', v_aal)::pg_catalog.text
+    end,
+    true);
+end;
+$f$;
+
+-- Huella del contenido de una tabla, para comparar antes y después (p. ej., que un intento
+-- rechazado no cambia nada). La tabla se pasa ya calificada: 'public.auditoria'.
+create function pg_temp.huella(p_tabla pg_catalog.text) returns pg_catalog.text
+language plpgsql
+as $f$
+declare
+  v_huella pg_catalog.text;
+begin
+  execute pg_catalog.format(
+    'select pg_catalog.md5(coalesce(pg_catalog.string_agg(t::pg_catalog.text, %L order by t::pg_catalog.text), %L)) from %s as t',
+    '|', '', p_tabla::pg_catalog.regclass::pg_catalog.text)
+    into v_huella;
+  return v_huella;
+end;
+$f$;
+
+-- SQLSTATE del error que da una sentencia, o 'sin_error'. La sentencia corre en un
+-- subbloque: lo que haga se deshace si falla y, si no falla, se queda (usar solo en pruebas).
+create function pg_temp.estado_de(p_sql pg_catalog.text) returns pg_catalog.text
+language plpgsql
+as $f$
+begin
+  execute p_sql;
+  return 'sin_error';
+exception when others then
+  return sqlstate;
+end;
+$f$;
+
+-- Intentos hechos con otro rol. Los permisos por defecto de postgres (D-4) cierran las
+-- funciones nuevas a todos menos al dueño, y las de pgTAP también: con un rol que no es el
+-- dueño no se llama a pgTAP. Se hace así: bajo el rol, `pg_temp.intentar(clave, sentencia)`
+-- (la sentencia corre con los permisos del rol y su SQLSTATE queda en `pg_temp.intentos`);
+-- de vuelta como dueño, `pg_temp.intento(clave)` se compara con `is()` o `ok()`.
+create temp table intentos (clave pg_catalog.text primary key, estado pg_catalog.text not null);
+grant all on table pg_temp.intentos to public;
+
+create function pg_temp.intentar(p_clave pg_catalog.text, p_sql pg_catalog.text) returns void
+language plpgsql
+as $f$
+declare
+  v_estado pg_catalog.text := pg_temp.estado_de(p_sql);
+begin
+  insert into pg_temp.intentos (clave, estado) values (p_clave, v_estado);
+end;
+$f$;
+
+create function pg_temp.intento(p_clave pg_catalog.text) returns pg_catalog.text
+language sql stable
+as $f$
+  select i.estado from pg_temp.intentos i where i.clave operator(pg_catalog.=) p_clave;
+$f$;
+
+-- Las ayudas se llaman también bajo otro rol (solo viven en esta sesión y transacción).
+grant execute on function
+  pg_temp.id(pg_catalog.text), pg_temp.como(pg_catalog.text), pg_temp.huella(pg_catalog.text),
+  pg_temp.estado_de(pg_catalog.text), pg_temp.intentar(pg_catalog.text, pg_catalog.text),
+  pg_temp.intento(pg_catalog.text)
+  to public;

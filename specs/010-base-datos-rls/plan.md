@@ -54,7 +54,7 @@ Las tareas 1 a 12 avanzan con el arnés PGlite y las pruebas locales L 1 a 14. N
 
 ## Entornos y despliegue
 
-- **Local** (Windows, sin Docker): arnés PGlite en `supabase/tests/pglite/` (corre dentro de `npm test`) y L 1 a 14 en `tests/unit/bd/`. No es evidencia de ningún `CA-` (REQ-028). El pgTAP solo corre aquí con `pglite-pgtap` si se aprueba P1-b, y aun así figura como «no ejecutada en CI».
+- **Local** (Windows, sin Docker): arnés PGlite en `supabase/tests/pglite/` (corre dentro de `npm test`) y L 1 a 14 en `tests/unit/bd/`. No es evidencia de ningún `CA-` (REQ-028). El pgTAP solo corre aquí con `@electric-sql/pglite-pgtap` si se aprueba P1-b, y aun así figura como «no ejecutada en CI».
 - **CI** (`bd.yml`, T-013): `npx supabase start` y todo lo de diseño «Flujo», 2. Es la única evidencia de los `CA-`, salvo CA-001, CA-026, CA-027 y CA-032, y de lo de «Fuera de CI».
 - **`Nido`** (T-014): una persona ejecuta `npx supabase db push` tras P1, el CI en verde y su «sí», y después fija `app.entorno = 'desarrollo'` y carga el seed y el volumen con `psql`. No se toca `conector_prueba`.
 - **Producción**: no existe en la fase 2. CA-026 y CA-032 se cierran en simulación (T-012).
