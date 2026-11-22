@@ -1,0 +1,23 @@
+commit:    d0e30f0f6f80585abdf036b079f2a7f1286e27ff
+fecha:     2026-11-22T09:49:26+01:00
+entorno:   local
+comando:   npx eslint --config eslint.config.mjs --max-warnings 0 scripts/conector/rafaga-waf.mjs tests/unit/plataforma/rafaga-waf.test.ts
+codigo de salida: 0
+comando:   npx prettier --check --config .prettierrc.json scripts/conector/rafaga-waf.mjs tests/unit/plataforma/rafaga-waf.test.ts
+Checking formatting...
+All matched files use Prettier code style!
+codigo de salida: 0
+comando:   npx tsc --noEmit -p tsconfig.json (proyecto entero; sin next typegen)
+codigo de salida: 0
+
+Segunda pasada (corrección de la revisión)
+commit:    a7eae5cf2c9b4ec4e9971da7c32a44442e30d1d5 + corrección en la copia de trabajo
+fecha:     2026-11-22T10:06:17+01:00
+entorno:   local
+comando:   npx eslint --config eslint.config.mjs --max-warnings 0 scripts/conector/rafaga-waf.mjs tests/unit/plataforma/rafaga-waf.test.ts
+codigo de salida: 0
+comando:   npx prettier --check --config .prettierrc.json scripts/conector/rafaga-waf.mjs tests/unit/plataforma/rafaga-waf.test.ts
+All matched files use Prettier code style!
+codigo de salida: 0
+comando:   npx tsc --noEmit -p tsconfig.json (proyecto entero; sin next typegen)
+codigo de salida: 0

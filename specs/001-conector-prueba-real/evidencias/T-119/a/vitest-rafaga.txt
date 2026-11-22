@@ -1,0 +1,58 @@
+commit:    a7eae5cf2c9b4ec4e9971da7c32a44442e30d1d5 + cambios de la corrección de la revisión (MAYOR-1, MENOR-2), en la copia de trabajo y en el commit siguiente
+prueba:    T-119 (a), lógica del script de ráfaga del WAF (no es la prueba del WAF)
+fecha:     2026-11-22T10:06:30+01:00
+entorno:   local (servidor falso en 127.0.0.1, sin red real)
+comando:   npx vitest run tests/unit/plataforma/rafaga-waf.test.ts --maxWorkers=1
+resultado: superada (41 de 41)
+revisor:   pendiente
+---
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-119
+
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla bien puesta (Starts with, 100 por minuto) > 429 en las dos rutas: SUPERADA y salida 0; se para tras 5 limitadas (más las 3 en vuelo como mucho) 77ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla bien puesta (Starts with, 100 por minuto) > Deny (403) también cuenta como limitado 32ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla bien puesta (Starts with, 100 por minuto) > con un cambio de ventana a mitad se ve el 429, pero tarde (n.º 160): NO CONCLUYENTE, repetir 35ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: limitado, pero no por la regla de 100 por minuto (MAYOR-1) > 403 desde la primera petición: NO CONCLUYENTE (no SUPERADA) y salida 2 7ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: limitado, pero no por la regla de 100 por minuto (MAYOR-1) > límite de 180 por minuto: el 429 llega en la 181, NO CONCLUYENTE (no SUPERADA) y salida 2 29ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla que no limita > sin regla: FALLIDA en las dos rutas y salida 1, con 210 enviadas 30ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla que no limita > operador Equals con `/api/*` literal: no limita nada, FALLIDA 30ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla que no limita > regla solo en /oauth/: /api/salud FALLIDA y /oauth/token SUPERADA (salida 1) 24ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: casos que no deciden > con 120 peticiones y cambio de ventana a mitad: NO CONCLUYENTE, no FALLIDA (salida 2) 17ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: casos que no deciden > servidor caído: errores de red, NO CONCLUYENTE y salida 2 73ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: casos que no deciden > ráfaga lenta (60 s o más): deja de enviar y NO CONCLUYENTE 16ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: redirecciones (MENOR-2) > una 302 a otro puerto no se sigue: el otro servidor recibe 0 peticiones 38ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: redirecciones (MENOR-2) > cada petición lleva redirect: "error" 4ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: lo que se envía > GET /api/salud sin cuerpo; POST /oauth/token con formulario ficticio; nunca Authorization ni cookie 17ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: lo que se envía > la salida no lleva la dirección, el puerto ni cuerpos del servidor 17ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > sin variable: salida 2, 0 peticiones y el motivo sin repetir lo recibido 3ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > vacía: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > producción (host sin pre-): salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > pre- en un segmento que no es el primero: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > http fuera de local: salida 2, 0 peticiones y el motivo sin repetir lo recibido 3ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > con ruta: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > con consulta: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > con puerto: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > con usuario: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > 100 peticiones (no pasa del límite): salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > 401 peticiones (más del tope): salida 2, 0 peticiones y el motivo sin repetir lo recibido 4ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > peticiones no numéricas: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > peticiones negativas: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > TLS desactivado: salida 2, 0 peticiones y el motivo sin repetir lo recibido 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: configuración (cierre en fallo, 0 peticiones) > preproduccion válida: se acepta, con 210 por defecto y el número pedido si va de 101 a 400 3ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > con 429 -> { limitadas: 1, primeraLimitada: 101 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 1 -> { limitadas: 5, primeraLimitada: 1 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 2 -> { limitadas: 5, primeraLimitada: 2 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 104 -> { limitadas: 5, primeraLimitada: 104 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 105 -> { limitadas: 5, primeraLimitada: 105 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > 210 sin limitar en 20 s -> {} 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > 200 sin limitar (posible cambio de ventana) -> { enviadas: 200, respondidas: 200 } 3ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > 201 sin limitar -> { enviadas: 201, respondidas: 201 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > 100 respuestas -> { respondidas: 100, erroresRed: 110 } 2ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > duró 60 s -> { duracionMs: 60000 } 3ms
+ ✓ tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > cortada por la ventana -> { fueraDeVentana: true } 2ms
+
+ Test Files  1 passed (1)
+      Tests  41 passed (41)
+   Start at  10:06:32
+   Duration  792ms (tests 89%, setup 6%, import 2%, transform 1%, worker 1%)
+

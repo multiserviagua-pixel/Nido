@@ -1,0 +1,39 @@
+commit:    d0e30f0f6f80585abdf036b079f2a7f1286e27ff (el script de cada mutación se modificó en la copia de trabajo y se restauró; comprobado con cmp)
+prueba:    T-119 (a), lógica de scripts/conector/rafaga-waf.mjs: la prueba falla cuando el código está mal
+fecha:     2026-11-22T09:48:30+01:00
+entorno:   local (servidor falso en 127.0.0.1)
+comando:   npx vitest run tests/unit/plataforma/rafaga-waf.test.ts --maxWorkers=1 (una vez por mutación)
+resultado: superada (las tres mutaciones se detectan)
+revisor:   pendiente
+
+M1 · `veredicto` da SUPERADA siempre (`if (r.limitadas > 0)` -> `if (true)`)
+     12 fallidas de 33: sin regla, Equals, regla solo en /oauth/, 120 con cambio de ventana, servidor caído,
+     ráfaga lenta y 6 filas de la tabla de veredictos.
+M2 · Sin el control del prefijo `pre-` del host (`if (!host.split(".")[0].startsWith("pre-"))` -> `if (false)`)
+     2 fallidas de 33: «producción (host sin pre-)» y «pre- en un segmento que no es el primero».
+M3 · El 403 (acción Deny) no cuenta como limitado (`LIMITADORES = [429, 403]` -> `[429]`)
+     1 fallida de 33: «Deny (403) también cuenta como limitado».
+
+Con el script restaurado: 33 de 33 superadas (primera pasada).
+
+Segunda pasada, corrección de la revisión (MAYOR-1 y MENOR-2)
+commit:    a7eae5cf2c9b4ec4e9971da7c32a44442e30d1d5 + corrección en la copia de trabajo (cada mutación se restauró;
+           comprobado con cmp)
+fecha:     2026-11-22T10:05:50+01:00
+entorno:   local (servidor falso en 127.0.0.1)
+comando:   npx vitest run tests/unit/plataforma/rafaga-waf.test.ts --maxWorkers=1 (una vez por mutación)
+resultado: superada (las cuatro mutaciones se detectan)
+revisor:   pendiente
+
+M1 de antes (SUPERADA con cualquier 429/403, sin mirar la n.º de la primera limitada) es el script previo a la
+     corrección: 5 fallidas de 41 (vitest-rafaga-rojo.txt).
+M4 · `redirect: "error"` -> `redirect: "follow"`
+     2 fallidas de 41: «una 302 a otro puerto no se sigue» y «cada petición lleva redirect: "error"».
+M5 · Sin el caso de la n.º 1 (`if (n === 1)` -> `if (false)`)
+     1 fallida de 41: «403 desde la primera petición» (da NO CONCLUYENTE, pero con el motivo equivocado).
+M6 · Sin el tope superior (`n > ULTIMA_ESPERADA` -> `false`)
+     3 fallidas de 41: «cambio de ventana a mitad», «límite de 180» y la fila 105 de la tabla.
+M7 · Sin el caso de la n.º 1 ni la cota inferior
+     2 fallidas de 41: «403 desde la primera petición» y la fila 1 de la tabla.
+
+Con el script restaurado: 41 de 41 superadas (vitest-rafaga.txt).

@@ -1,0 +1,103 @@
+commit:    a7eae5cf2c9b4ec4e9971da7c32a44442e30d1d5 + pruebas nuevas de la corrección, con el script aún sin corregir
+prueba:    T-119 (a), MAYOR-1 y MENOR-2: las pruebas nuevas están en rojo antes de corregir el script
+fecha:     2026-11-22T10:05:00+01:00
+entorno:   local (servidor falso en 127.0.0.1, sin red real)
+comando:   npx vitest run tests/unit/plataforma/rafaga-waf.test.ts --maxWorkers=1
+resultado: fallida, como se esperaba (5 de 41 en rojo; las 2 de redirección pasan porque el script ya llevaba redirect: "error"; su rojo se ve en mutaciones.txt, M4)
+revisor:   pendiente
+---
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-119
+
+ ❯ tests/unit/plataforma/rafaga-waf.test.ts (41 tests | 5 failed) 504ms
+   ❯ rafaga-waf: regla bien puesta (Starts with, 100 por minuto) (3)
+     × con un cambio de ventana a mitad se ve el 429, pero tarde (n.º 160): NO CONCLUYENTE, repetir 35ms
+   ❯ rafaga-waf: limitado, pero no por la regla de 100 por minuto (MAYOR-1) (2)
+     × 403 desde la primera petición: NO CONCLUYENTE (no SUPERADA) y salida 2 7ms
+     × límite de 180 por minuto: el 429 llega en la 181, NO CONCLUYENTE (no SUPERADA) y salida 2 30ms
+   ❯ rafaga-waf: veredicto (tabla) (11)
+     × primera limitada n.º 1 -> { limitadas: 5, primeraLimitada: 1 } 3ms
+     × primera limitada n.º 105 -> { limitadas: 5, primeraLimitada: 105 } 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: regla bien puesta (Starts with, 100 por minuto) > con un cambio de ventana a mitad se ve el 429, pero tarde (n.º 160): NO CONCLUYENTE, repetir
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/unit/plataforma/rafaga-waf.test.ts:279:22
+    277|     const s = await servidorFalso(REGLA_BUENA, { ventanaEn: 60 });
+    278|     const r = await ejecutar(local(s), { concurrencia: 1 });
+    279|     expect(r.codigo).toBe(2);
+       |                      ^
+    280|     const l = linea(r.salida, "/api/salud");
+    281|     expect(l).toMatch(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: limitado, pero no por la regla de 100 por minuto (MAYOR-1) > 403 desde la primera petición: NO CONCLUYENTE (no SUPERADA) y salida 2
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/unit/plataforma/rafaga-waf.test.ts:292:22
+    290|     const s = await servidorFalso({ ...REGLA_BUENA, limite: 0, accion:…
+    291|     const r = await ejecutar(local(s));
+    292|     expect(r.codigo).toBe(2);
+       |                      ^
+    293|     for (const ruta of ["/api/salud", "/oauth/token"]) {
+    294|       const l = linea(r.salida, ruta);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: limitado, pero no por la regla de 100 por minuto (MAYOR-1) > límite de 180 por minuto: el 429 llega en la 181, NO CONCLUYENTE (no SUPERADA) y salida 2
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/unit/plataforma/rafaga-waf.test.ts:306:22
+    304|     const s = await servidorFalso({ ...REGLA_BUENA, limite: 180 });
+    305|     const r = await ejecutar(local(s));
+    306|     expect(r.codigo).toBe(2);
+       |                      ^
+    307|     const l = linea(r.salida, "/api/salud");
+    308|     expect(l).toMatch(/NO CONCLUYENTE.*primera limitada: n\.º 18[1-4]/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 1 -> { limitadas: 5, primeraLimitada: 1 }
+ FAIL  tests/unit/plataforma/rafaga-waf.test.ts > rafaga-waf: veredicto (tabla) > primera limitada n.º 105 -> { limitadas: 5, primeraLimitada: 105 }
+AssertionError: expected 'SUPERADA' to be 'NO CONCLUYENTE' // Object.is equality
+
+Expected: "NO CONCLUYENTE"
+Received: "SUPERADA"
+
+ ❯ tests/unit/plataforma/rafaga-waf.test.ts:543:56
+    541|   ])("%s -> %s", async (_n, cambio, esperado) => {
+    542|     const m = await cargar();
+    543|     expect(m.veredicto({ ...base, ...cambio }).estado).toBe(esperado);
+       |                                                        ^
+    544|   });
+    545| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 36 passed (41)
+   Start at  10:05:09
+   Duration  813ms (tests 89%, setup 6%, import 2%, transform 1%, worker 1%)
+
