@@ -4,6 +4,9 @@
 # «revisión de propietarios de código» (ajuste de producción, no lo aplica un agente). Además, si el
 # propietario es quien abre los PR, GitHub no acepta su propia aprobación: la persona decide si exige
 # un segundo revisor, un equipo propietario o si se salta la regla como administrador.
+# T-125 (22/11/2026): `*` cubre todo lo que no tiene ruta propia. Va la primera y una sola vez,
+# porque gana la última coincidencia; lo exige tests/unit/plataforma/acciones-fijadas.test.ts.
+* @multiserviagua-pixel
 /.github/ @multiserviagua-pixel
 /.github/CODEOWNERS @multiserviagua-pixel
 /.npmrc @multiserviagua-pixel

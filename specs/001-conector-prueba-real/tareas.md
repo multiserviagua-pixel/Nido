@@ -217,6 +217,15 @@ Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten a
 - La comprobación de que `AGENTS.md` no cambia tras `next build` consta en `evidencias/T-124/agents-md.txt` (la ejecuta el responsable, no hay build en esta máquina de agente).
 - Revisión: `revisor`. Archivos: `next.config.ts`, `.github/` (flujos, `CODEOWNERS`, `dependabot.yml`), pruebas en `tests/unit/plataforma`.
 
+### T-125 · Menores abiertos de T-124 (CODEOWNERS, recorrido de `.github/` y Dependabot)
+`plataforma` (revisan `revisor` y `auditor-seguridad`) · C · hecha en la rama `tarea/T-125`, pendiente de revisión (22/11/2026, D-036) · Depende de: T-124 · REQ-015 · CA-015
+- Cambio de CI por delegación D-036 (22/11/2026), hallazgos 1, 2 y 4 de `evidencias/T-124/auditoria-vuelta-corta.md`. El 3 (clave YAML con escapes) queda fuera: no hay parser YAML entre las dependencias directas de `package.json` y no se añaden.
+- (a) `.github/CODEOWNERS`: `* @multiserviagua-pixel` como primera línea efectiva y única con `*` (gana la última coincidencia, así no tapa las rutas). Prueba: mutaciones ausente, no primera, repetida al final, otro propietario, sin propietario y comentada.
+- (b) `acciones-fijadas.test.ts` recorre `.github/` entero (cualquier `.yml` o `.yaml`, en cualquier subcarpeta, también `dependabot.yml`), no solo `workflows/`; misma regla de `uses` fijado por SHA. Prueba: el recorrido real contiene `workflows/arnes.yml` y `dependabot.yml`, y en una carpeta temporal encuentra `.yml`, `.yaml` y `.YML` a dos niveles y no `.txt`.
+- (c) `.github/dependabot.yml`: `open-pull-requests-limit: 2` y `cooldown` con `default-days: 7`, en forma de bloque (verificado en la documentación oficial de GitHub el 22/11/2026: `default-days` admitido para `github-actions`; ni la espera ni el tope afectan a las actualizaciones de seguridad). Prueba: mutaciones sin espera, sin tope, 3 días, tope 5, forma en línea, exclusiones dentro de `cooldown`, tope repetido y otro ecosistema.
+- Sin efecto en GitHub hasta que una persona active la revisión de propietarios en la protección de rama de `main` y haga el push (art. 14).
+- Archivos: `.github/CODEOWNERS`, `.github/dependabot.yml`, `tp/acciones-fijadas.test.ts`. Evidencia en `evidencias/T-125/`.
+
 ## Equivalencias (numeración del 19/11 → actual)
 
 | Actual | Antiguas | Actual | Antiguas |
@@ -232,7 +241,7 @@ Decididas por la coordinación (D-036, 21/11/2026). T-121 y T-122 no comparten a
 | T-109 | T-130 | T-119 | T-155, T-159 a T-164 |
 | T-110 | T-133 a T-136 | | |
 
-T-120 a T-123 actuales son tareas nuevas (bloques 7 y 8): no son las antiguas del mismo número de esta tabla.
+T-120 a T-125 actuales son tareas nuevas (bloques 7 y 8): no son las antiguas del mismo número de esta tabla.
 
 ## Escalados
 

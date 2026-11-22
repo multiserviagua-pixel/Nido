@@ -1,8 +1,14 @@
 # Solo las acciones de GitHub (fijadas por SHA): propone la subida del SHA y de su comentario de versión.
 # Cambio de CI por delegación D-036 (21/11/2026). No se añaden otros ecosistemas.
+# T-125 (22/11/2026): espera de 7 días desde cada publicación antes de proponerla y como mucho 2 PR
+# abiertos. Según la documentación de GitHub, ninguno de los dos afecta a las actualizaciones de
+# seguridad. Lo comprueba tests/unit/plataforma/acciones-fijadas.test.ts.
 version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 2
+    cooldown:
+      default-days: 7

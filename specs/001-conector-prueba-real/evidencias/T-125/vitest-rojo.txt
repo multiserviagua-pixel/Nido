@@ -1,0 +1,55 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-125
+
+ ❯ tests/unit/plataforma/acciones-fijadas.test.ts (36 tests | 2 failed) 21ms
+   ❯ CODEOWNERS (13)
+     × `* @multiserviagua-pixel` es la primera línea efectiva y la única con `*` 5ms
+   ❯ dependabot.yml (10)
+     × espera 7 días y abre como mucho 2 PR 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/plataforma/acciones-fijadas.test.ts > CODEOWNERS > `* @multiserviagua-pixel` es la primera línea efectiva y la única con `*`
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/unit/plataforma/acciones-fijadas.test.ts:106:56
+    104|   const ruta = join(raiz, ".github", "CODEOWNERS");
+    105|   it("`* @multiserviagua-pixel` es la primera línea efectiva y la únic…
+    106|     expect(comodinPrimero(readFileSync(ruta, "utf8"))).toBe(true);
+       |                                                        ^
+    107|   });
+    108|   const rutas = "# cabecera\n/.github/ @multiserviagua-pixel\n/.npmrc …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/plataforma/acciones-fijadas.test.ts > dependabot.yml > espera 7 días y abre como mucho 2 PR
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/unit/plataforma/acciones-fijadas.test.ts:196:85
+    194| describe("dependabot.yml", () => {
+    195|   it("espera 7 días y abre como mucho 2 PR", () => {
+    196|     expect(cumpleDependabot(readFileSync(join(carpeta, "dependabot.yml…
+       |                                                                                     ^
+    197|   });
+    198|   const base = [
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 34 passed (36)
+   Start at  09:24:45
+   Duration  379ms (transform 45%, setup 28%, tests 16%, import 8%, worker 3%)
+

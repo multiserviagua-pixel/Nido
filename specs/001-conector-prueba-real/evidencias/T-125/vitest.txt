@@ -1,0 +1,55 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-125
+
+(node:13356) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ ❯ tests/unit/plataforma/trazado.test.ts (7 tests | 1 failed) 2889ms
+   ❯ trazado de archivos del conector (C-4, V-3) (7)
+     × la traza de next build de /api/mcp incluye prompt, contratos y certificado 2882ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/plataforma/trazado.test.ts > trazado de archivos del conector (C-4, V-3) > la traza de next build de /api/mcp incluye prompt, contratos y certificado
+Error: Command failed: npx next build
+
+> Build error occurred
+Error: Turbopack build failed with 1 error:
+./src/app
+Error: Could not find the Next.js package (next/package.json)
+Resolved from: C:\dev\agentes-correo-humanaia\.claude\worktrees\t-125\src\app
+Filesystem root used for resolution: C:\dev\agentes-correo-humanaia\.claude\worktrees\t-125
+
+Possible causes:
+  - node_modules is being reorganized by a concurrent install (e.g. pnpm adding a package with a `next` peer dependency). This is transient and should clear once the install completes.
+  - node_modules/next was removed, renamed, or has a broken symlink.
+  - The workspace root is incorrect — see turbopack.root in the Next.js config docs for how to configure it.
+  - In a monorepo, the Next.js package may only exist in a directory above the closest directory containing a package manager lockfile. The workspace root is detected by locating the nearest package manager lockfile.
+  - Next.js is installed globally rather than as a project dependency. This is not supported; install it locally.
+
+Note: To ensure a hermetic build and a portable cache, files outside of the workspace root are not compiled.
+
+https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory
+
+
+    at <unknown> (Filesystem root used for resolution: C:\dev\agentes-correo-humanaia\.claude\worktrees\t-125)
+    at <unknown> (https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory)
+
+ ❯ tests/unit/plataforma/trazado.test.ts:135:7
+    133|     );
+    134|     if (vieja) {
+    135|       execFileSync("npx", ["next", "build"], {
+       |       ^
+    136|         cwd: RAIZ,
+    137|         stdio: "pipe",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 26 passed (27)
+      Tests  1 failed | 535 passed | 9 skipped (545)
+   Start at  09:25:06
+   Duration  57.93s (tests 90%, transform 4%, import 3%, setup 2%)
+
+    Isolate  27 workers spawned · ~259ms startup each (spawn + environment, per file)
+             at least ~6.74s faster with isolate: false — reuses workers across files instead of one per file
+
