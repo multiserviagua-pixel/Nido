@@ -10,6 +10,6 @@ Rama `tarea/010-T-009` rebasada sobre `main`, en su copia de trabajo, con candad
 | `npm run estilo` | 0 |
 | `npm run aislamiento` | 45 de 45 |
 | `node scripts/comprobar-specs.mjs` | SUPERADO |
-| Build y `trazado.test.ts` | pendiente en la carpeta principal tras el squash |
+| Build y `trazado.test.ts` (carpeta principal, tras el squash 9cd0855) | `npm run build`: salida 0 (5301 MB libres). `trazado.test.ts`: 7 de 7, salida 0 (4990 MB libres). Con esto el único fallo de la copia de trabajo queda explicado y resuelto |
 
 pgTAP en CI (`supabase test db`): NO ejecutado, queda para T-013. Lo ejecutado es el mismo SQL de 01 (38), 02 (844) y 07 (30) contra PGlite con `@electric-sql/pglite-pgtap` 0.0.18.
