@@ -102,7 +102,7 @@ Del 12 al 14/11 el gasto fue de unos 117 millones de unidades ponderadas: el 77 
 9. **Un solo orquestador por fase.** Antes de abrir uno, se cierra el anterior. Nunca dos chats sobre la misma función.
 10. **Sin esperas que gastan.** El orquestador no lanza bucles con `sleep` para vigilar archivos: espera el aviso del subagente.
 
-No se rebaja el modelo ni el esfuerzo de `auditor-seguridad` y `revisor`, ni se quita ninguna puerta o prueba.
+No se rebaja el modelo ni el esfuerzo de `auditor-seguridad`, ni se quita ninguna puerta o prueba. El `revisor` conserva `opus` en rutas críticas, especificaciones, diseños y planes; en tareas RC `R` cuyo diff no toca ninguna ruta crítica (`docs/SEGURIDAD.md` y «Críticas» de la 002) se le encarga con `sonnet` y el mismo esfuerzo (D-043, aprobado por el responsable el 22/11/2026: «Incluso la 7»).
 
 ## Estado de la carga en la app de escritorio
 

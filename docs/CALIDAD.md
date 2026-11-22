@@ -47,6 +47,17 @@ Reglas:
 
 Cada hallazgo cita archivo y línea, el requisito o artículo afectado y la prueba que lo demostraría.
 
+Reglas de revisión (D-043, 22/11/2026):
+
+- Un MAYOR o un BLOQUEANTE trae su escenario de fallo concreto (entrada o estado, resultado erróneo, ejecutado o trazado en el código). Sin él es una «Sospecha» sin gravedad, con la prueba que la confirmaría. Lo que afecta a los artículos 1 a 4, 8 y 9 de la constitución, y cualquier hallazgo en una ruta crítica, conserva su gravedad aunque sea sospecha. El orquestador nunca reclasifica un hallazgo. Cada sospecha queda anotada con su prueba en `verificacion.md` o en la tarea de limpieza.
+- Revisor y auditor revisan el mismo cambio a la vez, no uno tras otro.
+- La segunda vuelta mira solo las correcciones y los hallazgos abiertos; solo abre cualquier BLOQUEANTE (anterior o nuevo), cualquier hallazgo de los artículos 1 a 4, 8 y 9, o un MAYOR introducido por la corrección.
+- Los MENOR no detienen la integración; los que quedan van a una tarea de limpieza. En una ruta crítica, todo cambio posterior al dictamen pasa una vuelta del auditor sobre ese diff.
+- Un dictamen incompleto (sin «Sin bloqueantes» o «N bloqueantes») no cuenta.
+- Quien implementa repasa la lista de su ruta antes de entregar y lo dice en su informe.
+- Un MAYOR repetido en la misma ruta pasa a «Lecciones de revisión» de su regla en `.claude/rules/`; una lección solo añade comprobaciones.
+- El revisor usa `sonnet` solo si la tarea es RC `R` y su diff no toca ninguna ruta crítica (`docs/SEGURIDAD.md` y «Críticas» de la 002); si toca alguna, `opus` y auditor, diga lo que diga la etiqueta. En especificaciones, diseños y planes, `opus`.
+
 ## Definición de terminado
 
 Una tarea está terminada cuando:

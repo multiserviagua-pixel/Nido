@@ -17,10 +17,12 @@ Sale: el código y las pruebas de una tarea `T-NNN`, listos para revisión.
    - «Función NNN, tarea T-NNN», con el texto de la tarea.
    - Leer: la tarea, sus requisitos en `especificacion.md`, `diseno.md` y los contratos que toque.
    - Entregar: el cambio y sus pruebas. Prueba primero.
+   - Antes de entregar (D-043): repasar la lista de su ruta (las skills `migracion-bd`, `herramienta-mcp` o `revision-privacidad` que toquen, y la regla de `.claude/rules/` de su ruta con sus «Lecciones de revisión») y decir en el informe, punto por punto, qué comprobó.
    - No tocar: nada fuera del alcance de la tarea; ni contratos, ni CI, ni secretos, ni otras tareas.
    - Informar: archivos tocados, qué prueba cubre cada requisito, comandos y resultados, lo no ejecutado, riesgos, vuelta atrás, y si toca una ruta crítica.
 5. Comprueba tú:
    - Lee el cambio. Corresponde a la tarea y solo a ella.
+   - El informe trae el repaso de la lista de su ruta. Si falta, devuélvelo antes de revisar.
    - Ejecuta las pruebas que el agente dice haber pasado.
    - `node scripts/comprobar-specs.mjs`.
 6. Marca la tarea `en revisión` y sigue con `sdd-revisar`.
