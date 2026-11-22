@@ -1,6 +1,6 @@
 # Propuesta visual (020, T-011)
 
-Estado: **PROPUESTA, pendiente de validación del responsable (T-013)**. Autor: `disenador-ui`, 22/11/2026. Los valores están en `src/components/estilos/valores.css`, los pares en `src/components/estilos/combinaciones.ts` y las tablas completas, con el contraste calculado, en `docs/DISENO.md`. Este texto razona las opciones.
+Estado: **VALIDADA por el responsable el 22/11/2026 (T-013), con el logotipo C**. Autor: `disenador-ui`, 22/11/2026. Los valores están en `src/components/estilos/valores.css`, los pares en `src/components/estilos/combinaciones.ts` y las tablas completas, con el contraste calculado, en `docs/DISENO.md`. Este texto razona las opciones.
 
 ## 1. De dónde parte
 
@@ -89,8 +89,8 @@ Tres propuestas, cada una con tres SVG (`menu-oscuro.svg` para el menú azul noc
 
 ## 9. Validación del responsable
 
-Pendiente. Sin esta validación escrita y con fecha no empieza ninguna tarea de vistas (CA-055).
+Validada el 22/11/2026. Respuesta escrita del responsable en el chat de coordinación, tras ver la muestra servida en local (`/muestra/propuesta-visual`) y las capturas de `evidencias/T-013/capturas/`: «Logo C, aprobada». Anotada por la coordinación.
 
 | Fecha | Decisión | Logotipo elegido | Cambios pedidos |
 | --- | --- | --- | --- |
-| | | | |
+| 22/11/2026 | Aprobada: paleta, tipografía, tres vistas y umbral de 38 rem de la cabecera, sin cambios | C (nido en anillo) | Ninguno |
