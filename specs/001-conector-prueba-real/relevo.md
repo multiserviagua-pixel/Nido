@@ -2,6 +2,16 @@
 
 Reescrito entero (regla «Relevo auténtico»). Historia en `git log` y `docs/TECNOLOGIAS.md`. Sin push (lo hace la coordinación). Cada rama vive en su copia de `.claude/worktrees/`. Autorización: encargo de la coordinación (D-036, autonomía total, sin pausas). Prioridad: la prueba real del conector; la prueba Pro de Vercel acaba el 27/11.
 
+## Integrado hoy (22/11, 2.ª reescritura)
+- T-125 = a92ec95 (menores de T-124 en CI; revisor y auditor APTO CON MENORES; anotados: `usoFijado` admite `./x@sha`, la prueba de CODEOWNERS no fija el propietario de cada ruta, `tipos.txt` y `estilo.txt` vacíos).
+- `diseno.md` al día con T-107 = 85885bc (cierre, cerrada, resultados de SQL, límites L-1 a L-5; propone un caso de canje y cierre simultáneos en PRUEBA-008).
+- T-119, preparación sin despliegue = 1a41f55: guion y plantillas en `evidencias/T-119/`, `scripts/conector/rafaga-waf.mjs` con 41 pruebas locales; MAYOR-1 del revisor corregido y comprobado por el orquestador; nada ejecutado contra Vercel. Decisión de la coordinación (MENOR-4): la URL va por `RAFAGA_URL_BASE` frente a la convención sin eco. `despliegue-preproduccion.md` §8 propone 120 `curl`, que puede dar un falso fallo: usar el script (≥201 peticiones).
+- Las tres con pruebas de la tarea, tipos y comprobar-specs en verde; suite completa sin ejecutar.
+- `trazado.test.ts` lanza un `next build` si no hay traza y falla con `node_modules` enlazado: no ejecutar `tests/unit/plataforma` entero en copias con enlace.
+
+## Suite completa de `main` (paso 1 del encargo): PENDIENTE
+Copia `.claude/worktrees/suite-main` (igualada a `main`). Un trabajo en segundo plano tiene el candado y espera `esperar-memoria.sh 4000`; hubo ~2,5 GB libres durante horas. Cuando corra, anotar el resultado en `evidencias/T-112/resultado.md`. Después, T-112 (a) con `next start` en el puerto 3110 o superior. Si el candado pasa de 45 minutos sin suite, está abandonado.
+
 ## Estado (comprobado por el orquestador al reescribir)
 - Integradas en `main`: T-101 a T-111, T-115, T-116, T-117 (a), T-118 (a), T-120 a T-124 (T-110 = 9c0faac; T-123 (b) = 75b1c2f; T-117 (a) = 1690947; T-124 = c53728f; T-111 = f5af7ab; T-112 = d420e84; T-113 = ver `git log`). El carril A2 terminó (`relevo-paralelo.md`).
 - T-124: evidencia completa en verde (3231 pruebas). T-111: suite 3494 de 3495 y el fallo (manifiesto) corregido; tipos, estilo, aislamiento, arnés y build en 0. Candado de suite y espera de memoria (regla D): el sistema mató una pasada por memoria; se repitió con el script.
