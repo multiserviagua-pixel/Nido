@@ -1,0 +1,199 @@
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > claves ajenas (también __proto__ y constructor) se descartan y se cuentan sin guardarse 1642ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > claves ajenas dentro de comprobaciones también se descartan y se cuentan 906ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados negativo -> informe_invalido y la ejecución sigue abierta 960ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados 1001 -> informe_invalido y la ejecución sigue abierta 1078ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados decimal -> informe_invalido y la ejecución sigue abierta 975ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados como texto -> informe_invalido y la ejecución sigue abierta 817ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados null -> informe_invalido y la ejecución sigue abierta 847ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > tratados booleano -> informe_invalido y la ejecución sigue abierta 831ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > sin_tratar 100001 -> informe_invalido y la ejecución sigue abierta 783ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > frecuencia 0 -> informe_invalido y la ejecución sigue abierta 834ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > frecuencia 169 -> informe_invalido y la ejecución sigue abierta 792ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > estado fuera de lista -> informe_invalido y la ejecución sigue abierta 826ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > modo fuera de lista -> informe_invalido y la ejecución sigue abierta 1179ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > version_prompt con texto -> informe_invalido y la ejecución sigue abierta 1813ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > problemas: texto libre -> informe_invalido y la ejecución sigue abierta 1386ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > problemas: más de 5 -> informe_invalido y la ejecución sigue abierta 1171ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > comprobaciones no booleanas -> informe_invalido y la ejecución sigue abierta 1304ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > falta un campo obligatorio -> informe_invalido y la ejecución sigue abierta 1242ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > informe que es texto -> informe_invalido 1421ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > informe que es null -> informe_invalido 2217ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > informe que es lista -> informe_invalido 2150ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > informe que es número -> informe_invalido 1546ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > ejecucion_id no es uuid -> ejecucion_desconocida sin eco 1205ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > ejecucion_id numérico -> ejecucion_desconocida sin eco 1139ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > ejecucion_id null -> ejecucion_desconocida sin eco 1341ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · informe: campos de más, tipos y rangos > ejecucion_id con marca -> ejecucion_desconocida sin eco 1088ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · repeticiones y peticiones a la vez > el mismo informe dos veces: guardado y repetido; una sola fila y gana el primero 1081ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · repeticiones y peticiones a la vez > diez informes a la vez para una ejecución: uno guardado y nueve repetidos 1103ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · repeticiones y peticiones a la vez > diez confirmaciones a la vez de la misma orden: una confirmada y nueve repetidas 1050ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · repeticiones y peticiones a la vez > dos activaciones a la vez con el mismo código: una conexión y una sola recibe el código de autorización 1088ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · repeticiones y peticiones a la vez > dos canjes a la vez del mismo código de autorización: ningún token sigue valiendo (reutilización) 1154ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > lote -> -32600 1232ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > lote vacío -> -32600 1109ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > texto JSON -> -32600 1036ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > número -> -32600 959ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > null -> -32600 884ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > booleano -> -32600 1001ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > JSON mal formado -> -32700 sin eco 1590ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > nombre de herramienta ajeno -> -32602 sin eco del nombre 1673ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > cuerpo de más de 32 768 bytes -> 413 1291ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > Origin ajeno o null -> 403; con el propio o con el de claude.ai sirve 1277ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > autorización mal formada o con otro tipo de token -> 401 con reto, sin eco 1493ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > token en el cuerpo, en una cookie o en la consulta no sustituye a Authorization 1474ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > GET -> 405 con Allow: POST 1394ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > PUT -> 405 con Allow: POST 1738ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > PATCH -> 405 con Allow: POST 1804ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > DELETE -> 405 con Allow: POST 1435ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · tubería del punto MCP: lotes, no objetos, nombres ajenos, tamaño y origen > OPTIONS -> 405 con Allow: POST 1489ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: callback ajeno -> 400 y nada guardado 1568ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: callback local -> 400 y nada guardado 1443ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: callback con barra de más -> 400 y nada guardado 1357ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: redirect_uris no es lista -> 400 y nada guardado 1584ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: redirect_uris vacía -> 400 y nada guardado 1563ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: sin redirect_uris -> 400 y nada guardado 1562ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: auth distinta de none -> 400 y nada guardado 1486ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: cuerpo que no es objeto -> 400 y nada guardado 1293ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: JSON mal formado -> 400 y nada guardado 1232ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > DCR: campos de más se ignoran y no se guardan (texto libre con marca) 1406ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > autorización: callback ajeno y cliente ajeno dan error sin redirigir; errores de solicitud redirigen con error e iss 1785ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > POST autorizar: Origin ajeno o null, cookie ajena, state cambiado, otra solicitud o JSON no activan ni cuentan intento 2320ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > código incorrecto 5 veces bloquea: la sexta, con el código bueno, da 429 sin consumirlo 1888ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > token: grant_type ajeno, sin verificador, verificador falso, otro cliente, otro callback, JSON 1605ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-017 · registro (DCR), autorización y token con entradas hostiles > renovación: token ajeno, de acceso, de otro cliente o sin forma -> 400; la buena sigue valiendo 1708ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-019 · valores marcados y copia del estado > marcas en argumentos, cabeceras, consulta, cookies y id: 0 en consola y en el volcado de la base 1524ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-019 · valores marcados y copia del estado > la copia del estado no contiene tokens ni códigos, y la consola del ciclo tampoco 1378ms
+ ✓ tests/conector/hostiles.test.ts > PRUEBA-019 · valores marcados y copia del estado > con la copia del estado y otra clave del conector no se obtiene ningún token válido 1717ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > URL_PUBLICA ausente 3351ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > URL_PUBLICA mal formada n.º 1 2308ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > URL_PUBLICA mal formada n.º 2 1235ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > URL_PUBLICA mal formada n.º 3 957ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_SECRETO ausente 866ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_SECRETO mal formada n.º 1 1097ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_SECRETO mal formada n.º 2 975ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_SECRETO mal formada n.º 3 977ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_BD_URL ausente 1056ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_BD_URL mal formada n.º 1 935ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_BD_URL mal formada n.º 2 955ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > CONECTOR_BD_URL mal formada n.º 3 1094ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > AUTORIZACION_BD_URL ausente 1080ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > AUTORIZACION_BD_URL mal formada n.º 1 1035ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > AUTORIZACION_BD_URL mal formada n.º 2 1250ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > AUTORIZACION_BD_URL mal formada n.º 3 1017ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > OPERACION_HUELLA ausente 914ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > OPERACION_HUELLA mal formada n.º 1 862ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > OPERACION_HUELLA mal formada n.º 2 830ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · variables: cada una ausente o mal formada -> 503 en todas las rutas, sin tocar la base > OPERACION_HUELLA mal formada n.º 3 880ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > validar_acceso: 503 en la ruta MCP y ninguna otra función llamada 927ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > obtener_instrucciones: error_temporal sin prompt ni estado, y sin ejecución 1301ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > obtener_instrucciones con la respuesta perdida: la ejecución existe pero el cliente no recibe prompt 1285ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > enviar_informe: error_temporal, nada guardado; con el almacén de vuelta, la ejecución sigue abierta 1205ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > confirmar_orden: error_temporal, la orden sigue entregada 1073ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > registrar_suceso caído: la respuesta no cambia (200 con el resultado) y no se escribe el suceso 1256ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · almacén del conector caído, función a función > todo el almacén caído: 503 genérico, sin el token ni texto de la causa en cuerpo ni consola 1113ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > metadatos: no dependen de la base y responden 200 con ella caída 999ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > registro DCR: 503 sin cliente creado 1156ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > GET autorizar con la base caída: pantalla HTML «no disponible» (503), sin solicitud ni cookie 1391ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > POST activar con la base caída: «no disponible» y el código sigue sirviendo después 1857ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > respuesta perdida tras activar: conexión sin tokens; el código gastado ya tiene conexión; otro código funciona 1240ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > emitir (canje) con la base caída: 503 sin par, y sin tokens guardados 1156ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > respuesta perdida al emitir: 503 sin par; repetir el código revoca la conexión (reutilización) 1314ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > renovar con la base caída: 503 y el token de renovación sigue valiendo 1118ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > respuesta perdida al renovar: repetir en 60 s da el mismo par, byte a byte 1039ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-018 · autorización caída, paso a paso > operación con la base caída: 503 940ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > lo entregado coincide con la huella fijada y con el archivo del repositorio; no cambia tras operar ni tras hostiles 1069ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > pausada y suspendida no entregan prompt ni marca (huella solo con activa) 1153ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > huella distinta (un byte cambiado) -> 503 por /api/mcp, sin ejecución, sin texto en cuerpo ni consola 1098ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > texto canario sin la huella -> 503 por /api/mcp, sin ejecución, sin texto en cuerpo ni consola 1202ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > archivo vacío -> 503 por /api/mcp, sin ejecución, sin texto en cuerpo ni consola 932ms
+ ✓ tests/conector/fallos.test.ts > PRUEBA-016 · huella del prompt > archivo ilegible -> 503 por /api/mcp, sin ejecución, sin texto en cuerpo ni consola 917ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-014 · CAD-015: casos cruzados con el token de A > ejecucion_id de B, de otra conexión de A e inexistente dan la misma respuesta; B no cambia 1957ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-014 · CAD-015: casos cruzados con el token de A > orden de B, inexistente y de A no entregada dan confirmada: false; la orden de B queda entregada 908ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-014 · CAD-015: casos cruzados con el token de A > el identificador de B como campo, en cabecera, en la URL o en cookie no cambia nada 850ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-014 · CAD-015: casos cruzados con el token de A > el token de A en la URL cuenta como sin token (401) y el de B no sirve para la licencia de A 824ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-014 · CAD-015: casos cruzados con el token de A > A y B a la vez, cada uno con su conexión: ejecuciones separadas y cuentas exactas 1119ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-013: revocar una conexión > la conexión revocada se rechaza (401), la otra de A y la de B siguen y el resto no cambia 1157ms
+ ✓ tests/conector/aislamiento.test.ts > PRUEBA-013: revocar una conexión > revocar no depende de la licencia: el estado terminal de una no cierra la otra (sin cerrar_prueba) 1122ms
+ ✓ tests/conector/ciclo.test.ts > PRUEBA-001 · CAD-002: metadatos y reto > los dos documentos contienen todos los campos obligatorios y la respuesta sin token remite a ellos 2029ms
+ ✓ tests/conector/ciclo.test.ts > PRUEBA-001 · CAD-002: metadatos y reto > una cabecera Host o X-Forwarded-Host falsa no cambia emisor, recurso ni reto 1187ms
+ ✓ tests/conector/ciclo.test.ts > PRUEBA-004 (B) y PRUEBA-002: ciclo completo con el cliente oficial, sesión 2025-11-25 > descubrimiento, registro, autorización con código, tres herramientas y renovación con rotación 1420ms
+ ✓ tests/conector/ciclo.test.ts > PRUEBA-004 (B) y PRUEBA-002: ciclo completo con el cliente oficial, sesión 2026-07-28 > descubrimiento, registro, autorización con código, tres herramientas y renovación con rotación 1163ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: archivos de ruta > todo archivo de ruta del conector figura en el inventario 2ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: archivos de ruta > todo archivo inventariado existe y exporta los métodos declarados 7ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: archivos de ruta > una sola excepción de cabeceras: /oauth/autorizar 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /api/mcp lleva exactamente lo inventariado 9ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /api/operacion lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /oauth/registro lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /oauth/autorizar lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /oauth/token lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /.well-known/oauth-authorization-server lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /.well-known/oauth-protected-resource lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > /.well-known/oauth-protected-resource/api/mcp lleva exactamente lo inventariado 0ms
+ ✓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001: cabeceras de la configuración de Next > `same-origin` solo aparece en /oauth/autorizar (con y sin barra final) 0ms
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /api/mcp POST lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /api/operacion POST lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /oauth/registro POST lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /oauth/autorizar GET lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /oauth/autorizar POST lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /oauth/token POST lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /.well-known/oauth-authorization-server GET lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /.well-known/oauth-protected-resource GET lleva las cabeceras del inventario
+ ↓ tests/unit/plataforma/inventario-001.test.ts > inventario de la 001 contra `next start` (ejecución pendiente sin servidor) > /.well-known/oauth-protected-resource/api/mcp GET lleva las cabeceras del inventario
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite GET envuelto 2ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite noPermitido 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite OPTIONS 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite dynamic 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite revalidate 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite maxDuration 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite ajuste con tipo 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > admite envuelto en dos líneas 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta función exportada 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta función asíncrona 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta alias con export { f as GET } 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta export let 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta export var 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta const sin envolver 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta export default 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta reexportación 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta ajuste no admitido 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta nombre que no es método 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > problemasDeRuta: ejemplos sintéticos > detecta que no importa manejador 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > la excepción está anclada a su ruta exacta > solo la ruta exacta queda exenta 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > hay al menos una ruta 0ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\.well-known\oauth-authorization-server\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\api\mcp\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\api\operacion\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\api\salud\route.ts 19ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\oauth\autorizar\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\oauth\registro\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\oauth\token\route.ts 1ms
+ ✓ tests/unit/plataforma/rutas.test.ts > todo route.* usa manejador.ts > src\app\.well-known\oauth-protected-resource\[[...ruta]]\route.ts 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > inicio: un solo h1 12ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > no encontrada: un solo h1 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error: un solo h1 2ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error global: un solo h1 2ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > inicio y 404 llevan su texto 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > el layout declara lang es 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error: alerta, texto fijo y botón nativo sin datos del error 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error global: alerta, texto fijo y botón nativo sin datos del error 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error global incluye su propio html con lang es 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error global lleva title fijo y main 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error: el botón Reintentar llama a retry 1ms
+ ✓ tests/unit/app/paginas.test.tsx > páginas base > error global: el botón Reintentar llama a retry 0ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > GET: 200, cuerpo exacto de un solo campo y no-store 12ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > HEAD: 200 sin cuerpo y no-store 2ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > no lee la petición 1ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > POST: 405 2ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > PUT: 405 1ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > PATCH: 405 1ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > DELETE: 405 1ms
+ ✓ tests/unit/api/salud.test.ts > /api/salud (PRUEBA-025 y 044, partes L) > OPTIONS: 405 1ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > desactiva X-Powered-By 9ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > todas las rutas llevan las cabeceras de App base 2ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > /oauth/autorizar usa Referrer-Policy same-origin, conserva el resto y no lleva la CSP global (C-4) 1ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > la exclusión es exacta: cualquier otra ruta, también bajo /oauth, lleva las globales 1ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > ninguna ruta recibe dos veces la misma cabecera (la global y la de /oauth/autorizar no se suman) 0ms
+ ✓ tests/unit/plataforma/cabeceras.test.ts > cabeceras de next.config.ts > no declara HSTS (lo pone la plataforma) 1ms
+ Test Files  9 passed (9)
+      Tests  187 passed | 9 skipped (196)
+   Duration  160.31s (tests 98%, import 1%)

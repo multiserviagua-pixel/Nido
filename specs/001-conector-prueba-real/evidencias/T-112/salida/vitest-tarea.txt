@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/t-112
+
+
+ Test Files  6 passed (6)
+      Tests  149 passed | 9 skipped (158)
+   Start at  04:15:02
+   Duration  321.95s (tests 99%, import 1%)
+

@@ -1,0 +1,60 @@
+
+> nido@0.1.0 arnes
+> node scripts/comprobar-specs.mjs
+
+Comprobador del arnés
+
+  OK     Archivos obligatorios (30 archivos)
+  OK     Contratos (4 esquemas; informe sin texto libre)
+  OK     Contrato del informe y modelo de datos coinciden (12 códigos de problema)
+  OK     Trazabilidad de las funciones (29 funciones)
+  OK     Agentes (12 agentes)
+  OK     Enrutado: docs/EQUIPO.md coincide con los agentes (12 roles comparados)
+  OK     Skills (14 skills)
+  OK     Ajustes de Claude Code (sin permisos ampliados)
+  OK     Registro de decisiones (64 decisiones con estado)
+  OK     Plan de fases (fases 0 a 6 con criterios)
+  OK     .env.example sin valores (9 variables)
+  OK     Sin secretos en el repositorio (874 archivos revisados)
+
+37 avisos de tamaño (D-023; se recortan solo al reescribirlos, D-031):
+  - specs/001-conector-prueba-real/diseno.md: 45 KB (límite 40 KB)
+  - specs/001-conector-prueba-real/tareas.md: 34 KB (límite 25 KB)
+  - specs/003-repositorio-remoto-ci/especificacion.md: 26 KB (límite 25 KB)
+  - specs/010-base-datos-rls/diseno.md: 56 KB (límite 40 KB)
+  - specs/010-base-datos-rls/especificacion.md: 35 KB (límite 25 KB)
+  - specs/010-base-datos-rls/tareas.md: 31 KB (límite 25 KB)
+  - specs/011-conector-sobre-bd/especificacion.md: 35 KB (límite 25 KB)
+  - specs/012-prompt-1-3-arranque/especificacion.md: 36 KB (límite 25 KB)
+  - specs/013-latido-alertas/especificacion.md: 33 KB (límite 25 KB)
+  - specs/014-autorizacion-definitiva/especificacion.md: 49 KB (límite 25 KB)
+  - specs/015-registro-versiones-prompt/especificacion.md: 41 KB (límite 25 KB)
+  - specs/016-compuerta-envio-por-regla/especificacion.md: 40 KB (límite 25 KB)
+  - specs/017-configuracion-compuerta-dueno/especificacion.md: 35 KB (límite 25 KB)
+  - specs/018-aprendizaje-estilo/especificacion.md: 30 KB (límite 25 KB)
+  - specs/020-sistema-diseno-armazon/diseno.md: 139 KB (límite 40 KB)
+  - specs/020-sistema-diseno-armazon/especificacion.md: 50 KB (límite 25 KB)
+  - specs/020-sistema-diseno-armazon/tareas.md: 39 KB (límite 25 KB)
+  - specs/021-acceso-superadmin/diseno.md: 55 KB (límite 40 KB)
+  - specs/021-acceso-superadmin/especificacion.md: 69 KB (límite 25 KB)
+  - specs/021-acceso-superadmin/plan.md: 33 KB (límite 25 KB)
+  - specs/021-acceso-superadmin/tareas.md: 33 KB (límite 25 KB)
+  - specs/022-clientes-licencias-conexiones/especificacion.md: 65 KB (límite 25 KB)
+  - specs/023-informes-ordenes/diseno.md: 123 KB (límite 40 KB)
+  - specs/023-informes-ordenes/especificacion.md: 57 KB (límite 25 KB)
+  - specs/024-auditoria/especificacion.md: 62 KB (límite 25 KB)
+  - specs/025-reglas-por-cliente/especificacion.md: 41 KB (límite 25 KB)
+  - specs/030-versiones-prompt-y-canales/especificacion.md: 34 KB (límite 25 KB)
+  - specs/031-metricas-por-version/especificacion.md: 34 KB (límite 25 KB)
+  - specs/032-alertas-y-pausa-global/especificacion.md: 34 KB (límite 25 KB)
+  - specs/033-cliente-piloto-en-paralelo/especificacion.md: 45 KB (límite 25 KB)
+  - specs/040-acceso-cliente/especificacion.md: 33 KB (límite 25 KB)
+  - specs/041-resumen-actividad-cliente/especificacion.md: 47 KB (límite 25 KB)
+  - specs/042-suscripcion-cliente/especificacion.md: 43 KB (límite 25 KB)
+  - specs/050-cobro-stripe/especificacion.md: 33 KB (límite 25 KB)
+  - specs/051-publicacion-operacion/especificacion.md: 41 KB (límite 25 KB)
+  - specs/052-legal-rgpd/especificacion.md: 36 KB (límite 25 KB)
+  - specs/053-migracion-clientes-panel/especificacion.md: 40 KB (límite 25 KB)
+
+RESULTADO: SUPERADO
+Es una comprobación documental. No prueba seguridad ni comportamiento.

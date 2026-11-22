@@ -1,0 +1,6 @@
+
+> nido@0.1.0 tipos
+> next typegen && tsc --noEmit -p tsconfig.json
+
+Generating route types...
+✓ Types generated successfully

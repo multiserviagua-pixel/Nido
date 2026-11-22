@@ -118,12 +118,13 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 ## Bloque 4 · Transversales en local y `Nido`
 
 ### T-112 `[P]` · Inventario y pruebas transversales en local
-`qa` · C · pendiente · Depende de: T-110 · REQ-001, REQ-005, REQ-006, REQ-010, REQ-012, REQ-013, REQ-014, REQ-015 · CA-001, CA-005, CA-008, CA-010, CA-012, CA-013, CA-014, CA-015
-- (a) Inventario de rutas y cabeceras de la 001 contra `next start` (`same-origin` solo en `/oauth/autorizar`) en `tests/plataforma/inventario-rutas-001.json`. Prueba: `tp/inventario-001.test.ts`, PRUEBA-009 (parte); PRUEBA-025 de la 002 en verde.
-- (b) A, B y dos conexiones de A por HTTP en proceso. Prueba: `ta/aislamiento.test.ts`, PRUEBA-014 (CAD-015 entero; B idéntico), PRUEBA-013.
-- (c) Fallos y huella. Prueba: `ta/fallos.test.ts`, PRUEBA-018 (cada paso, variable y punto), PRUEBA-016 (antes y después de operaciones y hostiles).
-- (d) Entradas hostiles y valores marcados. Prueba: `ta/hostiles.test.ts`, PRUEBA-017, PRUEBA-019 (también en `id`; copia del estado → 0 tokens).
-- (e) Ciclo completo con el cliente oficial (RD-079). Prueba: `ta/ciclo.test.ts`, PRUEBA-004 (B), PRUEBA-002 (2 de 2), PRUEBA-001 (CAD-002).
+`qa` · C · hecha e integrada (22/11/2026; revisor APTO CON MENORES aplicados; (a) contra `next start` con ejecución pendiente; suite completa sin ejecutar por memoria, ver `ev/T-112/resultado.md`), salvo la parte contra `next start` de (a), de ejecución pendiente (22/11/2026; evidencia en `ev/T-112/`) · Depende de: T-110 · REQ-001, REQ-005, REQ-006, REQ-010, REQ-012, REQ-013, REQ-014, REQ-015 · CA-001, CA-005, CA-008, CA-010, CA-012, CA-013, CA-014, CA-015
+- (a) Inventario de rutas y cabeceras de la 001 contra `next start` (`same-origin` solo en `/oauth/autorizar`) en `tests/plataforma/inventario-rutas-001.json`. Prueba: `tp/inventario-001.test.ts`, PRUEBA-009 (parte); PRUEBA-025 de la 002 en verde. **Hecho** (inventario y parte estática: 12 casos en verde; la parte contra `next start` está escrita y se omite sin `INVENTARIO_BASE_URL`: **ejecución pendiente**, necesita build y servidor; se ejecutará con la máquina libre, en T-114 o antes del despliegue).
+- (b) A, B y dos conexiones de A por HTTP en proceso. Prueba: `ta/aislamiento.test.ts`, PRUEBA-014 (CAD-015 entero; B idéntico), PRUEBA-013. **Hecho** (7 casos; apoyo en `ta/apoyo-http.ts`).
+- (c) Fallos y huella. Prueba: `ta/fallos.test.ts`, PRUEBA-018 (cada paso, variable y punto), PRUEBA-016 (antes y después de operaciones y hostiles). **Hecho** (43 casos).
+- (d) Entradas hostiles y valores marcados. Prueba: `ta/hostiles.test.ts`, PRUEBA-017, PRUEBA-019 (también en `id`; copia del estado → 0 tokens). **Hecho** (66 casos).
+- (e) Ciclo completo con el cliente oficial (RD-079). Prueba: `ta/ciclo.test.ts`, PRUEBA-004 (B), PRUEBA-002 (2 de 2), PRUEBA-001 (CAD-002). **Hecho** (4 casos, cliente oficial 2.4.0 en las dos épocas).
+- Resultado y mutaciones comprobadas: `ev/T-112/resultado.md`; sin defectos de producto (`ev/T-112/hallazgos.md`). Límite: la concurrencia corre sobre una sola conexión de PGlite; el bloqueo de fila real es PRUEBA-008 (T-114).
 
 ### T-113 `[P]` · WCAG 2.2 AA de la pantalla
 `disenador-ui` · R · pendiente · Depende de: T-110 · REQ-005 · CA-005

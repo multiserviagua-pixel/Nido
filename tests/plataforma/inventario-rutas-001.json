@@ -1,0 +1,50 @@
+{
+  "funcion": "001-conector-prueba-real",
+  "tarea": "T-112 (a)",
+  "descripcion": "Rutas de la función 001 y las cabeceras de seguridad que cada una debe llevar. Las comprueba tests/unit/plataforma/inventario-001.test.ts: contra la configuración de Next (siempre) y contra `next start` (cuando INVENTARIO_BASE_URL apunta a un servidor levantado).",
+  "cabecerasGenerales": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "DENY",
+    "Content-Security-Policy": "frame-ancestors 'none'",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "X-Robots-Tag": "noindex"
+  },
+  "excepciones": {
+    "/oauth/autorizar": {
+      "cabeceras": { "Referrer-Policy": "same-origin" },
+      "sin": ["Content-Security-Policy"],
+      "motivo": "Con no-referrer el POST llega con Origin: null (diseño C-4). La CSP la pone la propia pantalla, con huella de estilo."
+    }
+  },
+  "rutas": [
+    { "ruta": "/api/mcp", "archivo": "src/app/api/mcp/route.ts", "metodos": ["POST"] },
+    { "ruta": "/api/operacion", "archivo": "src/app/api/operacion/route.ts", "metodos": ["POST"] },
+    {
+      "ruta": "/oauth/registro",
+      "archivo": "src/app/oauth/registro/route.ts",
+      "metodos": ["POST"]
+    },
+    {
+      "ruta": "/oauth/autorizar",
+      "archivo": "src/app/oauth/autorizar/route.ts",
+      "metodos": ["GET", "POST"]
+    },
+    { "ruta": "/oauth/token", "archivo": "src/app/oauth/token/route.ts", "metodos": ["POST"] },
+    {
+      "ruta": "/.well-known/oauth-authorization-server",
+      "archivo": "src/app/.well-known/oauth-authorization-server/route.ts",
+      "metodos": ["GET"]
+    },
+    {
+      "ruta": "/.well-known/oauth-protected-resource",
+      "archivo": "src/app/.well-known/oauth-protected-resource/[[...ruta]]/route.ts",
+      "metodos": ["GET"]
+    },
+    {
+      "ruta": "/.well-known/oauth-protected-resource/api/mcp",
+      "archivo": "src/app/.well-known/oauth-protected-resource/[[...ruta]]/route.ts",
+      "metodos": ["GET"]
+    }
+  ]
+}
