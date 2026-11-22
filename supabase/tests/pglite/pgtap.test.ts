@@ -1,5 +1,5 @@
 // Ejecución LOCAL de los archivos pgTAP de la 010 contra el arnés PGlite (T-008; D-034).
-// Comprueba que cada aserción de 01 y 07 se ejecuta y pasa sobre las migraciones y el seed, y
+// Comprueba que cada aserción de 01, 02 y 07 se ejecuta y pasa sobre las migraciones y el seed, y
 // que cada control puede fallar (mutaciones). NO es la ejecución de CI (`supabase test db`,
 // T-013): PGlite no es Supabase (REQ-028, artículo 13).
 import { readFileSync } from "node:fs";
@@ -18,8 +18,9 @@ afterAll(async () => {
 });
 
 const ARCHIVOS: [string, number][] = [
-  ["01_estructura.test.sql", 36],
+  ["01_estructura.test.sql", 38],
   ["07_informes.test.sql", 30],
+  ["02_matriz_acceso.test.sql", 844],
 ];
 
 /** Descripciones («N», «N-2 (a)») de las aserciones que fallan. */
@@ -27,6 +28,14 @@ async function falla(archivo: string): Promise<string[]> {
   const r = await ejecutarArchivo(db, archivo);
   return r.fallidas.map((l) => (/^not ok \d+ - (.*?) ·/.exec(l)?.[1] ?? l).trim());
 }
+
+const TABLAS_MONTADAS = ["clientes", "auditoria", "ordenes", "conexiones", "alertas"] as const;
+const ANTES: Record<string, number> = {};
+const contar = (tabla: string): Promise<number> =>
+  valor<number>(db, `select count(*)::int from public.${tabla}`);
+beforeAll(async () => {
+  for (const tabla of TABLAS_MONTADAS) ANTES[tabla] = await contar(tabla);
+});
 
 describe("pgTAP en PGlite (local, no es CI)", () => {
   for (const [archivo, total] of ARCHIVOS) {
@@ -42,6 +51,11 @@ describe("pgTAP en PGlite (local, no es CI)", () => {
   it("el archivo no deja nada en la base: la transacción se deshace", async () => {
     expect(await valor<number>(db, "select count(*)::int from public.informes")).toBe(3);
     expect(await valor<number>(db, "select count(*)::int from public.ejecuciones")).toBe(3);
+    // 02 monta además un cliente, una orden, una conexión, una alerta y tres filas de auditoría (R2-m-5):
+    // ninguna tabla que toque queda distinta de como estaba antes de los archivos.
+    for (const tabla of TABLAS_MONTADAS) {
+      expect(await contar(tabla), `queda algo en ${tabla}`).toBe(ANTES[tabla]);
+    }
   });
 });
 
@@ -310,9 +324,63 @@ const MUTACIONES: {
     deshace: "alter table public.informes drop constraint rechaza_base",
     fallan: ["15"],
   },
+  {
+    nombre: "TRUNCATE para el conector (N-4 (j), A-M-4, A1)",
+    archivo: "01_estructura.test.sql",
+    rompe: "grant truncate on public.informes to conector",
+    deshace: "revoke truncate on public.informes from conector",
+    fallan: ["N-4 (j)"],
+  },
+  {
+    nombre: "REFERENCES y TRIGGER para el conector (N-4 (j), A-M-4, A2)",
+    archivo: "01_estructura.test.sql",
+    rompe: "grant references, trigger on public.licencias to conector",
+    deshace: "revoke references, trigger on public.licencias from conector",
+    fallan: ["N-4 (j)"],
+  },
+  {
+    nombre: "MAINTAIN para el conector (N-4 (j), A-M-4, A3)",
+    archivo: "01_estructura.test.sql",
+    rompe: "grant maintain on public.informes to conector",
+    deshace: "revoke maintain on public.informes from conector",
+    fallan: ["N-4 (j)"],
+  },
+  {
+    nombre: "una secuencia nueva en public con permisos para el conector (N-4 (j), A-m-1, A10)",
+    archivo: "01_estructura.test.sql",
+    rompe: `create sequence public.secuencia_fuga;
+            revoke all on sequence public.secuencia_fuga from anon, authenticated, service_role;
+            grant usage, select on sequence public.secuencia_fuga to conector`,
+    deshace: "drop sequence public.secuencia_fuga",
+    fallan: ["N-4 (j)"],
+  },
+  {
+    nombre: "un permiso de columna para el conector (N-4 (j))",
+    archivo: "01_estructura.test.sql",
+    rompe: "grant select (id) on public.informes to conector",
+    deshace: "revoke select (id) on public.informes from conector",
+    fallan: ["N-4 (j)"],
+  },
+  {
+    nombre: "un esquema nuevo con una tabla legible por anon (N-4 (k), A-m-1, A11)",
+    archivo: "01_estructura.test.sql",
+    rompe: `create schema fuga;
+            create table fuga.t (id int);
+            grant usage on schema fuga to anon;
+            grant select on fuga.t to anon`,
+    deshace: "drop schema fuga cascade",
+    fallan: ["N-4 (k)"],
+  },
+  {
+    nombre: "un esquema nuevo con usage para PUBLIC y sin tablas (N-4 (k))",
+    archivo: "01_estructura.test.sql",
+    rompe: "create schema fuga2; grant usage on schema fuga2 to public",
+    deshace: "drop schema fuga2",
+    fallan: ["N-4 (k)"],
+  },
 ];
 
-describe("cada control de 01 y 07 puede fallar (mutaciones de la base)", () => {
+describe("cada control de 01, 02 y 07 puede fallar (mutaciones de la base)", () => {
   for (const m of MUTACIONES) {
     it(`${m.nombre}: falla ${m.fallan.join(", ")} en ${m.archivo}`, async () => {
       await db.exec(m.rompe);
@@ -328,7 +396,7 @@ describe("cada control de 01 y 07 puede fallar (mutaciones de la base)", () => {
     });
   }
 
-  it("tras deshacer todas las mutaciones, 01 y 07 vuelven a pasar", async () => {
+  it("tras deshacer todas las mutaciones, 01, 02 y 07 vuelven a pasar", async () => {
     for (const [archivo] of ARCHIVOS) expect(await falla(archivo)).toEqual([]);
   });
 });

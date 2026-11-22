@@ -8,8 +8,16 @@
 -- texto en cada archivo, sin cambios.
 --
 -- Datos 100 % ficticios (artículos 1 y 4): los identificadores son los de supabase/seed.sql.
--- Ningún secreto, ninguna contraseña. Los perfiles no usan `user_metadata`: la sesión es la
--- que lee la base (`request.jwt.claims`: sub, role y aal).
+-- Ningún secreto, ninguna contraseña. La base lee de la sesión (`request.jwt.claims`) solo sub,
+-- role y aal. Todo perfil con sesión lleva además `user_metadata` y `app_metadata` HOSTILES (un
+-- cliente_id ajeno, el de C, y es_admin = true): lo controla el usuario, nunca autoriza. El
+-- valor hostil es siempre el cliente C en dos claves fijas: la matriz detecta una política o
+-- función que lea esas claves y dé acceso a C o al administrador, pero no todas (quedan en verde
+-- la lectura de `usuarios_cliente` por `user_metadata.cliente_id`, porque C no tiene filas ahí; la
+-- modificación de `reglas_cliente` por esa clave, porque las sentencias solo apuntan a A y B; ni
+-- un `es_admin()` que acepte una clave no hostil como `user_metadata.rol`). Límite declarado en
+-- `evidencias/T-009/verde.md` y propuesta 49 (A-M-2, A2-m-1). USV y AD2 llevan `aal2`: el doble
+-- factor solo no hace administrador a nadie (A-M-1).
 --
 -- Uso:
 --   select pg_temp.como('UA');      -- usuario del cliente A, sesión de un factor
@@ -19,7 +27,8 @@
 --
 -- Perfiles (los de la especificación y D-6):
 --   SS    anon                         UA, UB, UAB  usuarios de cliente (UAB: A y B)
---   USV   usuario sin vínculo          AD1   superadmin sin doble factor, no vinculado
+--   USV   usuario sin vínculo, CON doble factor y que no es administrador
+--   AD1   superadmin sin doble factor, no vinculado
 --   AD2   superadmin con doble factor  AD1A  superadmin sin doble factor, vinculado a A
 --   AD3   usuario que no es administrador (alta y baja por el procedimiento)
 --   CON   conector                     SR    service_role                   DUENO  postgres
@@ -59,6 +68,10 @@ declare
   v_rol pg_catalog.text;
   v_sub pg_catalog.text;
   v_aal pg_catalog.text := 'aal1';
+  -- Datos de sesión que controla el usuario: hostiles a propósito (A-M-2). El cliente C es el que
+  -- ningún perfil de la matriz con vínculo tiene, y es_admin = true no hace administrador a nadie.
+  v_hostil pg_catalog.jsonb := pg_catalog.jsonb_build_object(
+    'cliente_id', '00000000-0000-4000-8000-00000000000c', 'es_admin', true);
 begin
   execute 'reset role';
   perform pg_catalog.set_config('request.jwt.claims', '', true);
@@ -72,7 +85,7 @@ begin
     when 'UA'   then v_rol := 'authenticated'; v_sub := pg_temp.id('UA')::pg_catalog.text;
     when 'UB'   then v_rol := 'authenticated'; v_sub := pg_temp.id('UB')::pg_catalog.text;
     when 'UAB'  then v_rol := 'authenticated'; v_sub := pg_temp.id('UAB')::pg_catalog.text;
-    when 'USV'  then v_rol := 'authenticated'; v_sub := pg_temp.id('USV')::pg_catalog.text;
+    when 'USV'  then v_rol := 'authenticated'; v_sub := pg_temp.id('USV')::pg_catalog.text; v_aal := 'aal2';
     when 'AD1'  then v_rol := 'authenticated'; v_sub := pg_temp.id('AD1')::pg_catalog.text;
     when 'AD2'  then v_rol := 'authenticated'; v_sub := pg_temp.id('AD2')::pg_catalog.text; v_aal := 'aal2';
     when 'AD1A' then v_rol := 'authenticated'; v_sub := pg_temp.id('AD1A')::pg_catalog.text;
@@ -84,7 +97,8 @@ begin
     'request.jwt.claims',
     case when v_sub is null
       then pg_catalog.jsonb_build_object('role', v_rol)::pg_catalog.text
-      else pg_catalog.jsonb_build_object('sub', v_sub, 'role', v_rol, 'aal', v_aal)::pg_catalog.text
+      else pg_catalog.jsonb_build_object('sub', v_sub, 'role', v_rol, 'aal', v_aal,
+             'user_metadata', v_hostil, 'app_metadata', v_hostil)::pg_catalog.text
     end,
     true);
 end;

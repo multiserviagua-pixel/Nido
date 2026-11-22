@@ -61,7 +61,11 @@ export interface ResultadoTap {
 
 /** Ejecuta un archivo pgTAP de supabase/tests/ (por su nombre, p. ej. `01_estructura.test.sql`). */
 export async function ejecutarArchivo(db: Base, nombre: string): Promise<ResultadoTap> {
-  const sql = expandirIr(resolve(DIR_TESTS, nombre));
+  return ejecutarTexto(db, expandirIr(resolve(DIR_TESTS, nombre)));
+}
+
+/** Ejecuta el texto de un archivo pgTAP ya expandido (para probar el archivo cambiado a propósito). */
+export async function ejecutarTexto(db: Base, sql: string): Promise<ResultadoTap> {
   let respuestas;
   try {
     respuestas = await db.exec(sql);

@@ -11,8 +11,8 @@
 -- de tabla, vista o tipo de public o privado sin su esquema. Dueño: postgres. Un solo archivo,
 -- una transacción, rollback al final.
 --
--- Las 36 aserciones: las 23 del diseño van numeradas 1 a 23. Las de origen N-1, N-2 y N-4 del
--- dictamen de la vuelta 2 (condiciones 1 y 2) van como N-1, N-2 (a-c) y N-4 (a-i) y entran
+-- Las 38 aserciones: las 23 del diseño van numeradas 1 a 23. Las de origen N-1, N-2 y N-4 del
+-- dictamen de la vuelta 2 (condiciones 1 y 2) van como N-1, N-2 (a-c) y N-4 (a-k) y entran
 -- en declaradas.json con su origen (T-011).
 --
 -- Lista cerrada de funciones security definer (N-2): por FIRMA (regprocedure), recorriendo todo
@@ -25,7 +25,7 @@ begin;
 \ir ayudas/perfiles.psql
 \ir ayudas/sombras.psql
 
-select plan(36);
+select plan(38);
 
 -- Esquemas de la plataforma (N-1; diseño D-3). La primera ejecución de T-013 la confirma y el
 -- auditor-seguridad la acepta (T-011); un esquema no listado cae en la regla.
@@ -655,6 +655,45 @@ select is_empty(
         join pg_catalog.pg_roles g on g.oid operator(pg_catalog.=) am.roleid
        where m.rolname in ('anon', 'authenticated', 'service_role', 'conector') $q$,
   'N-4 (i) · anon, authenticated, service_role y conector no son miembros de ningún rol (m-2)');
+
+-- N-4 (j) · el conector no tiene permiso alguno sobre tablas, vistas, secuencias ni columnas de public y
+-- privado (solo execute en las tres mcp_* y usage en privado), y las secuencias no dan permiso a nadie
+-- más que a su dueño. N-4 (a) y (b) admiten al conector como destinatario sin más: sin esto, un grant
+-- truncate, references, trigger o maintain, o una secuencia nueva con permisos, pasaría (A-M-4, A-m-1).
+select is_empty(
+  $q$ select d.sitio from pg_temp.destinatarios_ajenos d
+       where (d.sitio like 'relacl %' or d.sitio like 'attacl %')
+         and d.grantee operator(pg_catalog.=) 'conector'::pg_catalog.regrole
+      union all
+      select 'secuencia ' || c.relname::pg_catalog.text || ': ' || a.grantee::pg_catalog.text
+        from pg_catalog.pg_class c
+        cross join lateral pg_catalog.aclexplode(coalesce(c.relacl, pg_catalog.acldefault('s', c.relowner))) a
+       where c.relkind operator(pg_catalog.=) 'S'
+         and c.relnamespace in ('public'::pg_catalog.regnamespace, 'privado'::pg_catalog.regnamespace)
+         and a.grantee operator(pg_catalog.<>) c.relowner $q$,
+  'N-4 (j) · el conector no tiene permiso alguno sobre tablas, vistas, secuencias ni columnas, y las secuencias no dan permiso a nadie más que a su dueño');
+
+-- N-4 (k) · un esquema que no es de la plataforma ni public ni privado no da permisos a anon,
+-- authenticated, service_role, conector ni PUBLIC: ni usage o create en el esquema ni permisos en sus
+-- tablas (A-m-1, A11). Usa la misma lista cerrada de la plataforma que N-1 (VERIFICAR en T-013).
+select is_empty(
+  $q$ select 'esquema ' || n.nombre || ': ' || a.grantee::pg_catalog.text
+        from pg_temp.esquemas_nuestros n
+        join pg_catalog.pg_namespace ns on ns.oid operator(pg_catalog.=) n.oid
+        cross join lateral pg_catalog.aclexplode(coalesce(ns.nspacl, pg_catalog.acldefault('n', ns.nspowner))) a
+       where n.nombre not in ('public', 'privado')
+         and a.grantee in (0::pg_catalog.oid, 'anon'::pg_catalog.regrole, 'authenticated'::pg_catalog.regrole,
+                           'service_role'::pg_catalog.regrole, 'conector'::pg_catalog.regrole)
+      union all
+      select 'relacion ' || n.nombre || '.' || c.relname::pg_catalog.text || ': ' || a.grantee::pg_catalog.text
+        from pg_temp.esquemas_nuestros n
+        join pg_catalog.pg_class c on c.relnamespace operator(pg_catalog.=) n.oid
+        cross join lateral pg_catalog.aclexplode(c.relacl) a
+       where n.nombre not in ('public', 'privado')
+         and c.relkind in ('r', 'p', 'v', 'm', 'S', 'f')
+         and a.grantee in (0::pg_catalog.oid, 'anon'::pg_catalog.regrole, 'authenticated'::pg_catalog.regrole,
+                           'service_role'::pg_catalog.regrole, 'conector'::pg_catalog.regrole) $q$,
+  'N-4 (k) · un esquema ajeno a la plataforma, a public y a privado no da permisos a anon, authenticated, service_role, conector ni PUBLIC');
 
 select * from finish();
 rollback;
