@@ -119,3 +119,66 @@ Autor: `arquitecto`. `diseno.md` y `diseno.nuevo.md` se consolidan en `diseno.md
 | P-42 | 001 y 014 | El canje del código de autorización comprueba conexión y licencia vivas (m-4); la activación vuelve a comprobar tras los cerrojos y marca el uso con actualización condicionada (m-1); `generar_codigo` solo en local, o por `crear_codigo_interno` (DD-26, m-7) |
 | P-43 | Coordinación | Pasar DD-20 a DD-27 a `aclaraciones.md` como decididas por delegación D-036 (21/11/2026); presentar al responsable A-1, A-4, A-9, A-10, A-11 y A-12 (`diseno.md`, «Asuntos abiertos»); que la lista de publicación de `docs/SEGURIDAD.md` exija la alerta de conexión nueva (A-8) |
 | P-44 | Especificador, según las respuestas | A-9: REQ-052 y CA-006. A-10: REQ-011, REQ-067, CA-007, CA-041 y motivo de revocación por baja en REQ-025. A-11: CA-022 |
+
+## Puesta al día con D-040 y las cuestiones 17 y 18 (21/11/2026)
+
+Autor: `arquitecto`, al poner al día `diseno.md`. **Ninguna está aplicada.** Los números D-, DD-, O- y PRUEBA- son los del diseño.
+
+### Estado de las peticiones anteriores
+
+| N.º | Estado |
+| --- | --- |
+| P-29, A-1 de P-43 | Hechas por D-040 (constitución 1.5) |
+| P-36 | Sustituida por P-47 |
+| P-37 | El responsable eligió (a): sigue en P-45 |
+| P-38, P-39 | Sin objeto: A-11 y A-9 se decidieron con la opción (a) |
+| P-44 | Hecha por el `especificador` (D-040) |
+| P-34, P-40 | Donde dicen «las 18», son **17** (7 lecturas y 10 operaciones: sale O-4); además, las tres funciones de D-7 con `execute` para `authenticated` (P-46) |
+
+### A la 010 (sin editar sus archivos)
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-45 | Aceptar que una migración de la 022 cambie con `create or replace` el cuerpo de `privado.al_dar_de_baja()` (D-4b): da el motivo `baja_cliente`, revoca con `privado.revocar_conexion_interna`, deja cada revocación como I-12 vinculada a la I-03 de la baja y falla con `baja_sin_auditoria` si no hay I-03. Siguen el disparador `clientes_al_dar_de_baja`, `impedir_reactivar_cliente` y el filtro de cliente activo de `resolver_token`. Actualizar `m07.test.ts` (comprueba que el cuerpo usa `registrar_auditoria()`) y quitar `revocar_por_baja` como acción propia | A-10 (a), REQ-011, REQ-025, REQ-034 |
+| P-46 | En M07, el `select` de tabla entera de `authenticated` sobre `clientes`, `licencias` y `conexiones` (M07 L321, L331, L340) pasa, con `revoke select on <tabla>` y luego `grant select (<columnas>)`, a las columnas de DD-29 (`clientes`: `id`, `nombre`, `estado`, `frecuencia_esperada_horas`, `creado_en`; `licencias`: `id`, `cliente_id`, `caduca_en`, `creada_en`, `revocada_en`, `suspension_manual_en`, `suspension_cobro_en`; `conexiones`: `id`, `licencia_id`, `asistente`, `creada_en`, `ultimo_uso_en`, `revocada_en`, sin `motivo_revocacion`; corrección del 22/11/2026), y `licencias_select_usuario` añade `and revocada_en is null`. `resumen_cliente` (M09) se reescribe con `privado.situacion_licencia()` (D-7), que recibe valores y no es `security definer`; su `execute` para `authenticated` amplía la lista cerrada de REQ-010. Actualizar las pruebas de permisos y de M09. Avisar de que quien lea `clientes.canal` o `licencias.creada_por` sin función `security definer` deja de poder (T-P4) | A-11 (a), REQ-081; mínimo privilegio: el usuario de cliente no ve `canal`, `nombre_clave`, `version`, `baja_en` ni el autor de la licencia |
+| P-47 | Migración de roles (A-12): los cuatro ajustes de CA-050 van en los **roles que inician sesión**, no solo en `authenticated`: `authenticator` (la API) y los del conector. Un ajuste de rol solo actúa al iniciar sesión, `set role` no lo aplica (PostgreSQL, `ALTER ROLE`) y PostgREST solo aplica del rol de destino los de contexto de usuario. Con guarda si el rol no existe (PGlite), vuelta atrás `alter role … reset …`, prueba pgTAP de `rolconfig` y, en `Nido`, la prueba de efecto de PRUEBA-031. Antes, T-P1 comprueba que `postgres` puede fijarlos en `authenticator` y que `log_parameter_max_length_on_error` (de contexto de usuario y fuera de la lista de supautils) se admite por rol. Tras aplicarlos, una persona reinicia la API | REQ-082, DD-30. La nota de A-12 en `aclaraciones.md` dice «roles de la 010 y de los dashboards»: para la API, eso es `authenticator` |
+| P-48 | `bd.yml` (propuesta 24 de la 010): un paso más, `scripts/bd/concurrencia-clientes.mjs`, tras `supabase test db`, con su número en `declaradas.json` | A-4 (a), DD-31; CA-009, CA-034, CA-035 y CA-042 |
+
+### A la 024
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-49 | (a) Retirar I-04 `cliente_reactivacion` sin reutilizar su número y ajustar los recuentos de su catálogo (41 entradas, 36 que pueden ser principales) y lo que los cite. (b) I-12 vinculable también a I-03: cada conexión revocada por la baja deja su I-12 vinculada a la baja. (c) La acción `revocar_por_baja` de M07 no entra en el catálogo: es esa I-12 vinculada (P-45). (d) Sigue P-24: I-11 vinculable también a I-06 e I-03 | A-10 (a), D-040: la baja no se deshace y revoca las conexiones (REQ-011, REQ-034, CA-025) |
+
+### A la 025
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-50 | CA-010 cita «reactivar el cliente», que ya no existe: dejar «al reanudar o reactivar la licencia» (2 de 2 casos) y mantener que con el cliente dado de baja 0 revisiones reciben reglas | D-040: la baja es definitiva (REQ-011 de la 022) |
+
+### A coordinación
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-51 | Anotar en `aclaraciones.md` las cuestiones 17 y 18 decididas por D-036 el 21/11/2026 (ya en el «Registro de cambios» de la especificación) y, en P1, DD-28 a DD-35 (DD-33 a DD-35 añadidas el 22/11/2026 con la revisión del `revisor`) | El `arquitecto` no edita `aclaraciones.md` |
+
+## Revisión del `revisor` sobre el diseño (22/11/2026)
+
+Autor: `arquitecto`, al corregir `diseno.md`, `plan.md` y `tareas.md`. **Ninguna está aplicada ni aceptada.** P-46 y P-51 se corrigieron arriba (conexiones; DD-28 a DD-35).
+
+### A la 010 y a la fase 2 (sin editar sus archivos)
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-52 | Que cada función de la 010 y del conector que escriba en `conexiones` o `codigos_activacion` de un cliente (activación, renovación, canje, `ultimo_uso_en`) tome **antes** la fila de `clientes` y luego la de `licencias`, en ese orden y `for share`, de modo que espere en la fila del cliente al `for no key update` que toman primero O-2 a O-11 de la 022 (DD-34) sin tener ya conexión ni licencia. T-P4 (punto 4) lista las que hoy no lo hacen. Es la segunda barrera: DD-34 basta para T-016, pero T-033 (fase 2) la exige | R-MA-1: con la secuencia conexión → licencia de M08 (L154 y L238, H-11) y otro orden en el panel, `40P01`; PRUEBA-018 lo comprueba con 20 repeticiones y 0 `40P01` |
+
+### A la 024
+
+| N.º | Petición | Motivo |
+| --- | --- | --- |
+| P-53 | (a) Una auxiliar `privado.principal_de_esta_transaccion(accion, objeto)` sobre la lista local de transacción de su disparador (su D-3), sin `execute` para nadie salvo su dueño, que devuelva la fila principal de esa acción y ese objeto anotada **en esta transacción** o nada; la 022 la usa en D-4b (I-03 de la baja) y en la regla de `suspension_manual_en` (I-07). (b) Admitir que las operaciones de la 022 tomen sus cerrojos de fila antes de la primera fila de auditoría y que en O-3 y O-7 la principal se anote **antes** del cambio que la exige, como excepción acotada a su regla «anotar es el último paso». (c) Confirmar que su cerrojo consultivo no se toma antes de esos cerrojos de fila | DD-35, R-MA-3 y R-m6: la 024 usa `clock_timestamp()`, así que buscar la I-03 por `now()` no la ata a la transacción, y `xmin` falla con subtransacciones; sin (b), la guarda de D-5 no puede ver la principal; sin (c), riesgo de bloqueo mutuo |
+
+### Dependencias expresas
+
+- **Migración de auditoría de la 024** (su D-1 a D-5, con P-49 aplicada): la 022 no tiene migración de auditoría propia (D-10). T-010 y el resto del bloque 3 no empiezan sin ella en CI (R-MA-2).
+- **V-109** en VERIFICAR: T-035 la verifica antes de T-022 (R-m12).
