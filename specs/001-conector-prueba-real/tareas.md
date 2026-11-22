@@ -127,7 +127,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 - Resultado y mutaciones comprobadas: `ev/T-112/resultado.md`; sin defectos de producto (`ev/T-112/hallazgos.md`). Límite: la concurrencia corre sobre una sola conexión de PGlite; el bloqueo de fila real es PRUEBA-008 (T-114).
 
 ### T-113 `[P]` · WCAG 2.2 AA de la pantalla
-`disenador-ui` · R · pendiente · Depende de: T-110 · REQ-005 · CA-005
+`disenador-ui` · R · hecha (22/11/2026; revisor NO APTO por trazabilidad, corregida; 0 bloqueantes, 5 menores que van a T-119; navegador pendiente en T-119, AR-16; evidencia en `ev/T-113/`) · Depende de: T-110 · REQ-005 · CA-005
 - Prueba: PRUEBA-010 (V: 0 bloqueantes; 360 px; contraste; teclado). Archivo: `ev/T-113/wcag.md`.
 
 ### T-114 · Pruebas L en `Nido`
@@ -167,7 +167,7 @@ Las herramientas, una a una y en este orden: cada una, con su prueba en verde an
 
 ### T-119 · Navegador real, pasos 3 a 13 y resultados
 `qa` · C (por la parte (f); el resto, R) · pendiente · Depende de: T-117, T-118, AR-16; por partes, AR-09, AR-10, AR-11, AR-12 · REQ-001, REQ-004, REQ-005, REQ-006, REQ-007, REQ-008, REQ-009, REQ-011, REQ-015, REQ-016, REQ-018, REQ-019, REQ-020 · CA-004, CA-005, CA-008, CA-009, CA-011, CA-015, CA-016, CA-018, CA-019, CA-020, CA-021, CA-022, CA-023, CA-024, CA-025
-- (a) Antes del paso 3: V-6 y navegador real (AR-16). Prueba: PRUEBA-009 (R: GET y POST), PRUEBA-006 (V-6). Además, ráfaga de más de 100 peticiones por minuto desde una IP a `/api/salud` y a `/oauth/token`, con 429 o 403 en cada ruta y aciertos en Firewall overview (WAF; dictamen del auditor sobre T-117 (a), 21/11/2026).
+- (a) Antes del paso 3: V-6 y navegador real (AR-16). Prueba: PRUEBA-009 (R: GET y POST), PRUEBA-006 (V-6). Además PRUEBA-010 en navegador real (V: 360 y 320 px, zoom 400 %, lector de pantalla, foco pintado, colores forzados, tema oscuro; `ev/T-113/wcag.md` §No comprobado) y decidir los menores de T-113: M1 (título distinto por estado: «Código aceptado. Activar el conector de HumanaIA», que cumple `pantalla.test.ts:276`), M2 («Error: » por CSS `::before`), M3 (`color-scheme: light dark`), M4 y M5 (`autofocus` con `role="alert"`). M1 a M3 tocan `src/lib/oauth/pantalla.ts` (ruta OAuth): llevan revisor y auditor-seguridad y cambian `HUELLA_ESTILO`, que las pruebas recalculan solas. Además, ráfaga de más de 100 peticiones por minuto desde una IP a `/api/salud` y a `/oauth/token`, con 429 o 403 en cada ruta y aciertos en Firewall overview (WAF; dictamen del auditor sobre T-117 (a), 21/11/2026).
 - (b) Pasos 3 a 5 (alta y activación en Claude: AR-11). Prueba: PRUEBA-040, PRUEBA-041 (inicio).
 - (c) Pasos 6 a 8 (tras AR-09). Prueba: PRUEBA-042, PRUEBA-049 (paso 7), PRUEBA-045.
 - (d) Pasos 9, 10 y 12. Prueba: PRUEBA-043, 044, 050 y 048 (diaria).

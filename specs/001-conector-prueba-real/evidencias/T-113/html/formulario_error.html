@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Activar el conector de HumanaIA</title>
+<style>
+:root{--fondo:#F8FAFC;--superficie:#FFFFFF;--texto:#0F172A;--secundario:#475569;--borde:#E5E7EB;--control:#64748B;--acento:#6C3CE9;--sobre-acento:#FFFFFF;--foco:#8B5CF6;--error:#B91C1C;--correcto:#15803D}
+@media (prefers-color-scheme:dark){:root{--fondo:#0B1120;--superficie:#151E2E;--texto:#F1F5F9;--secundario:#A3B0C2;--borde:#273449;--control:#7D8BA0;--acento:#A78BFA;--sobre-acento:#0F172A;--foco:#A78BFA;--error:#F87171;--correcto:#4ADE80}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fondo);color:var(--texto);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:1rem;line-height:1.5}
+main{max-width:30rem;margin:0 auto;padding:1.5rem 1rem}
+.tarjeta{background:var(--superficie);border:1px solid var(--borde);border-radius:.75rem;padding:1.5rem 1.25rem;max-width:100%}
+h1{font-size:1.5rem;line-height:1.25;margin:0 0 1rem;overflow-wrap:anywhere}
+p{margin:0 0 1rem;overflow-wrap:anywhere}
+label{display:block;font-weight:600;margin:0 0 .25rem}
+.ayuda{color:var(--secundario);font-size:.9375rem;margin:0 0 .5rem}
+.error{color:var(--error);font-weight:600;margin:0 0 .5rem}
+.error::before{content:"Error: "}
+.correcto{color:var(--correcto);font-weight:600}
+input[type=text]{display:block;width:100%;max-width:100%;min-height:44px;padding:.5rem .75rem;font:inherit;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--texto);background:var(--superficie);border:2px solid var(--control);border-radius:.5rem}
+input[aria-invalid=true]{border-color:var(--error)}
+.boton{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;margin-top:1rem;padding:.5rem 1.25rem;font:inherit;font-weight:600;color:var(--sobre-acento);background:var(--acento);border:2px solid var(--acento);border-radius:.5rem;text-decoration:none;cursor:pointer;max-width:100%;text-align:center}
+:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
+@media (forced-colors:active){.tarjeta,input[type=text]{border-color:CanvasText}.boton{border-color:ButtonText;color:ButtonText;background:ButtonFace}:focus-visible{outline-color:Highlight}}
+</style>
+</head>
+<body>
+<main>
+<div class="tarjeta">
+<h1>Activar el conector de HumanaIA</h1>
+<p>Vas a conectar: <strong>ChatGPT</strong></p>
+<p class="ayuda">Continúa solo si has empezado tú esta conexión desde tu asistente.</p>
+<form method="post" action="/oauth/autorizar">
+<input type="hidden" name="solicitud" value="sol1">
+<input type="hidden" name="asistente" value="chatgpt">
+<input type="hidden" name="state" value="abc">
+<label for="codigo">Código de activación</label>
+<p class="ayuda" id="ayuda-codigo">Te lo da HumanaIA. Caduca a los 10 minutos y solo sirve una vez.</p>
+<p class="error" id="error-codigo" role="alert">El código no es válido o ha caducado. Pide uno nuevo a HumanaIA.</p>
+<input type="text" id="codigo" name="codigo" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" required aria-describedby="error-codigo ayuda-codigo" aria-invalid="true" autofocus>
+<button class="boton" type="submit">Activar</button>
+</form>
+</div>
+</main>
+</body>
+</html>
