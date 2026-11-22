@@ -1,7 +1,7 @@
 # 023 · Informes recibidos, resumen y órdenes pausar o reanudar
 
-Estado: APROBADA
-Fase: 3 · Fecha: 12/11/2026 · Respuestas del responsable aplicadas: 13/11/2026 · Autor: `especificador`
+Estado: PLANIFICADA
+Fase: 3 · Fecha: 12/11/2026 · Respuestas del responsable aplicadas: 13/11/2026 · Autor: `especificador` · Diseño, plan y tareas escritos el 22/11/2026, pendientes de dictamen y de la puerta P1 (`diseno.md`, `plan.md`)
 
 Estados posibles: PROPUESTA → APROBADA → DISEÑADA → PLANIFICADA → EN CURSO → VERIFICADA → CERRADA.
 
