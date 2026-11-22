@@ -8,6 +8,8 @@ Lo anterior, cerrado según `dictamen-diseno-3.md`. Tercera vuelta: N-1 → paso
 
 **D-036** (21/11/2026, coordinación): C-2 añade `prompt_no_valido` (T-122); apartado «HMAC del token en `registrar_suceso`», decisión A tomada (ver el apartado).
 
+**Puesta al día con T-107** (22/11/2026, `arquitecto`; recoge lo implementado en `supabase/conector-prueba/001_estado.sql` y `src/lib/{supabase,oauth,licencias}/`, sin cambiar decisiones): Operaciones (`cerrar_prueba`); Datos (tabla `cierre`, `tokens.cliente_oauth_id`, tiempos de los roles, tabla de resultados, apartados «Cierre de la prueba» y «Límites conocidos de T-107»); Flujo (cierre en fallo); Amenazas; constitución, art. 3 y 11.
+
 **D-025** (19/11/2026): «ancla», «cambio firmado», carpeta sellada y calendario firmado quedan en suspenso hasta la 003; rige 002§Integración y `plan.md`.
 
 ## Resumen
@@ -100,7 +102,7 @@ Mismo par (`kd`: clave de derivación; `t`: token presentado): `acceso = HMAC(kd
 
 ### Operaciones (REQ-017)
 
-`POST /api/operacion` (credencial en `Authorization`, argumentos en el cuerpo; consulta no vacía → 400) y `npm run operar -- <entorno> <operación> [argumentos]`, orden de la persona desde la carpeta sellada (C-3); credencial sin eco y no guardada. Credencial `hia_op_` + 256 bits creada por una persona; en el entorno solo su SHA-256 (`OPERACION_HUELLA`); 5 fallos por origen en 15 min bloquean 15 min. Con `ENTORNO=produccion`, 404 antes de leer nada. Lista cerrada: `generar_codigo` (`A`|`B`, mostrado una vez en la terminal de la persona), `suspender_licencia`, `reactivar_licencia`, `crear_orden` (`pausar`|`reanudar`, anula las no confirmadas), `listar_conexiones`, `revocar_conexion` (UUID que dio la ruta), `resumen` (recuentos, protocolo, percentil 95), `exportar_sucesos` (`dia`), `cerrar_prueba` (RD-076): estado terminal sin vuelta; después se rechazan generar, activar, canjear, renovar, validar y toda operación salvo `resumen`, `listar_conexiones` y `exportar_sucesos`. Ninguna toca prompt, reglas ni contratos.
+`POST /api/operacion` (credencial en `Authorization`, argumentos en el cuerpo; consulta no vacía → 400) y `npm run operar -- <entorno> <operación> [argumentos]`, orden de la persona desde la carpeta sellada (C-3); credencial sin eco y no guardada. Credencial `hia_op_` + 256 bits creada por una persona; en el entorno solo su SHA-256 (`OPERACION_HUELLA`); 5 fallos por origen en 15 min bloquean 15 min. Con `ENTORNO=produccion`, 404 antes de leer nada. Lista cerrada: `generar_codigo` (`A`|`B`, mostrado una vez en la terminal de la persona), `suspender_licencia`, `reactivar_licencia`, `crear_orden` (`pausar`|`reanudar`, anula las no confirmadas), `listar_conexiones`, `revocar_conexion` (UUID que dio la ruta), `resumen` (recuentos, protocolo, percentil 95), `exportar_sucesos` (`dia`), `cerrar_prueba` (RD-076): estado terminal sin vuelta (Datos, «Cierre de la prueba»); después se rechazan generar, activar, abrir solicitud, registrar o guardar clientes, canjear, renovar, validar y toda operación salvo `resumen`, `listar_conexiones` y `exportar_sucesos`. Ninguna toca prompt, reglas ni contratos. Respuesta HTTP fija por resultado (`operaciones.ts`): `cerrada` y `licencia_no_activa` 409, `origen_bloqueado` 429, `no_valido` 400, `licencia_desconocida` y `conexion_desconocida` 404; éxitos (`prueba_cerrada` y `ya_cerrada` incluidos) 200; cualquier otro resultado, 500 `error_interno`, nunca éxito.
 
 ### Registros
 
@@ -131,32 +133,61 @@ Conexión: `postgres` por el agrupador en modo transacción (6543), `prepare: fa
 
 Roles sin permisos sobre tablas, contraseñas por una persona: `conector_prueba_mcp` ejecuta `validar_acceso`, `mcp_*` y `registrar_suceso`; `conector_prueba_gestion`, autorización, `operar_*` y `registrar_suceso`. Lo que recibe entradas de un modelo no emite ni opera. Límite (m-3): todas las funciones ven las mismas variables; la separación protege de errores de lógica, no de un proceso comprometido.
 
-`001_estado.sql` (M-4): `revoke all on schema conector_prueba from public`; `revoke execute` de todas sus funciones a `public`, `anon`, `authenticated` y `service_role`, también con `alter default privileges`; roles `NOINHERIT NOBYPASSRLS`, `CONNECTION LIMIT 10` y `statement_timeout '5s'`. Lo concedido a `PUBLIC` fuera del esquema no se toca: si PRUEBA-022 lo halla, la prueba falla y se revocan, con el alcance del ADR-0007 punto 12 (AR-01 decidida por delegación D-036, 20/11/2026; ADR-0007).
+`001_estado.sql` (M-4): `revoke all on schema conector_prueba from public`; `revoke execute` de todas sus funciones a `public`, `anon`, `authenticated` y `service_role`, también con `alter default privileges`; roles `NOINHERIT NOBYPASSRLS`, `CONNECTION LIMIT 10`, `statement_timeout '5s'` y, en lo aplicado, también `lock_timeout '2s'` e `idle_in_transaction_session_timeout '10s'`. Un rol previo se adopta sin elevarlo (no se toca `LOGIN`) o la aplicación se para (Límites conocidos de T-107, L-5). Lo concedido a `PUBLIC` fuera del esquema no se toca: si PRUEBA-022 lo halla, la prueba falla y se revocan, con el alcance del ADR-0007 punto 12 (AR-01 decidida por delegación D-036, 20/11/2026; ADR-0007).
 
-Tablas con RLS sin políticas y enumerados de `docs/MODELO-DATOS.sql`: `licencias` (A, B), `codigos_activacion`, `clientes_oauth` (callbacks restringidos a la lista), `solicitudes_autorizacion` (HMAC de `state`), `conexiones` (asistente por callback, `revocada_en`, motivo `operador`/`reutilizacion`/`cierre`), `codigos_autorizacion`, `tokens` (HMAC, `sal`, sustitución), `ordenes` (`pendiente`, `entregada`, `confirmada`, `anulada`), `ejecuciones`, `informes` (`ejecucion_id` único, rangos del contrato, `campos_descartados`), `limites_origen` (HMAC, ámbito), `sucesos`. Ninguna columna con token, código, dirección ni texto libre. Purga a 24 h, en las funciones que escriben, de solicitudes caducadas y `limites_origen` vencidos; ejecuciones, informes y sucesos, hasta la reversión tras el cierre (C-6).
+Tablas con RLS sin políticas y enumerados de `docs/MODELO-DATOS.sql`: `licencias` (A, B), `codigos_activacion`, `clientes_oauth` (callbacks restringidos a la lista), `solicitudes_autorizacion` (HMAC de `state`), `conexiones` (asistente por callback, `revocada_en`, motivo `operador`/`reutilizacion`/`cierre`), `codigos_autorizacion`, `tokens` (HMAC, `sal`, sustitución y `cliente_oauth_id` obligatorio: la renovación solo vale para el mismo cliente; L-2), `ordenes` (`pendiente`, `entregada`, `confirmada`, `anulada`), `ejecuciones`, `informes` (`ejecucion_id` único, rangos del contrato, `campos_descartados`), `limites_origen` (HMAC, ámbito), `sucesos` y `cierre` (una sola fila, terminal; T-107 d). Ninguna columna con token, código, dirección ni texto libre. Purga a 24 h, en las funciones que escriben, de solicitudes caducadas y `limites_origen` vencidos; ejecuciones, informes y sucesos, hasta la reversión tras el cierre (C-6).
 
 Funciones `security definer`, `search_path = pg_catalog, pg_temp` (`pg_temp` el último; todo lo que no sea de `pg_catalog`, calificado con su esquema: `conector_prueba.licencias`; D-035, 20/11/2026), `execute` solo al rol, `jsonb` con `resultado` cerrado, reloj de la base de datos. La fase 2 conserva su forma cambiando solo `almacen.ts`:
 
+Resultados tal como los devuelve `001_estado.sql` y los acepta la forma cerrada de `almacen.ts` y `autorizacion.ts` (T-107). «Comunes» = `no_valido`, `licencia_desconocida`, `origen_bloqueado`, `cerrada`.
+
 | Función | Resultados |
 | --- | --- |
-| `validar_acceso(hmac, recurso)` | booleano |
-| `mcp_obtener_instrucciones(hmac, recurso)` | `no_autorizado` o estado, ejecución, orden |
+| `validar_acceso(hmac, recurso)` | booleano; falso tras el cierre |
+| `mcp_obtener_instrucciones(hmac, recurso)` | `no_autorizado` (también tras el cierre) o estado, ejecución, orden |
 | `mcp_enviar_informe(hmac, recurso, ejecución, informe o null, descartados)` | `no_autorizado`, `ejecucion_desconocida`, `informe_invalido`, `guardado`, `repetido` |
 | `mcp_confirmar_orden(hmac, recurso, orden)` | `no_autorizado`, `no_confirmada`, `confirmada`, `repetida` |
-| `leer_cliente`, `guardar_cliente_cimd`, `registrar_cliente_dcr` | `desconocido`; `guardado`; `registrado`, `limite`, `origen_bloqueado` |
-| `abrir_solicitud`, `activar` | `abierta`, `no_valida`; `solicitud_no_valida`, `origen_bloqueado`, `codigo_no_valido`, `activada` |
-| `canjear_codigo`, `renovar` | `no_valido`, `emitido`; `no_valido`, `reutilizado`, `rotado`, `repetido` |
-| `operar_*`, `operar_contar_fallo`, `registrar_suceso` | Cerrados |
+| `leer_cliente` | `desconocido`; `conocido` con `origen`, `redirect_uris` y `vigente` |
+| `guardar_cliente_cimd` | `guardado`, `no_valido`, `cerrada` |
+| `registrar_cliente_dcr` | `registrado`, `limite`, `origen_bloqueado`, `no_valido`, `cerrada` |
+| `abrir_solicitud` | `abierta` (con `solicitud`), `no_valida` (también desafío ≠ 43, antes de insertar), `cerrada` |
+| `activar` | `activada` (con `redirect_uri`), `solicitud_no_valida`, `origen_bloqueado`, `codigo_no_valido`, `cerrada` |
+| `canjear_codigo` | `emitido` (con `expires_in`), `no_valido` (también tras el cierre) |
+| `renovar` | `rotado`, `repetido` (con `sal`), `reutilizado`, `no_valido` (también tras el cierre) |
+| `operar_contar_fallo` | `contado`, `bloqueado`, `invalido`; funciona tras el cierre |
+| `operar_generar_codigo` | `generado`, `licencia_no_activa` y comunes |
+| `operar_suspender_licencia`, `operar_reactivar_licencia` | `suspendida` / `reactivada`, `sin_cambio` y comunes |
+| `operar_crear_orden` | `creada` (con `orden` y `anuladas`) y comunes |
+| `operar_revocar_conexion` | `revocada`, `sin_cambio`, `conexion_desconocida`, `origen_bloqueado`, `cerrada` |
+| `operar_listar_conexiones`, `operar_resumen`, `operar_exportar_sucesos` | `listado`; `resumen` (con el booleano `cerrada`); `exportado`, `no_valido`; las tres, `origen_bloqueado`. Responden tras el cierre |
+| `cerrar_prueba` | `prueba_cerrada`, `ya_cerrada`, `origen_bloqueado` |
+| `registrar_suceso` | `registrado`, `saturado`, `descartado`, `invalido`; sigue escribiendo tras el cierre (D-036) |
+
+Orden de las comprobaciones: en las `operar_*` y `cerrar_prueba`, primero la puerta de origen (`operar_puerta`) y después el cierre; en las de autorización, el cierre antes que cualquier otra (tras el cierre, `activar` no cuenta intentos). **Resultado desconocido ⇒ denegación**: un resultado fuera de la tabla, o con campos de más, de menos o con otra forma, es `almacen_no_disponible` en `almacen.ts` y `autorizacion.ts`, nunca éxito (Flujo, «Cierre en fallo»).
 
 Reglas: estado `suspendida` si la licencia lo está, `pausada` si la última orden no anulada es pausar, si no `activa`; siempre abre ejecución; entrega y marca la orden pendiente o entregada **salvo suspendida** (nula y sigue pendiente). Confirmar solo órdenes `entregada` de la licencia del token. Informe solo para ejecución de la **misma conexión**. Ajeno = inexistente. `activar`, en una transacción: solicitud, bloqueo, código, conexión, código de autorización; si falla, solo el recuento. Aplican las propuestas 3 a 5 de `propuestas.md`.
 
 Vuelta atrás (artículo 11): `001_estado.sql` transaccional y reejecutable; `semilla.sql`; reversión que borra esquema y roles; los aplica **una persona** en el editor SQL con `LEEME.md`; aplicar-revertir-aplicar se prueba (PRUEBA-022). Sin pgTAP hasta la 003: Vitest sobre PGlite y contra `Nido`.
 
+### Cierre de la prueba (T-107 d)
+
+Tabla `cierre`: una sola fila (`id` booleano fijo en `true`, `cerrado_en`), RLS sin políticas, sin permisos; solo la escribe `cerrar_prueba`. `prueba_cerrada()` (auxiliar, sin `execute` para nadie) dice si existe. `cerrar_prueba(origen_hmac)`, tras la puerta de origen y un bloqueo consultivo de transacción, en una transacción: si ya hay fila, `ya_cerrada` sin escribir (repetirla es inocuo); si no, inserta la fila, revoca todas las licencias, fecha las conexiones vivas con motivo `cierre` (las ya revocadas conservan el suyo), revoca todos los tokens, marca usados los códigos de activación y de autorización sin usar y borra las solicitudes; devuelve `prueba_cerrada`. El disparador `licencias_tras_cierre` impide crear o reactivar licencias con la fila presente, también a mano o con `semilla.sql`. Validación y `mcp_*` exigen además que no exista la fila. **Sin vuelta dentro del estado**: la única vuelta atrás es la reversión entera del esquema (`LEEME.md`), que es otra prueba (art. 11). Pruebas: `tests/unit/conector/bd/operar.test.ts` (PRUEBA-013, 020 y 023, parte B) y `tests/unit/conector/operaciones.test.ts`.
+
+### Límites conocidos de T-107 (condiciones abiertas)
+
+Ninguno cambia una decisión; se cierran en las tareas citadas o los decide una persona.
+
+- **L-1 Cierre terminal.** Un `cerrar_prueba` por error acaba la prueba: no hay reapertura. Mitigación: solo lo ejecuta la persona en el paso 13 (C-3); antes, `resumen` (`cerrada: false`). Si hubiera que seguir, revertir y reaplicar (pierde ejecuciones, informes y sucesos: exportarlos antes).
+- **L-2 `tokens.cliente_oauth_id not null`.** `001_estado.sql` añade la columna y la vuelve obligatoria; si `Nido` ya tuviera filas de `tokens` de una aplicación anterior, el `set not null` falla y se deshace la transacción entera (cierre en fallo). No se rellena a ciegas: la persona decide (lo previsto, revertir y reaplicar antes de AR-05/AR-06, sin datos que conservar).
+- **L-3 Posible interbloqueo `canjear_codigo`/`cerrar_prueba`.** Ambos bloquean conexión antes que tokens, pero `cerrar_prueba` recorre todas las conexiones y luego los códigos, y `canjear_codigo` bloquea su conexión y después su código. No está demostrado ni descartado. Si ocurre, Postgres aborta una de las dos (o vence `lock_timeout`): el canje da 503 al emitir (par descartado, Flujo) y el cliente repite y recibe `no_valido`; si cae `cerrar_prueba`, la persona la repite hasta `prueba_cerrada` o `ya_cerrada`. En ningún orden queda un token vivo tras el cierre: lo que gana el bloqueo después ve el código usado o la conexión revocada. Propuesta (la decide la coordinación, no está en `tareas.md`): caso de canje y cierre simultáneos en PRUEBA-008 (T-114).
+- **L-4 Carreras reales solo en PRUEBA-008.** PGlite tiene una sola conexión: PRUEBA-007 serializa; la concurrencia real de `activar`, `canjear_codigo`, `renovar`, `registrar_cliente_dcr` (recuento) y `cerrar_prueba` solo se comprueba contra `Nido` en PRUEBA-008 (T-114, tras AR-05). Hasta entonces, no se declara superada (art. 13).
+- **L-5 El bloque de roles se para con roles previos ajenos.** Si `conector_prueba_mcp` o `conector_prueba_gestion` ya existen con atributos peligrosos, pertenencias en cualquier sentido, o dueños o concesiones fuera del esquema (`pg_shdepend`), o el esquema tiene objetos de otro dueño, `001_estado.sql` lanza excepción y no aplica nada. Es lo querido (art. 3): la persona revisa y limpia a mano o borra el rol; nunca se relaja la comprobación.
+
 ## Flujo
 
 Alta (401 con reto, metadatos, CIMD o DCR) → activación (`GET`; la persona ejecuta `operar preproduccion generar_codigo A` y teclea; `POST` → `activar`; enlace con `code`, `state`, `iss`) → canje (`canjear_codigo`, `expires_in: 300`) → revisión (`obtener_instrucciones`, buzón fuera del conector, `enviar_informe`, `confirmar_orden`); renovación: una llamada a `renovar`.
 
-**Cierre en fallo** (REQ-014), además de la tubería: excepción → genérico y `error_no_controlado`; almacén caído → `error_temporal` en herramientas (sin estado, prompt, `guardado` ni `confirmada`), «no disponible» al activar (transacción deshecha), 503 al emitir (par descartado) o renovar (el token sigue valiendo); respuesta perdida tras `activar` → conexión sin tokens y otro código (nunca código consumido sin conexión); tras rotar → repetición en 60 s, mismo par.
+**Cierre en fallo** (REQ-014), además de la tubería: excepción → genérico y `error_no_controlado`; almacén caído → `error_temporal` en herramientas (sin estado, prompt, `guardado` ni `confirmada`), «no disponible» al activar (transacción deshecha), 503 al emitir (par descartado) o renovar (el token sigue valiendo); respuesta perdida tras `activar` → conexión sin tokens y otro código (nunca código consumido sin conexión); tras rotar → repetición en 60 s, mismo par. Resultado de SQL fuera de la lista o con otra forma → `almacen_no_disponible` (503 y suceso supervisado), nunca éxito. Prueba cerrada: `/api/mcp` 401 `invalid_token` (validación falsa); `/oauth/token` `invalid_grant`; `GET` y `POST /oauth/autorizar`, pantalla «no disponible» (503; en `GET`, sin cookie); `/oauth/registro`, 503 `no_disponible`; CIMD, cliente rechazado; `/api/operacion`, 409 salvo las tres consultas.
 
 ## Prueba real
 
@@ -218,7 +249,8 @@ Todo de 1 a 7 es ruta crítica (`revisor` y `auditor-seguridad` por tarea). Empe
 | A-21 | `Origin` propio con `same-origin`, cookie ligada, CSP; no cuenta intento | 009 |
 | Carreras; caídas; secreto ausente | Bloqueo de fila, transacción única; sin valores por defecto | 007, 008, 018 |
 | A-22 parcial | 32 768 bytes; 20 000 sucesos; WAF; purga a 24 h | 018 |
-| Operación ajena; producción; cierre | Huella, límite, 404, sin estado; `cerrar_prueba` terminal y roles sin acceso (M-5) | 020, 021, 023 |
+| Operación ajena; producción; cierre | Huella, límite, 404, sin estado; `cerrar_prueba` terminal, disparador `licencias_tras_cierre` y roles sin acceso (M-5); límites L-1 a L-4 | 020, 021, 023 |
+| Respuesta del almacén con forma inesperada | Forma cerrada por función; lo desconocido es `almacen_no_disponible` | 018 |
 ## Pruebas y mapa
 
 B: batería (PGlite, sin red). L: contra `Nido`. R: real. V: revisión.
@@ -283,7 +315,7 @@ B: batería (PGlite, sin red). L: contra `Nido`. R: real. V: revisión.
 | --- | --- | --- |
 | 1 Privacidad | Cumple | Informe cerrado; ajeno sin leer; origen y `state` como HMAC con purga; evidencias sin Gmail (B-1) |
 | 2 Aislamiento | Cumple | Cliente derivado del token en la función; PRUEBA-013, 014, 022 |
-| 3 Cierre en fallo | Cumple, con límite | «Cierre en fallo»; sin valores por defecto; roles sin tablas ni `PUBLIC`; TLS verificado; cierre terminal. Límite: m-3 (Datos) |
+| 3 Cierre en fallo | Cumple, con límite | «Cierre en fallo»; sin valores por defecto; roles sin tablas ni `PUBLIC`; TLS verificado; cierre terminal; resultado desconocido = denegación; `001_estado.sql` se para ante roles u objetos ajenos (L-5). Límites: m-3 (Datos); L-3 y L-4 sin probar hasta PRUEBA-008 |
 | 4 Secretos | Cumple, con límite | Solo nombres; valores por una persona; preproducción nunca local. Límite: credenciales de `Nido` locales en PRUEBA-008 (002 asunto A-3) |
 | 5 Especificación | Cumple | Mapa completo; E-1 propuesta |
 | 6 Revisión | Cumple | Todo es ruta crítica |
@@ -291,7 +323,7 @@ B: batería (PGlite, sin red). L: contra `Nido`. R: real. V: revisión.
 | 8 Anfitrión | Cumple en lo que depende del diseño | Prompt inmutable; arranque; `readOnlyHint: false`; cuenta acotada (paso 1, R-7) |
 | 9 Prompt | Cumple | Archivo con huella servido por el despliegue |
 | 10 Producto final | Cumple | Errores, accesibilidad, registros, operación; la fase 2 conserva las formas |
-| 11 Reversibilidad | Cumple | Reversión probada; `volver-atras` de la 002 |
+| 11 Reversibilidad | Cumple | Reversión probada; `volver-atras` de la 002. El cierre es terminal a propósito (RD-076); su única vuelta atrás es revertir y reaplicar el esquema (L-1) |
 | 12 Español | Cumple | Términos del protocolo como son |
 | 13 Evidencias | Cumple | Límites de PGlite; ChatGPT «no ejecutado»; Max no es Pro |
 | 14 Reservados | Cumple | A personas o como asuntos R-n |
