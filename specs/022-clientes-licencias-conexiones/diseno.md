@@ -107,7 +107,7 @@ Migraciones de la 022 tras M10 y tras la de auditoría de la 024, reversibles (D
 - **D-10 (R-MA-2)** Auditoría: **la de la 024** (su D-1 a D-5: tabla, catálogo `privado.acciones_auditoria`, `origen`, `grupo`, disparador, `anotar_auditoria` y `anotar_auditoria_vinculada`, retirada de `privado.auditar()`), con I-01 a I-12 e I-41 y los cambios de P-49 en su migración. La 022 no la migra; sin ella, ninguna operación.
 - **D-11** conector (abajo). **D-12** ficticios (T-008 y T-018). **D-13** DD-31. **D-14** DD-30.
 
-**DD-35 Principal de esta transacción.** D-4b y la regla de `suspension_manual_en` piden la I-03 o la I-07 a `privado.principal_de_esta_transaccion(accion, objeto)`, sobre la lista local de transacción del disparador de la 024 (su D-3), sin `execute` salvo su dueño (P-53); no por `now()` (la 024 usa `clock_timestamp()`) ni por `xmin` (subtransacciones). Toda operación toma sus cerrojos de fila **antes** de su primera fila de auditoría (nadie espera una fila con el cerrojo consultivo de la 024); en O-3 y O-7, la principal antes del cambio que la exige (P-53).
+**DD-35 Principal de esta transacción.** D-4b y la regla de `suspension_manual_en` piden la I-03 o la I-07 a `privado.principal_de_esta_transaccion(accion, objeto)`, sobre la lista local de transacción del disparador de la 024 (su D-3), sin `execute` salvo su dueño (P-53); esa lista es una tabla de `privado` con clave `pg_current_xact_id()` que la sesión no puede sembrar, y la principal debe existir además en `public.auditoria` (N-4); no por `now()` (la 024 usa `clock_timestamp()`) ni por `xmin` (subtransacciones). Toda operación toma sus cerrojos de fila **antes** de su primera fila de auditoría (nadie espera una fila con el cerrojo consultivo de la 024); en O-3 y O-7, la principal antes del cambio que la exige (P-53).
 
 ### Lectura del usuario de cliente (REQ-081, DD-29)
 
@@ -124,7 +124,7 @@ No escribe (D-6); L-1 a L-7, 0 filas; operaciones, `no_permitida` (DD-17).
 
 ### Registros de Postgres (REQ-082, DD-30)
 
-Un ajuste de rol actúa al iniciar sesión (no con `set role`), y PostgREST, que entra como `authenticator`, solo aplica del rol destino los de contexto de usuario; tres de los cuatro son de superusuario. Van en cada **rol que inicia sesión** (`authenticator`; los del conector, `conector_prueba_mcp` y `conector_prueba_gestion` de T-114, y los de la fase 2), en una migración **nueva** (P-47) con guarda si el rol no existe. **Vuelta atrás:** guarda antes en `privado.ajustes_rol_previos` (rol, ajuste, valor previo o nulo; RLS, sin políticas ni permisos) el valor de los cuatro; revertir lo restaura o hace `alter role … reset <ajuste>` de esos cuatro, **nunca `reset all`**. Las sesiones abiertas no los toman hasta que una persona reinicia la API y Supavisor (m-17). **PRUEBA-031:** `rolconfig` de `pg_roles where rolcanlogin`, en rojo si un rol fuera de la **lista cerrada de excepciones de su entorno** (CI, de T-017; `Nido`, de T-P1; versionadas con el motivo) no tiene los cuatro; y el efecto por la API y el conector (testigos: 0 apariciones, 0 sentencias con parámetros; control positivo desde `postgres`). `pgaudit`: T-P1; si registra parámetros, al arquitecto.
+Un ajuste de rol actúa al iniciar sesión (no con `set role`), y PostgREST, que entra como `authenticator`, solo aplica del rol destino los de contexto de usuario; tres de los cuatro son de superusuario. Van en cada **rol que inicia sesión** (`authenticator`; los del conector, `conector_prueba_mcp` y `conector_prueba_gestion` de T-114, y los de la fase 2), en una migración **nueva** (P-47) con guarda si el rol no existe. **Vuelta atrás:** guarda antes en `privado.ajustes_rol_previos` (rol, ajuste, valor previo o nulo; RLS, sin políticas ni permisos; `check` de los cuatro ajustes; sin sobrescribir un valor ya guardado, N-5) el valor de los cuatro, con `format()` y `%I` y `%L`; revertir lo restaura o hace `alter role … reset <ajuste>` de esos cuatro, **nunca `reset all`**, y vacía la tabla. Las sesiones abiertas no los toman hasta que una persona reinicia la API y Supavisor (m-17). **PRUEBA-031:** `rolconfig` de `pg_roles where rolcanlogin`, en rojo si un rol fuera de la **lista cerrada de excepciones de su entorno** (CI, de T-017; `Nido`, de T-P1; versionadas con el motivo) no tiene los cuatro; y el efecto por la API y el conector (testigos: 0 apariciones, 0 sentencias con parámetros; control positivo desde `postgres`). `pgaudit`: T-P1; si registra parámetros, al arquitecto.
 
 ### Estado derivado
 
@@ -171,7 +171,7 @@ Cliente de baja: revocar donde no esté revocada; lo demás, `cliente_de_baja`.
 
 ### Cerrojos y simultaneidad
 
-**DD-34 Orden y modos (R-MA-1).** Orden único (REQ-048): cliente → licencia → códigos y conexiones. O-2 a O-11 toman **primero el cliente `for no key update`**, que choca con el `for share` del conector (M08 L154) y de D-5; luego licencia, códigos y conexiones `for update`, por identificador; O-1 no bloquea filas. Así conector y operación se ordenan en la fila del cliente, el segundo espera sin tener conexión ni licencia y la secuencia conexión → licencia de D-5 (H-11) no cierra ciclo (PostgreSQL 18, «Explicit Locking»). Segunda barrera (P-52): el conector toma cliente y licencia `for share` antes de escribir en `conexiones` o `codigos_activacion`. PRUEBA-018.
+**DD-34 Orden y modos (R-MA-1).** Orden único (REQ-048): cliente → licencia → códigos y conexiones. O-2 a O-11 toman **primero el cliente `for no key update`** (O-2, `for update`, porque el renombre cambia `nombre_clave`, con índice único, N-3), que choca con el `for share` del conector (M08 L154) y de D-5; luego licencia, códigos y conexiones `for update`, por identificador, todo en el paso 2 y antes de la primera fila de auditoría (en O-3, la licencia vigente, sus conexiones activas y el código pendiente, N-6); O-1 no bloquea filas. Así conector y operación se ordenan en la fila del cliente, el segundo espera sin tener conexión ni licencia y la secuencia conexión → licencia de D-5 (H-11) no cierra ciclo (PostgreSQL 18, «Explicit Locking»). Segunda barrera (P-52): el conector toma cliente y licencia `for share` antes de escribir en `conexiones` o `codigos_activacion`. PRUEBA-018.
 
 Una licencia viva y un código vivo: cerrojo e índice (DD-03). Nombre: índice sobre `nombre_clave`; quien pierde recibe `repetido`, nunca `incierta` (REQ-053, M-2). Edición: `version` (REQ-049). La activación toma los mismos cerrojos (D-11).
 
@@ -305,3 +305,10 @@ Anteriores, en git. **Revisión del `revisor` (22/11/2026)**, sin probar ni conf
 | R-m3 a R-m6 / R-m8 a R-m10 | D-7 / «Regla de nombres» / D-4b, DD-35 · D-5, «Migración» / DD-30 |
 | R-m15, R-m17, R-m18, R-m19 | «Migración» / D-2, D-11 / pruebas a `plan.md` / «No ha podido comprobar» |
 | R-MA-4, R-m1, R-m2, R-m7, R-m11 a R-m14, R-m16 | `plan.md`, `tareas.md`, `propuestas.md` |
+
+**Condiciones de `dictamen-diseno-3.md` y revisión del `revisor` (22/11/2026):**
+
+| Hallazgo | Apartado |
+| --- | --- |
+| N-3, N-6 / N-4 / N-5 | DD-34 / DD-35 / DD-30; el resto, en `tareas.md`, «Condiciones de `dictamen-diseno-3.md`», `plan.md` (PRUEBA-015, 017, 018, 019) y `propuestas.md` (P-52, P-53) |
+| MAYOR-1 / MENOR-1 | `tareas.md` y `plan.md` / `plan.md`, cabecera, «Lo que bloquea» y «Aprobación» |
