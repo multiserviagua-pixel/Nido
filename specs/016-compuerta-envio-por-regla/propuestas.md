@@ -94,3 +94,12 @@ Recogen las propuestas PR-1 a PR-5 de `verificacion-gmail-outlook.md` y lo que l
 | P-22 | `piloto-gmail.md` (arquitecto) | Que el plan cubra, con evidencia por punto, NC-1 a NC-7, NC-9, NC-12 y NC-13 (vuelta de corrección 21/11/2026), la batería de 300 intentos por asistente de CA-024 y las pruebas de REQ-017 (herramientas y navegador), y diga qué REQ deja sin efecto cada punto no superado | REQ-026, CA-029 |
 | P-23 | Dictamen | La lectura del artículo 8 de la enmienda 1 (resumen y aviso con autoridad en la página, correo de cortesía sin ella, el estado de leído no impide el envío) necesita dictamen del `auditor-seguridad`: se aparta de la letra de R-2 de la 017 | REQ-008, REQ-011 |
 | P-24 | Tamaño de la especificación | Con la enmienda pasa de 25 requisitos y supera los 25 KB de D-023. Si la coordinación lo pide, se divide en dos funciones: condiciones de envío (REQ-001 a REQ-010, REQ-020 a REQ-025) y estado, página del dueño, instalación y plataforma (REQ-011 a REQ-019, REQ-026, REQ-027) | D-023 |
+
+## 9. Añadido el 21/11/2026 con la vuelta de corrección 3
+
+Ninguna está aplicada.
+
+| N.º | Documento | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-25 | 015 (registro y selección de versiones del prompt) | Que la selección de versión de un canal, también su vuelta atrás (requisito 24 de la 015), rechace una versión que pida navegador con la sesión del dueño en Google o envío en conversación mientras haya en ese canal una cuenta con la compuerta instalada, y la trate como instalada si no lo puede saber. Si no hay una versión anterior que cumpla, la vuelta atrás deja el canal sin instrucciones. Basta la licencia y el canal, sin datos del correo (artículo 1). Criterio a añadir: con una cuenta de prueba con la compuerta instalada, el paso a una versión así y la vuelta atrás a la 1.2 se rechazan | M-1 de `dictamen-enmienda-2.md`; REQ-026 y CA-029 de la 016; artículos 8 y 9 |
+| P-26 | `piloto-gmail.md` (arquitecto) | Añadir a NC-2 si Gmail conserva en el mensaje enviado algo que permita a la compuerta saber, sin nada que escriba el agente, si procede de un borrador del agente (M-2); a NC-13, si el conector puede borrar filtros y si los filtros se aplican al correo de cortesía que deja la compuerta (m-2); y a las pruebas de REQ-017, si cada asistente bloquea por defecto las herramientas nuevas de un conector (m-1) | `dictamen-enmienda-2.md`, «No comprobado» |

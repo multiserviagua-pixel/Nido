@@ -78,6 +78,13 @@ Añadir filas VERIFICAR, para Gmail y para Outlook:
 | P-14 | `docs/INSTALACION-CLIENTE.md` | Junto a P-05: alta del código de presencia en un dispositivo del dueño, sin el asistente abierto con navegador ni con control del equipo, sin autenticador en el navegador, gestor que rellene solo ni aplicación en el equipo que controla el asistente, y advertencia de no compartir el proyecto | REQ-011, REQ-023 |
 | P-15 | Tamaño de la especificación | Con la enmienda supera los 25 KB de D-023. Si la coordinación lo pide, se divide en dos funciones: vía protegida (REQ-001 a REQ-010 y REQ-012 a REQ-021) e instalación y presencia en Gmail (REQ-011, REQ-022 a REQ-024) | D-023 |
 
+## Añadido el 21/11/2026 con la vuelta de corrección 3
+
+| N.º | Documento o función | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-16 | `docs/SEGURIDAD.md`, amenaza A-21 | Ampliar A-21 («Ataques de sesión en los dashboards») a la vía protegida de la compuerta en la cuenta del dueño: datos que no escribe ella (texto de candidatos, direcciones, nombres visibles, lo aprendido de la 018) mostrados como texto inerte, nunca como HTML o guion, con caracteres invisibles, de control y de dirección del texto a la vista; lo que confirma el dueño construido desde el estado de la página, nunca desde esos datos; además de la protección contra peticiones falsificadas e incrustación que ya pide | m-2 de `dictamen-enmienda-2.md`; REQ-012 y CA-017; artículos 7 y 8 |
+| P-17 | `piloto-gmail.md` (arquitecto) | Junto a P-13: si la reinstalación en el mismo proyecto conserva las propiedades (NC-4), y cómo sirve la plataforma los datos en la aplicación web de la compuerta, para comprobar el texto inerte de REQ-012 | `dictamen-enmienda-2.md`, «No comprobado» |
+
 ## Contradicciones y riesgos detectados
 
 1. **Fase del panel de cliente.** El encargo sitúa el panel de cliente en la fase 4. `docs/PLAN.md` lo pone en la fase 5 (040 a 049), y la 040 dice «Fase: 5». La 017 usa la fase 5.

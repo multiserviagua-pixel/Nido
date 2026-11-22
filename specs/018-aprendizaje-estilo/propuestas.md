@@ -52,4 +52,11 @@ Se propuso `018-aprendizaje-compuerta`. Se usa `018-aprendizaje-estilo` porque l
 | P-9 | 017, sobre P-2 | La vía protegida aloja el visto bueno y la pausa de la 018 (REQ-021): pausar y retirar el visto bueno, restrictivas urgentes; darlo y reanudar, relajantes. Ver y borrar lo aprendido sigue como propuesta | REQ-021 |
 | P-10 | Coordinación | Consecuencia que conviene tener presente: en Outlook.com, en Microsoft 365 y en Gmail sin compuerta no se usa el arranque, y en Gmail no se aprende de enviados hasta superar NC-2 | REQ-001, REQ-021 |
 
+## Añadido el 21/11/2026 con la vuelta de corrección 3
+
+| N.º | Documento | Cambio propuesto | Motivo |
+| --- | --- | --- | --- |
+| P-11 | `piloto-gmail.md` (arquitecto), sobre P-7 | Que NC-11 cubra también la lectura, por un camino que ni el agente ni un tercero puedan escribir, de si la compuerta está instalada y activada. Si no se supera, el agente la trata como activada (REQ-021) | m-1 de `dictamen-enmienda-2.md`; REQ-021 y CA-021 |
+| P-12 | 012 (prompt), sobre P-1 y P-8 | En el paso 7, lo que el dueño cambie en un borrador del agente solo se anota como «rasgo de la lista → valor», con un valor de la lista cerrada, nunca como frase ni fórmula; y, si el agente no sabe con seguridad si la compuerta está activada, no usa en candidatos lo aprendido sin visto bueno | m-1 y m-2 de `dictamen-enmienda-2.md`; REQ-001, REQ-003 y REQ-021 |
+
 P-5 queda contestada por la verificación de la 016 (D2 y D6) y por la enmienda 1, salvo NC-11.
