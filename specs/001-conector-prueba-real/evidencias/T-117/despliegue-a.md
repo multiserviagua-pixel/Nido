@@ -32,3 +32,16 @@ Lección: comprobar `Length` de cada valor antes de copiarlo y crear de nuevo en
 - La compilación corre en Washington (`iad1`); solo se compila código, sin datos (riesgo anotado en `despliegue-preproduccion.md`).
 - `ENTORNO`, `SUPERVISION_DSN` y `URL_PUBLICA` figuran también en Preview; la guía pide solo Production (menor pendiente).
 - Falta de T-117 (b): el despliegue B del mismo commit y la prueba de vuelta atrás (`rollback` a A y vuelta) en menos de 10 minutos.
+
+## Despliegue B y prueba de vuelta atrás (23/11/2026)
+Despliegue B del mismo commit: `dpl_2JfUp93YkjvVPvR73wTxqxxsgJ4a` (`pre-nido-c8p6k4nte`, `--force`), con las mismas comprobaciones que A (salud 200, región `arn1`, metadatos 200, operación 401). Los dos despliegues se distinguen por `data-dpl-id` en el HTML de la raíz.
+
+| Paso | Hora | Resultado |
+| --- | --- | --- |
+| `promote` de B | 16:06 | Éxito (3 s); el dominio sirve B y `/api/salud` 200 (16:06:52) |
+| Decisión de volver atrás | 16:07:05 | |
+| `rollback` a A | 16:07:28 | Éxito (2 s) |
+| Primera comprobación de A en el dominio | 16:07:39 | `data-dpl-id` = A, `/api/salud` 200 |
+| `promote` de B de nuevo (vuelta adelante) | antes de 16:08:30 | Éxito (3 s); el dominio sirve B y `/api/salud` 200 (16:08:30) |
+
+Tiempo desde la decisión hasta A servido y en 200: **34 segundos**, dentro de los 10 minutos exigidos. Las dos órdenes se ejecutaron en el equipo del responsable y la coordinación comprobó desde fuera con `curl`.
