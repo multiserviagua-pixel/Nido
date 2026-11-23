@@ -226,6 +226,53 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "texto-largo", nombre: "Aviso con un texto largo" },
     ],
   },
+  // T-016 (c): los estados de una vista. `EstadoVacio` con y sin acción; `EstadoError` con un estado
+  // por motivo, el reintento en curso y una referencia inválida; `EstadoSinPermiso` (único, el
+  // mismo que la dirección inexistente); `Esqueleto` de tarjeta, tabla, gráfico y lista, y la carga
+  // lenta. Una carpeta de página fija por estado (R7). Los plazos de 10 s y 30 s y el bloque que los
+  // aplica son de `BloqueDatos` (T-016 (d)).
+  {
+    tipo: "componente",
+    clave: "estado-vacio",
+    nombre: "Estado vacío",
+    estados: [
+      { clave: "con-accion", nombre: "Con acción" },
+      { clave: "sin-accion", nombre: "Sin acción" },
+    ],
+  },
+  {
+    tipo: "componente",
+    clave: "estado-error",
+    nombre: "Estado de error",
+    estados: [
+      { clave: "sin-conexion", nombre: "Sin conexión" },
+      { clave: "fallo-servidor", nombre: "Fallo del servidor" },
+      { clave: "respuesta-no-valida", nombre: "Respuesta no válida" },
+      { clave: "tarda-demasiado", nombre: "Tarda demasiado" },
+      { clave: "sesion-no-valida", nombre: "Sesión no válida" },
+      { clave: "desconocido", nombre: "Motivo desconocido" },
+      { clave: "reintento-en-curso", nombre: "Reintento en curso" },
+      { clave: "referencia-invalida", nombre: "Referencia no válida" },
+    ],
+  },
+  {
+    tipo: "componente",
+    clave: "estado-sin-permiso",
+    nombre: "Estado sin permiso",
+    estados: [{ clave: "unico", nombre: "Único" }],
+  },
+  {
+    tipo: "componente",
+    clave: "esqueleto",
+    nombre: "Esqueleto de carga",
+    estados: [
+      { clave: "tarjeta", nombre: "De tarjeta" },
+      { clave: "tabla", nombre: "De tabla" },
+      { clave: "grafico", nombre: "De gráfico" },
+      { clave: "lista", nombre: "De lista" },
+      { clave: "carga-lenta", nombre: "Carga lenta" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

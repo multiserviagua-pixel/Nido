@@ -41,7 +41,12 @@ export async function medirDesborde(page: Page): Promise<Desborde> {
  * de la cuenta de la cabecera (`header button[aria-haspopup="dialog"] [data-nombre-acortable]`)
  * puede acortarse, y solo si el `aria-label` del botón contiene el nombre entero del `span` (el
  * nombre completo está en el nombre accesible y en el panel que abre; `cabecera.spec.ts` lo
- * comprueba). Cualquier otro recorte cuenta, también dentro de ese botón. */
+ * comprueba). Cualquier otro recorte cuenta, también dentro de ese botón.
+ * Segunda excepción (T-016 (c)): lo que existe para no verse. Las regiones del anunciador
+ * (`[data-anunciador]`) y el texto solo para lector (`.sr-only`) miden 1 px por 1 px y recortan su
+ * texto por construcción: no hay nada visible que se pueda cortar. Una página que anuncia al
+ * cargar (el esqueleto) las dejaba con texto justo cuando se medía. Un recorte de texto visible
+ * sigue contando (control sembrado en `medidas.spec.ts`). */
 export async function medirRecortes(page: Page): Promise<string[]> {
   return page.evaluate(`(() => {
     const nombre = ${nombreCorto};
@@ -51,6 +56,7 @@ export async function medirRecortes(page: Page): Promise<string[]> {
       const oculta = (v) => v === "hidden" || v === "clip";
       const tieneTexto = [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim() !== "");
       if (!tieneTexto) continue;
+      if (e.matches(".sr-only") || e.closest("[data-anunciador]") !== null) continue;
       if (e.matches("[data-nombre-acortable]")) {
         const boton = e.closest('header button[aria-haspopup="dialog"]');
         const entero = e.textContent.trim();

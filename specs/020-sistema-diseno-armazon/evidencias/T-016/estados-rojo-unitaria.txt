@@ -1,0 +1,38 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a
+
+ ❯ tests/unit/diseno/estados-componentes.test.tsx (0 test)
+ ❯ tests/unit/diseno/estados-logica.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/diseno/estados-componentes.test.tsx [ tests/unit/diseno/estados-componentes.test.tsx ]
+Error: Cannot find module '../../../src/components/estados/EstadoError' imported from C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/unit/diseno/estados-componentes.test.tsx
+ ❯ tests/unit/diseno/estados-componentes.test.tsx:9:1
+      7| import { renderToStaticMarkup } from "react-dom/server";
+      8| import { describe, expect, it } from "vitest";
+      9| import { EstadoError } from "../../../src/components/estados/EstadoErr…
+       | ^
+     10| import { EstadoSinPermiso } from "../../../src/components/estados/Esta…
+     11| import { EstadoVacio } from "../../../src/components/estados/EstadoVac…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/diseno/estados-logica.test.ts [ tests/unit/diseno/estados-logica.test.ts ]
+Error: Cannot find module '../../../src/components/estados/logica' imported from C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/unit/diseno/estados-logica.test.ts
+ ❯ tests/unit/diseno/estados-logica.test.ts:6:1
+      4| // en fallo y nunca deja pasar un texto libre. Escrita antes que el có…
+      5| import { describe, expect, it } from "vitest";
+      6| import {
+       | ^
+      7|   FORMAS_DE_ESQUELETO,
+      8|   MOTIVOS_DE_ERROR,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  19:45:24
+   Duration  481ms (setup 81%, worker 11%, transform 8%)
+

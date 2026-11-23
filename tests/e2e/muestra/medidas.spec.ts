@@ -54,6 +54,27 @@ test.describe("controles de las medidas de anchura y texto", () => {
     expect(await medirRecortes(page)).toContain("div");
   });
 
+  test("el texto solo para lector y las regiones del anunciador no cuentan como recorte, y un recorte visible sigue contando", async ({
+    page,
+  }) => {
+    const oculto = `position:absolute;width:1px;height:1px;overflow:hidden;white-space:nowrap`;
+    await page.setContent(
+      pagina(
+        `<span class="sr-only" style="${oculto}">Cargando datos de los clientes</span><div data-anunciador="cortes" role="status" style="${oculto}">Periodo cambiado a los últimos siete días</div>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toEqual([]);
+    // Control positivo: el mismo recorte en un elemento que no es de esos dos sí se detecta.
+    await page.setContent(pagina(`<span style="${oculto}">Cargando datos de los clientes</span>`));
+    expect(await medirRecortes(page)).toContain("span");
+    await page.setContent(
+      pagina(
+        `<div data-anunciador="cortes" role="status"></div><p style="width:30px;overflow:hidden;white-space:nowrap">Texto visible recortado</p>`,
+      ),
+    );
+    expect(await medirRecortes(page)).toContain("p");
+  });
+
   test("la excepción del nombre acortable de la cuenta es solo para el botón de la cabecera", async ({
     page,
   }) => {

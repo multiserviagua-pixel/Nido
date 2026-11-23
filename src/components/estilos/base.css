@@ -33,6 +33,22 @@
     overflow-wrap: anywhere;
   }
 
+  /* Esqueleto de carga (T-016 (c); diseño, «Estados de cada vista»; REQ-023, REQ-039): los bloques
+     laten con el ciclo del papel --duracion-esqueleto, que vale 0 con movimiento reducido (y la
+     regla de más abajo lo deja en una sola vuelta de 0,01 ms: sin animación). */
+  .esqueleto-pulso {
+    animation: esqueleto-pulso var(--duracion-esqueleto) ease-in-out infinite;
+  }
+  @keyframes esqueleto-pulso {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
   /* Avisos temporales (T-016 (b); diseño, «Diálogo, cajón y avisos»): mientras hay avisos, la
      página reserva el alto máximo de su región (el 40 % de la ventana) para que no tape el foco.
      `<html>` lleva `data-avisos-abiertos`, que pone `AvisosTemporales`. */

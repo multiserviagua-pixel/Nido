@@ -19,6 +19,25 @@ function origenDe(baseURL: string | undefined): string {
   return new URL(baseURL).origin;
 }
 
+/**
+ * Texto de la página para compararlo entre cargas (T-016 (c)). Quedan fuera dos cosas que cambian
+ * entre una carga y otra sin que lo que se enseña cambie: el texto de las regiones del anunciador
+ * (una copia de lo que se acaba de anunciar, que dura menos de un segundo: el esqueleto anuncia
+ * «Cargando» al montarse) y las referencias de error, que son aleatorias por diseño (`S-` o `N-`
+ * y diez caracteres de un alfabeto fijo). Todo lo demás se compara tal cual.
+ */
+async function textoDeLaPagina(page: Page): Promise<string> {
+  const texto = await page.evaluate(() => {
+    const regiones = [...document.querySelectorAll<HTMLElement>("[data-anunciador]")];
+    const antes = regiones.map((r) => r.style.display);
+    for (const r of regiones) r.style.display = "none";
+    const t = document.body.innerText;
+    regiones.forEach((r, i) => (r.style.display = antes[i] ?? ""));
+    return t;
+  });
+  return texto.replace(/\b[SN]-[0-9A-HJKMNP-TV-Z]{10}\b/g, "REFERENCIA");
+}
+
 /** Directiva estricta de solo informe: lo que no sea del propio origen y ningún código en línea. */
 const POLITICA_ESTRICTA =
   "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; " +
@@ -150,7 +169,7 @@ async function mirarConParametros(
     `${ruta}?usuario=otro-usuario&cliente=otro-cliente&sesion=otra&nombre=${testigos[0]}&correo=${testigos[1]}#${testigos[2]}`,
   );
   await page.waitForLoadState("networkidle");
-  const texto = await page.locator("body").innerText();
+  const texto = await textoDeLaPagina(page);
   // El árbol sin los guiones de datos de Next, que llevan la consulta serializada (H-1).
   const arbol = await page.evaluate(() => {
     const copia = document.documentElement.cloneNode(true) as HTMLElement;
@@ -218,7 +237,7 @@ for (const estado of ESTADOS) {
       await abrirEstado(page, estado);
       // Con los gráficos, el dibujo llega tras hidratar: la base se lee con la página ya asentada.
       await page.waitForLoadState("networkidle");
-      const base = await page.locator("body").innerText();
+      const base = await textoDeLaPagina(page);
       const testigos = [
         "TESTIGO-NOMBRE-018",
         "ficticio-018@ejemplo.invalid",
@@ -274,12 +293,12 @@ for (const estado of ESTADOS) {
     }) => {
       await abrirEstado(page, estado);
       await page.waitForLoadState("networkidle");
-      const base = await page.locator("body").innerText();
+      const base = await textoDeLaPagina(page);
       const testigo = "TESTIGO-MENSAJE-018";
       const ventana = await lanzarTestigo(page, testigo);
       expect(await page.content()).not.toContain(testigo);
       expect(ventana, "la ventana que recibió el mensaje no lo pinta").not.toContain(testigo);
-      expect(await page.locator("body").innerText(), "el contenido no cambia").toBe(base);
+      expect(await textoDeLaPagina(page), "el contenido no cambia").toBe(base);
     });
 
     test("política de contenido estricta en solo informe: inventario de infracciones", async ({
@@ -405,7 +424,7 @@ test.describe("PRUEBA-018 · controles: la medida detecta lo que debe", () => {
       await ruta.fulfill({ response: respuesta, body: cuerpo });
     });
     await page.goto("/muestra");
-    const base = await page.locator("body").innerText();
+    const base = await textoDeLaPagina(page);
     const visto = await mirarConParametros(page, "/muestra", base, [
       "TESTIGO-NOMBRE-018",
       "ficticio-018@ejemplo.invalid",

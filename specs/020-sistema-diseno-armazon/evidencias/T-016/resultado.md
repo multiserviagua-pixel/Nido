@@ -120,3 +120,94 @@ Las capturas versionadas de `evidencias/T-014/capturas` que Playwright reescribe
 - Lector de pantalla real (PRUEBA-028, manual): el anuncio se comprueba por el texto de la región cortés.
 - Colores forzados y cambio de tema con avisos abiertos: la prueba de T-009 (g) no los cubre; los pares de color son los ya declarados (`--texto`, `--superficie`, `--borde-control`, `--texto-secundario`).
 - El foco de vuelta cuando la vista real quita el elemento anterior (cae al contenido principal): sin prueba de navegador.
+
+## (c) `EstadoVacio`, `EstadoError`, `EstadoSinPermiso` y `Esqueleto`
+
+Rama `tarea/020-T-016c`, sobre `8e55530`. Entorno: local (Windows 11, Node 26, solo Chromium de Playwright, 1 worker). Autor: `ingeniero-frontend`. Datos de prueba ficticios. Sin revisión todavía (la hace el `revisor`). Sin commit. No ruta crítica. **Estado: implementada y verificada por el implementador; pendiente de revisión.**
+
+### Qué entrega
+
+- `src/components/estados/` (carpeta nueva, distinta de `estado/`, que guarda `EtiquetaEstado` y el catálogo: no choca, pero los dos nombres se parecen; ver decisión 1).
+  - `logica.ts`: lectura que cierra en fallo. `leerMotivoDeError` (lista cerrada, el resto «desconocido»), `encabezadoDeError` («No se ha podido cargar» una sola vez con cualquier motivo), `leerFormaDeEsqueleto`, `leerTextoFijoOr`, `leerAccionDeEstado`, `leerRutaDelResumen`.
+  - `EstadoVacio.tsx`: título y explicación (`TextoFijo`) y, si procede, un botón con texto fijo y función. Sin directiva de cliente (vale en servidor sin acción).
+  - `EstadoError.tsx`: solo `motivo` de lista cerrada, `referencia` (validada con `leerReferencia`; si no encaja, se descarta y, ya en el navegador, se pinta una `N-` creada con `useSyncExternalStore`, sin diferencia entre HTML e hidratación), `alReintentar` y `reintentando`. Un único botón «Reintentar»; en curso dice «Cargando» y queda `aria-disabled`. No es región viva.
+  - `EstadoSinPermiso.tsx`: sin propiedades salvo `rutaDelResumen` (validada con `esRutaInterna`; si no, `/admin`). Mismo marcado para denegado, inexistente y área de otra fase; sin directiva de cliente (lo usará el `not-found` de cada dashboard).
+  - `Esqueleto.tsx`: tarjeta, tabla, gráfico y lista con las cajas, rellenos y alturas de línea del componente real; bloques `aria-hidden`; «Cargando» una vez por la región cortés (guarda por referencia) y como texto solo para lector; variante `lenta` con el aviso visible y anunciado una vez; `anunciarCarga={false}` para quien ya anuncia.
+- `src/components/textos.ts`: `TEXTOS.estadoVacio` (genérico y `ejemplo` de la muestra).
+- `src/components/estilos/base.css`: `.esqueleto-pulso` y su `@keyframes`, con `--duracion-esqueleto` (0 con movimiento reducido), dentro de la capa `base` existente.
+- Menores que caen aquí: **(15 g / 19 g) `Tabla` usa `EstadoVacio`** (conserva su `section` con nombre y `data-tabla-vacia`, y los textos de `TEXTOS.tabla.vacio`); **(15 g / 24) el error de `ZonaDeDatos` es `EstadoError`**: ya no hay un botón «Reintentar» escrito a mano.
+- Muestra: 4 entradas nuevas en `inventario.ts` (`estado-vacio` 2 estados, `estado-error` 8, `estado-sin-permiso` 1, `esqueleto` 5), 16 páginas fijas en `src/app/muestra/componentes/`, `_vistas/estados/` (`VistaDeEstados`, `DemoDeEstadoVacio`, `DemoDeEstadoError`, `textos-estados.ts`).
+
+### Decisiones del ingeniero (revocables)
+
+1. **Carpeta `estados/`** (como pidió el encargo). No choca con `estado/`, pero se parecen; si el `revisor` lo prefiere, renombrar a `bloque/` o `estados-de-vista/` es mecánico.
+2. **«Reintentar» único = un solo componente, un botón por zona.** El diseño (punto 4, «Reintentar») dice «se revisa si basta un solo botón». No he quitado el botón de la segunda zona: cada zona es un bloque con su propio error y `BloqueDatos` pedirá solo su bloque (REQ-026); con dos errores a la vez hay dos botones con el mismo nombre. Lo que se ha unificado es el componente, el marcado y el comportamiento (`EstadoError`). Si el responsable prefiere un único botón en la página, es un cambio de `ZonaDeDatos` y de `periodo-servidor.spec.ts` (que hoy exige uno por zona).
+3. **«No se ha podido cargar» antepuesto** cuando el texto del motivo no lo dice ya (`sin_conexion`, `sesion_no_valida`), para que REQ-028 («la palabra») valga con los seis motivos y nunca salga dos veces.
+4. **Referencia ausente o inválida: se crea una `N-` en el navegador** después de hidratar (diseño, «La referencia se valida en los dos extremos»). En el HTML del servidor no hay referencia si no llegó una válida. Sin generador, el error se pinta sin ella (como ya hacía el proveedor del periodo).
+5. **`EstadoError` no anuncia.** El anuncio, una sola vez y urgente, lo hace quien detecta el fallo (el proveedor del periodo hoy, `BloqueDatos` en (d)). Un error sin esa pieza no se anuncia: es un riesgo mientras (d) no exista.
+6. **`Esqueleto` anuncia «Cargando» por sí mismo** (por defecto) y `ZonaDeDatos` NO lo usa todavía: su carga sigue siendo la propia (el proveedor ya anuncia). Se migra en (d), con `anunciarCarga={false}` o dejando que el bloque lo anuncie.
+7. **El alto del esqueleto** copia el del componente real (tarjeta con comparación, gráfico con una serie, fila de tabla de 37 px, título de 40 y cabecera de 49). La tabla dibuja 5 filas y la lista 3: una página llena tiene hasta 25 filas, así que al llegar los datos una tabla larga crece. Es lo que significa «aproximado» en REQ-023; el desplazamiento de diseño real (0,1) se mide en (d) con una vista.
+8. **`ListaAlertas` y los gráficos conservan su vacío propio** (`data-alertas-vacia`, `data-grafico-vacio`): el encargo y el menor 19 (g) solo piden `Tabla`. Queda como menor para (f)/(g) o limpieza: migrarlos a `EstadoVacio` (sus pruebas de `alertas.spec.ts` y `graficos.spec.ts` miran esos atributos).
+9. **Cambio a `base.css`** (no a `valores.css`): una clase y un `@keyframes` con el papel `--duracion-esqueleto` que ya existía. Ningún valor de `docs/DISENO.md` cambia. `valores.css`, `combinaciones.ts`, `excepciones.ts` y `paquetes-de-cliente.ts` sin tocar.
+10. **Texto de ejemplo en producción**: `TEXTOS.estadoVacio.ejemplo` está en `textos.ts` porque `EstadoVacio` solo admite `TextoFijo`; se mueve a la muestra con los demás (`cifras.ejemplo`, `dialogo.acciones`, `formulario.ejemplo`) cuando la 021 aporte los suyos.
+
+### Pruebas, primero en rojo
+
+`tests/unit/diseno/estados-logica.test.ts` y `estados-componentes.test.tsx` se escribieron **antes** de cualquier código de `src/components/estados/`: en rojo, sin módulo (`estados-rojo-unitaria.txt`). Después se escribió el código; las pruebas de integración (`Tabla`, `ZonaDeDatos`) y la de navegador (`estados.spec.ts`) vinieron con o después de los componentes, y esta última se escribió sin haberla ejecutado antes.
+
+| Requisito | Prueba |
+| --- | --- |
+| REQ-022, CA-016 (vacío: qué pasa, qué hacer, botón si procede) | `estados-componentes.test.tsx` (EstadoVacio); `estados.spec.ts` «estado vacío» (con y sin acción, contador, y `tabla/vacia` usa el mismo componente) |
+| REQ-026, REQ-028, REQ-057, CA-042 (error: texto fijo por motivo, referencia solo con formato exacto, «Reintentar» único, sin propiedad de mensaje) | `estados-logica.test.ts` (motivo, encabezado); `estados-componentes.test.tsx` (seis motivos, 12 referencias no válidas, `@ts-expect-error` de `mensaje`, `error`, `digest`); `estados.spec.ts` «estado de error» (seis motivos, referencia, reintento, en curso, sin anuncio propio, HTML sin referencia inventada) |
+| REQ-027, REQ-077, CA-020 (sin permiso igual que inexistente) | `estados-componentes.test.tsx` (misma salida byte a byte con propiedades colgadas; `@ts-expect-error` de `nombre`, `id`, `motivo`, `direccion`); `estados.spec.ts` (mismo `outerHTML` con cualquier consulta, testigo ausente del cuerpo y del DOM, sin JavaScript). **La igualdad con la dirección inexistente real (404 con las mismas cabeceras) es de `/muestra/servidor/` (T-016 (h)) y de PRUEBA-034: no comprobada aquí** |
+| REQ-023, REQ-039, REQ-069, CA-016, CA-048 (esqueleto: forma y alto, «Cargando» una vez, carga lenta, sin animación con movimiento reducido) | `estados-componentes.test.tsx`; `estados.spec.ts` «esqueleto» (anuncio `["Cargando"]` y `["Cargando","Está tardando más de lo normal"]`; alto frente a tarjeta, gráfico y tabla reales; sin JavaScript a 320 px) y PRUEBA-014 (movimiento reducido con control positivo) |
+| PRUEBA-013 (anchos, zum, espaciado) | `anchos.spec.ts` recorre las 16 entradas nuevas por el inventario; `estados.spec.ts` añade desborde a 320 px sin JavaScript |
+| PRUEBA-017 (hostil) | referencia hostil sembrada solo en el cliente: 0 apariciones en el DOM en ningún instante (observador de mutaciones), en el HTML y en el título; se pinta una `N-` |
+| PRUEBA-021 (teclado) | vacío con acción: foco, contorno de 2 px, Intro y Espacio; error: Tab a «Reintentar», Intro una vez, el foco no se pierde; sin permiso: Tab al enlace, Intro al Resumen |
+| PRUEBA-014 (colores forzados) | borde conservado en esqueleto, vacío, error y sin permiso; foco visible en «Reintentar» |
+| PRUEBA-025 (axe) | `accesibilidad.spec.ts` recorre las 16 entradas a 320 y 1280, claro y oscuro; `estados.spec.ts` añade tras actuar (reintento, acción) y la carga lenta |
+| PRUEBA-008 (fronteras), PRUEBA-007 (textos) | `fronteras.test.ts`, `inventario-muestra.test.ts`, `textos-estados.test.ts` |
+| Menores 15 (g), 19 (g), 24 | `estados-componentes.test.tsx` «integración» (la fuente de `Tabla` y de `ZonaDeDatos` ya no llevan su bloque propio; un solo botón por zona); `periodo-servidor.spec.ts` sigue exigiendo «Reintentar» por zona |
+
+### Cambios fuera de `src/components/estados/` (decisiones 11 y 12, revocables)
+
+11. **`tests/e2e/muestra/apoyo/medidas.ts`, `medirRecortes`**: no cuenta como recorte el texto de `.sr-only` ni el de las regiones del anunciador (`[data-anunciador]`). Existen para no verse (1 px por 1 px, con el texto recortado por construcción); hasta ahora ninguna página anunciaba al cargar y no se notaba. El esqueleto anuncia «Cargando» al montarse, y la primera pasada completa dio 15 rojos de `anchos.spec.ts` (tres casos por cada una de las 5 páginas de esqueleto: `span` y `div[status]`). El texto visible recortado sigue contando; control sembrado nuevo en `medidas.spec.ts` (sr-only y anunciador pasan, el mismo recorte en un `span` o un `p` normales falla). La alternativa era no anunciar al cargar, que contradice REQ-023.
+12. **`tests/e2e/muestra/red-y-direccion.spec.ts`**: la comparación «el contenido es el mismo» (PRUEBA-018) lee el texto con `textoDeLaPagina`, que deja fuera el texto de las regiones del anunciador (una copia de lo recién anunciado, que dura menos de un segundo) y enmascara las referencias de error `[SN]-…` (aleatorias por diseño). Sin esto, 14 casos del esqueleto y de cuatro estados de error fallaban en la segunda pasada completa. Las pruebas de testigos (que lo escrito en la dirección, el fragmento o un mensaje no aparece) no cambian y siguen mirando el texto y el árbol; el control sembrado de la prueba (contenido que sí cambia con parámetros) sigue pasando.
+
+### Comandos y resultado
+
+Con el candado de suite (regla A) tomado a las 19:54 y liberado al terminar, en primer plano de la sesión (las pasadas largas de Playwright, en segundo plano con la orden en primer plano de la sesión y con límite de 2 h), una sola toma para build y Playwright, servidor `next start` en el puerto 3110 con copia temporal de `playwright.config.ts` (borrada). Sin `vitest` en paralelo a Playwright.
+
+| Comando | Resultado |
+| --- | --- |
+| `npx vitest run tests/unit/diseno/estados-logica.test.ts tests/unit/diseno/estados-componentes.test.tsx` antes del código | rojo: sin módulo (`estados-rojo-unitaria.txt`) |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 53 archivos, 1706 pruebas en verde (1610 antes + 96 nuevas: 43 de lógica y 53 de marcado, con integración de `Tabla` y `ZonaDeDatos`); repetido tras los cambios de pruebas de navegador: igual |
+| `npx playwright test tests/e2e/muestra/estados.spec.ts` | 55 en verde a la primera pasada con el servidor ya compilado (2 rojos propios de la primera ejecución: la prueba de sin permiso comparaba el cuerpo entero del documento, donde Next escribe la dirección pedida en sus datos, y la de alto de tabla comparaba contra una fila con etiqueta de estado de 47 px; corregidas en la prueba, no en el componente); con `--repeat-each=3`, 165 en verde |
+| Primera pasada completa de `tests/e2e/muestra` (2 workers, se cortó a los 10 minutos por el límite de la orden) | 2919 en verde, 24 rojos: 15 de recortes del esqueleto (decisión 11), 6 fallos de Chromium («Target crashed», código 3221225794, de memoria o recursos del equipo, no del código: `accesibilidad.spec.ts` de `referencia-invalida` a 320 px, `red-y-direccion.spec.ts` y `tema-y-movimiento.spec.ts` de gráfico y diálogo) y 3 flaky ya conocidos (`cabecera.spec.ts:214` ×2, `tabla.spec.ts:174`); 800 sin ejecutar |
+| Segunda pasada completa (`--workers=1`) | 3728 en verde, 16 rojos: 14 de `red-y-direccion.spec.ts` (decisión 12), `anchos.spec.ts:132` de `grafico-barras/muchos-puntos` (zum de gráficos, flaky conocido, menor 20 g y 21 f) y `tabla.spec.ts:174` (flaky conocido) |
+| `npx playwright test tests/e2e/muestra --workers=1`, **pasada completa final con todo corregido** | **3743 en verde y 1 rojo**: `dialogo-confirmacion.spec.ts:476` (`objetivo-120 · 320 px`, «contorno de foco del campo»), ajeno a esta tarea (no usa nada de `estados/`); repetido 8 veces aparte: 8 en verde. 35 minutos. Los dos flaky de siempre (`cabecera.spec.ts:214`, `tabla.spec.ts:174`) y el de zum de gráficos pasaron esta vez |
+| `npx playwright test tests/e2e/muestra/avisos.spec.ts -g "PRUEBA-011 en el componente" --repeat-each=10` (una sola vez, sustituye el parcial de (b)) | 50 en verde, 0 fallos; **7 workers** (los que decide Playwright en este equipo: la frase «1 worker» de la evidencia de (b) no era cierta para esta orden). Salida entera en `avisos-repeticiones-chromium.txt` (cierra el menor 25 (a)) |
+| `npm run tipos` | 0 errores (todas las directivas `@ts-expect-error` se consumen) |
+| `npx eslint --max-warnings 0 .` | 0 avisos (la regla `react-hooks/set-state-in-effect` obligó a crear la referencia `N-` con `useSyncExternalStore`) |
+| `npx prettier --check` de lo tocado | limpio |
+| `npm run build` | correcto |
+
+Las capturas versionadas de `evidencias/T-014/capturas` que Playwright reescribe se restauraron con `git checkout`. No se ha ejecutado el `vitest` completo (a cargo de la coordinación).
+
+### No comprobado
+
+- **Firefox y WebKit**: solo hay Chromium. Reensayo en T-018.
+- **Lector de pantalla real** (PRUEBA-028, manual): el anuncio de «Cargando» y de la carga lenta se comprueba por el texto de la región cortés, no por NVDA.
+- **Igualdad con la dirección inexistente real** (404 con las mismas cabeceras y el mismo cuerpo, en carga completa y en navegación; V-1, PRUEBA-034): es de `/muestra/servidor/` (T-016 (h)). Aquí solo se prueba que el estado no admite nada del recurso y que su marcado es idéntico con cualquier consulta. Nota: Next escribe la consulta de la dirección en su propia carga (`"q":"?..."`); lo mide PRUEBA-018 (hallazgo H-1) y lo decide la 021.
+- **Plazos de 10 s y 30 s y desplazamiento de diseño real ≤ 0,1** al llegar los datos: son de `BloqueDatos` (T-016 (d)); aquí el esqueleto solo copia el alto del contenido en tarjeta, gráfico y fila de tabla de texto (±2 px a 1280 px).
+- **Alto del esqueleto de lista y de una tabla con etiquetas de estado**: la lista dibuja tres elementos de tres líneas y la tabla filas de 37 px; una fila con etiqueta de estado mide 47 px y una página llena, 25 filas.
+- **Con `EstadoError` fuera del proveedor del periodo, nadie anuncia el error** hasta que exista `BloqueDatos` (decisión 5).
+
+### Menores para el revisor y las siguientes tareas
+
+- `ListaAlertas` y los gráficos conservan su vacío propio (decisión 8).
+- `TEXTOS.estadoVacio.ejemplo` en producción (decisión 10).
+- `Esqueleto` en `ZonaDeDatos`: la carga de la zona sigue siendo propia (decisión 6); migrarla en (d) retiraría su `data-estado="carga"` escrito a mano.
+- Sospecha: con `referencia` ausente, la `N-` se crea en el primer pintado del navegador (`useSyncExternalStore` con instantánea de servidor `null`): en una navegación de cliente que monta el error ya hidratado, aparece en el mismo pintado; en la carga inicial, tras hidratar. El e2e `estados.spec.ts` solo lo comprueba tras `networkidle`.
+- Los 15 + 14 rojos de las dos primeras pasadas completas se debieron a que la prueba recorre el inventario nuevo: cualquier componente que anuncie al cargar o muestre referencias aleatorias necesitaba las dos aclaraciones de las decisiones 11 y 12.
+

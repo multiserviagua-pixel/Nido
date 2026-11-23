@@ -213,6 +213,27 @@ export const TEXTOS = {
     datosCargadosEl: "Datos cargados el",
   },
 
+  /** Estado vacío (T-016 (c); REQ-022): qué pasa y qué hacer. El genérico solo sale si quien lo
+   * pinta no da un texto fijo válido. Los de `ejemplo` son de la muestra (como `cifras.ejemplo`):
+   * cada vista da los suyos desde su propio grupo (`tabla.vacio`, `alertas.vacio`...). */
+  estadoVacio: {
+    generico: {
+      titulo: "No hay nada que mostrar",
+      explicacion: "Cuando haya datos, aparecerán aquí.",
+    },
+    ejemplo: {
+      conAccion: {
+        titulo: "Todavía no hay clientes",
+        explicacion: "Añade el primero para empezar a ver su actividad en esta página.",
+        accion: "Añadir cliente",
+      },
+      sinAccion: {
+        titulo: "No hay actividad en este periodo",
+        explicacion: "Prueba con otro periodo o espera a la siguiente revisión de los agentes.",
+      },
+    },
+  },
+
   /** Vista entera sin acceso: el mismo texto para denegado, inexistente y área de otra fase. */
   sinPermiso: {
     titulo: "No tienes acceso a esta página",

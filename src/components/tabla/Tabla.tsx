@@ -10,9 +10,10 @@
 // (sin invisibles ni dirección, dentro de `bdi`, que parte los nombres largos en vez de recortar),
 // las cifras por los formateadores y el estado por `EtiquetaEstado` (catálogo cerrado). De cada
 // fila solo se leen las claves de las columnas declaradas y solo si son propias: ni un
-// identificador ni un campo de más llegan al documento. Sin filas o sin columnas, el estado vacío,
-// no una tabla vacía. Si no cabe, se desplaza dentro de su `RegionDesplazable`.
+// identificador ni un campo de más llegan al documento. Sin filas o sin columnas, el estado vacío común
+// (`EstadoVacio`), no una tabla vacía. Si no cabe, se desplaza dentro de su `RegionDesplazable`.
 import type { ReactNode } from "react";
+import { EstadoVacio } from "../estados/EstadoVacio";
 import { EtiquetaEstado } from "../estado/EtiquetaEstado";
 import { textoPlano } from "../formato/texto-plano";
 import { IconoOrdenAscendente, IconoOrdenar, IconoOrdenDescendente } from "../iconos";
@@ -87,13 +88,11 @@ export function Tabla({
 
   if (cols.length === 0 || previo.vacia || lista.length === 0) {
     return (
-      <section
-        aria-label={nombre}
-        data-tabla-vacia
-        className="rounded-medio border border-borde-decorativo bg-superficie p-4"
-      >
-        <p className="text-cuerpo font-medio text-texto">{TEXTOS.tabla.vacio.titulo}</p>
-        <p className="text-cuerpo-menor text-texto-secundario">{TEXTOS.tabla.vacio.explicacion}</p>
+      <section aria-label={nombre} data-tabla-vacia>
+        <EstadoVacio
+          titulo={TEXTOS.tabla.vacio.titulo}
+          explicacion={TEXTOS.tabla.vacio.explicacion}
+        />
       </section>
     );
   }

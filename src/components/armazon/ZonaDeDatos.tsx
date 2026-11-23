@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { leerReferencia } from "../../lib/errores/referencia";
+import { EstadoError } from "../estados/EstadoError";
 import { TEXTOS } from "../textos";
 import { useTransicionDePeriodo } from "./TransicionDePeriodo";
 
@@ -21,7 +21,6 @@ export function ZonaDeDatos({
   children: ReactNode;
 }) {
   const { pendiente, lenta, fallida, referencia, reintentar } = useTransicionDePeriodo();
-  const ref = leerReferencia(referencia);
   return (
     <div
       data-zona={zona}
@@ -29,22 +28,9 @@ export function ZonaDeDatos({
       aria-busy={pendiente && !fallida ? "true" : undefined}
     >
       {fallida ? (
-        <div data-estado="error" className="flex flex-col items-start gap-2 text-texto">
-          {/* El motivo ya empieza por «No se ha podido cargar»: no se repite. */}
-          <p className="font-seminegrita">{TEXTOS.motivosDeError.tarda_demasiado}</p>
-          {ref === null ? null : (
-            <p className="text-cuerpo-menor text-texto-secundario">
-              {TEXTOS.bloque.referencia}: {ref}
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={reintentar}
-            className="inline-flex min-h-10 items-center justify-center rounded-medio border border-borde-control bg-superficie px-3 text-texto"
-          >
-            {TEXTOS.bloque.reintentar}
-          </button>
-        </div>
+        // El motivo ya empieza por «No se ha podido cargar»: `EstadoError` no lo repite. Un solo
+        // componente para el error y su «Reintentar» (menor 15 (g)).
+        <EstadoError motivo="tarda_demasiado" referencia={referencia} alReintentar={reintentar} />
       ) : pendiente ? (
         <div data-estado="carga" className="text-texto-secundario">
           <p>{TEXTOS.bloque.cargando}</p>
