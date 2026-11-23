@@ -144,6 +144,54 @@ export const TEXTOS = {
     },
   },
 
+  /** Diálogo de confirmación (T-010 (j); REQ-017, REQ-018). Cada acción dice qué va a pasar (título),
+   * a qué o a quién afecta (el objetivo, que es un dato y se pinta aparte), cuándo se aplica y el
+   * verbo con su objeto en el botón («Pausar agente»), nunca «Aceptar» o «Sí». Cada función de la
+   * fase añade sus acciones y sus datos distintivos en su propio diseño. */
+  dialogo: {
+    afecta: "Afecta a",
+    sinNombre: "Sin nombre",
+    cerrar: "Cerrar",
+    /** Qué dato distingue un objetivo de otro con un nombre parecido (lo declara cada vista). */
+    datosDistintivos: {
+      identificador: "Identificador",
+      alta: "Alta",
+      plan: "Plan",
+    },
+    acciones: {
+      pausar_agente: {
+        titulo: "¿Pausar este agente?",
+        cuando: "Se aplicará en la siguiente revisión de cada agente.",
+        confirmar: "Pausar agente",
+        enCurso: "Pausando…",
+      },
+      reanudar_agente: {
+        titulo: "¿Reanudar este agente?",
+        cuando: "Se aplicará en la siguiente revisión de cada agente.",
+        confirmar: "Reanudar agente",
+        enCurso: "Reanudando…",
+      },
+      revocar_licencia: {
+        titulo: "¿Revocar esta licencia?",
+        cuando: "Se aplicará de inmediato: el agente dejará de recibir instrucciones.",
+        confirmar: "Revocar licencia",
+        enCurso: "Revocando…",
+      },
+      publicar_version: {
+        titulo: "¿Publicar esta versión?",
+        cuando: "Se aplicará en la siguiente revisión de cada agente.",
+        confirmar: "Publicar versión",
+        enCurso: "Publicando…",
+      },
+      volver_atras_version: {
+        titulo: "¿Volver a la versión anterior?",
+        cuando: "Se aplicará en la siguiente revisión de cada agente.",
+        confirmar: "Volver atrás",
+        enCurso: "Volviendo atrás…",
+      },
+    },
+  },
+
   /** Motivos de error de lista cerrada (diseño, «Estados de cada vista»). */
   motivosDeError: {
     sin_conexion: "Sin conexión. Comprueba tu red e inténtalo de nuevo.",

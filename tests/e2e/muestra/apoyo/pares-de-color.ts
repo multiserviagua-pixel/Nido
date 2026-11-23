@@ -211,8 +211,12 @@ export async function recorrerPares(
       const enfocables = document.querySelectorAll(
         'a[href], button, input:not([type="hidden"]), select, textarea, summary, [tabindex]:not([tabindex="-1"])',
       );
+      // Con un diálogo de alerta abierto (T-010 (j)) el resto de la página queda inerte y el foco no
+      // entra en ella: solo se miden los elementos del propio diálogo.
+      const modal = document.querySelector('[role="alertdialog"]');
       for (const e of enfocables) {
         if (!visible(e)) continue;
+        if (modal !== null && !modal.contains(e)) continue;
         (e as HTMLElement).focus({ focusVisible: true } as FocusOptions);
         const s = getComputedStyle(e);
         const contorno =

@@ -72,8 +72,12 @@ export async function medirRecortes(page: Page): Promise<string[]> {
 export async function medirSolapes(page: Page): Promise<string[]> {
   return page.evaluate(`(() => {
     const nombre = ${nombreCorto};
+    // Con un diálogo de alerta abierto (T-010 (j)) la página de detrás queda bajo el velo: solo se
+    // miden los elementos del propio diálogo.
+    const modal = document.querySelector('[role="alertdialog"]');
     const hojas = [...document.body.querySelectorAll("*")].filter(
       (e) =>
+        (modal === null || modal.contains(e)) &&
         [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim() !== "") &&
         e.getBoundingClientRect().width > 0 &&
         getComputedStyle(e).visibility !== "hidden",

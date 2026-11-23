@@ -558,3 +558,76 @@ No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Fir
 **No ejecutado / no comprobado.** (j) entero; Firefox y WebKit; lector de pantalla; táctil real; escala de grises real (se comprueba por palabra e icono distintos, no por píxeles); contraste de `--texto-secundario` sobre `--superficie` y de los tonos sobre tarjeta: sin pares nuevos, los mide PRUEBA-022 (en verde); revisión independiente (pendiente del `revisor`); vitest completo (coordinación).
 
 **Vuelta atrás.** Borrar `src/components/alertas/`, `src/app/muestra/_vistas/alertas/`, `src/app/muestra/componentes/lista-alertas/`, la entrada `lista-alertas` del inventario, `TEXTOS.alertas`, las tres pruebas nuevas y restaurar el nombre `BASE` en `EtiquetaEstado.tsx`.
+
+## T-010 (j) `DialogoConfirmacion` y menores de (i) (23/11/2026, rama `tarea/020-T-010j`)
+
+**Estado: (j) y los menores (a) a (d) hechos; (e) anotado como pendiente de T-016.**
+
+**Qué.** `src/components/dialogo/DialogoConfirmacion.tsx` (cliente; `@radix-ui/react-alert-dialog` tras interfaz propia) y `src/components/dialogo/logica.ts` (puro: `leerAccionDeDialogo`, `leerDatoDistintivo`, `leerObjetivo`, `variantePorAccion`, `presentarResultado`, `puedeCerrarse`). `TEXTOS.dialogo` en `textos.ts` (cinco acciones de ejemplo con título, «cuándo», verbo con objeto y texto en curso). `Boton.tsx` solo exporta `VARIANTES` (el botón «Cancelar» lo necesita para no duplicar el aspecto). Muestra: entrada `dialogo-confirmacion` con tres estados (`pausar`, `objetivo-120`, `texto-hostil`), una carpeta de página fija por estado, vistas en `src/app/muestra/_vistas/dialogo/`. Todas las páginas se abren con el primer diálogo ya abierto (convención de `anchos.spec.ts`: la clave contiene `dialogo`).
+
+**Paquetes de cliente (reservado; «sí» de la coordinación por D-036, 23/11/2026).** Solo se añade `@radix-ui/react-alert-dialog` a `tests/unit/diseno/paquetes-de-cliente.ts`, con comentario de motivo. Sus dependencias (`primitive`, `react-compose-refs`, `react-context`, `react-dialog`, `react-primitive`) ya figuraban; PRUEBA-037 no exige nada más (ver tabla). Sin tocar su lógica ni relajarla. Sin dependencias nuevas en `package.json`.
+
+**Decisiones del ingeniero donde el diseño no cierra (revocables).**
+- Interfaz: `disparador` (elemento con `ref`, como en `PanelModal`), `accion` (lista cerrada), `objetivo {nombre, distintivo}`, `datoDistintivo` (lista cerrada: identificador, alta, plan; «qué dato es» lo declara la vista), `ejecutar`, `alReleer`, `lectura`, `abiertoAlCargar` (solo muestra). Ninguna propiedad admite un texto libre: el nombre y el distintivo son datos y van por `TextoDato`; el título no los lleva.
+- Variante: `peligro` para pausar, revocar y volver atrás; `primario` para reanudar y publicar. En los dos casos el foco inicial es «Cancelar» (lo hace Radix con `AlertDialog.Cancel`; no hay código de foco inicial propio).
+- Un clic fuera no cierra (es un diálogo de alerta; el diseño solo dice «Escape cierra»).
+- Con el envío en curso no se cierra (ni Escape ni «Cancelar», que queda `aria-disabled`): ya se envió y cerrarlo ocultaría un resultado que puede ser «no se sabe si se aplicó». Dura como mucho 30 s.
+- `hecha`: cierra, anuncia «Hecho…» por la región cortés y la vista relee; el foco vuelve al disparador. `rechazada`: el diálogo sigue, mensaje con el motivo de la lista y se puede volver a confirmar. `no_permitida`: «No tienes permiso…», sin confirmar, botón «Cerrar» con el foco. `incierta`: mensaje que permanece, sin confirmar (no se reintenta), «Cerrar» con el foco y «Comprobar estado» (relee la vista y cierra).
+- El aviso temporal de `hecha` (diseño: «un aviso temporal lo confirma») no existe todavía (`AvisosTemporales` es otra parte): se anuncia por la región cortés y la vista decide si añade el aviso.
+- El `Boton` se usa para confirmar y «Comprobar estado»; «Cancelar» es un `button` con las clases exportadas de `Boton` porque `AlertDialog.Cancel asChild` necesita pasar `ref` y manejadores y `Boton` no los reenvía (no se toca su interfaz).
+- Cambio fuera de lo pedido y necesario: `tests/e2e/muestra/anchos.spec.ts:198` buscaba `dialog[open], [role="dialog"]`; el diálogo de alerta tiene `role="alertdialog"`, así que se añade ese selector (el caso de poca altura de PRUEBA-013 se ejecuta ahora sobre el diálogo de confirmación).
+
+**Pruebas (escritas antes que el código; el rojo previo fue de importación de módulos inexistentes).**
+- `tests/unit/diseno/dialogo-logica.test.ts` (16): listas cerradas, verbo con objeto en cada acción, variante, objetivo con control y dirección, claves heredadas y de más, captadores y proxies que lanzan, los cuatro resultados de `leerResultadoAccion` y qué se ve tras cada uno, cierre en `incierta`, cierre en curso.
+- `tests/unit/diseno/dialogo-componente.test.tsx` (5): cerrado solo pinta el disparador, acción o dato fuera de lista no abren nada, sin red ni HTML sin escapar ni `next/`, usa la primitiva de alerta, `useAccion`, `Boton` y `TextoDato`, sin `autoFocus` ni `onOpenAutoFocus`, propiedades cerradas.
+- `tests/e2e/muestra/dialogo-confirmacion.spec.ts`: PRUEBA-015 (qué, a qué, cuándo, nombre y descripción; verbo con objeto; foco inicial en «Cancelar»; Intro nada más abrir no confirma; 50 y 50 tabuladores; Escape, «Cancelar» y confirmar devuelven el foco; clic fuera; hecha, doble pulsación e Intro repetido, rechazada, sin permiso, servidor/ilegible/desconocida, 30 s con `page.clock`, éxito tardío con relectura), PRUEBA-021, PRUEBA-017 (12 cadenas), PRUEBA-013 (anchos, poca altura 568x320, 320x256 y 640x400 con teclado y táctil, 120 caracteres, espaciado), colores forzados (mide `color` y `background-color` de «peligro»), axe a 320 y 1280 en claro y oscuro (también con el mensaje incierto).
+
+### Menores de (i) que caen aquí (punto 22 de `tareas.md`)
+- **(a) V-2.** `leerAlertas(brutas)` puro y exportado (`alertas/logica.ts`, corre en el servidor); `AlertaLeida` lleva una marca solo de tipos, así que pasar una fila cruda a `ListaAlertas` es un error de tipos (probado con `@ts-expect-error`, que `npm run tipos` comprueba). La vista de la muestra llama a `leerAlertas` en servidor y pasa solo lo leído al cliente. `alertas.spec.ts` recupera la aserción sobre `page.content()` y sobre el HTML crudo (`page.request.get`): los seis testigos de campos de más no viajan. El componente, además, vuelve a comprobar gravedad, tipo y acción contra sus listas.
+- **(b) Tope.** `MAXIMO_DE_ALERTAS = 25` (el criterio de la página de `Tabla`), aplicado en `leerAlertas` y en el componente. Sin nota «y N más»: el diseño no la prevé y no se ha inventado. **Pregunta para el arquitecto:** cortar sin decirlo oculta alertas; la vista debe pedir como mucho 25 (T-016) o el diseño debe decidir la nota.
+- **(c)** La prueba hostil usa un testigo distinto por cadena y por campo (`TESTIGO-HOSTIL-n-FIN`) y un control que demuestra que el mismo testigo sí aparece, escapado, cuando va como cliente; el campo de más lleva su testigo propio.
+- **(d)** `contraste.test.ts`: cota de 36 a 37.
+- **(e) `Tabla` y V-2: pendiente de T-016.** `Tabla` es controlada y recibe filas de la vista; el mismo patrón (tipo ya leído y lector en servidor) se aplica allí, no se ha tocado.
+
+### Cambios en ayudas de prueba compartidas (no reservadas; los justifica el diálogo abierto al cargar)
+- `tests/e2e/muestra/apoyo/medidas.ts` (`medirSolapes`) y `apoyo/pares-de-color.ts` (paso 5, foco): con un `[role="alertdialog"]` abierto solo se miden los elementos del propio diálogo (el resto queda inerte bajo el velo: se contaban 12 solapes y 10 «sin contorno de foco» de enlaces del fondo que no pueden recibir el foco). Sin diálogo de alerta el comportamiento es el de antes.
+- `tests/e2e/muestra/tema-y-movimiento.spec.ts`: si el estado trae un diálogo de alerta abierto, se cierra con Escape antes de ejercitar el resto (la prueba pulsaba el cajón y el diálogo lo tapaba). El cambio de tema con el diálogo abierto lo prueba `dialogo-confirmacion.spec.ts`.
+- `tests/e2e/muestra/anchos.spec.ts`: el selector del caso de poca altura admite `[role="alertdialog"]`.
+
+### Correcciones tras el dictamen del revisor (NO APTO por un mayor de pruebas; 23/11/2026)
+- **Mayor 1 (carrera con la hidratación).** `abrirEstado` solo esperaba al `h1` del HTML del servidor; el diálogo abierto al cargar lo pinta Radix (Portal) después de hidratar. Ahora `apoyo/estados.ts` exporta `esperarDialogoSiLoHay(page, estado)`, que `abrirEstado` llama siempre y que espera `getByRole("alertdialog")` visible cuando la entrada del inventario es `dialogo-confirmacion` (decide por el inventario, no por un conteo instantáneo). Con ello `tema-y-movimiento` (guarda del Escape), `medirSolapes` y el foco de `recorrerPares` ven siempre el diálogo ya pintado. **Reproducido antes de corregir:** retrasando 500 ms con `page.route("**/_next/static/**/*.js")` y sin la espera, `tema-y-movimiento` sobre `dialogo-confirmacion` dio 1 rojo en 63 (tiempo agotado de `texto-hostil`, el del dictamen). **Después:** 270 en verde con `--repeat-each=10` (`tema-y-movimiento` y `combinaciones` sobre `dialogo-confirmacion`, con el mismo retraso). El retraso era una edición temporal de `abrirEstado` que se ha quitado.
+- **«Movimiento reducido» de `objetivo-120`:** también caía en la carrera, por otra vía: con 0,01 ms de duración la animación de entrada del diálogo puede constar «en curso» un instante tras pintarse. Con retraso salió 1 rojo en 270 (no reproducible aislado: 40 repeticiones en verde). `tema-y-movimiento.spec.ts` espera ahora (`expect.poll`, 3 s) a que no quede ninguna en curso; una infinita no termina y falla igual. Tras el cambio, 270 en verde con retraso.
+- **Menor 3.** La fila cruda de `alertas-componente.test.tsx` lleva ahora los seis campos con tipos exactos (`as const`, `cliente: null`, `accion: null`, `enCurso: false`) y solo le falta la marca: el `@ts-expect-error` lo evalúa `npm run tipos`.
+- **Menor 4.** `dialogo-confirmacion.spec.ts`: para los tres estados, a 320 px, se cierra con «Cancelar» y se pasan `medirSolapes`, `medirDesborde` y el contorno de foco del `select` de la muestra sobre la página de detrás.
+
+### Decisiones de diseño sin cerrar (para el arquitecto)
+- Con el envío en curso, ni Escape ni «Cancelar» cierran el diálogo (hasta 30 s): decisión de la implementación, no del diseño.
+- Un clic fuera del diálogo no lo cierra (diálogo de alerta): igualmente conviene que el diseño lo fije por escrito.
+
+### Hueco aceptado
+- WebKit y Firefox no cubren el foco de vuelta de este componente; el reensayo de PRUEBA-011 y PRUEBA-015 en los tres motores sigue pendiente (T-018).
+
+### Resultado tras las correcciones del revisor (23/11/2026)
+- Playwright `tests/e2e/muestra` completo (puerto 3111, configuración temporal borrada, candado de suite tomado): **2844 en verde y 2 en rojo**: `cabecera.spec.ts:214` (selector de periodo, `con-periodo`) y `tabla.spec.ts:174` (anuncio del orden), los dos flaky ajenos de siempre (punto 21 e). Se reprodujeron al repetir (`--repeat-each=5`: 3 y 3 rojos de 5 cada uno, 9 en verde); no tocan el diálogo. Un primer intento de la pasada, hecho mientras corría vitest en paralelo, se descarta: un navegador se cayó («Target crashed») y 549 pruebas no se ejecutaron.
+- `npx vitest run tests/unit/diseno --maxWorkers=2`: 47 archivos, 1527 en verde. `npm run tipos`: sin errores. `eslint --max-warnings 0` y `prettier --check` de lo tocado: sin hallazgos.
+
+### Órdenes y resultado (T-010 (j) y menores)
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 47 archivos, 1527 en verde (1498 antes; PRUEBA-037 en verde con el único paquete nuevo) |
+| `npm run tipos` | 0 | sin errores (incluye el `@ts-expect-error` de la fila cruda) |
+| `npx eslint --max-warnings 0 src tests` | 0 | sin hallazgos (tras quitar un `setState` en efecto y una escritura de `ref` en el pintado) |
+| `npx prettier --check` de lo tocado | 0 | formato correcto |
+| `ENTORNO=preproduccion npm run build` (candado tomado y soltado) | 0 | compila (el primer intento, sin `ENTORNO`, dejó la muestra cerrada: todo 404) |
+| Playwright `dialogo-confirmacion.spec.ts` (puerto 3162, configuración temporal borrada) | 0 | 67 en verde |
+| Playwright `tests/e2e/muestra` completo, primera pasada | 1 | 2827 en verde y 15 en rojo: 4 `anchos` y 6 `combinaciones` (diálogo abierto bajo el velo), 3 `tema-y-movimiento` (el diálogo tapaba el cajón), y 2 flaky ajenos (`cabecera.spec.ts:214` y `tabla.spec.ts:174`, punto 21 e) |
+| Playwright de repaso tras corregir las ayudas: `dialogo-confirmacion`, `anchos`, `combinaciones`, `tema-y-movimiento`, `cabecera`, `tabla`, `alertas` | 1 | 1345 en verde y 4 en rojo: los 2 flaky ajenos de siempre (`cabecera.spec.ts:214` en dos estados y `tabla.spec.ts:174`) y un tiempo agotado de `tema-y-movimiento` en `texto-hostil` que no se repite (21 en verde al repetir, y otra vez un «movimiento reducido» de `objetivo-120` en rojo que no se reproduce en 6 repeticiones más: sospecho de carga de la máquina; no se ha encontrado qué animación era) |
+
+Playwright de la muestra no se ha vuelto a pasar entero tras las correcciones de las ayudas: solo el repaso de arriba (no vitest completo, a cargo de la coordinación). Capturas versionadas de `evidencias/T-014/capturas` restauradas con `git checkout`.
+
+**No ejecutado / no comprobado.** Firefox y WebKit (el foco de vuelta con ratón y táctil en WebKit es justo lo que falló en T-001 con la alternativa A: pendiente de PRUEBA-011 en los tres motores con este componente); lector de pantalla (anuncio por la región cortés y nombre y descripción, solo por atributos); táctil real (se usa `tap()` emulado); respuesta del servidor real (todo es simulado); colores forzados: se mide `color` y `background-color` de «peligro» pero CA-034 sigue siendo manual; el foco inicial en «Cancelar» lo da Radix (comprobado con `document.activeElement`); revisión independiente del `revisor` y `auditor-seguridad` no hace falta (no es ruta crítica); vitest completo (coordinación).
+
+**Riesgos.** (1) Con el envío en curso el diálogo no se cierra hasta 30 s como mucho: es una decisión mía. (2) Un diálogo abierto al cargar solo existe en la muestra (`abiertoAlCargar`). (3) `ListaAlertas` corta a 25 sin avisarlo. (4) Los textos de las cinco acciones son de ejemplo; cada función de la fase añadirá los suyos.
+
+**Vuelta atrás.** Borrar `src/components/dialogo/DialogoConfirmacion.tsx` y `logica.ts`, `src/app/muestra/_vistas/dialogo/`, `src/app/muestra/componentes/dialogo-confirmacion/`, la entrada del inventario, `TEXTOS.dialogo`, la línea de `paquetes-de-cliente.ts`, las tres pruebas nuevas y los tres cambios de ayudas; `export` de `VARIANTES` en `Boton.tsx`; deshacer `leerAlertas`, la marca de tipos y el tope en `alertas/`.

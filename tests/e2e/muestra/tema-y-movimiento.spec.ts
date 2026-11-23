@@ -29,6 +29,14 @@ for (const estado of ESTADOS) {
       await page.setViewportSize({ width: 1280, height: ALTO_POR_DEFECTO });
       await page.emulateMedia({ colorScheme: "light" });
       await abrirEstado(page, estado);
+      // Un diálogo de alerta abierto al cargar (T-010 (j)) deja inerte el resto de la página: se
+      // cierra para ejercitar lo demás. El cambio de tema con el diálogo abierto lo prueba
+      // `dialogo-confirmacion.spec.ts`.
+      // `abrirEstado` ya ha esperado a que el diálogo esté pintado si el estado lo trae.
+      if ((await page.getByRole("alertdialog").count()) > 0) {
+        await page.keyboard.press("Escape");
+        await expect(page.getByRole("alertdialog")).toHaveCount(0);
+      }
       // Lo que el usuario ha escrito o abierto: si hay campos, se rellenan antes del cambio.
       const campos = page.locator(
         'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), textarea',
@@ -117,8 +125,15 @@ for (const estado of ESTADOS) {
     test("movimiento reducido: 0 animaciones en curso", async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await abrirEstado(page, estado);
-      const animaciones = await medirAnimaciones(page);
-      expect(animaciones.filter((a) => a.enCurso)).toEqual([]);
+      // Con 0,01 ms de duración una animación de entrada (el diálogo, que se pinta tras hidratar)
+      // puede constar «en curso» un instante: se espera a que termine. Una infinita no termina y
+      // la prueba falla igual al agotar el plazo.
+      await expect
+        .poll(async () => (await medirAnimaciones(page)).filter((a) => a.enCurso).length, {
+          message: "animaciones en curso con movimiento reducido",
+          timeout: 3000,
+        })
+        .toBe(0);
     });
 
     test("ninguna animación repite más de 3 veces por segundo", async ({ page }) => {

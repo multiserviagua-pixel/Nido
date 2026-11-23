@@ -25,7 +25,9 @@ export type PropiedadesDeBoton = {
 
 const BASE =
   "inline-flex min-h-10 min-w-10 items-center justify-center rounded-medio px-3 text-cuerpo font-medio";
-const VARIANTES: Readonly<Record<VarianteDeBoton, string>> = {
+/** Clases de cada variante: las usan los botones que otro componente debe pasar a una primitiva
+ * (por ejemplo el de «Cancelar» del diálogo de confirmación) sin duplicar el aspecto. */
+export const VARIANTES: Readonly<Record<VarianteDeBoton, string>> = {
   primario: `${BASE} border border-acento bg-acento text-texto-sobre-acento`,
   secundario: `${BASE} border border-borde-control bg-superficie text-texto`,
   // Acción destructiva (diálogo de confirmación): relleno y borde `--error`, texto

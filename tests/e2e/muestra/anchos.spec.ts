@@ -195,7 +195,7 @@ test.describe("PRUEBA-013 · casos con entrada propia en el inventario", () => {
       test(`${estado.etiqueta} · diálogo a ${ancho} por ${alto}`, async ({ page }) => {
         await page.setViewportSize({ width: ancho, height: alto });
         await abrirEstado(page, estado);
-        const cuadro = page.locator('dialog[open], [role="dialog"]').first();
+        const cuadro = page.locator('dialog[open], [role="dialog"], [role="alertdialog"]').first();
         await expect(cuadro).toBeVisible();
         const r = await cuadro.evaluate((e) => {
           const c = e.getBoundingClientRect();

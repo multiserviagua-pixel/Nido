@@ -36,7 +36,12 @@ export const ASPECTO_DE_GRAVEDAD: Readonly<
   desconocida: { tono: "neutro", icono: "neutro" },
 });
 
+/** Marca solo de tipos (no existe en tiempo de ejecución): una fila cruda no la tiene, así que no
+ * se puede pasar a `ListaAlertas` sin pasar por `leerAlerta` o `leerAlertas` (regla V-2). */
+declare const LEIDA: unique symbol;
+
 export type AlertaLeida = {
+  readonly [LEIDA]: true;
   readonly gravedad: GravedadDeAlerta;
   readonly tipo: TipoDeAlerta;
   /** Ya con el formato común, o «Sin datos». */
@@ -63,7 +68,15 @@ export function leerAccionDeAlerta(valor: unknown): AccionDeAlerta | null {
   return deLaLista(ACCIONES_DE_ALERTA, valor);
 }
 
-const DESCONOCIDA: AlertaLeida = Object.freeze({
+/** Tope de alertas que se leen y se pintan (el mismo criterio que la página de `Tabla`). El
+ * diseño no dice nada sobre un tope ni sobre una nota de «y N más»: la vista debe limitar lo que
+ * pide al servidor; este tope es la red de seguridad del componente. */
+export const MAXIMO_DE_ALERTAS = 25;
+
+const sinMarca = (a: Omit<AlertaLeida, typeof LEIDA>): AlertaLeida =>
+  Object.freeze(a) as AlertaLeida;
+
+const DESCONOCIDA: AlertaLeida = sinMarca({
   gravedad: "desconocida",
   tipo: "desconocido",
   momento: TEXTOS.formato.sinDatos,
@@ -83,7 +96,7 @@ export function leerAlerta(bruta: unknown): AlertaLeida {
     if (typeof bruta !== "object" || bruta === null || Array.isArray(bruta)) return DESCONOCIDA;
     const cliente = propio(bruta, "cliente");
     const limpio = typeof cliente === "string" ? textoPlano(cliente) : "";
-    return Object.freeze({
+    return sinMarca({
       gravedad: leerGravedadDeAlerta(propio(bruta, "gravedad")),
       tipo: leerTipoDeAlerta(propio(bruta, "tipo")),
       momento: formatearFechaHora(propio(bruta, "momento")),
@@ -93,5 +106,21 @@ export function leerAlerta(bruta: unknown): AlertaLeida {
     });
   } catch {
     return DESCONOCIDA;
+  }
+}
+
+/** Lee la lista de alertas que llega del servidor: una a una, con `leerAlerta`, hasta el tope. Es
+ * lo que corre en el servidor (regla V-2): al navegador solo viaja lo ya leído, con los seis
+ * campos permitidos y nada más. Lo que no es una lista cierra en lista vacía. */
+export function leerAlertas(brutas: unknown): readonly AlertaLeida[] {
+  try {
+    if (!Array.isArray(brutas)) return Object.freeze([]);
+    const salida: AlertaLeida[] = [];
+    for (let i = 0; i < Math.min(brutas.length, MAXIMO_DE_ALERTAS); i += 1) {
+      salida.push(leerAlerta((brutas as readonly unknown[])[i]));
+    }
+    return Object.freeze(salida);
+  } catch {
+    return Object.freeze([]);
   }
 }

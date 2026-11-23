@@ -220,7 +220,7 @@ describe("PRUEBA-006 · la tabla «Contraste calculado» de docs/DISENO.md dice 
   });
 
   it("la tabla se ha leído entera", () => {
-    expect(documentados.length).toBeGreaterThanOrEqual(36);
+    expect(documentados.length).toBeGreaterThanOrEqual(37);
   });
 
   it("cada par de la tabla está declarado en combinaciones.ts, y al revés", () => {

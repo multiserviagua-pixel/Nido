@@ -152,6 +152,22 @@ test.describe("PRUEBA-014 · alertas: gravedad con palabra, momento y acción (C
     await expect(alertas(page).nth(2)).toHaveAttribute("data-gravedad", "desconocida");
     await expect(alertas(page).nth(3)).toHaveAttribute("data-gravedad", "desconocida");
     expect(await page.locator("body").innerText()).not.toContain("TESTIGO");
+    // Regla V-2: lo que no se lee tampoco viaja. Ni el DOM serializado ni el HTML crudo que
+    // devuelve el servidor (con la carga que Next pasa al componente de cliente) llevan los
+    // testigos de los campos de más, del tipo, la acción y la cadena suelta.
+    const crudo = await (await page.request.get(page.url())).text();
+    for (const documento of [await page.content(), crudo]) {
+      for (const testigo of [
+        "TESTIGO-TIPO-INVENTADO",
+        "TESTIGO-ACCION-INVENTADA",
+        "TESTIGO-CAMPO-DE-MAS-1",
+        "TESTIGO-CAMPO-DE-MAS-2",
+        "TESTIGO-CAMPO-DE-MAS-3",
+        "TESTIGO-CADENA-SUELTA",
+      ]) {
+        expect(documento, testigo).not.toContain(testigo);
+      }
+    }
   });
 });
 

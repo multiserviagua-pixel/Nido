@@ -182,6 +182,19 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "texto-hostil", nombre: "Texto hostil" },
     ],
   },
+  // T-010 (j): `DialogoConfirmacion` abierto al cargar (la clave contiene `dialogo`: anchos.spec.ts
+  // lo mide a 568 por 320 y a 320 por 256). Pausar y reanudar con respuesta simulada, objetivo de 120
+  // caracteres y texto hostil. Una carpeta de página fija por estado (R7).
+  {
+    tipo: "componente",
+    clave: "dialogo-confirmacion",
+    nombre: "Diálogo de confirmación",
+    estados: [
+      { clave: "pausar", nombre: "Pausar y reanudar" },
+      { clave: "objetivo-120", nombre: "Objetivo de 120 caracteres" },
+      { clave: "texto-hostil", nombre: "Texto hostil" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

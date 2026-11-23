@@ -25,9 +25,16 @@
 // (diseño 020, gráficos). La lista es la que calcula la prueba según el archivo de bloqueo. Cambio
 // hecho con el «sí» de la coordinación por D-036 (23/11/2026) que nombra esta ruta; solo se añaden
 // datos a la lista, sin tocar la lógica de PRUEBA-037; lo revisa el `revisor`.
+//
+// T-010 (j) (23/11/2026): entra `@radix-ui/react-alert-dialog` (1.2.1 en `package.json`; primitiva
+// de T-001) porque `DialogoConfirmacion.tsx` es un módulo de cliente que lo importa. Sus
+// dependencias (`primitive`, `react-compose-refs`, `react-context`, `react-dialog`,
+// `react-primitive`) ya figuraban. Cambio hecho con el «sí» de la coordinación por D-036
+// (23/11/2026) que nombra esta ruta; solo se añaden datos a la lista; lo revisa el `revisor`.
 
 export const paquetesDeCliente: readonly string[] = [
   "@radix-ui/primitive",
+  "@radix-ui/react-alert-dialog", // primitiva de T-001 (PRUEBA-011) para DialogoConfirmacion.tsx
   "@radix-ui/react-compose-refs",
   "@radix-ui/react-context",
   "@radix-ui/react-dialog",

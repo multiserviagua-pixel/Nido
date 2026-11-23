@@ -9,15 +9,18 @@ import { ListaAlertas } from "../../../src/components/alertas/ListaAlertas";
 import {
   ACCIONES_DE_ALERTA,
   GRAVEDADES_DE_ALERTA,
+  MAXIMO_DE_ALERTAS,
   TIPOS_DE_ALERTA,
+  leerAlertas,
 } from "../../../src/components/alertas/logica";
 import { TEXTOS } from "../../../src/components/textos";
 
 const RAIZ = resolve(import.meta.dirname, "..", "..", "..");
 const MOMENTO = "2026-11-12T07:04:00Z";
 const nada = (): void => undefined;
+// Como en una vista real (regla V-2): se lee en el servidor y el componente solo recibe lo leído.
 const pintar = (alertas: readonly unknown[]): string =>
-  renderToStaticMarkup(<ListaAlertas alertas={alertas} alAccionar={nada} />);
+  renderToStaticMarkup(<ListaAlertas alertas={leerAlertas(alertas)} alAccionar={nada} />);
 const elementos = (html: string): string[] => html.match(/<li[\s\S]*?<\/li>/g) ?? [];
 const texto = (html: string): string => html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ");
 
@@ -104,7 +107,7 @@ describe("ListaAlertas · vacía", () => {
   it("sin alertas, un estado vacío coherente y ninguna lista vacía", () => {
     for (const v of [[], undefined, null, "no es una lista", {}]) {
       const html = renderToStaticMarkup(
-        <ListaAlertas alertas={v as unknown as readonly unknown[]} alAccionar={nada} />,
+        <ListaAlertas alertas={leerAlertas(v)} alAccionar={nada} />,
       );
       expect(html, String(v)).toContain(TEXTOS.alertas.vacio.titulo);
       expect(html, String(v)).toContain(TEXTOS.alertas.vacio.explicacion);
@@ -192,14 +195,102 @@ describe("ListaAlertas · el cliente y el texto hostil (REQ-056, REQ-071; CA-041
     }
   });
 
-  it("el tipo, la acción, la gravedad y el momento hostiles no llegan al documento", () => {
-    for (const h of HOSTILES) {
-      const html = pintar([base({ tipo: h, gravedad: h, accion: h, momento: h })]);
-      expect(html, h).not.toContain("<script");
-      expect(html, h).not.toContain("<img");
-      expect(html, h).not.toContain("malo.example");
-      expect(html, h).not.toContain("&lt;b&gt;");
+  // Un testigo distinto por cada cadena: la aserción falla si ese testigo llega al documento. (React
+  // escapa el marcado, así que buscar `<script` o `<img` no detectaría nada: se busca el testigo.)
+  const TESTIGOS: readonly string[] = HOSTILES.map((h, i) => `${h} TESTIGO-HOSTIL-${i}-FIN`);
+
+  it("un testigo por campo: ni el tipo, ni la acción, ni la gravedad ni el momento llegan al documento", () => {
+    for (const campo of ["tipo", "accion", "gravedad", "momento"] as const) {
+      TESTIGOS.forEach((t, i) => {
+        const html = pintar([base({ [campo]: t })]);
+        expect(html, `${campo} #${i}`).not.toContain(`TESTIGO-HOSTIL-${i}-FIN`);
+        expect(html, `${campo} #${i}`).not.toContain("malo.example");
+        expect(html, `${campo} #${i}`).not.toContain("window.__hostil");
+      });
     }
+  });
+
+  it("control de la prueba: el mismo testigo sí aparece cuando va como cliente, escapado", () => {
+    TESTIGOS.forEach((t, i) => {
+      const html = pintar([base({ cliente: t })]);
+      expect(html, `cliente #${i}`).toContain(`TESTIGO-HOSTIL-${i}-FIN`);
+    });
+  });
+
+  it("un campo de más lleva su propio testigo y no viaja ni se pinta", () => {
+    const extras = ["mensaje", "detalle", "prompt", "id", "asunto", "remitente"];
+    const html = pintar([
+      base(Object.fromEntries(extras.map((c) => [c, `TESTIGO-EXTRA-${c.toUpperCase()}`]))),
+    ]);
+    const leidas = JSON.stringify(
+      leerAlertas([
+        base(Object.fromEntries(extras.map((c) => [c, `TESTIGO-EXTRA-${c.toUpperCase()}`]))),
+      ]),
+    );
+    for (const c of extras) {
+      expect(html).not.toContain(`TESTIGO-EXTRA-${c.toUpperCase()}`);
+      expect(leidas).not.toContain(`TESTIGO-EXTRA-${c.toUpperCase()}`);
+    }
+  });
+});
+
+describe("ListaAlertas · solo lo ya leído, y con tope (regla V-2; REQ-075)", () => {
+  it("una fila cruda no se puede pasar al componente: es un error de tipos", () => {
+    // Los seis campos con sus tipos exactos: lo único que le falta es la marca de `leerAlertas`.
+    const cruda = {
+      gravedad: "aviso",
+      tipo: "licencia_por_caducar",
+      momento: MOMENTO,
+      cliente: null,
+      accion: null,
+      enCurso: false,
+    } as const;
+    // @ts-expect-error solo falta la marca `unique symbol`: hay que pasar por `leerAlertas`
+    const mal = <ListaAlertas alertas={[cruda]} alAccionar={nada} />;
+    expect(mal).toBeDefined();
+  });
+
+  it("lo que llega al componente solo tiene los seis campos: lo serializado no lleva nada más", () => {
+    const leidas = leerAlertas([
+      base({ cliente: "Cliente", accion: "reanudar_agente", enCurso: true, secreto: "TESTIGO-V2" }),
+    ]);
+    expect(Object.keys(leidas[0]!).sort()).toEqual(
+      ["accion", "cliente", "enCurso", "gravedad", "momento", "tipo"].sort(),
+    );
+    expect(JSON.stringify(leidas)).not.toContain("TESTIGO-V2");
+    expect(JSON.parse(JSON.stringify(leidas)) as unknown).toEqual(leidas);
+  });
+
+  it("aunque se cuele una alerta con valores fuera de las listas, el componente cierra en desconocida", () => {
+    const colada = [
+      { gravedad: "TESTIGO-G", tipo: "TESTIGO-T", momento: 7, cliente: 3, accion: "TESTIGO-A" },
+    ] as unknown as Parameters<typeof ListaAlertas>[0]["alertas"];
+    const html = renderToStaticMarkup(<ListaAlertas alertas={colada} alAccionar={nada} />);
+    expect(html).not.toContain("TESTIGO");
+    expect(html).not.toContain("<button");
+    expect(html).toContain(TEXTOS.alertas.gravedad.desconocida);
+    expect(html).toContain(TEXTOS.alertas.tipos.desconocido);
+  });
+
+  it(`pinta como mucho ${MAXIMO_DE_ALERTAS} alertas y no inventa una nota de «y N más»`, () => {
+    const muchas = Array.from({ length: MAXIMO_DE_ALERTAS + 15 }, () => base());
+    expect(leerAlertas(muchas)).toHaveLength(MAXIMO_DE_ALERTAS);
+    const html = pintar(muchas);
+    expect(elementos(html)).toHaveLength(MAXIMO_DE_ALERTAS);
+    expect(texto(html)).not.toMatch(/y \d+ más/i);
+    // También si alguien pasa de más al componente sin pasar por `leerAlertas`.
+    const colada = leerAlertas(muchas.slice(0, MAXIMO_DE_ALERTAS));
+    const demasiadas = [...colada, ...colada, ...colada];
+    expect(
+      elementos(renderToStaticMarkup(<ListaAlertas alertas={demasiadas} alAccionar={nada} />)),
+    ).toHaveLength(MAXIMO_DE_ALERTAS);
+  });
+
+  it("un número exacto de alertas dentro del tope se pinta entero", () => {
+    expect(elementos(pintar([base(), base(), base()]))).toHaveLength(3);
+    expect(elementos(pintar(Array.from({ length: MAXIMO_DE_ALERTAS }, () => base())))).toHaveLength(
+      MAXIMO_DE_ALERTAS,
+    );
   });
 });
 

@@ -2,6 +2,7 @@
 // página fija. Los datos son ficticios; las entradas «desconocidas» llevan cadenas testigo que la
 // prueba comprueba que no aparecen.
 import type { ReactNode } from "react";
+import { leerAlertas } from "@/components/alertas/logica";
 import { MarcoDeComponente } from "../cifras/marco";
 import { HOSTILES, nombreDe120 } from "../tabla/datos-ficticios";
 import { AlertasInteractivas } from "./AlertasInteractivas";
@@ -99,7 +100,8 @@ export function VistaDeAlertas({
       <section aria-labelledby="alertas-titulo" className="flex min-w-0 flex-col gap-4">
         <h2 id="alertas-titulo">{T.titulo}</h2>
         <p className="text-cuerpo-menor text-texto-secundario">{T.explicaciones[estado]}</p>
-        <AlertasInteractivas alertas={ALERTAS[estado]} />
+        {/* Regla V-2: se lee en el servidor y al cliente solo viaja lo leído. */}
+        <AlertasInteractivas alertas={leerAlertas(ALERTAS[estado])} />
       </section>
     </MarcoDeComponente>
   );

@@ -34,6 +34,21 @@ export async function abrirEstado(page: Page, estado: EstadoDePrueba): Promise<v
   const respuesta = await page.goto(estado.ruta);
   expect(respuesta?.status(), `código de ${estado.ruta}`).toBe(200);
   await expect(page.locator("h1").first()).toBeVisible();
+  await esperarDialogoSiLoHay(page, estado);
+}
+
+/** Entradas del inventario cuyas páginas se abren con un diálogo de alerta ya abierto. */
+const ENTRADAS_CON_DIALOGO_ABIERTO: readonly string[] = ["dialogo-confirmacion"];
+
+/**
+ * El diálogo abierto al cargar lo pinta Radix (Portal) después de hidratar, no en el HTML del
+ * servidor: si la prueba decide o mide sin esperarlo, ve una página distinta según el instante.
+ * Se decide por la entrada del inventario, no por un conteo instantáneo.
+ */
+export async function esperarDialogoSiLoHay(page: Page, estado: EstadoDePrueba): Promise<void> {
+  if (ENTRADAS_CON_DIALOGO_ABIERTO.includes(estado.entrada)) {
+    await expect(page.getByRole("alertdialog")).toBeVisible();
+  }
 }
 
 /**
