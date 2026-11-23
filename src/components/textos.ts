@@ -337,6 +337,24 @@ export const TEXTOS = {
     },
   },
 
+  /** Avisos temporales (T-016 (b); REQ-021, REQ-072). Solo informan de algo que ha salido bien o de
+   * lo que va a pasar: no hay avisos de error (un error se queda en pantalla, junto a lo que
+   * falló). Cada mensaje se pide por su clave: no hay forma de pasar un texto. Cada función de la
+   * fase añade los suyos en su propio diseño. Los de esta lista también los enseña la muestra. */
+  avisos: {
+    region: "Avisos",
+    cerrar: "Cerrar aviso",
+    mensajes: {
+      cambiosGuardados: "Los cambios se han guardado.",
+      codigoCopiado: "El código se ha copiado al portapapeles.",
+      listaActualizada: "La lista se ha actualizado con los datos más recientes.",
+      pausaProgramada: "La pausa se aplicará en la siguiente revisión de cada agente.",
+      reanudacionProgramada: "La reanudación se aplicará en la siguiente revisión de cada agente.",
+      cambioProgramado:
+        "Los cambios se aplicarán en la siguiente revisión de cada agente; hasta entonces los agentes seguirán trabajando con la configuración anterior y no tienes que hacer nada más por tu parte.",
+    },
+  },
+
   /** Acciones que cambian algo: el botón de confirmar lleva un verbo, nunca «Aceptar». */
   acciones: {
     confirmar: {

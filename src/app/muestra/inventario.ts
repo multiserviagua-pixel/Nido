@@ -212,6 +212,20 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "tipos-de-campo", nombre: "Cada tipo de campo, obligatorio y opcional" },
     ],
   },
+  // T-016 (b): `AvisosTemporales` con uno, dos y cinco avisos a la vez y con un texto largo. Cada
+  // estado enseña un botón que los dispara; al cargar no hay ninguno. Una carpeta de página fija
+  // por estado (R7). Contrato de la prueba: evidencias/T-009/avisos-contrato.md.
+  {
+    tipo: "componente",
+    clave: "avisos-temporales",
+    nombre: "Avisos temporales",
+    estados: [
+      { clave: "uno", nombre: "Un aviso" },
+      { clave: "dos", nombre: "Dos avisos a la vez" },
+      { clave: "cinco", nombre: "Cinco avisos a la vez" },
+      { clave: "texto-largo", nombre: "Aviso con un texto largo" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

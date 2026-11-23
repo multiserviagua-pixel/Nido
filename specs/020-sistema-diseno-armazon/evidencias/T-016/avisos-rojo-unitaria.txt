@@ -1,0 +1,15 @@
+      8| import { describe, expect, it } from "vitest";
+      9| import { ID_CONTENIDO } from "../../../src/components/armazon/Armazon";
+     10| import {
+       | ^
+     11|   CLAVES_DE_AVISO,
+     12|   DURACION_DE_AVISO_MS,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  19:11:27
+   Duration  795ms (setup 69%, transform 18%, worker 13%)
+

@@ -70,3 +70,53 @@ Historia de la vuelta de pruebas: la primera pasada completa dio 17 rojos: 3 fla
 - Lector de pantalla real (PRUEBA-028, manual): el anuncio del resumen y del resultado se comprueba por el texto de la región, no por NVDA.
 - Firefox y WebKit: solo Chromium. Reensayo en tres motores en T-018.
 - Foco de vuelta tras `hecha` cuando la vista real relee y quita el botón (sospecha 23 h): la muestra no quita el botón; se prueba en T-016 (g).
+
+## (b) `AvisosTemporales`
+
+Rama `tarea/020-T-016b`, sobre `4ab4b01` (prueba de navegador de T-009 (g) en rojo). Entorno: local (Windows 11, Node 26, solo Chromium de Playwright, 1 worker). Autor: `ingeniero-frontend`. Datos de prueba ficticios. Sin revisión todavía. Sin commit. No ruta crítica.
+
+### Qué entrega
+
+- `src/components/avisos/logica.ts`: lógica pura. Plazo de 8 s con dos pausas (`iniciarPlazo`, `conPuntero`, `conFoco`, `milisegundosHastaVencer`, `decidirAlVencer` que mira dónde están de verdad el foco y el puntero antes de retirar), pila de avisos (`reducirPila`: orden de llegada, ids que no se reutilizan, tope de 20), lista cerrada de claves (`leerClaveDeAviso`).
+- `src/components/avisos/useAvisos.ts`: `avisar(clave)` anuncia una vez por la región cortés (`anunciar`) y añade; `cerrar(id)`.
+- `src/components/avisos/AvisosTemporales.tsx`: región fija «Avisos» (`section` con `aria-label`, `ol`, `li[data-aviso]`), no viva; pausa por `onPointerEnter/Leave` y `onFocus/onBlur` de React en el propio `li` (ningún `addEventListener`); Escape con el foco dentro; foco al aviso siguiente (si no hay, al anterior) y, si no queda ninguno, al elemento que lo tenía antes de entrar con el tabulador (o al contenido principal); nunca `focus()` al aparecer. Sin avisos no pinta nada.
+- `src/components/textos.ts`: `TEXTOS.avisos` (`region`, `cerrar`, `mensajes` de lista cerrada, informativos). El tipo de aviso es `{id, clave}` con `clave` de esa lista: sin gravedad, sin tono, sin texto libre.
+- `src/components/estilos/base.css`: dentro de `@layer base`, `:root[data-avisos-abiertos]` reserva `40dvh` de `scroll-padding-bottom` y de relleno inferior mientras hay avisos (diseño: «el contenedor reserva ese alto con `scroll-padding-bottom`»). No cambia ningún valor de `docs/DISENO.md`.
+- Muestra: entrada `avisos-temporales` en `inventario.ts` (estados `uno`, `dos`, `cinco`, `texto-largo`), cuatro carpetas de página fijas en `src/app/muestra/componentes/avisos-temporales/`, `_vistas/avisos/` (`VistaDeAvisos`, `DemoDeAvisos`, `textos-avisos.ts`).
+
+### Decisiones del ingeniero (revocables)
+
+1. **Foco al cerrar:** el diseño dice «al aviso siguiente; si no queda ninguno, al elemento anterior». Si se cierra el último y quedan otros, el foco va al **anterior de la lista** (no se pierde). Si no queda ninguno, vuelve a `relatedTarget` de la entrada en la región.
+2. **Tope de 20 avisos** a la vez; pasado el tope se retira el más antiguo (ya anunciado). No está en el diseño.
+3. **Reserva de altura en `base.css`** con la unidad `dvh` y relleno en `<html>` (el diseño dice solo «scroll-padding-bottom»): sin el relleno, el último control de la página quedaría bajo la región al llegar al final.
+4. **`max-h-2/5`** (utilidad de fracción, no un valor arbitrario: PRUEBA-005 los prohíbe) para el 40 %.
+5. Los textos de los avisos son mensajes fijos informativos de producción en `TEXTOS.avisos.mensajes`; cada función de la fase añadirá los suyos.
+
+### Prueba primero
+
+`tests/unit/diseno/avisos-logica.test.ts` se escribió antes que el código: en rojo (sin módulo), salida en `avisos-rojo-unitaria.txt`. Contiene los `@ts-expect-error` del tipo (cadena libre, otro grupo de `TEXTOS`, `gravedad`, `texto`, `tono`, `avisar("...")`, props del componente). La prueba de navegador es la de T-009 (g) (`tests/e2e/muestra/avisos.spec.ts`, no modificada). `avisos-componente.test.tsx` (marcado y código) se escribió después del componente.
+
+### Comandos y resultado
+
+Con el candado de suite (regla A), en primer plano, Playwright en el puerto 3115 con copia temporal de la configuración (borrada).
+
+| Comando | Resultado |
+| --- | --- |
+| `npx vitest run tests/unit/diseno/avisos-logica.test.ts` antes del código | rojo: sin módulo (`avisos-rojo-unitaria.txt`) |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 51 archivos, 1610 pruebas en verde (1577 antes + 27 de lógica + 6 de marcado) |
+| `npx playwright test tests/e2e/muestra/avisos.spec.ts` | 32 en verde a la primera, sin tocar la prueba |
+| mismo archivo, `-g "PRUEBA-011 en el componente" --repeat-each=10` (pausa por foco con reloj real, justo al abrir y a 600 ms, y foco que no cambia con teclado, ratón y táctil) | 50 en verde, 0 fallos (`avisos-repeticiones-chromium.txt`) |
+| `npx playwright test tests/e2e/muestra` (completo) | 3255 en verde y 1 rojo: `tabla.spec.ts:174` (anuncio de orden de `Tabla`, flaky ya conocido, menores 21 (e) y 23). Repetido aparte 5 veces: 3 en verde y 2 rojos, igual que antes de esta tarea; no usa avisos |
+| `npm run tipos` | 0 errores (todas las directivas `@ts-expect-error` se consumen) |
+| `npx eslint --max-warnings 0 .` | 0 avisos |
+| `npx prettier --check` de lo tocado | limpio |
+| `npm run build` | correcto |
+
+Las capturas versionadas de `evidencias/T-014/capturas` que Playwright reescribe se restauraron con `git checkout`.
+
+### No comprobado
+
+- Firefox y WebKit: solo está instalado Chromium. Las 10 repeticiones de la pausa por foco y del foco que no cambia en esos motores quedan **no comprobadas** (T-018 / `qa`).
+- Lector de pantalla real (PRUEBA-028, manual): el anuncio se comprueba por el texto de la región cortés.
+- Colores forzados y cambio de tema con avisos abiertos: la prueba de T-009 (g) no los cubre; los pares de color son los ya declarados (`--texto`, `--superficie`, `--borde-control`, `--texto-secundario`).
+- El foco de vuelta cuando la vista real quita el elemento anterior (cae al contenido principal): sin prueba de navegador.

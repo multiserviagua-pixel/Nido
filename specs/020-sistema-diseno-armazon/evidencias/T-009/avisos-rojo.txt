@@ -1,0 +1,647 @@
+
+Running 32 tests using 1 worker
+
+  x   1 tests\e2e\muestra\avisos.spec.ts:231:1 › hay entradas que recorrer: «avisos-temporales» tiene sus cuatro estados en el inventario (11ms)
+  ok  2 tests\e2e\muestra\avisos.spec.ts:235:1 › motores: lo que no se puede repetir en este equipo queda anotado como no comprobado (310ms)
+  x   3 tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › uno: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva (200ms)
+  x   4 tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › dos: sin avisos al cargar; el disparador muestra 2; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva (176ms)
+  x   5 tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › cinco: sin avisos al cargar; el disparador muestra 5; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva (179ms)
+  x   6 tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › texto-largo: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva (181ms)
+  x   7 tests\e2e\muestra\avisos.spec.ts:312:3 › PRUEBA-015 · el tipo no admite avisos de error; sin texto libre (REQ-021, REQ-072) › ningún aviso es una alerta ni usa la región urgente; la página no ofrece otro tipo de aviso (170ms)
+  x   8 tests\e2e\muestra\avisos.spec.ts:335:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › cinco avisos: cada texto se anuncia una sola vez, en el orden de la lista (174ms)
+  x   9 tests\e2e\muestra\avisos.spec.ts:353:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › un aviso: se anuncia una vez y no se vuelve a anunciar al pasar el tiempo ni al enfocar su botón (189ms)
+  x  10 tests\e2e\muestra\avisos.spec.ts:371:3 › PRUEBA-015 · duración de 8 s sin foco ni puntero (REQ-021, reloj real) › el aviso se retira a los 8 s, entre 7,5 y 9,5 s (170ms)
+  x  11 tests\e2e\muestra\avisos.spec.ts:387:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › a los 7 s sigue; a los 8,6 s ya no; con dos avisos, los dos (173ms)
+  x  12 tests\e2e\muestra\avisos.spec.ts:398:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el puntero encima no se retira (20 s); al salir vuelve a empezar entero (8 s) (180ms)
+  x  13 tests\e2e\muestra\avisos.spec.ts:415:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el foco en «Cerrar aviso» no se retira (20 s); al sacarlo vuelve a empezar entero (207ms)
+  x  14 tests\e2e\muestra\avisos.spec.ts:434:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › el foco entra justo antes de vencer el plazo (reloj parado a los 7,7 s): el aviso no se retira (218ms)
+  x  15 tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Intro con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior (183ms)
+  x  16 tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Espacio con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior (180ms)
+  x  17 tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior (168ms)
+  x  18 tests\e2e\muestra\avisos.spec.ts:497:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco fuera del aviso no lo cierra (185ms)
+  x  19 tests\e2e\muestra\avisos.spec.ts:507:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › 50 tabulaciones y 50 con Mayúsculas con cinco avisos abiertos: sin trampa y sin perder el foco (181ms)
+  x  20 tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › dos: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado (178ms)
+  x  21 tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › cinco: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado (186ms)
+  x  22 tests\e2e\muestra\avisos.spec.ts:605:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › texto largo a 320 px › sin desplazamiento horizontal, sin texto recortado y dentro del 40 % (198ms)
+  x  23 tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 1280 px (187ms)
+  x  24 tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 320 px (179ms)
+  x  25 tests\e2e\muestra\avisos.spec.ts:646:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador justo al abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue (171ms)
+  x  26 tests\e2e\muestra\avisos.spec.ts:655:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador 600 ms después de abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue (182ms)
+  x  27 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con teclado (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (174ms)
+  x  28 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (197ms)
+  x  29 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (175ms)
+  x  30 tests\e2e\muestra\avisos.spec.ts:691:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso que mueve el foco a su botón al aparecer: falla «no roba el foco» con teclado (203ms)
+  x  31 tests\e2e\muestra\avisos.spec.ts:698:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el foco se lo llevan 1,5 s después de entrar en «Cerrar aviso»: falla la pausa por foco (191ms)
+  x  32 tests\e2e\muestra\avisos.spec.ts:708:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso se retira a los 8 s con el foco dentro: falla la pausa por foco (200ms)
+
+
+  1) tests\e2e\muestra\avisos.spec.ts:231:1 › hay entradas que recorrer: «avisos-temporales» tiene sus cuatro estados en el inventario 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   "cinco",
+    -   "dos",
+    -   "texto-largo",
+    -   "uno",
+    - ]
+    + Array []
+
+      230 | // ===========================================================================================
+      231 | test("hay entradas que recorrer: «avisos-temporales» tiene sus cuatro estados en el inventario", () => {
+    > 232 |   expect(AVISOS.map((a) => a.estado).sort()).toEqual(Object.keys(CUANTOS).sort());
+          |                                              ^
+      233 | });
+      234 |
+      235 | test("motores: lo que no se puede repetir en este equipo queda anotado como no comprobado", async ({
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:232:46
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-hay-entrada-762f5-ro-estados-en-el-inventario\error-context.md
+
+  2) tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › uno: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:270:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--d10f6-ión-«Avisos»-que-no-es-viva\error-context.md
+
+  3) tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › dos: sin avisos al cargar; el disparador muestra 2; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:270:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--7d8a0-ión-«Avisos»-que-no-es-viva\error-context.md
+
+  4) tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › cinco: sin avisos al cargar; el disparador muestra 5; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:270:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--a8073-ión-«Avisos»-que-no-es-viva\error-context.md
+
+  5) tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › texto-largo: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+
+    Error: falta el estado texto-largo de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:270:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--50f0d-ión-«Avisos»-que-no-es-viva\error-context.md
+
+  6) tests\e2e\muestra\avisos.spec.ts:312:3 › PRUEBA-015 · el tipo no admite avisos de error; sin texto libre (REQ-021, REQ-072) › ningún aviso es una alerta ni usa la región urgente; la página no ofrece otro tipo de aviso 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:315:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--7a5b0-o-ofrece-otro-tipo-de-aviso\error-context.md
+
+  7) tests\e2e\muestra\avisos.spec.ts:335:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › cinco avisos: cada texto se anuncia una sola vez, en el orden de la lista 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:338:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--ddc1d-vez-en-el-orden-de-la-lista\error-context.md
+
+  8) tests\e2e\muestra\avisos.spec.ts:353:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › un aviso: se anuncia una vez y no se vuelve a anunciar al pasar el tiempo ni al enfocar su botón 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:356:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--abedd-empo-ni-al-enfocar-su-botón\error-context.md
+
+  9) tests\e2e\muestra\avisos.spec.ts:371:3 › PRUEBA-015 · duración de 8 s sin foco ni puntero (REQ-021, reloj real) › el aviso se retira a los 8 s, entre 7,5 y 9,5 s 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:373:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--6325c-a-los-8-s-entre-7-5-y-9-5-s\error-context.md
+
+  10) tests\e2e\muestra\avisos.spec.ts:387:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › a los 7 s sigue; a los 8,6 s ya no; con dos avisos, los dos 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:389:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--0f447-a-no-con-dos-avisos-los-dos\error-context.md
+
+  11) tests\e2e\muestra\avisos.spec.ts:398:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el puntero encima no se retira (20 s); al salir vuelve a empezar entero (8 s) 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:402:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--f3802-uelve-a-empezar-entero-8-s-\error-context.md
+
+  12) tests\e2e\muestra\avisos.spec.ts:415:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el foco en «Cerrar aviso» no se retira (20 s); al sacarlo vuelve a empezar entero 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:419:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--417ef-rlo-vuelve-a-empezar-entero\error-context.md
+
+  13) tests\e2e\muestra\avisos.spec.ts:434:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › el foco entra justo antes de vencer el plazo (reloj parado a los 7,7 s): el aviso no se retira 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:439:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--a912d-7-7-s-el-aviso-no-se-retira\error-context.md
+
+  14) tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Intro con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:463:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--61092-vuelve-al-elemento-anterior\error-context.md
+
+  15) tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Espacio con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:463:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--a24fe-vuelve-al-elemento-anterior\error-context.md
+
+  16) tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:463:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--050c3-vuelve-al-elemento-anterior\error-context.md
+
+  17) tests\e2e\muestra\avisos.spec.ts:497:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco fuera del aviso no lo cierra 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:498:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--aa757-uera-del-aviso-no-lo-cierra\error-context.md
+
+  18) tests\e2e\muestra\avisos.spec.ts:507:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › 50 tabulaciones y 50 con Mayúsculas con cinco avisos abiertos: sin trampa y sin perder el foco 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:510:23
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--74ac6-trampa-y-sin-perder-el-foco\error-context.md
+
+  19) tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › dos: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado 
+
+    Error: falta el estado dos de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:539:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--62cbd-ntrol-enfocado-queda-tapado\error-context.md
+
+  20) tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › cinco: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:539:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--598e4-ntrol-enfocado-queda-tapado\error-context.md
+
+  21) tests\e2e\muestra\avisos.spec.ts:605:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › texto largo a 320 px › sin desplazamiento horizontal, sin texto recortado y dentro del 40 % 
+
+    Error: falta el estado texto-largo de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:608:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-015--70058--recortado-y-dentro-del-40-\error-context.md
+
+  22) tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 1280 px 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:635:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-025--2ad1c-o-avisos-abiertos-a-1280-px\error-context.md
+
+  23) tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 320 px 
+
+    Error: falta el estado cinco de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:635:25
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-025--0f302-co-avisos-abiertos-a-320-px\error-context.md
+
+  24) tests\e2e\muestra\avisos.spec.ts:646:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador justo al abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at comprobarPausaPorFoco (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:163:21)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:652:11
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-011--8c749-y-a-los-10-s-el-aviso-sigue\error-context.md
+
+  25) tests\e2e\muestra\avisos.spec.ts:655:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador 600 ms después de abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at comprobarPausaPorFoco (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:163:21)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:661:11
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-011--6c90c-y-a-los-10-s-el-aviso-sigue\error-context.md
+
+  26) tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con teclado (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at comprobarNoRobaFoco (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:201:21)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:672:27
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-011--e1cdf-rol-del-motor-medido-antes-\error-context.md
+
+  27) tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at comprobarNoRobaFoco (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:201:21)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:672:27
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-011--2ac9c-rol-del-motor-medido-antes-\error-context.md
+
+  28) tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+
+    Error: falta el estado uno de «avisos-temporales» del inventario
+
+      25 |   const e = AVISOS.find((x) => x.estado === clave);
+      26 |   if (e === undefined)
+    > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+         |           ^
+      28 |   return e;
+      29 | };
+      30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+        at estado (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:27:11)
+        at comprobarNoRobaFoco (C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:201:21)
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:672:27
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-PRUEBA-011--ebc9b-rol-del-motor-medido-antes-\error-context.md
+
+  29) tests\e2e\muestra\avisos.spec.ts:691:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso que mueve el foco a su botón al aparecer: falla «no roba el foco» con teclado 
+
+    Error: expect(received).rejects.toThrow(expected)
+
+    Expected pattern: /el aviso no roba el foco/
+    Received message: "falta el estado uno de «avisos-temporales» del inventario"
+
+          25 |   const e = AVISOS.find((x) => x.estado === clave);
+          26 |   if (e === undefined)
+        > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+             |           ^
+          28 |   return e;
+          29 | };
+          30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+
+          at estado (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:27:11)
+          at comprobarNoRobaFoco (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:201:21)
+          at file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:695:18
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1646:9
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1135:11
+          at TimeoutManager.withRunnable (node_modules/playwright/lib/worker/workerProcessEntry.js:403:14)
+          at TestInfoImpl._runWithTimeout (node_modules/playwright/lib/worker/workerProcessEntry.js:1133:7)
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1644:7
+          at WorkerMain._runTest (node_modules/playwright/lib/worker/workerProcessEntry.js:1617:5)
+          at WorkerMain.runTestGroup (node_modules/playwright/lib/worker/workerProcessEntry.js:1519:9)
+          at process.<anonymous> (node_modules/playwright/lib/common/index.js:2033:25)
+
+      693 |   }) => {
+      694 |     await page.addInitScript(sembrarRoboAlAparecer);
+    > 695 |     await expect(comprobarNoRobaFoco(page, "teclado")).rejects.toThrow(/el aviso no roba el foco/);
+          |                                                                ^
+      696 |   });
+      697 |
+      698 |   test("el foco se lo llevan 1,5 s después de entrar en «Cerrar aviso»: falla la pausa por foco", async ({
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:695:64
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-La-prueba-d-1a4b0-o-roba-el-foco»-con-teclado\error-context.md
+
+  30) tests\e2e\muestra\avisos.spec.ts:698:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el foco se lo llevan 1,5 s después de entrar en «Cerrar aviso»: falla la pausa por foco 
+
+    Error: expect(received).rejects.toThrow(expected)
+
+    Expected pattern: /el foco ya no está en «Cerrar aviso»/
+    Received message: "falta el estado uno de «avisos-temporales» del inventario"
+
+          25 |   const e = AVISOS.find((x) => x.estado === clave);
+          26 |   if (e === undefined)
+        > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+             |           ^
+          28 |   return e;
+          29 | };
+          30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+
+          at estado (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:27:11)
+          at comprobarPausaPorFoco (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:163:21)
+          at file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:703:18
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1646:9
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1135:11
+          at TimeoutManager.withRunnable (node_modules/playwright/lib/worker/workerProcessEntry.js:403:14)
+          at TestInfoImpl._runWithTimeout (node_modules/playwright/lib/worker/workerProcessEntry.js:1133:7)
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1644:7
+          at WorkerMain._runTest (node_modules/playwright/lib/worker/workerProcessEntry.js:1617:5)
+          at WorkerMain.runTestGroup (node_modules/playwright/lib/worker/workerProcessEntry.js:1519:9)
+          at process.<anonymous> (node_modules/playwright/lib/common/index.js:2033:25)
+
+      701 |     test.setTimeout(45_000);
+      702 |     await page.addInitScript(sembrarRoboDelFocoDentro);
+    > 703 |     await expect(comprobarPausaPorFoco(page, 600)).rejects.toThrow(
+          |                                                            ^
+      704 |       /el foco ya no está en «Cerrar aviso»/,
+      705 |     );
+      706 |   });
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:703:60
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-La-prueba-d-47b70-so»-falla-la-pausa-por-foco\error-context.md
+
+  31) tests\e2e\muestra\avisos.spec.ts:708:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso se retira a los 8 s con el foco dentro: falla la pausa por foco 
+
+    Error: expect(received).rejects.toThrow(expected)
+
+    Expected pattern: /se retiró a los \d+ ms con el foco dentro/
+    Received message: "falta el estado uno de «avisos-temporales» del inventario"
+
+          25 |   const e = AVISOS.find((x) => x.estado === clave);
+          26 |   if (e === undefined)
+        > 27 |     throw new Error(`falta el estado ${clave} de «avisos-temporales» del inventario`);
+             |           ^
+          28 |   return e;
+          29 | };
+          30 | /** Avisos que enseña cada estado al pulsar el disparador. */
+
+          at estado (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:27:11)
+          at comprobarPausaPorFoco (file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:163:21)
+          at file:/C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/e2e/muestra/avisos.spec.ts:713:18
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1646:9
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1135:11
+          at TimeoutManager.withRunnable (node_modules/playwright/lib/worker/workerProcessEntry.js:403:14)
+          at TestInfoImpl._runWithTimeout (node_modules/playwright/lib/worker/workerProcessEntry.js:1133:7)
+          at node_modules/playwright/lib/worker/workerProcessEntry.js:1644:7
+          at WorkerMain._runTest (node_modules/playwright/lib/worker/workerProcessEntry.js:1617:5)
+          at WorkerMain.runTestGroup (node_modules/playwright/lib/worker/workerProcessEntry.js:1519:9)
+          at process.<anonymous> (node_modules/playwright/lib/common/index.js:2033:25)
+
+      711 |     test.setTimeout(45_000);
+      712 |     await page.addInitScript(sembrarRetiradaConFocoDentro);
+    > 713 |     await expect(comprobarPausaPorFoco(page, 600)).rejects.toThrow(
+          |                                                            ^
+      714 |       /se retiró a los \d+ ms con el foco dentro/,
+      715 |     );
+      716 |   });
+        at C:\dev\agentes-correo-humanaia\.claude\worktrees\c-020-t010a\tests\e2e\muestra\avisos.spec.ts:713:60
+
+    Error Context: node_modules\.playwright-resultados\muestra-avisos-La-prueba-d-3f902-tro-falla-la-pausa-por-foco\error-context.md
+
+  31 failed
+    tests\e2e\muestra\avisos.spec.ts:231:1 › hay entradas que recorrer: «avisos-temporales» tiene sus cuatro estados en el inventario 
+    tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › uno: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+    tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › dos: sin avisos al cargar; el disparador muestra 2; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+    tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › cinco: sin avisos al cargar; el disparador muestra 5; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+    tests\e2e\muestra\avisos.spec.ts:267:5 › PRUEBA-015 · la página de la muestra (contrato) › texto-largo: sin avisos al cargar; el disparador muestra 1; cada uno con «Cerrar aviso» y un texto fijo; región «Avisos» que no es viva 
+    tests\e2e\muestra\avisos.spec.ts:312:3 › PRUEBA-015 · el tipo no admite avisos de error; sin texto libre (REQ-021, REQ-072) › ningún aviso es una alerta ni usa la región urgente; la página no ofrece otro tipo de aviso 
+    tests\e2e\muestra\avisos.spec.ts:335:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › cinco avisos: cada texto se anuncia una sola vez, en el orden de la lista 
+    tests\e2e\muestra\avisos.spec.ts:353:3 › PRUEBA-015 · anuncio por la región cortés, una vez y en orden (REQ-042) › un aviso: se anuncia una vez y no se vuelve a anunciar al pasar el tiempo ni al enfocar su botón 
+    tests\e2e\muestra\avisos.spec.ts:371:3 › PRUEBA-015 · duración de 8 s sin foco ni puntero (REQ-021, reloj real) › el aviso se retira a los 8 s, entre 7,5 y 9,5 s 
+    tests\e2e\muestra\avisos.spec.ts:387:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › a los 7 s sigue; a los 8,6 s ya no; con dos avisos, los dos 
+    tests\e2e\muestra\avisos.spec.ts:398:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el puntero encima no se retira (20 s); al salir vuelve a empezar entero (8 s) 
+    tests\e2e\muestra\avisos.spec.ts:415:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › con el foco en «Cerrar aviso» no se retira (20 s); al sacarlo vuelve a empezar entero 
+    tests\e2e\muestra\avisos.spec.ts:434:3 › PRUEBA-015 · reloj simulado: 8 s, pausa por puntero y por foco, cierre › el foco entra justo antes de vencer el plazo (reloj parado a los 7,7 s): el aviso no se retira 
+    tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Intro con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+    tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Espacio con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+    tests\e2e\muestra\avisos.spec.ts:460:5 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco en «Cerrar aviso» cierra ese aviso y el foco pasa al siguiente; al cerrar el último vuelve al elemento anterior 
+    tests\e2e\muestra\avisos.spec.ts:497:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › Escape con el foco fuera del aviso no lo cierra 
+    tests\e2e\muestra\avisos.spec.ts:507:3 › PRUEBA-015 · cierre con teclado (REQ-021, CA-015) › 50 tabulaciones y 50 con Mayúsculas con cinco avisos abiertos: sin trampa y sin perder el foco 
+    tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › dos: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado 
+    tests\e2e\muestra\avisos.spec.ts:536:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › cinco: sin solapes, región de 40 % como mucho que se desplaza por dentro, y ningún control enfocado queda tapado 
+    tests\e2e\muestra\avisos.spec.ts:605:5 › PRUEBA-015 · 2 y 5 avisos sin solapes ni foco tapado; 40 % del alto; texto largo (REQ-072) › texto largo a 320 px › sin desplazamiento horizontal, sin texto recortado y dentro del 40 % 
+    tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 1280 px 
+    tests\e2e\muestra\avisos.spec.ts:633:5 › PRUEBA-025 · avisos abiertos sin infracciones de axe › cinco avisos abiertos a 320 px 
+    tests\e2e\muestra\avisos.spec.ts:646:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador justo al abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue 
+    tests\e2e\muestra\avisos.spec.ts:655:3 › PRUEBA-011 en el componente · pausa por foco, reloj real (T-001 2.2.1; REQ-021) › tabulador 600 ms después de abrir: el foco llega a «Cerrar aviso» y a los 10 s el aviso sigue 
+    tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con teclado (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+    tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+    tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) 
+    tests\e2e\muestra\avisos.spec.ts:691:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso que mueve el foco a su botón al aparecer: falla «no roba el foco» con teclado 
+    tests\e2e\muestra\avisos.spec.ts:698:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el foco se lo llevan 1,5 s después de entrar en «Cerrar aviso»: falla la pausa por foco 
+    tests\e2e\muestra\avisos.spec.ts:708:3 › La prueba de la prueba: un robo de foco sembrado las hace fallar (T-001 2.1) › el aviso se retira a los 8 s con el foco dentro: falla la pausa por foco 
+  1 passed (48.7s)

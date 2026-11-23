@@ -1,0 +1,8 @@
+  ok 45 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.3s)
+  ok 46 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.2s)
+  ok 47 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con raton (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.2s)
+  ok 48 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.2s)
+  ok 49 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.3s)
+  ok 50 tests\e2e\muestra\avisos.spec.ts:668:5 › PRUEBA-011 en el componente · el aviso no roba el foco con tactil (T-001 2.2.2; CA-015) › 1,5 s después de activarlo, el foco activo es el mismo (control del motor medido antes) (2.2s)
+
+  50 passed (1.2m)

@@ -33,6 +33,14 @@
     overflow-wrap: anywhere;
   }
 
+  /* Avisos temporales (T-016 (b); diseño, «Diálogo, cajón y avisos»): mientras hay avisos, la
+     página reserva el alto máximo de su región (el 40 % de la ventana) para que no tape el foco.
+     `<html>` lleva `data-avisos-abiertos`, que pone `AvisosTemporales`. */
+  :root[data-avisos-abiertos] {
+    scroll-padding-bottom: 40dvh;
+    padding-bottom: 40dvh;
+  }
+
   /* Cifras alineadas en columna. */
   table,
   [data-cifra] {
