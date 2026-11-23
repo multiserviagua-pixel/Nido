@@ -153,6 +153,17 @@ test.describe("controles de las medidas de tema, movimiento y colores forzados",
     expect(await medirControlesSinBorde(page)).toEqual(["input"]);
   });
 
+  test("una casilla o un radio nativos no cuentan; sin aspecto nativo y sin borde, sí", async ({
+    page,
+  }) => {
+    await page.setContent(
+      pagina(
+        `<input type="checkbox" aria-label="a"><input type="radio" aria-label="b"><input type="checkbox" aria-label="c" style="appearance:none;border:0"><input type="radio" aria-label="d" style="appearance:none;border:0">`,
+      ),
+    );
+    expect(await medirControlesSinBorde(page)).toEqual(["input", "input"]);
+  });
+
   test("un tipo de letra que oculta el texto mientras carga se detecta", async ({ page }) => {
     await page.setContent(pagina(`<p>x</p>`));
     expect(await medirFuentesQueOcultan(page)).toEqual([]);

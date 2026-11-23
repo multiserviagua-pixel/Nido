@@ -270,8 +270,71 @@ export const TEXTOS = {
     cuenta: "Cuenta",
   },
 
+  /** Formulario y campos (T-016 (a); REQ-019, REQ-020, REQ-057, REQ-080). Las etiquetas, ayudas y
+   * opciones de cada formulario son de su vista y salen de aquí como textos fijos; los errores son
+   * de lista cerrada, también los que devuelve el servidor (par `{campo, codigo}`): nunca se pinta
+   * un texto recibido. Cada función de la fase añade sus códigos y sus campos en su diseño. Los
+   * textos de `ejemplo` son de la muestra (como `cifras.ejemplo`); se mueven a ella cuando la 021
+   * aporte los suyos. */
   formulario: {
     obligatorio: "(obligatorio)",
+    leyenda: "Los campos marcados con (obligatorio) hay que rellenarlos.",
+    campoSinNombre: "Campo",
+    opcionSinNombre: "Opción",
+    elegirOpcion: "Elige una opción",
+    /** «Hasta 120 caracteres.»: se compone con el número ya formateado. */
+    limiteAntes: "Hasta",
+    limiteDespues: "caracteres.",
+    /** «Hay 2 errores en el formulario. Corrígelos para continuar.» */
+    resumenUno: "Hay un error en el formulario. Corrígelo para continuar.",
+    resumenAntes: "Hay",
+    resumenDespues: "errores en el formulario. Corrígelos para continuar.",
+    /** Error de un campo o un código que el formulario no declara: nunca se pinta lo recibido. */
+    errorGeneral: "Hay un problema con el formulario. No se ha cambiado nada.",
+    /** Códigos de error de campo, de lista cerrada: los de validación del propio formulario y los
+     * que puede devolver el servidor. */
+    errores: {
+      obligatorio: "Este campo es obligatorio.",
+      sin_marcar: "Marca esta casilla para continuar.",
+      demasiado_largo: "Has escrito más caracteres de los permitidos.",
+      opcion_no_valida: "Elige una de las opciones de la lista.",
+      nombre_en_uso: "Ya existe un registro con este nombre.",
+      valor_no_valido: "El valor no es válido.",
+    },
+    ejemplo: {
+      nombreDelFormulario: "Ficha del cliente de ejemplo",
+      guardar: "Guardar ficha",
+      guardando: "Guardando…",
+      nombre: "Nombre del cliente",
+      nombreAyuda: "Como aparecerá en la lista de clientes.",
+      descripcion: "Descripción",
+      descripcionAyuda: "Un resumen para el equipo; puedes dejarlo en blanco.",
+      plan: "Plan",
+      planBasico: "Básico",
+      planProfesional: "Profesional",
+      planEquipo: "Equipo",
+      periodicidad: "Periodicidad de las revisiones",
+      periodicidadDiaria: "Cada día",
+      periodicidadSemanal: "Cada semana",
+      avisos: "Quiero recibir los avisos del cliente",
+      condiciones: "He leído las condiciones de la ficha",
+      busqueda: "Buscar en la ficha",
+      busquedaAyuda: "Lo que escribas no se guarda ni viaja en la dirección.",
+      codigo: "Código interno",
+      guardarTipos: "Guardar campos",
+      textoObligatorio: "Texto corto",
+      textoOpcional: "Texto corto opcional",
+      largoObligatorio: "Texto largo",
+      largoOpcional: "Texto largo opcional",
+      seleccionObligatoria: "Selección",
+      seleccionOpcional: "Selección opcional",
+      grupoObligatorio: "Grupo de opciones",
+      grupoOpcional: "Grupo de opciones opcional",
+      casillaObligatoria: "Casilla que hay que marcar",
+      casillaOpcional: "Casilla opcional",
+      busquedaObligatoria: "Búsqueda",
+      busquedaOpcional: "Búsqueda opcional",
+    },
   },
 
   /** Acciones que cambian algo: el botón de confirmar lleva un verbo, nunca «Aceptar». */

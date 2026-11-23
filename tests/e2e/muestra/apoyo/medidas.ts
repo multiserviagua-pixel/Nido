@@ -171,7 +171,8 @@ export async function medirPapelesDeDegradado(
   })()`) as Promise<{ papeles: string[]; sinRestablecer: string[] }>;
 }
 
-/** Controles que no dibujan borde (colores forzados: el borde tiene que estar). */
+/** Controles que no dibujan borde (colores forzados: el borde tiene que estar). Las casillas y los
+ * radios nativos quedan fuera porque los dibuja el navegador (T-016 (a)). */
 export async function medirControlesSinBorde(page: Page): Promise<string[]> {
   return page.evaluate(`(() => {
     const nombre = ${nombreCorto};
@@ -179,6 +180,11 @@ export async function medirControlesSinBorde(page: Page): Promise<string[]> {
     return [...document.querySelectorAll(selector)]
       .filter((e) => {
         const s = getComputedStyle(e);
+        // Casilla o radio con el aspecto nativo: los dibuja el navegador con los colores del sistema
+        // (T-016 (a)). Con «appearance: none» ya no los dibuja nadie y sí cuentan.
+        if (e.matches('input[type="checkbox"], input[type="radio"]') && s.appearance !== "none") {
+          return false;
+        }
         const lados = ["Top", "Right", "Bottom", "Left"].map(
           (l) => s["border" + l + "Style"] !== "none" && parseFloat(s["border" + l + "Width"]) > 0,
         );

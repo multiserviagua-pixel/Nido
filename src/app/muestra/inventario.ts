@@ -195,6 +195,23 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "texto-hostil", nombre: "Texto hostil" },
     ],
   },
+  // T-016 (a): `Formulario` y campos. Un estado por página fija (R7); el servidor es simulado en
+  // la propia página. Enviar vacío se pinta ya intentado; los estados con servidor se alcanzan
+  // rellenando y enviando (la respuesta ya viene elegida).
+  {
+    tipo: "componente",
+    clave: "formulario",
+    nombre: "Formulario",
+    estados: [
+      { clave: "inicial", nombre: "Inicial" },
+      { clave: "enviado-vacio", nombre: "Enviado vacío, con errores" },
+      { clave: "error-servidor", nombre: "Error del servidor en un campo" },
+      { clave: "enviando", nombre: "Enviando" },
+      { clave: "hecho", nombre: "Hecho" },
+      { clave: "conexion-perdida", nombre: "Conexión perdida al enviar" },
+      { clave: "tipos-de-campo", nombre: "Cada tipo de campo, obligatorio y opcional" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).
