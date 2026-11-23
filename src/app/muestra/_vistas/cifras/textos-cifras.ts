@@ -1,0 +1,50 @@
+// Textos de las páginas de la muestra de `TarjetaCifra` y `EtiquetaEstado` (T-010 (e) y (f)). Son de
+// la muestra, no de los componentes: los pies que explican cada caso solo existen aquí. Los textos
+// de los componentes salen de `src/components/textos.ts`.
+export const TEXTOS_CIFRAS = {
+  tituloVariantes: "Variantes de la tarjeta",
+  tituloCasosLimite: "Casos límite del valor",
+  tituloCifraGrande: "Cifras muy grandes",
+  tituloEtiquetaLarga: "Etiqueta larga",
+  variantes: {
+    positivaFavorable: "Variación positiva, favorable",
+    negativaFavorable: "Variación negativa, favorable",
+    negativaDesfavorable: "Variación negativa, desfavorable",
+    positivaDesfavorable: "Variación positiva, desfavorable",
+    positivaNeutra: "Variación positiva, neutra",
+    nula: "Variación nula",
+    anteriorCero: "Valor anterior cero: sin porcentaje",
+    sinComparacion: "Periodo anterior incompleto",
+    sinDato: "Sin dato, con comparación pedida",
+    sinVariacion: "Sin variación pedida",
+  },
+  casosLimite: {
+    cero: "Cero se ve como «0»",
+    ausente: "Valor ausente",
+    nulo: "Valor nulo",
+    noNumerico: "Valor no numérico",
+    noFinito: "Valor no finito",
+    negativo: "Negativo donde no cabe",
+    negativoAdmitido: "Negativo admitido por la vista",
+    decimales: "Con un decimal",
+    ceroConAnteriorCero: "Cero contra cero",
+  },
+  cifraGrande: {
+    novecientos: "Novecientos noventa y nueve millones",
+    billones: "Doce cifras",
+    maximo: "Quince cifras, lo máximo que se lee",
+    sinPaso: "Por encima del límite de lectura",
+  },
+  catalogo: "Catálogo de estados",
+  desconocido: "Valores fuera del catálogo",
+  desconocidos: {
+    inventado: "Valor inventado",
+    mayusculas: "En mayúsculas",
+    vacio: "Vacío",
+    ausente: "Ausente",
+    objeto: "Un objeto",
+    ambito: "Ámbito desconocido",
+  },
+  respuestaConCamposDeMas: "Respuesta con tres campos de más",
+  sinNombrar: "Solo se lee el campo del estado; los demás no se pintan en ningún sitio.",
+} as const;

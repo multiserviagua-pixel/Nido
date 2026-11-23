@@ -410,3 +410,24 @@ No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Fir
 | `npm run build` | 0 | compila |
 
 **No ejecutado:** vitest completo (a cargo de la coordinación); Firefox y WebKit; lector de pantalla (los mensajes se anuncian por la región cortés, no se oyen); `acciones.spec.ts` simula al servidor en la página, no hay acción real de servidor (la 021 y T-016 (h)); PRUEBA-015 completa (diálogo, formulario, avisos) espera a T-009 (g) y a T-016/T-010 (j); «lo escrito se conserva» no se prueba porque aún no hay formulario (T-016 (a)).
+
+## T-010 (e) `TarjetaCifra` y (f) `EtiquetaEstado` (23/11/2026, rama `tarea/020-T-010ef`)
+
+**Qué.** (e) `src/components/cifras/`: `TarjetaCifra` (grupo con `aria-labelledby` a etiqueta, valor, variación y periodo; valor por `formatearCifra`/`leerCifra`; variación por `calcularVariacion`; valoración favorable, desfavorable o neutra declarada por la vista, siempre con signo y palabra), `ValorAjustado` (baja por pasos de la escala hasta que cabe; sin `style` en línea, sin abreviar ni cortar; parte el valor si ni el último paso cabe) y `ajuste.ts` (lógica pura). (f) `src/components/estado/EtiquetaEstado.tsx`: `leerEstado` y catálogo, tono, icono y palabra; fuera de catálogo, «Estado desconocido» neutro sin pintar el valor recibido. Textos nuevos en `TEXTOS.cifras`. Muestra: entradas `tarjeta-cifra` (4 estados) y `etiqueta-estado` (2 estados), una página fija por estado y vistas en `src/app/muestra/_vistas/cifras/`.
+
+**Pruebas.** `tests/unit/diseno/cifras-ajuste.test.ts`, `cifras-tarjeta.test.tsx`, `estado-etiqueta.test.tsx` y `tests/e2e/muestra/cifras-y-etiquetas.spec.ts` (448 líneas). Escritas por un agente anterior que murió por un error de API sin informar; esta sesión las comprobó en verde sin rehacerlas, y no observó su rojo previo.
+
+**Órdenes y resultado**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 39 archivos, 1285 pruebas en verde |
+| `npm run tipos` | 0 | sin errores |
+| `npx eslint --max-warnings 0` de lo tocado | 0 | sin hallazgos |
+| `npx prettier --check` de lo tocado | 0 | formato correcto |
+| `npm run build` | 0 | compila |
+| Playwright `tests/e2e/muestra` completo (puerto 3110, configuración temporal ya borrada, candado de suite) | 0 | **1327 en verde**, 0 fallos, 3,8 min |
+
+**Candado.** `.git/suite-completa.lock` seguía con fecha 10:25:18 a las 11:13 (más de 45 minutos): se dio por abandonado, se quitó con `rmdir`, se tomó uno propio para build y Playwright y se soltó al acabar.
+
+**No ejecutado:** vitest completo (coordinación); Firefox y WebKit; lector de pantalla; revisión independiente (pendiente del `revisor`).

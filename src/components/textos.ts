@@ -28,6 +28,31 @@ export const TEXTOS = {
     desconocido: "Estado desconocido",
   },
 
+  /** Tarjeta de cifra (T-010 (e)). La palabra de la valoración acompaña siempre al signo de la
+   * variación (REQ-055); el periodo de comparación sigue a los de `periodo`. Las etiquetas de
+   * `ejemplo` son de medidas ficticias de la muestra: cada vista añade las suyas en su diseño. */
+  cifras: {
+    valoracion: {
+      favorable: "Favorable",
+      desfavorable: "Desfavorable",
+      neutra: "Neutra",
+    },
+    comparacion: {
+      ultimos7Dias: "frente a los 7 días anteriores",
+      ultimos30Dias: "frente a los 30 días anteriores",
+      ultimos90Dias: "frente a los 90 días anteriores",
+    },
+    ejemplo: {
+      correosRevisados: "Correos revisados",
+      borradoresPreparados: "Borradores preparados",
+      avisosAbiertos: "Avisos abiertos",
+      revisionesCompletas: "Revisiones completas",
+      respuestasPendientes: "Respuestas pendientes",
+      etiquetaLarga:
+        "Correos revisados por el agente de tu cuenta desde la última comprobación completa de la bandeja de entrada",
+    },
+  },
+
   /** Motivos de error de lista cerrada (diseño, «Estados de cada vista»). */
   motivosDeError: {
     sin_conexion: "Sin conexión. Comprueba tu red e inténtalo de nuevo.",

@@ -81,6 +81,30 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "acciones", nombre: "Acción con cada respuesta" },
     ],
   },
+  // T-010 (e): `TarjetaCifra` en sus variantes, casos límite del valor, cifras muy grandes
+  // (999.999.999 a 320 px; la clave del estado lleva `999`, convención de anchos.spec.ts) y
+  // etiqueta larga. Una carpeta de página fija por estado (PRUEBA-008, R7).
+  {
+    tipo: "componente",
+    clave: "tarjeta-cifra",
+    nombre: "Tarjeta de cifra",
+    estados: [
+      { clave: "variantes", nombre: "Variantes" },
+      { clave: "casos-limite", nombre: "Casos límite del valor" },
+      { clave: "cifra-999999999", nombre: "Cifras muy grandes" },
+      { clave: "etiqueta-larga", nombre: "Etiqueta larga" },
+    ],
+  },
+  // T-010 (f): `EtiquetaEstado` con el catálogo entero y con valores fuera de él.
+  {
+    tipo: "componente",
+    clave: "etiqueta-estado",
+    nombre: "Etiqueta de estado",
+    estados: [
+      { clave: "catalogo", nombre: "Catálogo de estados" },
+      { clave: "desconocido", nombre: "Estado desconocido" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).
