@@ -32,7 +32,6 @@
     --serie-3: var(--escala-neutro-500);
     --serie-4: var(--escala-acento-800);
     --degradado-acento: var(--escala-degradado-acento-claro);
-    --degradado-grafico: var(--escala-degradado-grafico-claro);
     --sombra-tarjeta: var(--escala-sombra-tarjeta-claro);
     --sombra-elevada: var(--escala-sombra-elevada-claro);
     --sombra-velo: var(--escala-sombra-velo-claro);
@@ -58,7 +57,6 @@
     --serie-3: var(--escala-neutro-450);
     --serie-4: var(--escala-acento-200);
     --degradado-acento: var(--escala-degradado-acento-oscuro);
-    --degradado-grafico: var(--escala-degradado-grafico-oscuro);
     --sombra-tarjeta: var(--escala-sombra-tarjeta-oscuro);
     --sombra-elevada: var(--escala-sombra-elevada-oscuro);
     --sombra-velo: var(--escala-sombra-velo-oscuro);
@@ -226,12 +224,6 @@
 }
 .m-degradado-acento-oscuro {
   background-image: var(--escala-degradado-acento-oscuro);
-}
-.m-degradado-grafico-claro {
-  background-image: var(--escala-degradado-grafico-claro);
-}
-.m-degradado-grafico-oscuro {
-  background-image: var(--escala-degradado-grafico-oscuro);
 }
 .m-espaciado-0 {
   inline-size: var(--escala-espaciado-0);

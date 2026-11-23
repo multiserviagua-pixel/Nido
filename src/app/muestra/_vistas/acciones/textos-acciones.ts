@@ -24,6 +24,7 @@ export const TEXTOS_ACCIONES = {
   tituloVariantes: "Variantes y estados",
   primario: "Primario",
   secundario: "Secundario",
+  peligro: "Peligro",
   enCurso: "En curso",
   enReposo: "En reposo",
 } as const;

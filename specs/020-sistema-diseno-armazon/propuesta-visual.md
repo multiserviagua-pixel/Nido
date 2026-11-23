@@ -26,7 +26,7 @@ Cómo se lee la paleta (todo medido; cifras en `docs/DISENO.md`, «Contraste cal
 - Foco: 4,05:1 sobre la página en claro y 3,86:1 en el peor punto del menú; 3:1 como mínimo en todo fondo donde se pinta.
 - Borde de controles: 4,55:1 en claro. Borde decorativo `#E5E7EB` (1,24:1): solo separa tarjetas, nunca delimita un control.
 
-**Degradados** (REQ-085): menú (azul noche a azul noche más claro), botón primario (acento a acento más oscuro; en oscuro, más claro) y relleno bajo la línea de la serie principal (acento muy suave a la superficie). Son sutiles: ninguno es el único medio de transmitir algo, y con colores forzados valen `none`. Cada texto sobre un degradado se mide en 33 puntos.
+**Degradados** (REQ-085): menú (azul noche a azul noche más claro), botón primario (acento a acento más oscuro; en oscuro, más claro) y relleno bajo la línea de la serie principal (acento muy suave a la superficie). Son sutiles: ninguno es el único medio de transmitir algo, y con colores forzados valen `none`. Cada texto sobre un degradado se mide en 33 puntos. *Nota del 23/11/2026: el relleno bajo la línea se retiró; ver `docs/DISENO.md`, «Diferencias con los valores iniciales».*
 
 **Escala**: espaciado en múltiplos de 4 px (0 a 64), radios 4, 8 y 12 px (más el completo), dos sombras de elevación sutiles (de tarjeta y elevada) y seis tamaños de texto de 12 a 30 px. Es la escala de partida de T-006, sin cambios: la propuesta visual no la ha necesitado.
 
@@ -96,3 +96,5 @@ Validada el 22/11/2026. Respuesta escrita del responsable en el chat de coordina
 | Fecha | Decisión | Logotipo elegido | Cambios pedidos |
 | --- | --- | --- | --- |
 | 22/11/2026 | Aprobada: paleta, tipografía, tres vistas y umbral de 38 rem de la cabecera, sin cambios | C (nido en anillo) | Ninguno |
+
+**Ajuste posterior (23/11/2026, D-036; el responsable lo sabrá por el informe de la coordinación):** el `disenador-ui` retira `--degradado-grafico` (el relleno bajo la línea no informa; ningún componente real lo pintaba): desaparecen su tarjeta de la paleta y el fondo de la maqueta del gráfico; el resto de lo validado el 22/11 queda igual. Nueva variante `peligro` de `Boton` (relleno `--error`, texto `--texto-sobre-acento`, 6,47:1 y 6,45:1). Detalle en `docs/DISENO.md` (tabla de diferencias) y `evidencias/T-015/resultado.md`.

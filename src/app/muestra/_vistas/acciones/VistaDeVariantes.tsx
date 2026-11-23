@@ -5,12 +5,19 @@ import { TEXTOS } from "@/components/textos";
 import { MarcoDeComponente } from "./Marco";
 import { TEXTOS_ACCIONES as T } from "./textos-acciones";
 
+// La variante de peligro es la de la acción destructiva: «Revocar».
+const TEXTOS_DE_VARIANTE = {
+  primario: { texto: TEXTOS.acciones.confirmar.pausar, enCurso: TEXTOS.acciones.enCurso.pausar },
+  secundario: { texto: TEXTOS.acciones.confirmar.pausar, enCurso: TEXTOS.acciones.enCurso.pausar },
+  peligro: { texto: TEXTOS.acciones.confirmar.revocar, enCurso: TEXTOS.acciones.enCurso.revocar },
+} as const;
+
 export function VistaDeVariantes({ titulo }: { titulo: string }) {
   return (
     <MarcoDeComponente titulo={titulo}>
       <section aria-labelledby="variantes-titulo" className="flex flex-col gap-4">
         <h2 id="variantes-titulo">{T.tituloVariantes}</h2>
-        {(["primario", "secundario"] as const).map((variante) => (
+        {(["primario", "secundario", "peligro"] as const).map((variante) => (
           <div
             key={variante}
             data-variante={variante}
@@ -18,11 +25,11 @@ export function VistaDeVariantes({ titulo }: { titulo: string }) {
           >
             <h3 className="w-full">{T[variante]}</h3>
             <span>{T.enReposo}</span>
-            <Boton texto={TEXTOS.acciones.confirmar.pausar} variante={variante} />
+            <Boton texto={TEXTOS_DE_VARIANTE[variante].texto} variante={variante} />
             <span>{T.enCurso}</span>
             <Boton
-              texto={TEXTOS.acciones.confirmar.pausar}
-              textoEnCurso={TEXTOS.acciones.enCurso.pausar}
+              texto={TEXTOS_DE_VARIANTE[variante].texto}
+              textoEnCurso={TEXTOS_DE_VARIANTE[variante].enCurso}
               enCurso
               variante={variante}
             />

@@ -5,13 +5,13 @@
 // forma de pasar un texto del servidor. En curso, dice la acción con palabra («Pausando…»), se
 // marca `aria-disabled` (sigue en el orden de tabulación, no se pierde el foco) y la pulsación se
 // ignora, también la de Intro repetido o la de un envío implícito de formulario. El cerrojo real
-// contra el doble envío es el de `useAccion`. Dos variantes, con papeles de color ya declarados en
+// contra el doble envío es el de `useAccion`. Tres variantes, con papeles de color ya declarados en
 // `combinaciones.ts`; el foco es el de `base.css`. Alto de 40 px (`control`), por encima de los
 // 24 px mínimos (REQ-037).
 import type { MouseEvent } from "react";
 import { TEXTOS, type TextoFijo } from "../textos";
 
-export type VarianteDeBoton = "primario" | "secundario";
+export type VarianteDeBoton = "primario" | "secundario" | "peligro";
 
 export type PropiedadesDeBoton = {
   readonly texto: TextoFijo;
@@ -28,6 +28,9 @@ const BASE =
 const VARIANTES: Readonly<Record<VarianteDeBoton, string>> = {
   primario: `${BASE} border border-acento bg-acento text-texto-sobre-acento`,
   secundario: `${BASE} border border-borde-control bg-superficie text-texto`,
+  // Acción destructiva (diálogo de confirmación): relleno y borde `--error`, texto
+  // `--texto-sobre-acento` (6,47:1 en claro y 6,45:1 en oscuro).
+  peligro: `${BASE} border border-error bg-error text-texto-sobre-acento`,
 };
 
 export function Boton({

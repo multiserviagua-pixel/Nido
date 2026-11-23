@@ -68,16 +68,6 @@
     var(--escala-acento-300),
     var(--escala-acento-450)
   );
-  --escala-degradado-grafico-claro: linear-gradient(
-    to bottom,
-    var(--escala-acento-50),
-    var(--escala-neutro-0)
-  );
-  --escala-degradado-grafico-oscuro: linear-gradient(
-    to bottom,
-    var(--escala-acento-900),
-    var(--escala-neutro-850)
-  );
 
   /* Espaciado: múltiplos de 4 px */
   --escala-espaciado-0: 0px;
@@ -170,7 +160,6 @@
 
   --degradado-menu: var(--escala-degradado-menu);
   --degradado-acento: var(--escala-degradado-acento-claro);
-  --degradado-grafico: var(--escala-degradado-grafico-claro);
 
   --sombra-tarjeta: var(--escala-sombra-tarjeta-claro);
   --sombra-elevada: var(--escala-sombra-elevada-claro);
@@ -208,7 +197,6 @@
     --serie-4: var(--escala-acento-200);
 
     --degradado-acento: var(--escala-degradado-acento-oscuro);
-    --degradado-grafico: var(--escala-degradado-grafico-oscuro);
 
     --sombra-tarjeta: var(--escala-sombra-tarjeta-oscuro);
     --sombra-elevada: var(--escala-sombra-elevada-oscuro);
@@ -246,7 +234,6 @@
 
     --degradado-menu: none;
     --degradado-acento: none;
-    --degradado-grafico: none;
 
     --sombra-tarjeta: none;
     --sombra-elevada: none;
@@ -363,7 +350,4 @@
 }
 @utility bg-degradado-acento {
   background-image: var(--degradado-acento);
-}
-@utility bg-degradado-grafico {
-  background-image: var(--degradado-grafico);
 }

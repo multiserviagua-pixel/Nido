@@ -49,3 +49,16 @@ Capturas nuevas por la prueba: `evidencias/T-014/capturas/menu-16.png` y `menu-3
 2. A 375 px el nombre en el cajón ocupa dos líneas bajo el logotipo de 32 px; a 256 px de menú lateral también (se comprobó que no desborda, no con capturas de todos los casos).
 3. El cajón repite el título «Menú» bajo la marca; si el responsable prefiere solo la marca, `Dialog.Title` pasaría a ser solo para lectores de pantalla (cambio de prueba).
 4. Los menores 3, 4 y 5 de T-011 siguen abiertos.
+
+## Ajustes del 23/11/2026
+
+Encargo de la coordinación al `disenador-ui` sobre los menores 17 (d) y 20 (a) y (c) de `tareas.md`. Cada decisión se tomó con las pruebas de contraste de combinaciones delante (PRUEBA-005, 006 y 022). Valores en `src/components/estilos/valores.css` y en `docs/DISENO.md` (tabla «Diferencias con los valores iniciales»).
+
+| Ajuste | Antes | Ahora | Motivo y medida |
+| --- | --- | --- | --- |
+| `--degradado-grafico` (relleno bajo la línea) | `#EFE9FF` → `#FFFFFF` en claro; `#2A2152` → `#151E2E` en oscuro; `none` en colores forzados | **Retirado**: papel, escala (`--escala-degradado-grafico-claro/oscuro`), utilidad `bg-degradado-grafico`, 4 pares de contraste (las cuatro series sobre él) y 2 combinaciones prohibidas | No informa (sugiere cantidad acumulada, se tapa con varias series y se corta con huecos). Ningún componente real lo pintaba. Sus extremos eran `--acento-suave` y `--superficie`: no se pierde ningún tono. Los degradados del menú y del botón primario siguen cumpliendo REQ-085. La propuesta visual (paleta y maqueta) deja de pintarlo |
+| `--serie-2` frente a `--serie-3` | `#334155` y `#64748B` (claro); `#CBD5E1` y `#7D8BA0` (oscuro) | **Sin cambio** | Relación de luminancia entre ellas: 2,18:1 (claro) y 2,33:1 (oscuro): se separan en valor. Además las separan el trazo grueso frente a rayas y el marcador. Los pares casi iguales son otros: `--serie-1` con `--serie-3` (1,28 y 1,27) y `--serie-2` con `--serie-4` (1,07 y 1,06); solo los separan trazo y marcador, y por eso ninguna serie va sin ellos. Anotado en DISENO.md |
+| Variante `peligro` de `Boton` | No existía | Relleno y borde `--error`, texto `--texto-sobre-acento`; **sin papel nuevo** | Texto sobre relleno 6,47:1 (claro) y 6,45:1 (oscuro), mínimo 4,5. Borde contra superficie 6,47 y 6,04, contra fondo de página 6,18 y 6,81 (mínimo 3). Foco como el resto, separado 2 px sobre la superficie: 4,23 y 6,14. Par nuevo en `combinaciones.ts`: `--texto-sobre-acento` sobre `--error`. Con colores forzados el navegador impone `ButtonFace`/`ButtonText` a los botones; el nombre de la acción va en el texto |
+| Estado `cuatro-series` de `grafico-barras` | Cubierto solo en unitaria | Entrada de inventario, carpeta de página fija, datos y texto de la muestra | PRUEBA-014 (valores del dibujo y de la tabla, contraste a 3:1 en los dos temas, colores forzados) y PRUEBA-022 recorren el inventario; se añadió una prueba de la cuarta trama (cuadrícula) |
+
+Pruebas tocadas: `contraste.test.ts` (sin `--degradado-grafico`; la lectura entera de la tabla pasa de «al menos 40» a «al menos 36» pares: ahora son 37), `valores.test.ts`, `muestra-propuesta.test.tsx`, `acciones-boton.test.tsx` (peligro, y la variante desconocida pasa a «otra»), `graficos.spec.ts`, `acciones.spec.ts`. No se han tocado `excepciones.ts` ni `paquetes-de-cliente.ts`.

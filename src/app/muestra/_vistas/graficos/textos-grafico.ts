@@ -42,6 +42,10 @@ export const TEXTOS_GRAFICO = {
       "Varias series",
       "Tres series que se distinguen por la trama además del color.",
     ],
+    "cuatro-series": [
+      "Cuatro series",
+      "Cuatro series que se distinguen por la trama además del color: lisa, diagonal, puntos y cuadrícula.",
+    ],
     "con-cero": [
       "Con un valor cero",
       "Un valor cero se marca con una raya sobre el eje; no se confunde con un hueco.",

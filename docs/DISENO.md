@@ -83,7 +83,7 @@ Columnas: valor inicial (tabla de esta sección antes de la 020), valor en tema 
 | `--borde-control` | Borde de campos, casillas y selectores | — | `#64748B` | `#7D8BA0` | `CanvasText` |
 | `--acento` | Botón primario y selección | `#6C3CE9` | `#6C3CE9` | `#A78BFA` | `Highlight` |
 | `--enlace` | Texto de los enlaces | — | `#6C3CE9` | `#A78BFA` | `LinkText` |
-| `--texto-sobre-acento` | Texto del botón primario | — | `#FFFFFF` | `#0F172A` | `HighlightText` |
+| `--texto-sobre-acento` | Texto del botón primario y del de peligro | — | `#FFFFFF` | `#0F172A` | `HighlightText` |
 | `--acento-suave` | Fondo de selección y de iconos | `#EFE9FF` | `#EFE9FF` | `#2A2152` | `Canvas` |
 | `--foco` | Contorno de foco, en todo control | — | `#8B5CF6` | `#A78BFA` | `Highlight` |
 | `--menu-fondo` | Fondo plano del menú | `#0B1230` | `#0B1230` | `#0B1230` | `Canvas` |
@@ -93,7 +93,7 @@ Columnas: valor inicial (tabla de esta sección antes de la 020), valor en tema 
 | `--menu-indicador` | Barra lateral del área actual | — | `#A78BFA` | `#A78BFA` | `Highlight` |
 | `--correcto` | Estado correcto, con palabra o icono | `#15803D` | `#15803D` | `#4ADE80` | `CanvasText` |
 | `--aviso` | Estado de aviso, con palabra o icono | `#B45309` | `#B45309` | `#FBBF24` | `CanvasText` |
-| `--error` | Estado de error, con palabra o icono | `#B91C1C` | `#B91C1C` | `#F87171` | `CanvasText` |
+| `--error` | Estado de error, con palabra o icono; relleno y borde del botón de peligro | `#B91C1C` | `#B91C1C` | `#F87171` | `CanvasText` |
 | `--serie-1` | Serie principal de los gráficos | `#6C3CE9` | `#6C3CE9` | `#A78BFA` | `Highlight` |
 | `--serie-2` | Segunda serie, trazo continuo grueso | — | `#334155` | `#CBD5E1` | `CanvasText` |
 | `--serie-3` | Tercera serie, trazo a rayas | — | `#64748B` | `#7D8BA0` | `CanvasText` |
@@ -107,7 +107,6 @@ Las series se distinguen además por el trazo y la forma del marcador, o por la 
 | --- | --- | --- | --- | --- |
 | `--degradado-menu` | Fondo del menú, de arriba abajo | `#0B1230` → `#151C45` | `#0B1230` → `#151C45` | `none` |
 | `--degradado-acento` | Botón primario | `#7344F0` → `#5B2BD6` | `#B39BFB` → `#9775F7` | `none` |
-| `--degradado-grafico` | Relleno bajo la línea de la serie principal | `#EFE9FF` → `#FFFFFF` | `#2A2152` → `#151E2E` | `none` |
 
 Un degradado nunca es el único medio de transmitir una información (REQ-085). Con colores forzados pasan a `none` y queda el color plano del papel.
 
@@ -129,6 +128,7 @@ Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, tamb
 | `--acento` | `--acento-suave` | Texto | 5,13 | 5,37 |
 | `--texto-sobre-acento` | `--acento` | Texto | 6,07 | 6,56 |
 | `--texto-sobre-acento` | `--degradado-acento` (peor punto) | Texto | 5,51 | 5,27 |
+| `--texto-sobre-acento` | `--error` | Texto | 6,47 | 6,45 |
 | `--correcto` | `--fondo-pagina` / `--superficie` | Texto | 4,79 / 5,02 | 10,81 / 9,59 |
 | `--aviso` | `--fondo-pagina` / `--superficie` | Texto | 4,80 / 5,02 | 11,28 / 10,01 |
 | `--error` | `--fondo-pagina` / `--superficie` | Texto | 6,18 / 6,47 | 6,81 / 6,04 |
@@ -143,10 +143,10 @@ Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, tamb
 | `--foco` | `--degradado-menu` (peor punto) | No texto | 3,86 | 6,01 |
 | `--foco` | `--menu-actual` | No texto | 3,34 | 5,19 |
 | `--menu-indicador` | `--degradado-menu` (peor punto) / `--menu-actual` | No texto | 6,01 / 5,19 | 6,01 / 5,19 |
-| `--serie-1` | `--superficie` / `--degradado-grafico` (peor punto) | No texto | 6,07 / 5,13 | 6,14 / 5,37 |
-| `--serie-2` | `--superficie` / `--degradado-grafico` (peor punto) | No texto | 10,35 / 8,76 | 11,25 / 9,84 |
-| `--serie-3` | `--superficie` / `--degradado-grafico` (peor punto) | No texto | 4,76 / 4,03 | 4,83 / 4,22 |
-| `--serie-4` | `--superficie` / `--degradado-grafico` (peor punto) | No texto | 9,64 / 8,15 | 10,58 / 9,25 |
+| `--serie-1` | `--superficie` | No texto | 6,07 | 6,14 |
+| `--serie-2` | `--superficie` | No texto | 10,35 | 11,25 |
+| `--serie-3` | `--superficie` | No texto | 4,76 | 4,83 |
+| `--serie-4` | `--superficie` | No texto | 9,64 | 10,58 |
 
 **Combinaciones prohibidas.** No llegan al umbral y no se declaran en `combinaciones.ts`:
 
@@ -154,8 +154,6 @@ Fórmula de luminancia relativa de WCAG 2.2. Umbrales: 4,5:1 en todo texto, tamb
 | --- | --- | --- | --- | --- |
 | `--correcto` | `--acento-suave` | 4,24 | 8,38 | Texto por debajo de 4,5:1 en claro. Una etiqueta de estado no va sobre fondo de selección; se prohíbe en los dos temas para que la regla sea una sola |
 | `--aviso` | `--acento-suave` | 4,25 | 8,75 | Ídem |
-| `--correcto` | `--degradado-grafico` (peor punto) | 4,24 | 8,38 | El extremo de arriba del degradado es `--acento-suave`: mismo fallo. Una etiqueta de estado no va sobre el relleno de un gráfico |
-| `--aviso` | `--degradado-grafico` (peor punto) | 4,25 | 8,75 | Ídem |
 | `--borde-decorativo` | cualquier fondo | 1,24 sobre `--superficie` | 1,33 sobre `--superficie` | No sirve para delimitar un control; para eso está `--borde-control` |
 | `--foco` | `--acento` | 1,43 | 1,00 | El contorno de foco nunca se pinta pegado al botón primario: va separado 2 px, sobre el fondo. En oscuro los dos son el mismo color |
 | `--texto-sobre-acento` | `--foco` | 4,23 | 6,56 | `--foco` no es un fondo |
@@ -173,8 +171,11 @@ Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto 
 | `--enlace` | `--acento` (servía a enlaces y a botón) | `--enlace` `#6C3CE9` (nuevo) | Con colores forzados el botón es `Highlight` y el enlace tiene que ser `LinkText`, el color que el sistema da a los enlaces; con un solo papel no se pueden separar. En claro y en oscuro valen lo mismo que `--acento` |
 | `--menu-actual` | — | `#1F2757` (nuevo) | La referencia resalta el área actual del menú; hace falta un fondo propio, más claro que el menú, con texto de 12,90:1 y foco de 3,34:1 |
 | `--menu-texto-secundario` | — | `#A3AECB` (nuevo) | Textos menores del menú (contadores, pie). Con `--menu-texto` no se distinguirían del resto; este llega a 7,38:1 en el peor punto del degradado |
-| `--serie-2` a `--serie-4` | Solo existía la serie principal | `#334155`, `#64748B`, `#4A1FB8` (nuevos) | REQ-038 pide distinguir series sin depender del color: cada serie lleva además su trazo y su marcador. Cada color llega a 3:1 sobre `--superficie` y sobre `--degradado-grafico` (4,03:1 la tercera, la más justa) |
-| `--degradado-menu`, `--degradado-acento`, `--degradado-grafico` | Colores planos | Degradados de dos colores de la escala (nuevos) | REQ-085 los pide como recurso de estilo. Cada texto sobre ellos se mide en el peor de 33 puntos; con colores forzados valen `none` y queda el color plano del papel |
+| `--serie-2` a `--serie-4` | Solo existía la serie principal | `#334155`, `#64748B`, `#4A1FB8` (nuevos) | REQ-038 pide distinguir series sin depender del color: cada serie lleva además su trazo y su marcador. Cada color llega a 3:1 sobre `--superficie` (4,76:1 la tercera, la más justa en claro) |
+| `--degradado-menu`, `--degradado-acento` | Colores planos | Degradados de dos colores de la escala (nuevos) | REQ-085 los pide como recurso de estilo. Cada texto sobre ellos se mide en el peor de 33 puntos; con colores forzados valen `none` y queda el color plano del papel |
+| `--degradado-grafico` | `#EFE9FF` → `#FFFFFF` en claro y `#2A2152` → `#151E2E` en oscuro (papel de la tabla de degradados) | **Retirado** (23/11/2026, `disenador-ui`) | No informa: el relleno bajo una línea sugiere una cantidad acumulada, que las series de este producto no son, y con varias series o con huecos (un día sin dato) se tapa o se corta. Cada serie ya se distingue por su trazo y su marcador. Los dos extremos eran `--acento-suave` y `--superficie`, así que no se pierde ningún tono. La propuesta visual deja de pintarlo; los degradados del menú y del botón primario cumplen REQ-085. Quedan fuera sus pares de contraste y las dos combinaciones prohibidas que lo mencionaban |
+| Botón de peligro | — (no había variante) | Sin papel nuevo: relleno y borde `--error`, texto `--texto-sobre-acento` (23/11/2026) | Para la acción destructiva del diálogo de confirmación. Texto sobre relleno: 6,47:1 en claro y 6,45:1 en oscuro (mínimo 4,5:1). Borde y relleno son el mismo color y contra la superficie dan 6,47 y 6,04 (mínimo 3:1). El foco es el de siempre, separado 2 px del botón sobre la superficie: 4,23 y 6,14. Con colores forzados el navegador impone `ButtonFace` y `ButtonText` a todo botón, y el borde sigue presente; el nombre de la acción va en el texto, no en el color |
+| `--serie-2` frente a `--serie-3` | `#334155` y `#64748B` en claro; `#CBD5E1` y `#7D8BA0` en oscuro | Sin cambio (23/11/2026, medido) | La relación de luminancia entre las dos es 2,18:1 en claro y 2,33:1 en oscuro: se separan a simple vista y en escala de grises. Además, el trazo (grueso continuo frente a rayas) y el marcador las distinguen sin color. Aclarar `--serie-3` para ganar separación le quitaría margen sobre la superficie (4,76:1 hoy, frente a 3:1 exigido) sin que haga falta. Quedan dos pares casi iguales en valor, `--serie-1` frente a `--serie-3` (1,28:1 en claro, 1,27:1 en oscuro) y `--serie-2` frente a `--serie-4` (1,07:1 y 1,06:1): solo los separan el trazo y el marcador (REQ-038), y por eso una serie nunca va sin ellos |
 | Tema oscuro | No existía | Columna «Oscuro» | Nuevo por REQ-088. Mismo tono de acento en pasos más claros |
 | `--sombra-velo` | — | Velo de `rgb(15 23 42 / 0.5)` en claro y `rgb(11 17 32 / 0.7)` en oscuro (nuevo, T-011) | El cajón del menú y el panel de la cuenta no oscurecían el fondo. Se declara como sombra porque es la otra capa con alfa; sus pares están en la tabla «Velo». El cajón gana un borde derecho `--menu-texto` y el panel pasa a borde `--borde-control` para separarse con el velo puesto |
 | Umbral de alto de la cabecera fija | `38rem`, por validar | Se mantiene | Ver `propuesta-visual.md`, «Cabecera fija»: la de peor caso ocupa el 39 % de 608 px |
@@ -288,6 +289,8 @@ Las variantes responsivas (`sm:`, `md:`...) parten de estos anchos; no hay otros
 
 Tarjeta de cifra (etiqueta, valor, variación con signo y periodo), etiqueta de estado, tabla con orden y paginación, gráfico de líneas y de barras, lista de alertas con acción, diálogo de confirmación para acciones que cambian algo (pausar, revocar, publicar, volver atrás), formulario con errores junto al campo, aviso temporal, estado vacío, esqueleto de carga.
 
+Botón: variantes primario, secundario y peligro. El de peligro, con relleno rojo, es solo para la acción destructiva del diálogo de confirmación; nunca es el primero en recibir el foco al abrirlo (lo recibe «Cancelar»).
+
 Toda acción que afecta a agentes de clientes pide confirmación y dice qué va a pasar y cuándo («Se aplicará en la siguiente revisión de cada agente»).
 
 ## Estados obligatorios de cada vista
@@ -322,6 +325,7 @@ Carga, vacío (con qué hacer a continuación), error (qué ha pasado y cómo re
 
 - Un gráfico, una idea. Título que dice la conclusión o la medida, ejes con unidad.
 - La serie principal en el acento; las demás en grises o tonos distinguibles también sin color.
+- Las líneas van sin relleno debajo: el área sugiere una cantidad acumulada y se tapa con varias series. Las barras llevan una trama distinta por serie, hasta cuatro.
 - Cada gráfico tiene una tabla equivalente accesible.
 - Antes de crear un gráfico se carga la skill de visualización de datos disponible en la sesión.
 

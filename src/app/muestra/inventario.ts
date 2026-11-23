@@ -154,6 +154,7 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
     estados: [
       { clave: "una-serie", nombre: "Una serie" },
       { clave: "varias-series", nombre: "Varias series" },
+      { clave: "cuatro-series", nombre: "Cuatro series" },
       { clave: "con-cero", nombre: "Con un valor cero" },
       { clave: "pocos-puntos", nombre: "Menos puntos que el mínimo" },
       { clave: "sin-datos", nombre: "Sin datos" },

@@ -24,6 +24,7 @@ export const ESTADOS_DE_LINEAS = [
 export const ESTADOS_DE_BARRAS = [
   "una-serie",
   "varias-series",
+  "cuatro-series",
   "con-cero",
   "pocos-puntos",
   "sin-datos",
@@ -180,6 +181,17 @@ export function configuracionDeBarras(estado: EstadoDeBarras): PropiedadesDeGraf
           { nombre: "Revisados", valores: [320, 410, 380, 295, 450, 120, 85] },
           { nombre: "Borradores", valores: [140, 190, 160, 120, 210, 40, 30] },
           { nombre: "Avisos", valores: [30, 45, 38, 22, 51, 9, 6] },
+        ],
+      };
+    case "cuatro-series":
+      return {
+        ...BASE_BARRAS,
+        titulo: "Cuatro medidas por día de la semana",
+        series: [
+          { nombre: "Revisados", valores: [320, 410, 380, 295, 450, 120, 85] },
+          { nombre: "Borradores", valores: [140, 190, 160, 120, 210, 40, 30] },
+          { nombre: "Avisos", valores: [30, 45, 38, 22, 51, 9, 6] },
+          { nombre: "Archivados", valores: [210, 260, 240, 180, 300, 70, 55] },
         ],
       };
     case "con-cero":

@@ -79,12 +79,12 @@ function TarjetaCifra({
   );
 }
 
-/** Dibujo de ejemplo: dos series y un fondo con el degradado del gráfico. No es un gráfico real. */
+/** Dibujo de ejemplo: dos series sobre la superficie. No es un gráfico real. */
 function HuecoDeGrafico() {
   return (
     <div className="rounded-grande border border-borde-decorativo bg-superficie p-4 shadow-tarjeta">
       <p className="text-cuerpo font-seminegrita text-texto">Entregas por día</p>
-      <div className="mt-3 rounded-medio border border-borde-decorativo bg-degradado-grafico">
+      <div className="mt-3 rounded-medio border border-borde-decorativo">
         <svg viewBox="0 0 240 80" className="block w-full" aria-hidden="true" focusable="false">
           <line x1="0" y1="20" x2="240" y2="20" className="stroke-borde-decorativo" />
           <line x1="0" y1="40" x2="240" y2="40" className="stroke-borde-decorativo" />

@@ -162,7 +162,6 @@ describe.each(TEMAS)("PRUEBA-006 · todos los pares declarados cumplen su umbral
       "--menu-actual",
       "--degradado-menu",
       "--degradado-acento",
-      "--degradado-grafico",
     ]) {
       expect(detras.has(f), `${f} detrás`).toBe(true);
     }
@@ -221,7 +220,7 @@ describe("PRUEBA-006 · la tabla «Contraste calculado» de docs/DISENO.md dice 
   });
 
   it("la tabla se ha leído entera", () => {
-    expect(documentados.length).toBeGreaterThanOrEqual(40);
+    expect(documentados.length).toBeGreaterThanOrEqual(36);
   });
 
   it("cada par de la tabla está declarado en combinaciones.ts, y al revés", () => {
@@ -329,7 +328,7 @@ describe("PRUEBA-006 · un solo color de acento (REQ-030)", () => {
 describe("PRUEBA-006 · los degradados usan colores de la escala y se miden con los valores reales", () => {
   it("el degradado de cada papel se resuelve a dos colores hexadecimales", () => {
     for (const tema of TEMAS) {
-      for (const p of ["--degradado-menu", "--degradado-acento", "--degradado-grafico"]) {
+      for (const p of ["--degradado-menu", "--degradado-acento"]) {
         const v = resolver(valores.claro.get(p)!, valores.escala);
         expect(v).toMatch(/^linear-gradient\(to bottom, #[0-9A-F]{6}, #[0-9A-F]{6}\)$/);
         expect(papelesDeTema(valores, tema).get(p)).toMatch(/^linear-gradient\(/);

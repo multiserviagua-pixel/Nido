@@ -49,10 +49,6 @@ export const ESCALA: Readonly<Record<string, string>> = {
     "linear-gradient(to bottom, var(--escala-acento-550), var(--escala-acento-700))",
   "--escala-degradado-acento-oscuro":
     "linear-gradient(to bottom, var(--escala-acento-300), var(--escala-acento-450))",
-  "--escala-degradado-grafico-claro":
-    "linear-gradient(to bottom, var(--escala-acento-50), var(--escala-neutro-0))",
-  "--escala-degradado-grafico-oscuro":
-    "linear-gradient(to bottom, var(--escala-acento-900), var(--escala-neutro-850))",
   "--escala-espaciado-0": "0px",
   "--escala-espaciado-1": "4px",
   "--escala-espaciado-2": "8px",

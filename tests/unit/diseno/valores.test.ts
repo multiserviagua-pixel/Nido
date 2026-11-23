@@ -71,7 +71,7 @@ describe("PRUEBA-005 · valores.css tiene tres capas y tres juegos de papeles", 
     const f = papelesForzados(valores);
     expect(f.get("--degradado-menu")).toBe("none");
     expect(f.get("--degradado-acento")).toBe("none");
-    expect(f.get("--degradado-grafico")).toBe("none");
+    expect(f.has("--degradado-grafico")).toBe(false);
     expect(f.get("--sombra-tarjeta")).toBe("none");
     expect(f.get("--enlace")).toBe("LinkText");
     expect(f.get("--serie-1")).toBe("Highlight");

@@ -61,17 +61,27 @@ describe("Boton · variantes con papeles de color ya declarados", () => {
     expect(secundario).toContain("text-texto");
   });
 
+  it("peligro: relleno y borde de error con texto sobre acento (6,47:1 y 6,45:1 en los dos temas)", () => {
+    const peligro = clases(
+      pintar({ texto: TEXTOS.acciones.confirmar.revocar, variante: "peligro" }),
+    );
+    expect(peligro).toContain("bg-error");
+    expect(peligro).toContain("border-error");
+    expect(peligro).toContain("text-texto-sobre-acento");
+    expect(peligro).not.toContain("bg-superficie");
+  });
+
   it("sin variante es secundario, y una variante desconocida también (cierra en lo discreto)", () => {
     const base = clases(pintar({ texto: TEXTOS.acciones.cancelar }));
     expect(base).toContain("bg-superficie");
-    const rara = { texto: TEXTOS.acciones.cancelar, variante: "peligro" } as unknown as Parameters<
+    const rara = { texto: TEXTOS.acciones.cancelar, variante: "otra" } as unknown as Parameters<
       typeof Boton
     >[0];
     expect(clases(pintar(rara))).toEqual(base);
   });
 
   it("solo usa papeles: ninguna clase con un valor ni un color de la rampa", () => {
-    for (const variante of ["primario", "secundario"] as const) {
+    for (const variante of ["primario", "secundario", "peligro"] as const) {
       const c = clases(pintar({ texto: TEXTOS.acciones.cancelar, variante }));
       expect(
         c.filter((x) => /#|\[|\b(?:slate|gray|zinc|neutral|purple|violet|red|green)-\d/.test(x)),
@@ -109,7 +119,7 @@ describe("Boton · acción en curso (REQ-024, REQ-074)", () => {
   });
 
   it("los colores no cambian al ocuparse: el texto sigue con su contraste", () => {
-    for (const variante of ["primario", "secundario"] as const) {
+    for (const variante of ["primario", "secundario", "peligro"] as const) {
       expect(clases(pintar({ ...enCurso, variante }))).toEqual(
         clases(pintar({ ...enCurso, variante, enCurso: false })),
       );

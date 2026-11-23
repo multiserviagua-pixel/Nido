@@ -80,7 +80,7 @@ for (const tema of TEMAS) {
         const raiz = `[data-seccion="paleta"][data-tema-muestra="${marco}"]`;
         const filas = page.locator(`${raiz} [data-papel]`);
         const n = await filas.count();
-        expect(n).toBeGreaterThanOrEqual(26);
+        expect(n).toBeGreaterThanOrEqual(25);
         for (let i = 0; i < n; i++) {
           const papel = (await filas.nth(i).getAttribute("data-papel"))!;
           const esperado = await colorDeVariable(page, raiz, `--${papel}`);

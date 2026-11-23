@@ -67,10 +67,13 @@ function paresDelTema(): Par[] {
     noTexto("--foco", "--menu-actual", "Contorno de foco en el área actual"),
     noTexto("--menu-indicador", "--degradado-menu", "Barra lateral del área actual"),
     noTexto("--menu-indicador", "--menu-actual", "Barra lateral sobre el fondo del área actual"),
-    ...["--serie-1", "--serie-2", "--serie-3", "--serie-4"].flatMap((s) => [
+    ...["--serie-1", "--serie-2", "--serie-3", "--serie-4"].map((s) =>
       noTexto(s, "--superficie", "Serie de un gráfico"),
-      noTexto(s, "--degradado-grafico", "Serie sobre el relleno de un gráfico"),
-    ]),
+    ),
+    // Botón de peligro (acción destructiva): relleno y borde `--error`, texto `--texto-sobre-acento`.
+    // El borde y el relleno son el mismo color; contra la página y la tarjeta ya lo miden los pares
+    // de texto de `--error` (4,5:1, más exigentes que los 3:1 de un borde).
+    texto("--texto-sobre-acento", "--error", "Texto del botón de peligro"),
   ];
 }
 
@@ -103,20 +106,6 @@ export const PROHIBIDAS: readonly Prohibida[] = [
     temas: ["claro"],
     umbral: 4.5,
     motivo: "Texto por debajo de 4,5:1",
-  },
-  {
-    delante: "--correcto",
-    detras: "--degradado-grafico",
-    temas: ["claro"],
-    umbral: 4.5,
-    motivo: "Su extremo superior es --acento-suave",
-  },
-  {
-    delante: "--aviso",
-    detras: "--degradado-grafico",
-    temas: ["claro"],
-    umbral: 4.5,
-    motivo: "Su extremo superior es --acento-suave",
   },
   {
     delante: "--borde-decorativo",

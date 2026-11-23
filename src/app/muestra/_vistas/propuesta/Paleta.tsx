@@ -40,7 +40,6 @@ const COLORES: readonly Papel[] = [
 const DEGRADADOS: readonly Papel[] = [
   { papel: "degradado-menu", clase: "bg-degradado-menu", uso: "Fondo del menú lateral" },
   { papel: "degradado-acento", clase: "bg-degradado-acento", uso: "Botón primario" },
-  { papel: "degradado-grafico", clase: "bg-degradado-grafico", uso: "Relleno bajo la serie 1" },
 ];
 
 function Fila({ papel }: { papel: Papel }) {

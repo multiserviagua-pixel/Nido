@@ -136,7 +136,7 @@ describe("propuesta visual · declaración honesta", () => {
 });
 
 describe("propuesta visual · paleta y degradados en los dos temas", () => {
-  it("hay un marco claro y otro oscuro de paleta, con todos los papeles de color y los 3 degradados", async () => {
+  it("hay un marco claro y otro oscuro de paleta, con todos los papeles de color y los 2 degradados", async () => {
     const html = await pintar("propuesta-visual");
     const marcos = html.split('data-seccion="paleta"').slice(1);
     expect(marcos).toHaveLength(2);
@@ -147,7 +147,7 @@ describe("propuesta visual · paleta y degradados en los dos temas", () => {
     ["claro", "oscuro"].forEach((tema, i) => {
       expect(marcos[i]).toContain(`data-tema-muestra="${tema}"`);
       expect(marcos[i]).toContain(`tema-${tema}`);
-      expect(marcos[i]!.match(/data-papel="/g)).toHaveLength(conUtilidad.length + 3);
+      expect(marcos[i]!.match(/data-papel="/g)).toHaveLength(conUtilidad.length + 2);
     });
   });
 
@@ -158,7 +158,7 @@ describe("propuesta visual · paleta y degradados en los dos temas", () => {
       .filter((k) => !k.startsWith("--escala") && valores.tema.has(`--color-${k.slice(2)}`))
       .map((k) => k.slice(2));
     for (const p of delCss) expect(pintados, p).toContain(p);
-    for (const d of ["degradado-menu", "degradado-acento", "degradado-grafico"]) {
+    for (const d of ["degradado-menu", "degradado-acento"]) {
       expect(pintados).toContain(d);
     }
   });

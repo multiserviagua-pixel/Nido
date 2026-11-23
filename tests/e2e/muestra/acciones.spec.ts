@@ -216,17 +216,22 @@ test.describe("PRUEBA-015 · Boton: variantes y tamaño (REQ-024, REQ-037)", () 
     expect(respuesta?.status()).toBe(200);
     await expect(page.locator("h1")).toBeVisible();
     const botones = page.locator("main button");
-    expect(await botones.count()).toBeGreaterThanOrEqual(6);
+    expect(await botones.count()).toBeGreaterThanOrEqual(8);
     for (const b of await botones.all()) {
       const caja = await b.boundingBox();
       expect(caja?.height ?? 0, await b.innerText()).toBeGreaterThanOrEqual(40);
       expect(caja?.width ?? 0, await b.innerText()).toBeGreaterThanOrEqual(24);
     }
     const ocupados = page.locator('main button[aria-disabled="true"]');
-    await expect(ocupados).toHaveCount(2);
-    for (const o of await ocupados.all()) {
-      await expect(o).toHaveText(TEXTOS.acciones.enCurso.pausar);
-    }
+    await expect(ocupados).toHaveCount(3);
+    const textos = await ocupados.allInnerTexts();
+    expect(textos.sort()).toEqual(
+      [
+        TEXTOS.acciones.enCurso.pausar,
+        TEXTOS.acciones.enCurso.pausar,
+        TEXTOS.acciones.enCurso.revocar,
+      ].sort(),
+    );
   });
 
   test("el foco es el contorno común de base.css, visible con teclado", async ({ page }) => {

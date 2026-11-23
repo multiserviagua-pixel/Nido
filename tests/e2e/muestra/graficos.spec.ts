@@ -72,6 +72,7 @@ test("hay entradas que recorrer: los gráficos tienen sus estados en el inventar
     [
       "una-serie",
       "varias-series",
+      "cuatro-series",
       "con-cero",
       "pocos-puntos",
       "sin-datos",
@@ -227,6 +228,7 @@ test.describe("PRUEBA-014 · el dibujo y la tabla tienen los mismos valores (CA-
     for (const clave of [
       "una-serie",
       "varias-series",
+      "cuatro-series",
       "con-cero",
       "valores-iguales",
       "muchos-puntos",
@@ -377,6 +379,26 @@ test.describe("PRUEBA-014 · las series se distinguen sin color y nada exige el 
     // Las tramas existen de verdad en el documento (el relleno apunta a un patrón que existe).
     const rotos = await page.evaluate(() =>
       [...document.querySelectorAll("[data-barra]")]
+        .map((b) => /url\(#([^)]+)\)/.exec(b.getAttribute("fill") ?? "")?.[1])
+        .filter((id): id is string => id !== undefined && document.getElementById(id) === null),
+    );
+    expect(rotos).toEqual([]);
+  });
+
+  test("cuatro barras: la cuarta trama (cuadrícula) existe, se ve distinta en la leyenda y en el dibujo", async ({
+    page,
+  }) => {
+    await abrirConDibujo(page, estado("grafico-barras", "cuatro-series"));
+    const tramas = await page
+      .locator("[data-leyenda-serie] [data-trama]")
+      .evaluateAll((ts) => ts.map((t) => t.getAttribute("data-trama")));
+    expect(tramas).toEqual(["lisa", "diagonal", "puntos", "cuadricula"]);
+    const rellenos = await page
+      .locator("[data-barra]")
+      .evaluateAll((bs) => [...new Set(bs.map((b) => b.getAttribute("fill")))]);
+    expect(rellenos).toHaveLength(4);
+    const rotos = await page.evaluate(() =>
+      [...document.querySelectorAll("[data-barra], [data-leyenda-serie] [data-trama]")]
         .map((b) => /url\(#([^)]+)\)/.exec(b.getAttribute("fill") ?? "")?.[1])
         .filter((id): id is string => id !== undefined && document.getElementById(id) === null),
     );
