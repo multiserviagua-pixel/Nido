@@ -21,3 +21,10 @@ El responsable quitó los conectores que sobraban («quitados»): Drive, Figma, 
 
 ## Resumen del servidor tras la primera ejecución
 5 informes y 5 ejecuciones cerradas; 2 órdenes confirmadas, 0 pendientes; licencias A y B activas; 1 conexión activa; protocolo 2026-07-28 en los 47 sucesos. Sucesos: 47 (31 correctos, 16 rechazados, 0 errores). **Patrón por explicar:** una ejecución añadió 16 sucesos, 8 correctos y 8 rechazados. Pendiente de `exportar_sucesos 2026-11-23` para clasificar los rechazados por código.
+
+## Los 16 sucesos rechazados, explicados (`exportar_sucesos 2026-11-23`, 23/11/2026)
+Exportación de 47 sucesos (solo códigos de lista cerrada, sin contenido; el resultado completo no se copia aquí). Los **16 rechazados tienen todos el mismo código: `metodo_no_permitido`**, en `api/mcp`, con 7 a 17 ms. Ningún suceso tiene resultado `error`.
+- Causa más probable: el cliente de Claude envía, además de las llamadas `POST`, una petición `GET` a `/api/mcp` para abrir el flujo opcional de eventos del transporte HTTP de MCP. El conector es sin estado y **responde 405 por diseño** (el transporte permite a un servidor sin flujo de eventos contestar «método no permitido»). Es decir, **no es un fallo**: se repite entre 4 y 5 veces por conexión de Claude, sin consecuencias. Se corresponde con el patrón visto (la mitad de los sucesos de cada ejecución).
+- Los correctos con `herramienta: null` son el apretón de manos del protocolo (inicialización y lista de herramientas); los que llevan nombre son `obtener_instrucciones`, `enviar_informe` y `confirmar_orden`.
+- Los rechazados de los pasos 6 y 8 (4 + 4) quedan explicados por lo mismo. Las comprobaciones sin credencial hechas por la coordinación al desplegar no figuran: se registraron como `sin_token` y `credencial_no_valida` en rutas con otro código o antes de la exportación de esta fecha.
+- Pendiente (menor): confirmar contra la especificación del transporte que contestar 405 al `GET` es la conducta esperada, y decidir si conviene registrarlo como `correcto` para no inflar la cifra de rechazados. Para CA-023, estos rechazados **no cuentan como fallos por causa de HumanaIA**.
