@@ -46,6 +46,8 @@ La prueba real del conector (001) es la prioridad máxima. Autonomía total salv
 - Decision por D-036: si a propuesta-router-replace.patch de la 020 (tests/unit/diseno/paquetes-de-cliente.ts admite next), como parte T-010 (e) despues de T-012. Evidencia de la 020 por hoy sin suite completa de vitest (la pasa la coordinacion); pruebas en primer plano porque el sistema mata los procesos en segundo plano con poca memoria.
 - Al acabar el dia: relanzar 001 (suite en main y T-112 (a)), 010 (T-010 desde su copia y relevo) y la suite completa de main.
 
+- 23/11: T-114 paso 1 aplicado en Nido (estado, semilla, ajustes de registro por rol; evidencia en specs/001-conector-prueba-real/evidencias/T-114/paso-1-nido.md). RECORDAR AL RESPONSABLE: D-044, postgres con BYPASSRLS en Supabase, riesgo aceptado; pidió revisar como quitarlo. Falta el paso 2 (verificadores SCRAM y variables en Vercel).
+
 ## Reglas en los encargos (D-036, 21/11)
 - **A. Candado de suite:** `until mkdir C:/dev/agentes-correo-humanaia/.git/suite-completa.lock 2>/dev/null; do sleep 30; done` antes de la suite completa o `build`; `rmdir` al terminar; si tiene más de 45 min, está abandonado.
 - **B.** La evidencia completa se pasa en la rama rebasada, en su copia de trabajo, nunca con cambios preparados en `main`.
