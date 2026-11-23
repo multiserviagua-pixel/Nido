@@ -105,6 +105,25 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "desconocido", nombre: "Estado desconocido" },
     ],
   },
+  // T-010 (g): `Tabla`, `Paginacion` y `RegionDesplazable`, con un servidor simulado en la página
+  // (sin red). Una carpeta de página fija por estado (PRUEBA-008, R7). La carga y el error de la
+  // tabla son del bloque de datos (T-016) y no están aquí.
+  {
+    tipo: "componente",
+    clave: "tabla",
+    nombre: "Tabla",
+    estados: [
+      { clave: "datos", nombre: "Con datos, ordenable" },
+      { clave: "intermedia", nombre: "Página intermedia, ordenada" },
+      { clave: "ultima", nombre: "Última página" },
+      { clave: "una-pagina", nombre: "Una sola página" },
+      { clave: "vacia", nombre: "Sin filas" },
+      { clave: "diez-mil", nombre: "Diez mil filas" },
+      { clave: "ancha", nombre: "Más ancha que la pantalla" },
+      { clave: "nombres-largos-120", nombre: "Nombres de 120 caracteres" },
+      { clave: "texto-hostil", nombre: "Texto hostil" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

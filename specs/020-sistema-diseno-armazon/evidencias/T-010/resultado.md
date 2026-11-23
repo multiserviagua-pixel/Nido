@@ -431,3 +431,41 @@ No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Fir
 **Candado.** `.git/suite-completa.lock` seguía con fecha 10:25:18 a las 11:13 (más de 45 minutos): se dio por abandonado, se quitó con `rmdir`, se tomó uno propio para build y Playwright y se soltó al acabar.
 
 **No ejecutado:** vitest completo (coordinación); Firefox y WebKit; lector de pantalla; revisión independiente (pendiente del `revisor`).
+
+## T-010 (g) `Tabla`, `Paginacion` y `RegionDesplazable` (23/11/2026, rama `tarea/020-T-010g`)
+
+**Qué.** `src/components/tabla/`: `logica.ts` (pura: posición con miles, página corregida, números de página con huecos, orden de lista cerrada, `esquemaDeTabla` para la dirección, `leerCelda`, avisos de cambio), `Tabla.tsx`, `Paginacion.tsx` y `RegionDesplazable.tsx`. Textos nuevos en `TEXTOS.tabla`. Muestra: entrada `tabla` del inventario con nueve estados (`datos`, `intermedia`, `ultima`, `una-pagina`, `vacia`, `diez-mil`, `ancha`, `nombres-largos-120`, `texto-hostil`), una carpeta de página fija por estado, vistas en `src/app/muestra/_vistas/tabla/` (servidor simulado en la propia página, sin red).
+
+**Decisiones donde el diseño no cierra la API (lo más cerrado; revocables).**
+- `Tabla` es controlada con una sola función: `alCambiar({pagina, orden})`. Al ordenar la página vuelve a la 1; al paginar se conserva el orden. No importa `next/navigation` (la regla de PRUEBA-008 deja ese paquete solo a `SelectorPeriodo`): la vista que la use lleva página y orden a la dirección con `esquemaDeTabla` y `escribirEstadoDireccion`.
+- Dirección: `pagina` (entero 1 a 100.000), `orden` (lista de las columnas ordenables) y `sentido` (`ascendente` o `descendente`). `rutaParaCambiarPeriodo` ya conserva las listas y devuelve `pagina` a 1 (comprobado en la prueba). Una página mayor que la última se corrige en `calcularPaginacion` (la última); el servidor debe pedir esa página.
+- Total no válido (negativo, NaN, no entero, mayor o igual que 1e12) = 0 = estado vacío (cierra en fallo). Con 0 filas pintables, o total 0, o sin columnas válidas, se pinta el estado vacío. `EstadoVacio` aún no existe (T-016): `Tabla` lleva un bloque propio con `TEXTOS.tabla.vacio`; T-016 debe sustituirlo.
+- Solo se pintan las primeras `tamano` filas recibidas (25 por defecto, 100 como mucho): 10.000 filas recibidas son 25 en el documento. De cada fila solo se leen las claves de las columnas declaradas y si son propias.
+- Columnas: `{clave, etiqueta, tipo: texto|numero|porcentaje|fecha|estado, ordenable, decimales, minimo, ambito}`. La primera columna es el encabezado de fila (`th scope=row`). `aria-sort` solo en la columna ordenada. Ordenar alterna ascendente y descendente (no hay vuelta al «sin orden»; el orden por defecto es el de la vista).
+- Los botones de paginación son botones (no enlaces) con `aria-disabled` en los extremos para no perder el foco. El nombre de la navegación lleva el título de la tabla (si no, dos tablas repetirían el nombre y `axe` lo marca).
+- `RegionDesplazable` lleva siempre `tabindex="0"` (no mide el desbordamiento: quitarlo con el foco dentro lo perdería).
+- Anuncios (`anunciar`) en el manejador del clic: «Ordenado por Cliente, ascendente» y «Página 2 de 50. Del 26 al 50 de 1.234».
+- No falta ningún par de color: los botones usan pares ya declarados (`--texto`, `--texto-secundario` y `--texto-sobre-acento` sobre `--superficie` y `--acento`).
+
+**Pruebas.** `tests/unit/diseno/tabla-logica.test.ts` y `tabla-componentes.test.tsx` (escritos antes que el código; la ejecución en rojo antes del código no se observó por separado: los módulos no existían, así que el primer resultado fue de importación); `tests/e2e/muestra/tabla.spec.ts` (PRUEBA-014 tabla, PRUEBA-013 y PRUEBA-025 sobre los nueve estados, 320 y 1280 px, claro y oscuro; teclado, ratón, táctil, colores forzados, zum, espaciado, nombres de 120 caracteres, región desplazable sin trampa, texto hostil, 10.000 filas en 200 ms).
+
+**Menor 15 (g)** (botón «Reintentar» duplicado por zona): no toca de forma natural a esta parte; se deja para T-016.
+
+**Órdenes y resultado (T-010 (g))**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 41 archivos, 1390 pruebas en verde (1285 antes; 105 nuevas) |
+| `npm run tipos` | 0 | sin errores |
+| `npx eslint --max-warnings 0 src tests` | 0 | sin hallazgos |
+| `npx prettier --check` de lo tocado | 0 | formato correcto |
+| `npm run build` | 0 | compila |
+| Playwright `tests/e2e/muestra` completo (puerto 3137, configuración temporal borrada, candado de suite tomado y soltado) | 0 | **1652 en verde** (1327 antes; 325 nuevas: 77 de `tabla.spec.ts` más los casos por estado de `anchos`, `accesibilidad`, `combinaciones`, `tema-y-movimiento`, `red-y-direccion`, etc.) |
+
+**Hallazgos de las pruebas, corregidos.** (1) PRUEBA-020 (colores forzados) marcó la `table` y los cuatro botones de orden sin borde: el borde pasa de un contenedor a la propia `table` y los botones llevan `border-transparent` (en colores forzados el navegador lo sustituye por un color del sistema). (2) Playwright trata `aria-disabled` como no activable: la prueba de pulsar «Siguiente» desactivado usa `force`. (3) Errores de las propias pruebas (td por tipo, 1234 sin punto como nombre, mínimo de botones).
+
+**No ejecutado.** Vitest completo (coordinación); Firefox y WebKit; lector de pantalla (los anuncios van por la región cortés, no se oyen); táctil real (solo `tap` emulado); el rojo previo de las pruebas unitarias no se observó por separado; revisión independiente (pendiente del `revisor`); carga y error de la tabla (T-016, `BloqueDatos`); ninguna vista real usa aún `esquemaDeTabla` con la dirección (la muestra guarda página y orden en el estado del componente, no en la URL).
+
+**Menores y pendientes para otros.** `EstadoVacio` (T-016) debe sustituir al bloque vacío propio de `Tabla`; el botón «Reintentar» duplicado (15 g) sigue para T-016; `esquemaDeTabla` + `rutaParaCambiarPeriodo` conservan `orden` y `sentido` y reinician `pagina` (probado), pero la vista real debe pedir al servidor la página ya corregida; sin `disenador-ui`: el botón de orden con `border-transparent` y la tabla sin esquinas redondeadas (borde de la `table` en vez del contenedor) son decisión del ingeniero.
+
+**Vuelta atrás.** Borrar `src/components/tabla/`, `src/app/muestra/_vistas/tabla/`, `src/app/muestra/componentes/tabla/`, la entrada `tabla` del inventario, `TEXTOS.tabla` y las tres pruebas nuevas.

@@ -53,6 +53,29 @@ export const TEXTOS = {
     },
   },
 
+  /** Tabla, paginación y región desplazable (T-010 (g); REQ-013, REQ-042, REQ-045, REQ-066). Los
+   * títulos y las etiquetas de columna son de cada vista; lo que va aquí es lo común. La posición
+   * se compone «Del 26 al 50 de 1.234» con `del`, `al` y `de` y números con miles. */
+  tabla: {
+    sinTitulo: "Tabla de datos",
+    columnaSinNombre: "Columna",
+    regionDesplazable: "se puede desplazar",
+    ordenadoPor: "Ordenado por",
+    ascendente: "ascendente",
+    descendente: "descendente",
+    vacio: {
+      titulo: "No hay filas que mostrar",
+      explicacion: "Cuando haya datos, aparecerán aquí.",
+    },
+    paginacion: "Paginación",
+    anterior: "Anterior",
+    siguiente: "Siguiente",
+    pagina: "Página",
+    posicionDel: "Del",
+    posicionAl: "al",
+    posicionDe: "de",
+  },
+
   /** Motivos de error de lista cerrada (diseño, «Estados de cada vista»). */
   motivosDeError: {
     sin_conexion: "Sin conexión. Comprueba tu red e inténtalo de nuevo.",
