@@ -383,3 +383,30 @@ No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Fir
 ## T-010 (e2) · Ejecución final del orquestador (22/11/2026, sobre la rama rebasada en `main`, tras la vuelta de revisión)
 
 `npx playwright test --config playwright.config.ts` (oficial, puerto 3100, `tests/e2e` completo, compila dentro), Chromium, 1 worker: **984 ejecutadas sin fallo**, 0 saltadas, 0 intermitentes, 243 s. `npx vitest run tests/unit/diseno --maxWorkers=2`: 33 archivos, 1144 en verde. Tipos, `eslint` (`src` y `tests`) y `comprobar-specs` en 0. La pasada completa anterior (977 en verde y 1 fallo: el centinela de `/muestra/servidor/`) no cuenta como final. Vitest completo, a cargo de la coordinación. Quedan por confirmar por el arquitecto: la transición de 30 s no cancelable, la región urgente para el error y el botón «Reintentar» duplicado por zona.
+
+## T-010 (d) · `Boton`, `useAccion`, `leerResultadoAccion` y menores de (e2) (23/11/2026, rama `tarea/020-T-010d`)
+
+**Qué.** `src/components/acciones/`: `resultado.ts` (`leerResultadoAccion`, lista cerrada de cuatro resultados), `controlador.ts` (cerrojo, plazo de 30 s, resultado por envío; sin React para probarlo con reloj simulado), `useAccion.ts` (gancho de cliente sobre el controlador con `useSyncExternalStore`) y `Boton.tsx`. Textos nuevos en `textos.ts` (`acciones.resultado`, `acciones.motivosDeRechazo`) y el tipo `TextoFijo` (hojas de `TEXTOS`): `Boton` solo admite un texto fijo. Muestra: entrada `boton-accion` del inventario con dos estados (`variantes`, `acciones`), una carpeta de página por estado y un simulador de respuestas del servidor en la propia página (no hay red).
+
+**Decisiones donde el diseño no cierra la API** (lo más cerrado, revocables):
+- Entrada de `leerResultadoAccion`: `{estado?, cuerpo?}` (código HTTP y cuerpo ya leído). 401 y 403 son `no_permitida` con cualquier cuerpo. `hecha` exige código 2xx o ninguno y un cuerpo que sea exactamente `{resultado:"hecha"}`; claves de más o código contradictorio: `incierta`. `rechazada` admite 2xx o 4xx (no 401/403), con motivo de la lista que declara quien envía (sin lista, ninguno vale). Errores de campo: máximo 20; campo o código fuera de las listas pasan a `{campo:null, codigo:null}` (error general) y se devuelve el valor de la lista, nunca el recibido.
+- `alReleer` se llama con `hecha`, con `no_permitida` y con cualquier respuesta tardía; no con `rechazada` ni con `incierta`.
+- `Boton`: dos variantes (`primario`, `secundario`), alto 40 px, `aria-disabled` y texto en curso (sin `textoEnCurso`, «Cargando»). No hay variante «peligro» (el diseño no la define): se pide al `disenador-ui` si hace falta. El primario lleva borde del color del acento para no quedar sin borde en colores forzados (PRUEBA-020).
+- No hay jsdom ni biblioteca de pruebas de componentes (y no se añaden dependencias): el gancho se prueba por su controlador y por lectura del código; lo que depende del navegador, en `acciones.spec.ts`.
+
+**Menores del punto 15 de `tareas.md`:** (a) hecho: R3 prohíbe todo `next/dist/…` en `src/components/` y fija la lista cerrada `ENTRADAS_DE_NEXT_PERMITIDAS = {next/navigation}` (las importaciones solo de tipo no cuentan), con 7 casos sembrados. (b) hecho: prueba de la llegada tardía sin reintento en `periodo-servidor.spec.ts` (0 estados de error, cifras del periodo elegido, 0 fotogramas con error y cifras, una sola petición). (c) hecho: el proveedor devuelve el foco al `select` al retirarse el error si se ha perdido (`focoPerdido`); comprobado con `document.activeElement` tras «Reintentar» y tras la llegada tardía. (d) hecho: el error de 30 s pinta el motivo, que ya empieza por «No se ha podido cargar», sin repetirlo. (e) hecho: el centinela de disco reconoce `route`. (f) hecho: `layout.muestra.tsx` entra como origen del grafo de registro; `src/instrumentation.ts` se comprueba aparte porque llega a la supervisión a propósito (alcanza `supervision.ts` y, por ella, `registro.ts`, y no `fallo-servidor.ts`; si cambia, la prueba falla). (g) no, como se pidió.
+
+**Rojo observado.** `fronteras.test.ts`: 7 casos nuevos en rojo contra la regla antigua antes de cambiar `apoyo/fronteras.ts`. Las pruebas de `acciones-*` se escribieron antes que los módulos y fallaban por no existir; tras el código, dos errores de la propia prueba (regex de tamaño y la palabra «children» en un comentario) corregidos.
+
+**Órdenes y resultado**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 36 archivos, 1219 pruebas en verde (1144 antes; 75 nuevas) |
+| `npm run tipos` | 0 | sin errores |
+| `npx eslint --max-warnings 0 src tests` | 0 | sin hallazgos |
+| `npx prettier --check` de lo tocado | 0 | formato correcto |
+| Playwright `tests/e2e/muestra` completo (puerto 3115, candado, configuración temporal borrada) | 0 | **1093 en verde**. Una pasada previa: 1091 y 2 en rojo (`colores forzados`, `controles sin borde` del botón primario, corregido con el borde) |
+| `npm run build` | 0 | compila |
+
+**No ejecutado:** vitest completo (a cargo de la coordinación); Firefox y WebKit; lector de pantalla (los mensajes se anuncian por la región cortés, no se oyen); `acciones.spec.ts` simula al servidor en la página, no hay acción real de servidor (la 021 y T-016 (h)); PRUEBA-015 completa (diálogo, formulario, avisos) espera a T-009 (g) y a T-016/T-010 (j); «lo escrito se conserva» no se prueba porque aún no hay formulario (T-016 (a)).

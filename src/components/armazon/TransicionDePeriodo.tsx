@@ -41,7 +41,15 @@ export type EstadoDeTransicion = {
   readonly iniciar: (accion: () => void) => void;
   /** Repite la última acción iniciada (el reintento del error). */
   readonly reintentar: () => void;
+  /** El selector registra aquí cómo llevar el foco a su `select` (y `null` al desmontarse). */
+  readonly registrarDestinoDeFoco: (destino: (() => void) | null) => void;
 };
+
+/** El foco se ha perdido si no hay elemento activo o es el propio `body` (el botón que lo tenía se
+ * ha retirado). Con cualquier otro elemento activo, el foco lo movió la persona: no se toca. */
+export function focoPerdido(activo: unknown, cuerpo: unknown): boolean {
+  return activo === null || activo === undefined || activo === cuerpo;
+}
 
 /** Tiempo pendiente tras el que se avisa de que tarda más de lo normal («Cuando algo falla»). */
 const LENTA_MS = 10_000;
@@ -55,6 +63,7 @@ export const ContextoDeTransicion = createContext<EstadoDeTransicion>({
   referencia: null,
   iniciar: (accion) => accion(),
   reintentar: () => {},
+  registrarDestinoDeFoco: () => {},
 });
 
 export function useTransicionDePeriodo(): EstadoDeTransicion {
@@ -69,6 +78,11 @@ export function ProveedorDeTransicion({ children }: { children: ReactNode }) {
   // Cada inicio o reintento reinicia los plazos aunque la transición anterior siga pendiente.
   const [intento, fijarIntento] = useState(0);
   const ultima = useRef<(() => void) | null>(null);
+  const destinoDeFoco = useRef<(() => void) | null>(null);
+  const eraFallida = useRef(false);
+  const registrarDestinoDeFoco = useCallback((destino: (() => void) | null): void => {
+    destinoDeFoco.current = destino;
+  }, []);
 
   const iniciar = useCallback(
     (accion: () => void): void => {
@@ -89,6 +103,15 @@ export function ProveedorDeTransicion({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (pendiente) anunciar(TEXTOS.bloque.cargando);
   }, [pendiente]);
+
+  // Al retirarse el error (por «Reintentar» o porque llega la respuesta tardía) el botón que tenía
+  // el foco desaparece: se lleva al `select`, solo si el foco se ha perdido (menor 15 (c)).
+  useEffect(() => {
+    if (eraFallida.current && !fallida && focoPerdido(document.activeElement, document.body)) {
+      destinoDeFoco.current?.();
+    }
+    eraFallida.current = fallida;
+  }, [fallida]);
 
   useEffect(() => {
     if (!pendiente) return undefined;
@@ -123,7 +146,15 @@ export function ProveedorDeTransicion({ children }: { children: ReactNode }) {
 
   return (
     <ContextoDeTransicion.Provider
-      value={{ pendiente, lenta, fallida, referencia, iniciar, reintentar }}
+      value={{
+        pendiente,
+        lenta,
+        fallida,
+        referencia,
+        iniciar,
+        reintentar,
+        registrarDestinoDeFoco,
+      }}
     >
       {children}
     </ContextoDeTransicion.Provider>

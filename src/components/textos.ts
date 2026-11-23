@@ -128,5 +128,22 @@ export const TEXTOS = {
     },
     cancelar: "Cancelar",
     noPermitida: "No tienes permiso para hacer esto",
+    /** Resultado de una acción (`useAccion`): lo que se dice, de lista cerrada. */
+    resultado: {
+      hecha: "Hecho. El estado se ha actualizado.",
+      rechazada: "No se ha podido hacer. No se ha cambiado nada.",
+      incierta:
+        "No se sabe si la acción se ha aplicado. Comprueba el estado actual antes de repetirla.",
+      comprobarEstado: "Comprobar estado",
+    },
+    /** Motivos de rechazo de lista cerrada (cada función de la fase añade los suyos). */
+    motivosDeRechazo: {
+      estado_distinto: "El estado ha cambiado mientras tanto. No se ha cambiado nada.",
+    },
   },
 } as const;
+
+/** Cualquier texto fijo de `TEXTOS`, como tipo: lo que un componente admite como texto propio. Un
+ * texto que llega como dato no es de este tipo (se pinta con `TextoDato`). */
+type Hojas<T> = T extends string ? T : { [K in keyof T]: Hojas<T[K]> }[keyof T];
+export type TextoFijo = Hojas<typeof TEXTOS>;

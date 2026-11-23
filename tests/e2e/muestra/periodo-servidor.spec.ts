@@ -457,12 +457,80 @@ test.describe("REQ-069 · a los 30 s pendiente, error con reintento", () => {
       await expect.poll(() => navegaciones.length).toBe(2);
       expect(periodoDe(navegaciones[1]!)).toBe(SIETE);
       await expect(errores).toHaveCount(0);
+      // Menor 15 (c): el botón se retira y el foco no cae al body: va al select.
+      await expect(selector(page)).toBeFocused();
+      expect(await page.evaluate(() => document.activeElement === document.body)).toBe(false);
       await expect(zonaCifras(page)).not.toHaveAttribute("aria-busy", "true");
       await expect.poll(() => cifrasVisibles(page)).toEqual(referencia7);
       await expect(selector(page)).toHaveValue(SIETE);
       expect(new URL(page.url()).search).toBe(`?periodo=${SIETE}`);
     } finally {
       soltarLaPrimera();
+    }
+  });
+});
+
+// Menor 15 (b) y (c) de T-010 (e2): la respuesta llega tarde (después del error de 30 s) y sin que
+// nadie pulse «Reintentar». Se retira el error, se pintan las cifras del periodo elegido, nunca
+// hay a la vez error y cifras a la vista, no hay una segunda petición y el foco no se pierde.
+test.describe("REQ-069 · la respuesta llega después del error de 30 s, sin reintento", () => {
+  test("0 estados error al final, cifras del periodo elegido, ningún fotograma con error y cifras, foco en el select", async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await abrir(page);
+    const referencia7 = await cifrasDe(page, SIETE);
+    // Vigila cada cambio del documento: error y alguna cifra a la vista a la vez es un fallo.
+    await page.evaluate(() => {
+      const w = window as unknown as { __mezclas: number };
+      w.__mezclas = 0;
+      new MutationObserver(() => {
+        const hayError = document.querySelector('[data-estado="error"]') !== null;
+        const hayCifra = [...document.querySelectorAll("[data-cifra]")].some(
+          (e) => (e as HTMLElement).offsetParent !== null,
+        );
+        if (hayError && hayCifra) w.__mezclas += 1;
+      }).observe(document, { subtree: true, childList: true, attributes: true });
+    });
+    const navegaciones: string[] = [];
+    let soltar: () => void = () => {};
+    await page.route(
+      (u) => u.pathname === RUTA,
+      async (route) => {
+        if (esNavegacion(route)) {
+          navegaciones.push(route.request().url());
+          await new Promise<void>((r) => (soltar = r));
+        }
+        await route.continue().catch(() => undefined);
+      },
+    );
+    const errores = page.locator('[data-estado="error"]');
+    try {
+      await selector(page).selectOption(SIETE);
+      await expect(zonaCifras(page)).toHaveAttribute("aria-busy", "true");
+      await page.clock.runFor(30_100);
+      await expect(errores).toHaveCount(2);
+      expect(await cifrasVisibles(page)).toEqual([]);
+      // El foco está en el botón de reintento cuando llega la respuesta tardía.
+      const reintentar = page
+        .locator('[data-zona="cifras"]')
+        .getByRole("button", { name: TEXTOS.bloque.reintentar });
+      await reintentar.focus();
+      await expect(reintentar).toBeFocused();
+      await page.clock.resume();
+      soltar();
+      await expect(errores).toHaveCount(0);
+      await expect(zonaCifras(page)).not.toHaveAttribute("aria-busy", "true");
+      await expect.poll(() => cifrasVisibles(page)).toEqual(referencia7);
+      await expect(selector(page)).toHaveValue(SIETE);
+      await expect(selector(page)).toBeFocused();
+      expect(navegaciones, "sin reintento: una sola petición").toHaveLength(1);
+      expect(
+        await page.evaluate(() => (window as unknown as { __mezclas: number }).__mezclas),
+        "fotogramas con error y cifras a la vez",
+      ).toBe(0);
+    } finally {
+      soltar();
     }
   });
 });

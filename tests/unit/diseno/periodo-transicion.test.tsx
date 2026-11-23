@@ -32,6 +32,7 @@ function rejilla(estado: {
         referencia: estado.referencia ?? null,
         iniciar: () => {},
         reintentar: () => {},
+        registrarDestinoDeFoco: () => {},
       }}
     >
       <RejillaCuerpo
@@ -131,6 +132,14 @@ describe("T-010 (e2) · RejillaCuerpo con el cambio de periodo fallido (30 s)", 
     }
   });
 
+  it("el texto «No se ha podido cargar» no se repite: lo dice solo el motivo (menor 15 (d))", () => {
+    for (const nombre of ["cifras", "contenido"]) {
+      const z = zona(html(), nombre);
+      expect(z.split(TEXTOS.bloque.noSePudoCargar).length - 1, nombre).toBe(1);
+      expect(z, nombre).toContain(TEXTOS.motivosDeError.tarda_demasiado);
+    }
+  });
+
   it("lo que había sigue oculto: 0 cifras a la vista en el estado de error", () => {
     const z = zona(html(), "cifras");
     expect(/<div class="([^"]*)"[^>]*>(?=<p id="cifra-vieja")/.exec(z)![1]!.split(" ")).toContain(
@@ -197,5 +206,26 @@ describe("T-010 (e2) · el proveedor y el anuncio, leídos en el código", () =>
     );
     expect(html).not.toContain("aria-busy");
     expect(html).toContain('data-zona="cifras"');
+  });
+});
+
+// Menor 15 (c): al retirarse el error (por «Reintentar» o por la llegada tardía de la respuesta) el
+// botón desaparece y el foco caería al `body`; se lleva al `select` solo si el foco se ha perdido.
+describe("T-010 (d) · el foco tras el error de 30 s", () => {
+  it("focoPerdido: sin elemento activo o con el cuerpo, sí; con cualquier otro, no", async () => {
+    const { focoPerdido } = await import("../../../src/components/armazon/TransicionDePeriodo");
+    const cuerpo = {};
+    expect(focoPerdido(null, cuerpo)).toBe(true);
+    expect(focoPerdido(cuerpo, cuerpo)).toBe(true);
+    expect(focoPerdido({}, cuerpo)).toBe(false);
+  });
+
+  it("el proveedor devuelve el foco al destino registrado al salir del error, y el selector lo registra", () => {
+    const proveedor = leer("src/components/armazon/TransicionDePeriodo.tsx");
+    expect(proveedor).toMatch(/registrarDestinoDeFoco/);
+    expect(proveedor).toMatch(/focoPerdido\(document\.activeElement, document\.body\)/);
+    const selector = leer("src/components/armazon/SelectorPeriodo.tsx");
+    expect(selector).toMatch(/registrarDestinoDeFoco\(/);
+    expect(selector).toMatch(/\.focus\(\)/);
   });
 });

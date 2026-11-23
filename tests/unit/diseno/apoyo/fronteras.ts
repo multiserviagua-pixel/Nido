@@ -25,6 +25,9 @@ const PAQUETES_DE_PRUEBA =
 // Incluye la extensión (`next/navigation.js`) y las rutas internas del paquete
 // (`next/dist/client/components/navigation`, `next/dist/client/router`).
 const ES_ENRUTADOR_DE_NEXT = /^next\/(?:[\w./-]+\/)?(?:navigation|router)(?:\.[cm]?js)?$/;
+/** Lista cerrada de entradas de `next` que `src/components/` puede importar (con valor). Añadir
+ * una exige decisión escrita en el diseño (y, si es de cliente, `paquetes-de-cliente.ts`). */
+export const ENTRADAS_DE_NEXT_PERMITIDAS: ReadonlySet<string> = new Set(["next/navigation"]);
 export const SELECTOR_DE_PERIODO = "src/components/armazon/SelectorPeriodo.tsx";
 const ES_RADIX = /^(radix-ui|@radix-ui\/.+)$/;
 
@@ -275,6 +278,25 @@ function reglaLibrerias(grafo: Grafo, salida: Hallazgo[]): void {
           archivo: m.ruta,
           detalle: a.especificador,
         });
+      }
+      // Menor 15 (a) de T-010 (e2): nada de `next/dist/…` en `src/components/` (ni en
+      // SelectorPeriodo: son archivos internos del paquete, sin garantía de versión) y lista
+      // cerrada de entradas de `next` que se admiten (importaciones solo de tipo, borradas al
+      // compilar, no cuentan).
+      if (m.ruta.startsWith("src/components/") && a.paquete === "next") {
+        if (/^next\/dist(?:\/|$)/.test(a.especificador)) {
+          salida.push({
+            regla: "R3 next/dist en un componente",
+            archivo: m.ruta,
+            detalle: a.especificador,
+          });
+        } else if (!a.soloTipo && !ENTRADAS_DE_NEXT_PERMITIDAS.has(a.especificador)) {
+          salida.push({
+            regla: "R3 entrada de next fuera de la lista",
+            archivo: m.ruta,
+            detalle: a.especificador,
+          });
+        }
       }
       // Ni siquiera SelectorPeriodo usa el enrutador antiguo (`next/router`).
       if (m.ruta === SELECTOR_DE_PERIODO && a.especificador === "next/router") {

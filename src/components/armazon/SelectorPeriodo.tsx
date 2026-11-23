@@ -19,7 +19,7 @@
 // se retira al siguiente cambio o con el evento `online` («Cambio de periodo», punto 7). No se guarda nada en el navegador (REQ-058). Este es el único
 // componente de `src/components/` que importa `next/navigation` (PRUEBA-008).
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useOptimistic, useState } from "react";
+import { useEffect, useId, useOptimistic, useRef, useState } from "react";
 import { anunciar } from "../texto/anuncios";
 import { TEXTOS } from "../textos";
 import {
@@ -34,7 +34,13 @@ import { useTransicionDePeriodo } from "./TransicionDePeriodo";
 export function SelectorPeriodo({ periodo }: { periodo: ConfiguracionDePeriodo }) {
   const id = useId();
   const router = useRouter();
-  const { iniciar } = useTransicionDePeriodo();
+  const { iniciar, registrarDestinoDeFoco } = useTransicionDePeriodo();
+  const referenciaDelSelect = useRef<HTMLSelectElement>(null);
+  // El proveedor devuelve el foco aquí si se pierde al retirarse el error de 30 s.
+  useEffect(() => {
+    registrarDestinoDeFoco(() => referenciaDelSelect.current?.focus());
+    return () => registrarDestinoDeFoco(null);
+  }, [registrarDestinoDeFoco]);
   const [elegido, fijarElegido] = useOptimistic(periodo.valor);
   const [sinConexion, fijarSinConexion] = useState(false);
   // Solo mientras se ve el aviso: al volver la conexión se retira.
@@ -52,6 +58,7 @@ export function SelectorPeriodo({ periodo }: { periodo: ConfiguracionDePeriodo }
         {TEXTOS.periodo.etiqueta}
       </label>
       <select
+        ref={referenciaDelSelect}
         id={id}
         value={activo.clave}
         onChange={(evento) => {

@@ -69,6 +69,18 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
     ruta: "/muestra/servidor/periodo",
     estados: [{ clave: "unico", nombre: "Único" }],
   },
+  // T-010 (d): `Boton` en sus variantes y estados, y `useAccion` con cada respuesta posible del
+  // servidor (simulada en la propia página: la muestra no llama a la red). Una carpeta de página
+  // fija por estado (PRUEBA-008, R7).
+  {
+    tipo: "componente",
+    clave: "boton-accion",
+    nombre: "Botón de acción",
+    estados: [
+      { clave: "variantes", nombre: "Variantes" },
+      { clave: "acciones", nombre: "Acción con cada respuesta" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

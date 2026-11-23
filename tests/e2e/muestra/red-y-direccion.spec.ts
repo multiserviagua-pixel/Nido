@@ -525,6 +525,10 @@ test.describe("PRUEBA-018 · controles: la medida detecta lo que debe", () => {
 // ejecutada». El centinela falla si aparece una vista de servidor que no esté listada.
 const SUPERVISION = "src/lib/plataforma/supervision.ts";
 const VETADOS_EN_SERVIDOR = [REGISTRO, FALLO_SERVIDOR, SUPERVISION] as const;
+const CAPA_DE_LA_MUESTRA = "src/app/muestra/layout.muestra.tsx";
+const INSTRUMENTACION = "src/instrumentation.ts";
+// Valor observado en el árbol actual (se ajusta tras la primera ejecución).
+const LLEGA_INSTRUMENTACION: readonly string[] = [REGISTRO, SUPERVISION];
 /** Cada vista de servidor y cómo se activa: añadir una vista nueva exige listarla aquí. */
 const VISTAS_DE_SERVIDOR: Record<string, (page: Page) => Promise<void>> = {
   "/muestra/servidor/periodo": async (page) => {
@@ -546,7 +550,7 @@ function vistasDeServidorEnDisco(): string[] {
   const recorrer = (dir: string, ruta: string): void => {
     for (const e of readdirSync(dir, { withFileTypes: true })) {
       if (e.isDirectory()) recorrer(resolve(dir, e.name), `${ruta}/${e.name}`);
-      else if (/^page(\.muestra)?\.(tsx|ts|jsx|js)$/.test(e.name)) rutas.push(ruta);
+      else if (/^(?:page|route)(?:\.muestra)?\.(tsx|ts|jsx|js)$/.test(e.name)) rutas.push(ruta);
     }
   };
   recorrer(raiz, "/muestra/servidor");
@@ -609,13 +613,30 @@ test.describe("vistas de /muestra/servidor/: 0 peticiones ajenas, 0 envíos a su
 
   test("ningún módulo de esas rutas llega a registro.ts, fallo-servidor.ts ni supervision.ts", () => {
     const grafo = construirGrafo(process.cwd());
-    const origenes = [...grafo.modulos.keys()].filter((r) =>
-      r.startsWith("src/app/muestra/servidor/"),
-    );
-    expect(origenes.length, "módulos de servidor encontrados").toBeGreaterThan(0);
+    // Menor 15 (f): además de las rutas, la capa de la muestra (`layout.muestra.tsx`, que se
+    // ejecuta con cada una de ellas) es origen del grafo.
+    const origenes = [
+      ...[...grafo.modulos.keys()].filter((r) => r.startsWith("src/app/muestra/servidor/")),
+      CAPA_DE_LA_MUESTRA,
+    ];
+    expect(origenes.length, "módulos de servidor encontrados").toBeGreaterThan(1);
+    for (const o of origenes) expect(grafo.modulos.has(o), `${o} está en el grafo`).toBe(true);
     const alcance = alcanzables(grafo, origenes, { incluirTipos: true });
     const llegan = VETADOS_EN_SERVIDOR.filter((v) => alcance.modulos.has(v));
     expect(llegan, "módulos vetados alcanzables desde las rutas de servidor").toEqual([]);
+  });
+
+  test("src/instrumentation.ts: lo que alcanza es exactamente el gancho de errores hacia la supervisión", () => {
+    // Menor 15 (f). `instrumentation.ts` se ejecuta en el servidor para toda ruta y su
+    // `onRequestError` llega a la supervisión a propósito (solo código, plantilla de ruta y método).
+    // Se fija aquí qué vetados alcanza: la supervisión sí; el registro de fallos y `fallo-servidor`
+    // no. Si cambia, hay que mirarlo.
+    const grafo = construirGrafo(process.cwd());
+    expect(grafo.modulos.has(INSTRUMENTACION), "instrumentation.ts está en el grafo").toBe(true);
+    const alcance = alcanzables(grafo, [INSTRUMENTACION], { incluirTipos: true });
+    expect(VETADOS_EN_SERVIDOR.filter((v) => alcance.modulos.has(v))).toEqual(
+      LLEGA_INSTRUMENTACION,
+    );
   });
 
   test("controles sembrados: el contador ve una petición ajena, un ingreso y un sendBeacon; el grafo ve el registro desde la supervisión", async ({

@@ -324,6 +324,75 @@ export const S = useRouter;
     },
     regla: "R3 next/navigation fuera de SelectorPeriodo",
   },
+  // R3 (T-010 (d), menor 15 (a)): nada de `next/dist/…` en `src/components/` (ni en
+  // SelectorPeriodo) y lista cerrada de entradas de `next`: solo `next/navigation`.
+  {
+    nombre: "next/dist/client/components/app-router-instance en un componente",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `"use client";
+import { createMutableActionQueue } from "next/dist/client/components/app-router-instance";
+export const O = createMutableActionQueue;
+`,
+    },
+    regla: "R3 next/dist en un componente",
+  },
+  {
+    nombre: "next/dist/… en el propio SelectorPeriodo",
+    cambios: {
+      "src/components/armazon/SelectorPeriodo.tsx": `"use client";
+import { useRouter } from "next/dist/client/components/navigation";
+export const S = useRouter;
+`,
+    },
+    regla: "R3 next/dist en un componente",
+  },
+  {
+    nombre: "next/dist/… por importación dinámica en una tarjeta",
+    cambios: {
+      "src/components/cifras/Tarjeta.tsx": `export const cargar = () => import("next/dist/shared/lib/router/router");
+`,
+    },
+    regla: "R3 next/dist en un componente",
+  },
+  {
+    nombre: "next/link en un componente (fuera de la lista cerrada de entradas de next)",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `import Link from "next/link";
+export const O = Link;
+`,
+    },
+    regla: "R3 entrada de next fuera de la lista",
+  },
+  {
+    nombre: "next/font/local en un componente (fuera de la lista)",
+    cambios: {
+      "src/components/estilos/Fuente.tsx": `import localFont from "next/font/local";
+export const F = localFont;
+`,
+    },
+    regla: "R3 entrada de next fuera de la lista",
+  },
+  {
+    nombre: "next sin subruta en un componente (fuera de la lista)",
+    cambios: {
+      "src/components/armazon/Otro.tsx": `import type { Metadata } from "next";
+import next from "next";
+export const O = next;
+export type M = Metadata;
+`,
+    },
+    regla: "R3 entrada de next fuera de la lista",
+  },
+  {
+    nombre: "next/navigation.js (con extensión) en SelectorPeriodo no está en la lista",
+    cambios: {
+      "src/components/armazon/SelectorPeriodo.tsx": `"use client";
+import { useRouter } from "next/navigation.js";
+export const S = useRouter;
+`,
+    },
+    regla: "R3 entrada de next fuera de la lista",
+  },
   // R4: lo que llega al navegador
   {
     nombre: "módulo de cliente que reexporta sin-acceso.ts a través de un puente",

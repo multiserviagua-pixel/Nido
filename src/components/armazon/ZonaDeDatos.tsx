@@ -30,8 +30,8 @@ export function ZonaDeDatos({
     >
       {fallida ? (
         <div data-estado="error" className="flex flex-col items-start gap-2 text-texto">
-          <p className="font-seminegrita">{TEXTOS.bloque.noSePudoCargar}</p>
-          <p>{TEXTOS.motivosDeError.tarda_demasiado}</p>
+          {/* El motivo ya empieza por «No se ha podido cargar»: no se repite. */}
+          <p className="font-seminegrita">{TEXTOS.motivosDeError.tarda_demasiado}</p>
           {ref === null ? null : (
             <p className="text-cuerpo-menor text-texto-secundario">
               {TEXTOS.bloque.referencia}: {ref}
