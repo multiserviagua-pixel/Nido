@@ -124,6 +124,46 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "texto-hostil", nombre: "Texto hostil" },
     ],
   },
+  // T-010 (h): `GraficoLineas` y `GraficoBarras` con su tabla equivalente (Recharts confinado en
+  // `graficos/`). Una carpeta de página fija por estado (PRUEBA-008, R7). La carga y el error del
+  // gráfico son del bloque de datos (T-016) y no están aquí. Las claves con `120` entran en los casos
+  // de nombre largo de anchos.spec.ts.
+  {
+    tipo: "componente",
+    clave: "grafico-lineas",
+    nombre: "Gráfico de líneas",
+    estados: [
+      { clave: "una-serie", nombre: "Una serie" },
+      { clave: "cuatro-series", nombre: "Cuatro series" },
+      { clave: "con-hueco", nombre: "Con huecos" },
+      { clave: "pocos-puntos", nombre: "Menos puntos que el mínimo" },
+      { clave: "sin-datos", nombre: "Sin datos" },
+      { clave: "tabla-abierta", nombre: "Con la tabla abierta" },
+      { clave: "un-punto", nombre: "Un solo punto" },
+      { clave: "valores-iguales", nombre: "Valores iguales" },
+      { clave: "negativos", nombre: "Con negativos" },
+      { clave: "cientos-de-puntos", nombre: "366 puntos" },
+      { clave: "etiquetas-largas-120", nombre: "Etiquetas de 120 caracteres" },
+      { clave: "texto-hostil", nombre: "Texto hostil" },
+    ],
+  },
+  {
+    tipo: "componente",
+    clave: "grafico-barras",
+    nombre: "Gráfico de barras",
+    estados: [
+      { clave: "una-serie", nombre: "Una serie" },
+      { clave: "varias-series", nombre: "Varias series" },
+      { clave: "con-cero", nombre: "Con un valor cero" },
+      { clave: "pocos-puntos", nombre: "Menos puntos que el mínimo" },
+      { clave: "sin-datos", nombre: "Sin datos" },
+      { clave: "tabla-abierta", nombre: "Con la tabla abierta" },
+      { clave: "valores-iguales", nombre: "Valores iguales" },
+      { clave: "muchos-puntos", nombre: "61 barras" },
+      { clave: "etiquetas-largas-120", nombre: "Etiquetas de 120 caracteres" },
+      { clave: "texto-hostil", nombre: "Texto hostil" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

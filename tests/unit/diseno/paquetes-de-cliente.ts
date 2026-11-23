@@ -19,6 +19,12 @@
 // en uso», «Cambio de periodo», y «Coste»). Es la única importación de `next` en `src/components/`
 // (PRUEBA-008). El marco ya está en el navegador: no llega código nuevo. Cambio hecho con el «sí»
 // de la coordinación por D-036 (22/11/2026) que nombra esta ruta; lo revisa el `revisor`.
+//
+// T-010 (h) (23/11/2026): entra `recharts` con su clausura de dependencias (29 paquetes; los que
+// llevan comentario), porque `DibujoConRecharts.tsx` es un módulo de cliente que lo importa
+// (diseño 020, gráficos). La lista es la que calcula la prueba según el archivo de bloqueo. Cambio
+// hecho con el «sí» de la coordinación por D-036 (23/11/2026) que nombra esta ruta; solo se añaden
+// datos a la lista, sin tocar la lógica de PRUEBA-037; lo revisa el `revisor`.
 
 export const paquetesDeCliente: readonly string[] = [
   "@radix-ui/primitive",
@@ -37,16 +43,45 @@ export const paquetesDeCliente: readonly string[] = [
   "@radix-ui/react-use-controllable-state",
   "@radix-ui/react-use-effect-event",
   "@radix-ui/react-use-layout-effect",
+  "@reduxjs/toolkit", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "@standard-schema/spec", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "@standard-schema/utils", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "aria-hidden",
+  "clsx", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-array", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-color", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-ease", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-format", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-interpolate", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-path", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-scale", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-shape", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-time", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-time-format", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "d3-timer", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "decimal.js-light", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "detect-node-es",
+  "es-toolkit", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "eventemitter3", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "get-nonce",
+  "immer", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "internmap", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "next",
   "react",
   "react-dom",
+  "react-is", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "react-redux", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "react-remove-scroll",
   "react-remove-scroll-bar",
   "react-style-singleton",
+  "recharts", // paquete de gráficos; lo importa DibujoConRecharts.tsx
+  "redux", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "redux-thunk", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "reselect", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "tiny-invariant", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
   "tslib",
   "use-callback-ref",
   "use-sidecar",
+  "use-sync-external-store", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
+  "victory-vendor", // dependencia de recharts, arrastrada por DibujoConRecharts.tsx
 ];

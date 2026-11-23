@@ -23,6 +23,38 @@ const clienteConRecharts = {
   "src/components/graficos/Linea.tsx": `"use client";\nimport { LineChart } from "recharts";\nexport const Linea = LineChart;\n`,
 };
 
+// Lista fija de antes de T-010 (h): los paquetes de cliente sin `recharts` ni su clausura.
+const listaSinRecharts: readonly string[] = [
+  "@radix-ui/primitive",
+  "@radix-ui/react-compose-refs",
+  "@radix-ui/react-context",
+  "@radix-ui/react-dialog",
+  "@radix-ui/react-dismissable-layer",
+  "@radix-ui/react-focus-guards",
+  "@radix-ui/react-focus-scope",
+  "@radix-ui/react-id",
+  "@radix-ui/react-portal",
+  "@radix-ui/react-presence",
+  "@radix-ui/react-primitive",
+  "@radix-ui/react-slot",
+  "@radix-ui/react-use-callback-ref",
+  "@radix-ui/react-use-controllable-state",
+  "@radix-ui/react-use-effect-event",
+  "@radix-ui/react-use-layout-effect",
+  "aria-hidden",
+  "detect-node-es",
+  "get-nonce",
+  "next",
+  "react",
+  "react-dom",
+  "react-remove-scroll",
+  "react-remove-scroll-bar",
+  "react-style-singleton",
+  "tslib",
+  "use-callback-ref",
+  "use-sidecar",
+];
+
 describe("PRUEBA-037 · la lista declarada es la del grafo y el bloqueo", () => {
   it("src/ de verdad: lo declarado coincide, sin más ni menos", () => {
     const real = paquetesDeClienteDelGrafo(construirGrafo(RAIZ), bloqueo);
@@ -53,9 +85,13 @@ describe("PRUEBA-037 · la prueba puede fallar", () => {
     }
     expect(lista.some((n) => n.startsWith("d3-"))).toBe(true);
     expect(lista.some((n) => n.startsWith("@types/"))).toBe(false);
-    // La lista declarada hoy (27 paquetes, sin recharts) no lo trae: el paquete nuevo hace fallar la prueba.
-    const diferencia = comparar(paquetesDeCliente, lista);
+    // Contra una lista fija anterior a Recharts (28 paquetes, sin `recharts` ni su clausura), el
+    // paquete nuevo y lo que arrastra hacen fallar la comprobación `faltan`. No depende de lo
+    // que declare hoy `paquetes-de-cliente.ts`.
+    const diferencia = comparar(listaSinRecharts, lista);
     expect(diferencia.faltan).toContain("recharts");
+    expect(diferencia.faltan).toContain("victory-vendor");
+    expect(diferencia.faltan).toEqual(lista.filter((n) => !listaSinRecharts.includes(n)).sort());
   });
 
   it("declarada igual a la calculada: coincide; con uno de más o de menos: no", () => {

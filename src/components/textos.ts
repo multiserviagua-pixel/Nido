@@ -76,6 +76,45 @@ export const TEXTOS = {
     posicionDe: "de",
   },
 
+  /** Gráficos de líneas y de barras (T-010 (h); REQ-014, REQ-015, REQ-052, REQ-054). El título,
+   * los nombres de los ejes, las unidades y los nombres de las series son de cada vista; lo que va
+   * aquí es lo común. Los textos de reserva solo salen si la vista no da uno válido. */
+  graficos: {
+    sinTitulo: "Gráfico sin título",
+    ejeHorizontalSinNombre: "Categorías",
+    ejeVerticalSinNombre: "Valor",
+    unidadSinNombre: "unidades",
+    serie: "Serie",
+    tipoLineas: "Gráfico de líneas",
+    tipoBarras: "Gráfico de barras",
+    ejeHorizontal: "Eje horizontal",
+    ejeVertical: "Eje vertical",
+    verTabla: "Ver los datos en tabla",
+    tablaDeDatos: "tabla de datos",
+    leyenda: "Series",
+    sinDatos: {
+      titulo: "Sin datos",
+      explicacion: "No hay datos que mostrar para este periodo.",
+    },
+    sinDatosSuficientes: {
+      titulo: "Sin datos suficientes",
+      explicacion: "Hay menos datos de los necesarios para dibujar el gráfico.",
+    },
+    descripcion: {
+      con: "con",
+      y: "y",
+      serie: "serie",
+      series: "series",
+      punto: "punto",
+      puntos: "puntos",
+      de: "de",
+      a: "a",
+      minimo: "Valor mínimo",
+      maximo: "máximo",
+      remite: "Los mismos valores están en la tabla de datos que hay debajo.",
+    },
+  },
+
   /** Motivos de error de lista cerrada (diseño, «Estados de cada vista»). */
   motivosDeError: {
     sin_conexion: "Sin conexión. Comprueba tu red e inténtalo de nuevo.",

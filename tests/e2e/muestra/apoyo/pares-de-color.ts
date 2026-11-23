@@ -156,7 +156,16 @@ export async function recorrerPares(
       const visible = (e: Element): boolean => {
         const r = e.getBoundingClientRect();
         const s = getComputedStyle(e);
-        return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none";
+        // `checkVisibility` deja fuera lo que está en un bloque desplegable cerrado (`details`), que
+        // conserva su tamaño pero no se pinta ni se puede enfocar (T-010 (h): la tabla equivalente).
+        const pintado = (e as HTMLElement).checkVisibility?.() !== false;
+        return (
+          pintado &&
+          r.width > 0 &&
+          r.height > 0 &&
+          s.visibility !== "hidden" &&
+          s.display !== "none"
+        );
       };
 
       // 3. Texto.

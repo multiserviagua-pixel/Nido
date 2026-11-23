@@ -67,6 +67,20 @@ describe("PRUEBA-008 · control positivo: el árbol sembrado limpio no da hallaz
     expect(h).toEqual([]);
   });
 
+  it("Recharts importado, también de forma diferida, desde graficos/ vale", () => {
+    const h = hallazgosDe({
+      "src/components/graficos/Carga.tsx": `"use client";
+import { lazy } from "react";
+export const D = lazy(() => import("./Dibujo"));
+`,
+      "src/components/graficos/Dibujo.tsx": `"use client";
+import { BarChart } from "recharts";
+export default BarChart;
+`,
+    });
+    expect(h.filter((x) => x.regla.startsWith("R3"))).toEqual([]);
+  });
+
   it("una importación de solo tipo hacia sin-acceso desde un módulo de cliente no cuenta", () => {
     const h = hallazgosDe({
       "src/app/otra/Cliente.tsx": `"use client";\nimport type { sinAcceso } from "../../lib/errores/sin-acceso";\nexport type T = typeof sinAcceso;\n`,
@@ -250,6 +264,46 @@ export default async function P() {
       "src/components/tabla/Tabla.tsx": `import { Bar } from "recharts";\nexport const T = Bar;\n`,
     },
     regla: "R3 Recharts fuera de graficos/",
+  },
+  // R3 (T-010 (h)): Recharts, por cualquier vía, solo desde `src/components/graficos/`.
+  {
+    nombre: "Recharts por importación dinámica fuera de graficos/",
+    cambios: {
+      "src/components/cifras/Tarjeta.tsx": `export const cargar = () => import("recharts");
+`,
+    },
+    regla: "R3 Recharts fuera de graficos/",
+    archivo: "src/components/cifras/Tarjeta.tsx",
+  },
+  {
+    nombre: "Recharts desde una vista de la muestra",
+    cambios: {
+      "src/app/muestra/_vistas/Grafico.tsx": `"use client";
+import { LineChart } from "recharts";
+export const G = LineChart;
+`,
+    },
+    regla: "R3 Recharts fuera de graficos/",
+    archivo: "src/app/muestra/_vistas/Grafico.tsx",
+  },
+  {
+    nombre: "una subruta de Recharts fuera de graficos/",
+    cambios: {
+      "src/components/tabla/Tabla.tsx": `import { Bar } from "recharts/es6/cartesian/Bar";
+export const T = Bar;
+`,
+    },
+    regla: "R3 Recharts fuera de graficos/",
+    archivo: "src/components/tabla/Tabla.tsx",
+  },
+  {
+    nombre: "Recharts reexportado desde un módulo fuera de graficos/",
+    cambios: {
+      "src/components/estado/Atajo.ts": `export { LineChart } from "recharts";
+`,
+    },
+    regla: "R3 Recharts fuera de graficos/",
+    archivo: "src/components/estado/Atajo.ts",
   },
   {
     nombre: "avisos/ importa Radix",

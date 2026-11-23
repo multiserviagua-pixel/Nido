@@ -216,6 +216,8 @@ for (const estado of ESTADOS) {
       page,
     }) => {
       await abrirEstado(page, estado);
+      // Con los gráficos, el dibujo llega tras hidratar: la base se lee con la página ya asentada.
+      await page.waitForLoadState("networkidle");
       const base = await page.locator("body").innerText();
       const testigos = [
         "TESTIGO-NOMBRE-018",
