@@ -165,6 +165,23 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "texto-hostil", nombre: "Texto hostil" },
     ],
   },
+  // T-010 (i): `ListaAlertas` con cada gravedad, con y sin acción, con la acción en curso, vacía,
+  // con valores fuera de las listas, con nombres de 120 caracteres y con texto hostil. La carga y el
+  // error de la lista son del bloque de datos (T-016). Una carpeta de página fija por estado (R7).
+  {
+    tipo: "componente",
+    clave: "lista-alertas",
+    nombre: "Lista de alertas",
+    estados: [
+      { clave: "gravedades", nombre: "Cada gravedad" },
+      { clave: "con-accion", nombre: "Con acción" },
+      { clave: "accion-en-curso", nombre: "Acción en curso" },
+      { clave: "vacia", nombre: "Sin alertas" },
+      { clave: "desconocidas", nombre: "Valores fuera de las listas" },
+      { clave: "nombres-largos-120", nombre: "Clientes de 120 caracteres" },
+      { clave: "texto-hostil", nombre: "Texto hostil" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

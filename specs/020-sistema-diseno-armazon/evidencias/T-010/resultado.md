@@ -518,3 +518,43 @@ No se ejecutaron: Playwright completo, `next build` suelto, vitest completo, Fir
 **Vuelta atrás.** Borrar `src/components/graficos/`, `src/app/muestra/_vistas/graficos/`, `src/app/muestra/componentes/grafico-lineas/` y `grafico-barras/`, las dos entradas del inventario, `TEXTOS.graficos`, las tres pruebas nuevas y los cuatro casos nuevos de `fronteras.test.ts`; deshacer los dos cambios de `pares-de-color.ts` y `red-y-direccion.spec.ts`.
 
 **Actualización (23/11/2026, tras el «sí» de la coordinación):** `paquetes-de-cliente.ts` con los 29 paquetes y `paquetes-de-cliente.test.ts` con lista fija sin Recharts; `npx vitest run tests/unit/diseno --maxWorkers=2`: 43 archivos, 1462 en verde; tipos, eslint y prettier de los archivos tocados en 0. Playwright y build no se repiten: la lista no cambia el comportamiento y `main` no se movió (8f9d406).
+
+## T-010 (i) `ListaAlertas` y (j) `DialogoConfirmacion` (23/11/2026, rama `tarea/020-T-010ij`)
+
+**Estado: (i) hecha; (j) NO empezada, parada por la orden «si necesitas un paquete que no figure en `paquetes-de-cliente.ts`, para y dilo».** `@radix-ui/react-alert-dialog` (1.2.1 en `package.json`, instalado) **no figura** en `tests/unit/diseno/paquetes-de-cliente.ts` (su cabecera dice «no entra hasta T-010 (j)»). Importarlo desde un módulo de cliente añade un paquete a la lista que calcula PRUEBA-037 y la deja en rojo hasta que la coordinación lo apruebe. Lo que haría falta es exactamente una línea nueva, `"@radix-ui/react-alert-dialog"`: sus dependencias (`primitive`, `react-compose-refs`, `react-context`, `react-dialog`, `react-primitive`) ya están en la lista. Hace falta el «sí» de la coordinación (D-036) que nombre ese archivo, como el de (h).
+
+### (i) `ListaAlertas`
+
+**Qué.** `src/components/alertas/logica.ts` (lectura pura) y `ListaAlertas.tsx` (cliente por el botón). `TEXTOS.alertas` en `textos.ts`. `EtiquetaEstado.tsx` exporta su forma común como `BASE_DE_ETIQUETA` (única modificación de un componente integrado; la reutiliza la gravedad). Muestra: entrada `lista-alertas` del inventario con siete estados (`gravedades`, `con-accion`, `accion-en-curso`, `vacia`, `desconocidas`, `nombres-largos-120`, `texto-hostil`), una carpeta de página fija por estado, vistas en `src/app/muestra/_vistas/alertas/`.
+
+**Decisiones del ingeniero (revocables).**
+- Entrada: `alertas: readonly unknown[]`; cada una se lee con `leerAlerta` (solo claves propias de `gravedad`, `tipo`, `momento`, `cliente`, `accion`, `enCurso`; lo demás no se lee). Una entrada que no es un objeto, o no se puede leer, se pinta como alerta desconocida (nunca se omite: una alerta que desaparece es lo menos seguro) sin texto ni botón recibidos.
+- Gravedad: lista cerrada `critica` («Crítica», tono error), `aviso` («Aviso», tono aviso), `informacion` («Información», tono informativo) y, fuera de ella, `desconocida` («Gravedad desconocida», tono neutro). Reutiliza tonos e iconos de `EtiquetaEstado` (pares de color ya declarados). No está en el catálogo de estados porque una gravedad no es un estado de agente.
+- Tipos de ejemplo (`agente_sin_senal`, `agente_con_avisos`, `licencia_por_caducar`, `revision_completada`) y acciones de ejemplo (`reanudar_agente`, `revisar_licencia`): cada función de la fase añadirá las suyas en su diseño. Tipo fuera de lista: «Alerta de un tipo desconocido». Acción fuera de lista: sin botón.
+- La acción es una clave de lista cerrada con su verbo y su texto «en curso» en `TEXTOS.alertas.acciones`; no hay propiedad de texto libre. `alAccionar(posicion, accion)` devuelve la posición en la lista recibida; el cerrojo, el plazo y el resultado son de la vista (`useAccion`). `enCurso` solo con `true` exacto.
+- El cliente es el único texto libre: línea aparte «Cliente: …» con `TextoDato`, tras `textoPlano`; vacío o solo invisibles, sin línea.
+- Sin tope de alertas ni encabezado propio (la vista pone el suyo; la lista lleva `aria-label="Alertas"`). «Horas en horario de Madrid» (PRUEBA-019) es de la vista.
+- Carga y error: del bloque de datos (T-016).
+
+**Pruebas (escritas antes que el código; el rojo previo fue de importación, módulos inexistentes).**
+- `tests/unit/diseno/alertas-logica.test.ts` (16): listas cerradas con valores hostiles, momento válido e inválido, `enCurso` exacto, cliente con control y dirección, 120 caracteres, entradas que no son objetos, claves heredadas y de más, congelado, captadores y proxies que lanzan.
+- `tests/unit/diseno/alertas-componente.test.tsx` (21): estructura, palabra, icono y tono por gravedad, gravedad y tipo desconocidos, campos de más, vacío, botón único con verbo, en curso con `aria-disabled`, acción fuera de lista, cliente en `bdi`, cadenas hostiles, reglas de componente (sin red, sin color suelto, sin Radix ni `next/`).
+- `tests/e2e/muestra/alertas.spec.ts`: PRUEBA-014 (alertas), PRUEBA-021 (teclado), PRUEBA-017 (texto hostil), PRUEBA-013 (320, 375 y 1280, 120 caracteres, espaciado de texto, zum 200 % y 400 %), objetivos de 24 px, colores forzados, grises, sin JavaScript, PRUEBA-025 (axe, 320 y 1280, claro y oscuro, siete estados). Las demás pruebas que recorren el inventario (anchos, accesibilidad, combinaciones, tema) recogen los estados nuevos sin cambios.
+
+**Órdenes y resultado (T-010 (i))**
+
+| Orden | Código | Resultado |
+| --- | --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 0 | 45 archivos, 1498 en verde (1462 antes más 37 de alertas menos 1; PRUEBA-004 falló una vez por un carácter invisible literal en mi prueba, corregido) |
+| `npm run tipos` | 0 | sin errores |
+| `npx eslint --max-warnings 0 src tests` | 0 | sin hallazgos |
+| `npx prettier --check` de lo tocado | 0 | formato correcto |
+| `npm run build` (candado tomado y soltado) | 0 | compila |
+| Playwright `tests/e2e/muestra` completo (puerto 3150, configuración temporal borrada) | 1 | 2683 en verde y 5 en rojo: 3 míos (errores de mi prueba, abajo), `anchos.spec.ts:132` `grafico-lineas/etiquetas-largas-120` zum (desborde de Recharts a 320 por 256 en una ejecución cargada) y `tabla.spec.ts:174` (flaky conocido, punto 21 e) |
+| Playwright de repaso, mismo candado, puerto 3151: `alertas.spec.ts` entero más `anchos`, `tabla` y las pruebas PRUEBA-013/014/017/021/025 | 0 | 541 en verde, con los 5 casos anteriores |
+
+**Hallazgos de las pruebas, corregidos (los tres son de la prueba, no del componente).** (1) Playwright no pulsa un botón `aria-disabled`: `click({force:true})`. (2) La aserción de que `page.content()` no tenga la cadena testigo es falsa por construcción en la muestra: los datos crudos que la página pasa al componente de cliente viajan serializados en el HTML (carga de Next). Es de la vista y no del componente; **aviso para T-016 y la 021**: una vista real no debe pasar al cliente el objeto crudo del servidor, sino lo ya leído campo a campo (regla V-6; PRUEBA-017 con las vistas de `/muestra/servidor/`). Se quita la aserción; sigue comprobándose el texto visible. (3) Mi detector de invisibles contaba el salto de línea. El rojo previo de los 37 unitarios fue de importación (módulos inexistentes).
+
+**No ejecutado / no comprobado.** (j) entero; Firefox y WebKit; lector de pantalla; táctil real; escala de grises real (se comprueba por palabra e icono distintos, no por píxeles); contraste de `--texto-secundario` sobre `--superficie` y de los tonos sobre tarjeta: sin pares nuevos, los mide PRUEBA-022 (en verde); revisión independiente (pendiente del `revisor`); vitest completo (coordinación).
+
+**Vuelta atrás.** Borrar `src/components/alertas/`, `src/app/muestra/_vistas/alertas/`, `src/app/muestra/componentes/lista-alertas/`, la entrada `lista-alertas` del inventario, `TEXTOS.alertas`, las tres pruebas nuevas y restaurar el nombre `BASE` en `EtiquetaEstado.tsx`.

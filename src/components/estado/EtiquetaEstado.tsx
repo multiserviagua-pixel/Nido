@@ -40,7 +40,8 @@ export const ICONO_DE_ESTADO: Readonly<
   pausa: IconoPausa,
 };
 
-const BASE =
+/** Forma común de la etiqueta; la reutiliza la gravedad de `ListaAlertas`. */
+export const BASE_DE_ETIQUETA =
   "inline-flex max-w-full items-center gap-1 rounded-pequeno border border-current px-2 py-1 text-cuerpo-menor font-medio";
 
 export function EtiquetaEstado({ ambito, valor }: { ambito: string; valor: unknown }) {
@@ -50,7 +51,7 @@ export function EtiquetaEstado({ ambito, valor }: { ambito: string; valor: unkno
     <span
       data-estado={estado.clave}
       data-tono={estado.tono}
-      className={`${BASE} ${CLASES_DE_TONO[estado.tono]}`}
+      className={`${BASE_DE_ETIQUETA} ${CLASES_DE_TONO[estado.tono]}`}
     >
       <span className="inline-flex shrink-0">
         <Icono tamano={16} />

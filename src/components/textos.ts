@@ -76,6 +76,35 @@ export const TEXTOS = {
     posicionDe: "de",
   },
 
+  /** Lista de alertas (T-010 (i); REQ-016, REQ-056). El texto de una alerta sale de su tipo, de
+   * lista cerrada; la gravedad se dice con una palabra; el cliente, si lo hay, va aparte. Cada
+   * función de la fase añade sus tipos y sus acciones en su propio diseño. */
+  alertas: {
+    lista: "Alertas",
+    cliente: "Cliente",
+    vacio: {
+      titulo: "No hay alertas",
+      explicacion: "Cuando algo necesite tu atención, aparecerá aquí.",
+    },
+    gravedad: {
+      critica: "Crítica",
+      aviso: "Aviso",
+      informacion: "Información",
+      desconocida: "Gravedad desconocida",
+    },
+    tipos: {
+      agente_sin_senal: "Un agente no envía señal",
+      agente_con_avisos: "Un agente ha registrado avisos",
+      licencia_por_caducar: "Una licencia caduca pronto",
+      revision_completada: "Se ha completado una revisión",
+      desconocido: "Alerta de un tipo desconocido",
+    },
+    acciones: {
+      reanudar_agente: { texto: "Reanudar agente", enCurso: "Reanudando…" },
+      revisar_licencia: { texto: "Revisar licencia", enCurso: "Revisando…" },
+    },
+  },
+
   /** Gráficos de líneas y de barras (T-010 (h); REQ-014, REQ-015, REQ-052, REQ-054). El título,
    * los nombres de los ejes, las unidades y los nombres de las series son de cada vista; lo que va
    * aquí es lo común. Los textos de reserva solo salen si la vista no da uno válido. */
