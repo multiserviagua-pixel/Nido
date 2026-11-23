@@ -45,3 +45,11 @@ Despliegue B del mismo commit: `dpl_2JfUp93YkjvVPvR73wTxqxxsgJ4a` (`pre-nido-c8p
 | `promote` de B de nuevo (vuelta adelante) | antes de 16:08:30 | Éxito (3 s); el dominio sirve B y `/api/salud` 200 (16:08:30) |
 
 Tiempo desde la decisión hasta A servido y en 200: **34 segundos**, dentro de los 10 minutos exigidos. Las dos órdenes se ejecutaron en el equipo del responsable y la coordinación comprobó desde fuera con `curl`.
+
+## Cierre de la sesión de Vercel (23/11/2026)
+El responsable ejecutó `vercel logout -Q <carpeta temporal>` y borró la carpeta. Prueba de que no queda sesión (apartado 2.1, punto 6):
+- `vercel whoami -Q <carpeta temporal>`: «Logged out» (sin sesión).
+- `vercel whoami` sin `-Q`: «Logged out» (el perfil nunca guardó sesión).
+- La carpeta temporal `C:\despliegue\config-vercel` ya no existe (comprobado por la coordinación; la primera comprobación de `whoami -Q` la había recreado con 4 elementos y se borró otra vez).
+- La copia exportada y su `.zip` se borraron. Queda `C:\despliegue\clon` (copia limpia del commit `297fd4a`) hasta cerrar la fase.
+No se leyó el contenido de la carpeta temporal.
