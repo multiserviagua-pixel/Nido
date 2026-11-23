@@ -65,7 +65,7 @@ Las cifras llevan `font-variant-numeric: tabular-nums` (en tablas y en todo `[da
 
 ## 6. Logotipos
 
-Tres propuestas, cada una con tres SVG (`menu-oscuro.svg` para el menú azul noche, `fondo-claro.svg` para la página y `icono.svg`, un icono de aplicación con su propio fondo en el degradado del acento), en `specs/020-sistema-diseno-armazon/propuesta-visual/logotipos/propuesta-<letra>/`. Solo llevan formas, un degradado y un título: sin guiones, enlaces, estilos en línea ni texto con fuente (el nombre «HumanaIA» va en HTML junto al logotipo). Usan solo colores de la paleta. `tests/unit/diseno/logotipos.test.ts` comprueba que están limpios, que son tres propuestas distintas de forma y que cada color llega a 3:1 sobre su fondo.
+Tres propuestas, cada una con tres SVG (`menu-oscuro.svg` para el menú azul noche, `fondo-claro.svg` para la página y `icono.svg`, un icono de aplicación con su propio fondo en el degradado del acento), en `specs/020-sistema-diseno-armazon/propuesta-visual/logotipos/propuesta-<letra>/`. Solo llevan formas, un degradado y un título: sin guiones, enlaces, estilos en línea ni texto con fuente (el nombre del producto, «Nido: Agentes de Correo» (`TEXTOS.marca.nombreProducto`), va en HTML junto al logotipo; en la propuesta se escribió «HumanaIA» por error, corregido en T-015). Usan solo colores de la paleta. `tests/unit/diseno/logotipos.test.ts` comprueba que están limpios, que son tres propuestas distintas de forma y que cada color llega a 3:1 sobre su fondo.
 
 | Propuesta | Forma | Idea | Lectura a 16 px |
 | --- | --- | --- | --- |
@@ -75,6 +75,8 @@ Tres propuestas, cada una con tres SVG (`menu-oscuro.svg` para el menú azul noc
 
 **Recomendación:** B si se quiere sobriedad y un icono que funcione en la pestaña del navegador; A si se quiere que el nido de aves se reconozca a primera vista. Ninguna usa un color fuera de la paleta ni rompe el criterio de un solo acento. La elección es del responsable (CA-055): el logotipo elegido pasa luego a `src/components/marca/` y a `icon.svg`, `favicon.ico` y `apple-icon.png`.
 
+**Resultado (T-015, 23/11/2026):** el responsable eligió C. **Los logotipos A y B se retiran**: solo se arregla el elegido; los menores de A y B (p. ej. el ojo blanco sobre cabeza blanca del icono de A) quedan sin arreglar. Sus SVG y su dibujo en la maqueta `/muestra/propuesta-visual` se conservan como registro de lo que se propuso, porque `logotipos.test.ts` (tres propuestas distintas) y PRUEBA-023 (27 logotipos decorativos en la maqueta) los cuentan y no se relajan controles. El logotipo definitivo está en `src/components/marca/`, montado en el menú lateral y en el cajón. Para los tamaños pequeños (menos de 24 px) el anillo interior, que a 16 px se funde, se omite y el huevo crece: la forma y el tono son los aprobados. Los archivos `src/app/icon.svg`, `favicon.ico` y `apple-icon.png` los genera `scripts/generar-iconos.mjs`.
+
 ## 7. Qué debe ver el responsable en T-013
 
 1. `/muestra/propuesta-visual` (la monta T-012): paleta y degradados en claro y oscuro, los tres logotipos a 16, 32 y 128 px sobre claro y oscuro, y las tres vistas (Resumen de superadmin, tabla con el diálogo abierto, Resumen de cliente a 375 px).
@@ -83,7 +85,7 @@ Tres propuestas, cada una con tres SVG (`menu-oscuro.svg` para el menú azul noc
 
 ## 8. Qué no se ha podido comprobar
 
-- Nada se ha visto aún en navegador: el contraste es de cálculo (script de la prueba, fórmula de WCAG 2.2) y los logotipos se han visto solo como imagen generada a partir de los SVG. El velo con un navegador real, y el borde nuevo del cajón, los revisará `revisor` en T-013 con Playwright.
+- Nada se ha visto aún en navegador: el contraste es de cálculo (script de la prueba, fórmula de WCAG 2.2) y los logotipos se han visto solo como imagen generada a partir de los SVG. El velo con un navegador real, y el borde nuevo del cajón, los revisó `revisor` en Playwright (menor 3 de T-011, pendiente de una prueba que mida overlay y borde).
 - El efecto del velo en oscuro es discreto y es una decisión de diseño que el responsable puede querer ajustar.
 - Los pares de colores forzados no se miden (el sistema los elige).
 

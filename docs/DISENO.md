@@ -1,6 +1,6 @@
 # Diseño: sistema visual, páginas y accesibilidad
 
-Estado: PROPUESTA para validar. La escala y los papeles de «Escala y papeles» son los de la propuesta visual de la función 020 (T-011, razonada en `specs/020-sistema-diseno-armazon/propuesta-visual.md`), con el contraste calculado; los definitivos son los que valide el responsable (REQ-086, T-013) y esta tabla cambia con ellos.
+Estado: **definitivo, validado por el responsable el 22/11/2026** (T-013; «Logo C, aprobada», sin cambios en paleta, tipografía, vistas ni umbral de 38 rem de la cabecera). La escala y los papeles de «Escala y papeles» son los de la propuesta visual de la función 020 (T-011, razonada en `specs/020-sistema-diseno-armazon/propuesta-visual.md`), con el contraste calculado; T-015 (a) los deja como definitivos sin cambiar ningún valor.
 
 ## Referencia
 
@@ -178,6 +178,10 @@ Solo se ha cambiado lo que no llegaba al contraste en un uso previsto. El resto 
 | Tema oscuro | No existía | Columna «Oscuro» | Nuevo por REQ-088. Mismo tono de acento en pasos más claros |
 | `--sombra-velo` | — | Velo de `rgb(15 23 42 / 0.5)` en claro y `rgb(11 17 32 / 0.7)` en oscuro (nuevo, T-011) | El cajón del menú y el panel de la cuenta no oscurecían el fondo. Se declara como sombra porque es la otra capa con alfa; sus pares están en la tabla «Velo». El cajón gana un borde derecho `--menu-texto` y el panel pasa a borde `--borde-control` para separarse con el velo puesto |
 | Umbral de alto de la cabecera fija | `38rem`, por validar | Se mantiene | Ver `propuesta-visual.md`, «Cabecera fija»: la de peor caso ocupa el 39 % de 608 px |
+
+### Logotipo y nombre
+
+Elegido el 22/11/2026: **C, «Nido en anillo»**. Los logotipos A y B se retiran. El componente está en `src/components/marca/` (`LogotipoNido`, con las variantes `menu-oscuro`, `fondo-claro` e `icono`, y `MarcaDelProducto`, logotipo más nombre para el menú). Solo lleva formas y pinta con papeles, nunca con un valor de la escala: `menu-oscuro` usa `--menu-indicador` (anillo y anillo interior) y `--menu-texto` (nodos y huevo); `fondo-claro` usa `--acento`, `--serie-4` (anillo interior) y `--texto`; `icono` va sobre `--degradado-acento` con `--texto-sobre-acento`. El nombre es `TEXTOS.marca.nombreProducto` («Nido: Agentes de Correo»), en HTML junto al logotipo y anunciado una sola vez: el logotipo es decorativo (`aria-hidden`). Por debajo de 24 px el anillo interior se funde con el huevo, y el componente lo omite y agranda el huevo (misma forma y mismo tono). Los archivos de la aplicación (`src/app/icon.svg`, `favicon.ico` y `apple-icon.png`) los genera `scripts/generar-iconos.mjs` con los mismos dos extremos del degradado del acento en claro (`#7344F0` y `#5B2BD6`) y blanco.
 
 ### Espaciado
 

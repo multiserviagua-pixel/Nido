@@ -122,8 +122,9 @@ describe("PRUEBA-012 · MenuLateral: área actual", () => {
 describe("PRUEBA-012 · MenuLateral: iconos y objetivos", () => {
   it("los iconos son decorativos (aria-hidden): el nombre de cada enlace es su texto", () => {
     const html = pintar();
-    expect(cuenta(html, /<svg\b/g)).toBe(AREAS_SUPERADMIN.length);
-    expect(cuenta(html, /<svg[^>]*aria-hidden="true"/g)).toBe(AREAS_SUPERADMIN.length);
+    // Un icono por área y, desde T-015 (b), el logotipo de la marca arriba.
+    expect(cuenta(html, /<svg\b/g)).toBe(AREAS_SUPERADMIN.length + 1);
+    expect(cuenta(html, /<svg[^>]*aria-hidden="true"/g)).toBe(AREAS_SUPERADMIN.length + 1);
     expect(html).not.toMatch(/<title>|role="img"/);
   });
 

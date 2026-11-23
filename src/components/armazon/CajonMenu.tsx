@@ -12,6 +12,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState } from "react";
 import { IconoCerrar, IconoMenu } from "../iconos";
+import { MarcaDelProducto } from "../marca";
 import { TEXTOS } from "../textos";
 import { CONSULTA_MENU_FIJO, alEnsancharLaVentana } from "./ancho-menu";
 import type { Area } from "./areas";
@@ -64,6 +65,7 @@ export function CajonMenu({ areas, areaActual }: { areas: readonly Area[]; areaA
           }}
           className="fixed inset-y-0 left-0 z-50 flex w-menu-ancho max-w-full flex-col overflow-y-auto border-r border-menu-texto bg-menu-fondo bg-degradado-menu py-4 text-menu-texto shadow-elevada"
         >
+          <MarcaDelProducto />
           <div className="flex items-center justify-between gap-3 px-4 pb-4">
             <Dialog.Title className="text-subtitulo font-seminegrita text-menu-texto">
               {TEXTOS.armazon.menu}

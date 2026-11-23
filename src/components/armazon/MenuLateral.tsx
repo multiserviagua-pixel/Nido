@@ -1,3 +1,4 @@
+import { MarcaDelProducto } from "../marca";
 import { TEXTOS } from "../textos";
 import type { Area } from "./areas";
 import { ListaDeAreas } from "./ListaDeAreas";
@@ -8,7 +9,7 @@ import { ListaDeAreas } from "./ListaDeAreas";
  * 1024 px: por debajo está oculto (`display: none`: ni se pinta, ni sale en el árbol de
  * accesibilidad, ni recibe el foco) y lo sustituye `CajonMenu`. La marca `data-menu-lateral` la
  * usa el cajón para devolver el foco aquí si la ventana se ensancha con el cajón abierto.
- * Logotipo y nombre arriba: los pone T-015 (b).
+ * Arriba, el logotipo y el nombre del producto (REQ-087, T-015); el logotipo es decorativo.
  */
 export function MenuLateral({ areas, areaActual }: { areas: readonly Area[]; areaActual: string }) {
   return (
@@ -17,6 +18,7 @@ export function MenuLateral({ areas, areaActual }: { areas: readonly Area[]; are
       data-menu-lateral
       className="hidden bg-menu-fondo bg-degradado-menu py-4 text-menu-texto lg:block lg:w-menu-ancho lg:shrink-0"
     >
+      <MarcaDelProducto />
       <ListaDeAreas areas={areas} areaActual={areaActual} />
     </nav>
   );

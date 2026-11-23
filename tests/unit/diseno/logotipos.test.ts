@@ -118,9 +118,13 @@ describe("PRUEBA-008 y PRUEBA-006 · propuestas de logotipo (T-011 (c))", () => 
       for (const c of marca) {
         expect(medir(c, FONDO_ICONO).razon, `${p} ${c}`).toBeGreaterThanOrEqual(3);
       }
-      // El borde del icono (extremo claro del degradado) contra la página clara y la oscura.
-      expect(contraste("#5B2BD6", "#FFFFFF")).toBeGreaterThanOrEqual(3);
+      // Sobre la página clara, los 33 puntos del degradado del icono llegan a 3:1. Sobre la oscura
+      // solo se afirma el extremo claro (`#7344F0`): el oscuro (`#5B2BD6`) da 2,48:1, y el icono,
+      // un logotipo con su propio fondo, queda fuera de la exigencia de 1.4.11 y se reconoce por su
+      // forma (T-011, menor 1, saldado en T-015).
+      expect(medir("#FFFFFF", FONDO_ICONO).razon).toBeGreaterThanOrEqual(3);
       expect(contraste("#7344F0", "#0F172A")).toBeGreaterThanOrEqual(3);
+      expect(contraste("#5B2BD6", "#0F172A")).toBeLessThan(3);
     },
   );
 

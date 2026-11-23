@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Nido: Agentes de Correo</title>
+  <defs><linearGradient id="fondo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7344F0"/><stop offset="1" stop-color="#5B2BD6"/></linearGradient></defs>
+  <rect width="64" height="64" rx="14" fill="url(#fondo)"/>
+  <g transform="translate(7 7) scale(0.78)">
+    <path d="M32 8 A24 24 0 1 1 8 32" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="32" cy="8" r="6" fill="#FFFFFF"/><circle cx="8" cy="32" r="6" fill="#FFFFFF"/>
+    <ellipse cx="32" cy="32" rx="8" ry="10" fill="#FFFFFF"/>
+  </g>
+</svg>

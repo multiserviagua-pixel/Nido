@@ -121,10 +121,11 @@ describe("PRUEBA-012 · áreas en el menú", () => {
     expect(cuenta(pintar("__proto__"), /aria-current/g)).toBe(0);
   });
 
-  it("los iconos del menú son decorativos: el nombre lo da el texto", () => {
+  it("los iconos del menú y el logotipo son decorativos: el nombre lo da el texto", () => {
     const nav = /<nav[\s\S]*?<\/nav>/.exec(pintar())![0];
-    expect(cuenta(nav, /<svg\b/g)).toBe(5);
-    expect(cuenta(nav, /<svg[^>]*aria-hidden="true"/g)).toBe(5);
+    // Cinco iconos de áreas y, desde T-015 (b), el logotipo de la marca.
+    expect(cuenta(nav, /<svg\b/g)).toBe(6);
+    expect(cuenta(nav, /<svg[^>]*aria-hidden="true"/g)).toBe(6);
   });
 
   it("el menú lo pone Armazon a partir de las áreas: no admite un ReactNode que lo sustituya", () => {
