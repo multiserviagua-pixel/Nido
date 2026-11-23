@@ -13,3 +13,6 @@ Estado: **PROPUESTA** para el `especificador` y el `arquitecto` de la 011.
 ## A comprobar
 - Contra la especificación del transporte Streamable HTTP vigente (2026-07-28): que contestar 405 al `GET` es válido para un servidor que no ofrece flujo de eventos (V-: verificar-decision antes de especificar).
 - Cuántos `GET` hace cada cliente (en la prueba: 4 o 5 por conexión).
+
+## Criterio del responsable (23/11/2026)
+Respuesta expresa: «tomando en cuenta esto, que no quiero encarecer el proyecto ni dejarlo frágil». Queda decidido: **el conector sigue sin estado y no ofrece flujo de eventos**; el `GET` se contesta 405 y se registra con código propio (puntos 1, 2 y 4). El punto 3 se descarta salvo petición expresa del responsable.
