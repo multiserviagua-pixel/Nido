@@ -15,3 +15,9 @@ La lanzó el responsable a mano antes de la primera hora programada (20:53); la 
 - Buzón (recuentos, por la coordinación): borradores 3, `prueba-revisado` 3, enviados 44, papelera 0, bandeja 30, etiquetas 5 y 7 sin cambios.
 - Falta: resumen del servidor tras esta ejecución (5 informes y 5 ejecuciones cerradas esperados) y la hora exacta de la ejecución (la anota la persona).
 - Uso: el semanal del plan pasó del 87 % al 88 % durante esta tanda.
+
+## Inventario de conectores de la tarea, corregido (23/11/2026)
+El responsable quitó los conectores que sobraban («quitados»): Drive, Figma, WebMCP, Docs y Claude Code Remote. Queda solo HumanaIA y el Gmail de pruebas, como pide el guion (paso 1). Declarado por el responsable; sin captura. Desde este punto la desviación del inventario queda cerrada. **Efecto lateral:** al quitar esos conectores de la cuenta, la sesión de coordinación pierde también Figma y Drive (el FigJam del plan no se puede actualizar hasta volver a conectarlo).
+
+## Resumen del servidor tras la primera ejecución
+5 informes y 5 ejecuciones cerradas; 2 órdenes confirmadas, 0 pendientes; licencias A y B activas; 1 conexión activa; protocolo 2026-07-28 en los 47 sucesos. Sucesos: 47 (31 correctos, 16 rechazados, 0 errores). **Patrón por explicar:** una ejecución añadió 16 sucesos, 8 correctos y 8 rechazados. Pendiente de `exportar_sucesos 2026-11-23` para clasificar los rechazados por código.
