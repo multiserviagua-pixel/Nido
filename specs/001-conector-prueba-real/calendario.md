@@ -1,8 +1,24 @@
 # Calendario de la prueba real (función 001)
 
-Fecha: 20/11/2026 · Autor: `qa` · Estado: PENDIENTE de «sí» del responsable (AR-08, RD-080)
+Fecha: 20/11/2026 · Autor: `qa` · Estado: APROBADO por el responsable el 23/11/2026 con una condición (AR-08, RD-080), ver «Aprobación»
 
 Este calendario es un documento normal (D-025); no es un documento firmado. Se aprueba con un «sí» del responsable, con fecha, antes del primer paso.
+
+## Aprobación
+
+Respuesta expresa del responsable, 23/11/2026: «si, mientras que el calendario no se vuelve un obstáculo para avanzar mas rápido, yo lo apruebo».
+
+- **Condición:** el calendario es una guía, no un freno. Las fechas y horas se anotan al ejecutar cada paso (fecha real, quién y estado) y nunca se espera a una fecha prevista si el paso anterior ya está hecho y puede seguirse.
+- **Sigue abierto, sin decidir:** si se acepta una prueba con menos de tres bloques completos (R-5) o se paga Vercel Pro para ampliar la ventana. Decisión de pago: 26/11/2026.
+- Las fechas de la tabla siguen en «a fijar»: se rellenan con las reales según se avanza.
+
+## Aprobación
+
+Respuesta expresa del responsable, 23/11/2026: «si, mientras que el calendario no se vuelve un obstáculo para avanzar mas rápido, yo lo apruebo».
+
+- **Condición:** el calendario es una guía, no un freno. Las fechas y horas se anotan al ejecutar cada paso (fecha real, quién y estado) y no se espera a una fecha prevista si el paso anterior ya está hecho y puede seguirse.
+- **Sigue abierto, sin decidir:** si se acepta una prueba con menos de tres bloques completos (R-5) o se paga Vercel Pro para ampliar la ventana. Decisión de pago: 26/11/2026.
+- Las fechas de la tabla siguen en «a fijar»: se rellenan con las reales según se avanza.
 
 ## Reglas
 
