@@ -9,15 +9,7 @@ Este calendario es un documento normal (D-025); no es un documento firmado. Se a
 Respuesta expresa del responsable, 23/11/2026: «si, mientras que el calendario no se vuelve un obstáculo para avanzar mas rápido, yo lo apruebo».
 
 - **Condición:** el calendario es una guía, no un freno. Las fechas y horas se anotan al ejecutar cada paso (fecha real, quién y estado) y nunca se espera a una fecha prevista si el paso anterior ya está hecho y puede seguirse.
-- **Sigue abierto, sin decidir:** si se acepta una prueba con menos de tres bloques completos (R-5) o se paga Vercel Pro para ampliar la ventana. Decisión de pago: 26/11/2026.
-- Las fechas de la tabla siguen en «a fijar»: se rellenan con las reales según se avanza.
-
-## Aprobación
-
-Respuesta expresa del responsable, 23/11/2026: «si, mientras que el calendario no se vuelve un obstáculo para avanzar mas rápido, yo lo apruebo».
-
-- **Condición:** el calendario es una guía, no un freno. Las fechas y horas se anotan al ejecutar cada paso (fecha real, quién y estado) y no se espera a una fecha prevista si el paso anterior ya está hecho y puede seguirse.
-- **Sigue abierto, sin decidir:** si se acepta una prueba con menos de tres bloques completos (R-5) o se paga Vercel Pro para ampliar la ventana. Decisión de pago: 26/11/2026.
+- **Sigue abierto, sin decidir:** si se acepta una prueba con menos de tres bloques completos (R-5) o se continúa en Vercel Pro de pago (hay una tarjeta guardada; la prueba gratuita acaba el 27/11/2026). Decisión de pago: 26/11/2026.
 - Las fechas de la tabla siguen en «a fijar»: se rellenan con las reales según se avanza.
 
 ## Reglas
