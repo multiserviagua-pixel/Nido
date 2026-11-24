@@ -40,3 +40,16 @@ El responsable reactiva la tarea programada el 24/11/2026 por la mañana («Reac
 - El buzón creció en **dos** ejecuciones entre las 09:49 y las 10:55 (borradores 4 → 6 y `prueba-revisado` 4 → 6): la del minuto 53 de las 09:00 y la de las 10:00. **Inicio del bloque 1 inferido: 24/11/2026 09:53.** Debe confirmarse con el historial de la tarea (la persona).
 - Aprobaciones pedidas por el conector de HumanaIA en la ejecución de las 10:53: **ninguna visible** (dato de la propia tarea; falta la confirmación expresa de la persona).
 - Bloque 1: del 24/11 09:53 al 25/11 09:53. Se necesitan 8 ejecuciones programadas como mínimo.
+
+## Orden de pausa y de reanudación durante el periodo (24/11/2026)
+Ejecutadas por el responsable con `operar preproduccion crear_orden A pausar` y `crear_orden A reanudar` (cada una respondió «creada» y `anuladas: 0`). Comprobado por la coordinación con recuentos del buzón y con `resumen`.
+
+| Paso | Qué ocurrió | Buzón (recuentos) |
+| --- | --- | --- |
+| Orden `pausar` creada (~11:2x) | Estado `pendiente` hasta la siguiente ejecución | 6 borradores, 6 `prueba-revisado` |
+| Ejecución de las 11:54 | Recibió la orden y la confirmó; dijo «El agente está en pausa. HumanaIA puede reanudarlo»; informe `pausado` con cifras a 0; **no revisó el buzón** | **Sin cambios**: 6 y 6, enviados 44, papelera 0 (CA-020) |
+| `resumen` tras la pausa | Órdenes: 3 confirmadas, 0 pendientes; 9 informes y 9 ejecuciones cerradas | |
+| Orden `reanudar` creada (~12:1x) | Estado `pendiente` | |
+| Ejecución de las 12:53 | Confirmó `reanudar`; estado `activa`; revisó el buzón: 30, 5 urgentes, 7 facturas, `prueba-revisado` en un mensaje, un borrador, informe `aviso` en modo desatendido; sin enviar, reenviar, eliminar ni compartir | **7 borradores y 7 `prueba-revisado`**, enviados 44, papelera 0, bandeja 30 |
+
+Resultado: la pausa y la reanudación por orden funcionan de extremo a extremo en tarea programada (CA-011, CA-020, CA-023). Falta `resumen` posterior a las 12:53 (4 órdenes confirmadas esperadas) y los dos bloques de 24 h siguientes.
