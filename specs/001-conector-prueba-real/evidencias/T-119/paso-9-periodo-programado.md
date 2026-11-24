@@ -53,3 +53,6 @@ Ejecutadas por el responsable con `operar preproduccion crear_orden A pausar` y 
 | Ejecución de las 12:53 | Confirmó `reanudar`; estado `activa`; revisó el buzón: 30, 5 urgentes, 7 facturas, `prueba-revisado` en un mensaje, un borrador, informe `aviso` en modo desatendido; sin enviar, reenviar, eliminar ni compartir | **7 borradores y 7 `prueba-revisado`**, enviados 44, papelera 0, bandeja 30 |
 
 Resultado: la pausa y la reanudación por orden funcionan de extremo a extremo en tarea programada (CA-011, CA-020, CA-023). Falta `resumen` posterior a las 12:53 (4 órdenes confirmadas esperadas) y los dos bloques de 24 h siguientes.
+
+## `resumen` tras la reanudación (24/11/2026, después de las 12:53)
+Órdenes: **4 confirmadas**, 0 pendientes, 0 entregadas sin confirmar, 0 anuladas. 10 informes y 10 ejecuciones, todas cerradas. Licencias A y B activas; 1 conexión activa, 0 revocadas; `cerrada: false`. Protocolo `2026-07-28` en los 96 sucesos. Sucesos: 96 (68 correctos, 28 rechazados, 0 errores). **La ejecución de las 12:53 añadió 10 sucesos correctos y ningún rechazado**: el `GET` contestado con 405 no aparece siempre (ver `specs/011-…/propuesta-get-405.md`). p95: `obtener_instrucciones` 71 ms, `enviar_informe` 136 ms, `confirmar_orden` 29 ms.
