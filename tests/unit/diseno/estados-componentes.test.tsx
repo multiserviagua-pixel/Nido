@@ -332,12 +332,14 @@ describe("estados/ · código que no puede existir", () => {
     .filter((f) => /\.tsx?$/.test(f))
     .map((f) => [f, readFileSync(resolve(dir, f), "utf8").replace(/\/\/.*$/gm, "")] as const);
 
-  it("hay los cinco archivos esperados", () => {
+  it("hay los siete archivos esperados", () => {
     expect(fuentes.map(([f]) => f).sort()).toEqual([
+      "BloqueDatos.tsx",
       "Esqueleto.tsx",
       "EstadoError.tsx",
       "EstadoSinPermiso.tsx",
       "EstadoVacio.tsx",
+      "bloque.ts",
       "logica.ts",
     ]);
   });
@@ -440,7 +442,8 @@ describe("integración · `Tabla` y `ZonaDeDatos` usan los componentes comunes (
 
   it("la fuente de `ZonaDeDatos` ya no pinta su propio botón", () => {
     const fuente = readFileSync(resolve(RAIZ, "src/components/armazon/ZonaDeDatos.tsx"), "utf8");
-    expect(fuente).toContain("EstadoError");
+    // El error y su botón los pinta `BloqueDatos` (T-016 (d)), que usa `EstadoError`.
+    expect(fuente).toContain("BloqueDatos");
     expect(fuente).not.toMatch(/<button\b/);
   });
 });

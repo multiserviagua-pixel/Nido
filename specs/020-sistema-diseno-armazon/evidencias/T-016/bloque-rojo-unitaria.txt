@@ -1,0 +1,38 @@
+
+ RUN  v5.1.0 C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a
+
+ ❯ tests/unit/diseno/bloque-logica.test.ts (0 test)
+ ❯ tests/unit/diseno/bloque-componente.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/diseno/bloque-componente.test.tsx [ tests/unit/diseno/bloque-componente.test.tsx ]
+Error: Cannot find module '../../../src/components/estados/BloqueDatos' imported from C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/unit/diseno/bloque-componente.test.tsx
+ ❯ tests/unit/diseno/bloque-componente.test.tsx:12:1
+     10| import { ZonaDeDatos } from "../../../src/components/armazon/ZonaDeDat…
+     11| import { ContextoDeTransicion } from "../../../src/components/armazon/…
+     12| import { BloqueDatos } from "../../../src/components/estados/BloqueDat…
+       | ^
+     13| import { EstadoSinPermiso } from "../../../src/components/estados/Esta…
+     14| import { MOTIVOS_DE_ERROR } from "../../../src/components/estados/logi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/diseno/bloque-logica.test.ts [ tests/unit/diseno/bloque-logica.test.ts ]
+Error: Cannot find module '../../../src/components/estados/bloque' imported from C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/unit/diseno/bloque-logica.test.ts
+ ❯ tests/unit/diseno/bloque-logica.test.ts:7:1
+      5| import { describe, expect, it } from "vitest";
+      6| import { TEXTOS } from "../../../src/components/textos";
+      7| import {
+       | ^
+      8|   ESTADOS_DE_BLOQUE,
+      9|   LECTURA_INICIAL,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  09:45:01
+   Duration  577ms (setup 69%, transform 16%, worker 15%)
+

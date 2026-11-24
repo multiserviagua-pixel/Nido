@@ -10,7 +10,7 @@
 // contenedor es `aria-busy`, sin ser región viva, para no leerlo dos veces. La variante lenta
 // (`lenta`, que decide `BloqueDatos` a los 10 s) añade, visible y anunciado una sola vez,
 // «Está tardando más de lo normal». Los plazos de 10 s y 30 s no son de este componente. Si quien
-// lo usa ya anuncia la carga (el cambio de periodo), pasa `anunciarCarga={false}`. Sin texto libre.
+// lo usa ya anuncia la carga (el cambio de periodo), pasa `anunciarCarga={false}` y anuncia él también la carga lenta. Sin texto libre.
 import { useEffect, useRef } from "react";
 import { anunciar } from "../texto/anuncios";
 import { SoloLector } from "../texto/SoloLector";
@@ -185,11 +185,12 @@ export function Esqueleto({ forma, lenta = false, anunciarCarga = true }: Propie
   }, [anunciarCarga]);
 
   useEffect(() => {
-    if (esLenta && !dichoLenta.current) {
+    // Quien ya anuncia la carga (`anunciarCarga={false}`) anuncia también que tarda.
+    if (esLenta && anunciarCarga !== false && !dichoLenta.current) {
       dichoLenta.current = true;
       anunciar(TEXTOS.bloque.cargaLenta);
     }
-  }, [esLenta]);
+  }, [esLenta, anunciarCarga]);
 
   return (
     <div

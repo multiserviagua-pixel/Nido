@@ -273,6 +273,29 @@ export const INVENTARIO: readonly EntradaDeInventario[] = congelar([
       { clave: "carga-lenta", nombre: "Carga lenta" },
     ],
   },
+  // T-016 (d): `BloqueDatos`. Un estado por página fija (R7): los cinco estados (carga, vacío,
+  // error, sin permiso, datos), tres fuentes con una que falla, la respuesta tardía a mano y el
+  // paso de la carga a los datos de cada forma de esqueleto (REQ-064, desplazamiento de diseño).
+  {
+    tipo: "componente",
+    clave: "bloque-datos",
+    nombre: "Bloque de datos",
+    estados: [
+      { clave: "carga", nombre: "Carga" },
+      { clave: "vacio", nombre: "Vacío" },
+      { clave: "error", nombre: "Error" },
+      { clave: "sin-permiso", nombre: "Sin permiso" },
+      { clave: "datos", nombre: "Con datos" },
+      { clave: "datos-parciales", nombre: "Datos parciales" },
+      { clave: "respuesta-tardia", nombre: "Respuesta tardía" },
+      { clave: "conserva-hijos", nombre: "Hijos conservados" },
+      { clave: "carga-a-tarjeta", nombre: "De la carga a una tarjeta" },
+      { clave: "carga-a-tabla", nombre: "De la carga a una tabla de cinco filas" },
+      { clave: "carga-a-tabla-llena", nombre: "De la carga a una tabla llena" },
+      { clave: "carga-a-grafico", nombre: "De la carga a un gráfico" },
+      { clave: "carga-a-lista", nombre: "De la carga a una lista" },
+    ],
+  },
   // T-010 (a): el armazón con las áreas de superadmin (fase 3) y con el juego de cliente de la
   // muestra. Un estado por área actual; el de nombre largo prueba 120 caracteres sin espacios.
   // Los nombres siguen la convención de tests/e2e/muestra/anchos.spec.ts (armazon…, …120).

@@ -75,7 +75,7 @@ describe("T-010 (e2) · RejillaCuerpo con la transición en curso", () => {
     ] as const) {
       const z = zona(html, nombre);
       const envoltorio =
-        /<div class="([^"]*)"[^>]*>(?=<p id="(?:cifra-vieja|contenido-viejo)")/.exec(z);
+        /<div [^>]*class="([^"]*)"[^>]*>(?=<p id="(?:cifra-vieja|contenido-viejo)")/.exec(z);
       expect(envoltorio, `${nombre}: los hijos van en un envoltorio`).not.toBeNull();
       expect(envoltorio![1]!.split(" "), nombre).toContain("hidden");
       expect(z, nombre).toContain(`id="${id}"`);
@@ -84,7 +84,7 @@ describe("T-010 (e2) · RejillaCuerpo con la transición en curso", () => {
 
   it("no pendiente: el envoltorio de los hijos no oculta nada (no cambia el diseño de la rejilla)", () => {
     const z = zona(rejilla({ pendiente: false }), "cifras");
-    expect(z).toMatch(/<div class="contents"><p id="cifra-vieja">48<\/p><\/div>/);
+    expect(z).toMatch(/<div [^>]*class="contents"[^>]*><p id="cifra-vieja">48<\/p><\/div>/);
   });
 
   it("las alertas no son datos del periodo: no se marcan ocupadas", () => {
@@ -142,9 +142,9 @@ describe("T-010 (e2) · RejillaCuerpo con el cambio de periodo fallido (30 s)", 
 
   it("lo que había sigue oculto: 0 cifras a la vista en el estado de error", () => {
     const z = zona(html(), "cifras");
-    expect(/<div class="([^"]*)"[^>]*>(?=<p id="cifra-vieja")/.exec(z)![1]!.split(" ")).toContain(
-      "hidden",
-    );
+    expect(
+      /<div [^>]*class="([^"]*)"[^>]*>(?=<p id="cifra-vieja")/.exec(z)![1]!.split(" "),
+    ).toContain("hidden");
   });
 
   it("una referencia que no cumple el formato no se pinta (se descarta)", () => {

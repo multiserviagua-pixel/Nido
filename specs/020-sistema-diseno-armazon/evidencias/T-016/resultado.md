@@ -211,3 +211,97 @@ Las capturas versionadas de `evidencias/T-014/capturas` que Playwright reescribe
 - Sospecha: con `referencia` ausente, la `N-` se crea en el primer pintado del navegador (`useSyncExternalStore` con instantánea de servidor `null`): en una navegación de cliente que monta el error ya hidratado, aparece en el mismo pintado; en la carga inicial, tras hidratar. El e2e `estados.spec.ts` solo lo comprueba tras `networkidle`.
 - Los 15 + 14 rojos de las dos primeras pasadas completas se debieron a que la prueba recorre el inventario nuevo: cualquier componente que anuncie al cargar o muestre referencias aleatorias necesitaba las dos aclaraciones de las decisiones 11 y 12.
 
+
+## (d) `BloqueDatos`
+
+Rama `tarea/020-T-016d`, sobre `bb34e5b`. Entorno: local (Windows 11, Node 26, solo Chromium de Playwright salvo el extra de Firefox y WebKit). Autor: `ingeniero-frontend`. Datos de prueba ficticios. Sin revisión todavía. Sin commit. No ruta crítica. **Estado: implementada y verificada por el implementador; pendiente de revisión.**
+
+### Qué entrega
+
+- `src/components/estados/bloque.ts` (lógica pura): `ESTADOS_DE_BLOQUE` (`carga`, `vacio`, `error`, `sin_permiso`, `datos`; lo que no es de la lista es `error`), plazos (`PLAZO_DE_AVISO_MS` 10 s, `PLAZO_DE_ERROR_MS` 30 s, `faseDeCarga`: un tiempo no numérico cuenta como agotado), `resolverBloque` (a los 30 s la carga se pinta como error `tarda_demasiado`), `anuncioDeError` y `reducirLectura` (la respuesta tardía: solo la del envío en curso mientras siga en `carga`; la de un envío anterior, la de un envío inexistente y una segunda del mismo envío no cambian nada).
+- `src/components/estados/BloqueDatos.tsx`: compone `Esqueleto`, `EstadoVacio`, `EstadoError` y `EstadoSinPermiso`. Con plazos propios (por defecto): «Cargando» una vez (lo anuncia `Esqueleto`), aviso visible y anunciado una vez a los 10 s, error `tarda_demasiado` con referencia `N-` a los 30 s sin cancelar nada (el bloque no tiene petición; si la vista cambia el estado después, el error se retira), «Reintentar» (`alReintentar` de la vista) que reinicia los plazos y deja el foco en el bloque si se pierde, y **un solo anuncio urgente por entrada en error** (cierra el menor 26 c). Con `plazos="externos"` los lleva quien lo usa. Sin permiso se pinta exactamente como `EstadoSinPermiso` suelto, sin envoltorio ni más propiedad que la ruta del Resumen. Los hijos solo se pintan con `datos` (o, con `conservarHijos`, ocultos; nunca en sin permiso).
+- `ZonaDeDatos` usa `BloqueDatos` (`plazos="externos"`, `anuncia={false}`, `conservarHijos`): el proveedor del periodo sigue llevando plazos, anuncios y foco; la zona ya no pinta su carga ni su error a mano. `Esqueleto` con `anunciarCarga={false}` tampoco anuncia la carga lenta (antes, con dos zonas, la anunciarían tres).
+- Muestra: entrada `bloque-datos` con 12 estados (páginas fijas en `src/app/muestra/componentes/bloque-datos/`), `_vistas/estados/{DemoDeBloque,VistaDeBloque}.tsx` y textos en `textos-estados.ts`. Los textos de los componentes salen de `TEXTOS` (sin textos nuevos en producción).
+
+### Decisiones del ingeniero (revocables)
+
+1. **Estados**: los cinco del encargo (`carga`, `vacio`, `error`, `sin_permiso`, `datos`). El diseño dice que sin permiso es de la vista entera; `BloqueDatos` lo admite para que la vista lo use como vehículo, y lo pinta como `EstadoSinPermiso` suelto (sin envoltorio). Los **parciales** no son un sexto estado: cada fuente es su propio `BloqueDatos` (diseño, REQ-028); no hay un componente «conjunto».
+2. **Plazos propios del bloque, sin petición**: el bloque cuenta 10 s y 30 s desde que está en `carga` y a los 30 s se pinta como error `tarda_demasiado`; la vista sigue pudiendo cambiar `estado` (la «respuesta tardía») y el error se retira. «Reintentar» no vuelve a pedir nada por sí mismo: llama a `alReintentar` de la vista y reinicia sus plazos. Sin `alReintentar` no hay botón.
+3. **Respuesta tardía = `reducirLectura`** (lógica pura, `bloque.ts`): cuenta envíos; solo resuelve la respuesta del envío en curso y mientras siga en `carga`. Es lo que usa la muestra; la vista real decide si usa esta función o la suya.
+4. **Anuncio del error**: lo hace `BloqueDatos` (urgente, una vez por entrada en `error`, con el texto del motivo y la referencia si es válida); con `plazos="externos"` y `anuncia={false}` lo hace quien lo usa (el proveedor del periodo). Si el error llega sin referencia, el anuncio lleva solo el texto del motivo y `EstadoError` pinta su `N-` tras hidratar.
+5. **Foco**: al retirarse el error por «Reintentar» (plazos propios), si el foco se pierde pasa al envoltorio del bloque (`tabIndex=-1`). Con plazos externos no se toca: el proveedor lo lleva al `select`.
+6. **`ZonaDeDatos` con `BloqueDatos`**: la carga de cada zona pasa a ser `Esqueleto` (tarjeta en cifras, tabla en contenido) en lugar del texto «Cargando». Sin perder cobertura: `periodo-servidor.spec.ts`, `periodo-transicion.test.tsx` y `estados-componentes.test.tsx` siguen, con tres aserciones de pruebas existentes adaptadas (la lista de archivos de `estados/`, «la fuente de `ZonaDeDatos`» y el envoltorio `contents`, que ahora lleva `data-estado="datos"`).
+7. **`Esqueleto` con `anunciarCarga={false}`** tampoco anuncia la carga lenta (quien anuncia la carga anuncia que tarda).
+8. **Muestra**: «Responder…» son botones nativos de la muestra con la clase del botón secundario (como en `DemoDeAvisos`); el marcador de la prueba de desplazamiento es `data-pie-del-bloque`.
+
+### Pruebas, primero en rojo
+
+`tests/unit/diseno/bloque-logica.test.ts` y `bloque-componente.test.tsx` se escribieron **antes** de `bloque.ts` y `BloqueDatos.tsx`: en rojo, sin módulo (`bloque-rojo-unitaria.txt`). El código vino después; `bloque-datos.spec.ts` se escribió con el componente hecho y se ejecutó entonces por primera vez.
+
+| Requisito | Prueba |
+| --- | --- |
+| REQ-025, CA-016 (cinco estados, lista cerrada; desconocido = error) | `bloque-logica.test.ts`; `bloque-componente.test.tsx`; `bloque-datos.spec.ts` «los cinco estados» |
+| REQ-023, REQ-069, CA-048 (aviso a los 10 s visible y anunciado una vez; error a los 30 s sin cancelar; «Cargando» una vez) | `bloque-logica.test.ts` (plazos; un tiempo no numérico cierra en fallo); `bloque-datos.spec.ts` «carga lenta a los 10 s y error a los 30 s» con `page.clock`: 10 s, margen sembrado de 27 s, 30 s, anuncios corteses `[Cargando, Está tardando…]`, 1 anuncio urgente y sin cambios a +60 s |
+| Reintento: plazos reiniciados, foco, un anuncio más | `bloque-datos.spec.ts` «Reintentar tras los 30 s» (foco en `[data-bloque]`, «Cargando» dos veces, segundo error a otros 30 s, 2 anuncios urgentes) |
+| Respuesta tardía: se retira el error, nunca error y tarjeta a la vez; la de un envío anterior no pisa | `bloque-logica.test.ts` (`reducirLectura`); `bloque-datos.spec.ts` (observador de mutaciones: 0 fotogramas mezclados; respuestas cruzadas de tres envíos) |
+| Menor 26 (c), REQ-057 (error anunciado una sola vez, con referencia) | `anuncioDeError` en `bloque-logica.test.ts`; `bloque-datos.spec.ts` «el error se anuncia una sola vez» (carga inicial en error, tras «Reintentar» y una fuente de tres) |
+| REQ-028 (parciales) | `bloque-componente.test.tsx` «datos parciales»; `bloque-datos.spec.ts` «datos parciales» (el bloque fallido lo dice; las otras dos fuentes quedan intactas, byte a byte, tras reintentar solo la suya) |
+| REQ-027, REQ-077, CA-020 (sin permiso idéntico a inexistente) | `bloque-componente.test.tsx` (misma salida que `EstadoSinPermiso`, con propiedades colgadas y con hijos); `bloque-datos.spec.ts` (`outerHTML` igual al de `estado-sin-permiso/unico`; sin JavaScript). La igualdad con el 404 real sigue siendo de T-016 (h) |
+| REQ-064, menor 26 (h) (desplazamiento de diseño ≤ 0,1) | `bloque-datos.spec.ts` «desplazamiento de diseño»: `PerformanceObserver` de `layout-shift`, 5 casos a 1280 y a 375 px, más control sembrado (> 0,1). Medidas abajo |
+| PRUEBA-021 teclado, PRUEBA-014 colores forzados, PRUEBA-025 axe, PRUEBA-013 | `bloque-datos.spec.ts`; además `anchos.spec.ts`, `accesibilidad.spec.ts` y `red-y-direccion.spec.ts` recorren las 12 entradas nuevas del inventario sin tocarlas |
+| `ZonaDeDatos` sin perder cobertura | `periodo-servidor.spec.ts`, `periodo-transicion.test.tsx`, `estados-componentes.test.tsx` |
+
+### Desplazamiento de diseño medido (REQ-064, menor 26 h)
+
+(`bloque-playwright-completo.txt`.) Todos ≤ 0,1 (máximo 0,0274). Desplazamiento geométrico real de lo que hay debajo: tarjeta 0 px y gráfico 0 px a 1280 px (20 px a 375 px: el título y los ejes ocupan más líneas); **tabla de cinco filas 87 px (1280) y 439 px (375); tabla llena de 25 filas 1027 px y 2379 px; lista 42 px**. La métrica pasa porque el contenido de debajo queda casi siempre fuera de la ventana; la geometría no es «cero». **No he cambiado el alto del esqueleto**: el de tabla dibuja 5 filas (una página llena tiene 25, y una fila con etiqueta de estado mide 47 px y no 37) y es lo que dice REQ-023 («aproximado»). Si se quiere un esqueleto de tabla de 25 filas, o con el número de filas que dé la vista, es un cambio de `Esqueleto` (propiedad `filas`) con su prueba; queda como decisión. La prueba exige ±2 px solo en tarjeta y gráfico (24 px para el gráfico a 375 px).
+
+### Comandos y resultado
+
+Con el candado de suite tomado a las 09:52 y liberado al terminar; puerto 3111 (y 3115 y 3116 para el extra), una copia temporal de `playwright.config.ts` (borrada); sin `vitest` en paralelo a Playwright.
+
+| Comando | Resultado |
+| --- | --- |
+| `npx vitest run tests/unit/diseno/bloque-logica.test.ts tests/unit/diseno/bloque-componente.test.tsx` antes del código | rojo: sin módulo (`bloque-rojo-unitaria.txt`) |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 55 archivos, 1785 pruebas en verde (1706 + 79 nuevas) |
+| `npx playwright test tests/e2e/muestra/bloque-datos.spec.ts` (primera ejecución) | 43 en verde y 2 rojos propios de la prueba (el marcador `data-marcador` chocaba con el de los puntos del gráfico); corregidos en la prueba |
+| `npx playwright test tests/e2e/muestra --workers=2` (completo, con todo corregido) | **4142 en verde, 0 rojos, 0 flaky, 0 saltados** (22,7 min, tras la corrección del revisor; `bloque-playwright-completo.txt`) |
+| `npm run tipos` | 0 errores |
+| `npx eslint --max-warnings 0 .` | 0 avisos |
+| `npx prettier --check` de lo tocado | limpio |
+| `npm run build` | correcto |
+
+Las capturas versionadas de `evidencias/T-014/capturas` que Playwright reescribe se restauraron con `git checkout`. No se ha ejecutado el `vitest` completo (a cargo de la coordinación).
+
+### Corrección del MAYOR 1 del revisor: `conservarHijos` no conservaba
+
+- **Fallo**: con `conservarHijos` los hijos vivían en `<div data-estado="datos" class="contents">` (hueco 0) y fuera de `datos` en `<div class="hidden">` (hueco 1): otra posición y otro elemento, así que React los desmontaba y volvía a montar en cada cambio, y un `Tabla` en los hijos perdía su orden y su página al cambiar de periodo.
+- **Corrección** (`BloqueDatos.tsx`): con `conservarHijos` los hijos van SIEMPRE en el mismo `<div>`, primero en el envoltorio, que solo alterna `contents` (con `data-estado="datos"`) y `hidden` (con `data-hijos-ocultos`); sin `conservarHijos`, solo se pintan en `datos`. Comentarios de `BloqueDatos.tsx` y `ZonaDeDatos.tsx` ajustados.
+- **Menor (a)**: el `tabIndex={-1}` del envoltorio solo se pone en error o después de haber mostrado uno (cuando el foco puede pasar al bloque).
+- **Prueba**: nueva página de la muestra `bloque-datos/conserva-hijos` (un contador de cliente dentro de un bloque con `conservarHijos`) y dos pruebas en `bloque-datos.spec.ts` (datos → carga → datos y datos → error → datos conservan la cuenta de 2 y el hijo está oculto fuera de datos).
+- **Rojo previo**: con la versión anterior del componente, 2 de 2 en rojo (`Expected "2", Received "0"`). Con la corrección, en verde.
+- Pruebas unitarias de marcado ajustadas al orden de atributos del nuevo `<div>` (`bloque-componente.test.tsx`, `periodo-transicion.test.tsx`): `npx vitest run tests/unit/diseno --maxWorkers=2` 55 archivos, 1785 en verde.
+- `eslint --max-warnings 0 .` 0 avisos; `npm run tipos` y `npm run build` correctos; `prettier --check` limpio salvo `tests/unit/plataforma/acciones-fijadas.test.ts`, ajeno y sin tocar. Puerto 3110, candado tomado y liberado, copia de configuración borrada.
+
+### Extra: Firefox y WebKit (PRUEBA-011 «en el componente», 10 repeticiones)
+
+Copia temporal de la configuración con los tres proyectos (borrada), `--repeat-each=10 --reporter=list`, 7 workers, un servidor por ejecución. Salida entera en `avisos-repeticiones-firefox.txt` y `avisos-repeticiones-webkit.txt`.
+
+- **Firefox (firefox-1572): 50 de 50 en verde.**
+- **WebKit (webkit-2388): 30 en verde y 20 rojos**: los 10 casos de «el aviso no roba el foco con ratón» y los 10 de «con táctil» (`avisos.spec.ts:668`, «el aviso no roba el foco: document.activeElement no es el mismo que antes de activarlo…»); las pausas por foco (teclado) pasan 20 de 20. **No he cambiado la prueba.** Diagnóstico con un guion aparte (borrado) sobre `/muestra/componentes/avisos-temporales/uno`: en WebKit, tras pulsar con ratón o con el dedo un botón, `document.activeElement` es `<main>` (la región de contenido, con `tabindex=-1`) y **no `document.body`**; lo mismo ocurre con el «Botón que no abre nada» (el control del motor). La prueba solo reconoce el cuerpo como destino del motor (`cuerpoTrasPulsar = activeElement === body`), así que compara con el botón y falla. **No es un robo de foco del componente** (el aviso queda abierto y el foco es el mismo que sin aviso): es una hipótesis de la prueba demasiado estrecha. Arreglo propuesto para `qa` (archivo suyo; no lo toco): medir el elemento activo tras el botón neutro y exigir ese mismo elemento tras el disparador. Hasta ese arreglo no hay 10 repeticiones en verde en WebKit para esa prueba: **NO COMPROBADO** (T-018).
+
+### No comprobado
+
+- **Firefox y WebKit para `bloque-datos.spec.ts` y la muestra**: solo se ejecutó el extra de avisos. Reensayo en T-018.
+- **Lector de pantalla real** (PRUEBA-028, manual): los anuncios se comprueban por el texto de las regiones.
+- **Petición real**: el bloque no tiene petición que cancelar; «sin cancelar» se comprueba porque la lectura sigue y su respuesta tardía se acepta. La vista real (021) debe conectar `alReintentar` y descartar respuestas de envíos anteriores (con `reducirLectura` o equivalente).
+- **Varios bloques cargando a la vez** anuncian «Cargando» cada uno. Una vista con varias fuentes puede pasar `plazos="externos"` y `anuncia={false}` a los demás; no hay coordinador.
+- **Igualdad con la dirección inexistente real** (404, cabeceras, cuerpo): T-016 (h) y PRUEBA-034.
+- **Alto del esqueleto de tabla y de lista** frente a contenido real: ver arriba.
+
+### Menores para el revisor y las siguientes tareas
+
+- Menor 26 (c): cerrado (`BloqueDatos` anuncia el error una vez, con prueba). Menor 26 (h): medido; el alto no se ha cambiado; decisión pendiente sobre el esqueleto de tabla.
+- Menor 15 (g) («Reintentar» duplicado por zona): sigue un botón por zona; ahora lo pinta `BloqueDatos`.
+- `diseno.md` líneas ~574 y ~1004 (el «Reintentar» provisional hasta `BloqueDatos`): al arquitecto, ya desfasadas.
+- La carga de `ZonaDeDatos` es ahora un `Esqueleto` (antes texto): cambia el aspecto del cambio de periodo; a validar por el `disenador-ui`.
+- `EstadoSinPermiso` sigue con `/admin` por defecto (menor 26 b): `BloqueDatos` pasa la ruta tal cual.

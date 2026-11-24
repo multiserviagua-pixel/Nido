@@ -1,16 +1,17 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { EstadoError } from "../estados/EstadoError";
-import { TEXTOS } from "../textos";
+import { BloqueDatos } from "../estados/BloqueDatos";
 import { useTransicionDePeriodo } from "./TransicionDePeriodo";
 
 /** Zona de datos del cuerpo (cifras o contenido) que sigue la transición del cambio de periodo
- * (diseño 020, «Cambio de periodo», punto 4). A los 30 s pendiente pasa a `error` (motivo de lista
- * cerrada, referencia `N-` validada y «Reintentar»; sin `aria-busy`). Pendiente: `aria-busy="true"` y estado `carga`; los
- * hijos de servidor se quedan montados pero ocultos, así que ninguna cifra del periodo anterior se
- * ve ni se lee como actual. El envoltorio de los hijos es siempre el mismo (`contents` o
- * `hidden`): React no los desmonta ni cambia el diseño de la rejilla. */
+ * (diseño 020, «Cambio de periodo», punto 4). Pinta un `BloqueDatos` con los plazos de la
+ * transición (`plazos="externos"`: los anuncios y el foco los lleva el proveedor): pendiente,
+ * esqueleto con `aria-busy="true"`; a los 30 s, `error` con el motivo `tarda_demasiado`, la
+ * referencia `N-` del proveedor y «Reintentar», sin `aria-busy`. Los hijos de servidor se quedan
+ * montados (`conservarHijos`: mismo elemento, sin desmontar, solo oculto con `hidden`), así que
+ * ninguna cifra del periodo anterior se ve ni se lee como actual y el estado de cliente de los
+ * hijos (orden y página de una tabla) sobrevive al cambio de periodo. */
 export function ZonaDeDatos({
   zona,
   className,
@@ -27,17 +28,19 @@ export function ZonaDeDatos({
       className={className}
       aria-busy={pendiente && !fallida ? "true" : undefined}
     >
-      {fallida ? (
-        // El motivo ya empieza por «No se ha podido cargar»: `EstadoError` no lo repite. Un solo
-        // componente para el error y su «Reintentar» (menor 15 (g)).
-        <EstadoError motivo="tarda_demasiado" referencia={referencia} alReintentar={reintentar} />
-      ) : pendiente ? (
-        <div data-estado="carga" className="text-texto-secundario">
-          <p>{TEXTOS.bloque.cargando}</p>
-          {lenta ? <p>{TEXTOS.bloque.cargaLenta}</p> : null}
-        </div>
-      ) : null}
-      <div className={pendiente || fallida ? "hidden" : "contents"}>{children}</div>
+      <BloqueDatos
+        estado={fallida ? "error" : pendiente ? "carga" : "datos"}
+        forma={zona === "cifras" ? "tarjeta" : "tabla"}
+        plazos="externos"
+        anuncia={false}
+        lenta={lenta}
+        motivo="tarda_demasiado"
+        referencia={referencia}
+        alReintentar={reintentar}
+        conservarHijos
+      >
+        {children}
+      </BloqueDatos>
     </div>
   );
 }
