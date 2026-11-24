@@ -34,3 +34,9 @@ El responsable **pausó la tarea programada en Claude** («ya la pausé»), para
 
 ## Reactivación de la tarea (24/11/2026)
 El responsable reactiva la tarea programada el 24/11/2026 por la mañana («Reactivo la tarea programada y esperamos»), con solo Gmail de pruebas y HumanaIA en la tarea. **El periodo de tres bloques de 24 h empieza con la primera ejecución programada posterior**; la hora la anota la persona al ver la primera ejecución. Uso semanal al reactivar: 90 % (tope autorizado: 95 %); la coordinación vigila y, si llega al tope, propone pausar la tarea.
+
+## Inicio del bloque 1 (24/11/2026)
+- Ejecución visible en la tarea («Agente de prueba HumanaIA · revisión horaria», sección Programadas): **24/11/2026 10:53** (hora de Madrid), hecha por la propia tarea; informe «Revisión completada (versión 0.1, sin órdenes pendientes)», estado `aviso`, 30 mensajes, 5 urgentes, 7 facturas, `prueba-revisado` a un mensaje, un borrador, sin enviar, eliminar ni compartir. Usó Gmail y el conector de HumanaIA.
+- El buzón creció en **dos** ejecuciones entre las 09:49 y las 10:55 (borradores 4 → 6 y `prueba-revisado` 4 → 6): la del minuto 53 de las 09:00 y la de las 10:00. **Inicio del bloque 1 inferido: 24/11/2026 09:53.** Debe confirmarse con el historial de la tarea (la persona).
+- Aprobaciones pedidas por el conector de HumanaIA en la ejecución de las 10:53: **ninguna visible** (dato de la propia tarea; falta la confirmación expresa de la persona).
+- Bloque 1: del 24/11 09:53 al 25/11 09:53. Se necesitan 8 ejecuciones programadas como mínimo.
