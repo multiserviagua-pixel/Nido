@@ -31,3 +31,6 @@ Exportación de 47 sucesos (solo códigos de lista cerrada, sin contenido; el re
 
 ## Pausa de la tarea (23/11/2026)
 El responsable **pausó la tarea programada en Claude** («ya la pausé»), para ahorrar uso hasta el reinicio del límite semanal y seguir al día siguiente. Hora exacta: la anota la persona (no consta). Hasta ahora: una ejecución a mano completa y, según los sucesos, las ejecuciones de los pasos 6 a 8 y la del 23/11 hacia las 19:54 (hora de Madrid). **El periodo de tres bloques de 24 h no ha empezado:** el reloj arranca con la primera ejecución programada, cuando se reactive la tarea. Se reactiva con el mismo interruptor, que conserva la aprobación automática (dato de Claude, sin comprobar).
+
+## Reactivación de la tarea (24/11/2026)
+El responsable reactiva la tarea programada el 24/11/2026 por la mañana («Reactivo la tarea programada y esperamos»), con solo Gmail de pruebas y HumanaIA en la tarea. **El periodo de tres bloques de 24 h empieza con la primera ejecución programada posterior**; la hora la anota la persona al ver la primera ejecución. Uso semanal al reactivar: 90 % (tope autorizado: 95 %); la coordinación vigila y, si llega al tope, propone pausar la tarea.
