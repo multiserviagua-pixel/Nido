@@ -17,7 +17,7 @@ Nunca entra contenido de correos: solo cifras y estados.
 2. Revisa `docs/PLAN.md` (fases 0 a 6) y `docs/TECNOLOGIAS.md` (decisiones y lo que queda por verificar).
 3. Abre la carpeta en Claude Code y escribe `/orquestar` para continuar con la función en curso (`specs/001-conector-prueba-real/`).
 
-## Fuente de verdad
+## Fuente
 
 | Qué | Dónde |
 | --- | --- |
