@@ -76,4 +76,15 @@ export const TEXTOS_ESTADOS = {
     fuente: "Fuente",
     marcador: "Contenido que va debajo del bloque",
   },
+  aviso: {
+    titulo: "Aviso de conexión de ejemplo",
+    explicaciones: {
+      "sin-conexion":
+        "Corta la red del navegador: el armazón dice «Sin conexión» y cada bloque con datos añade la hora en que los cargó.",
+      recuperada:
+        "Al volver la red, el aviso se retira, se anuncia «Conexión recuperada» y las horas de carga desaparecen.",
+    },
+    bloqueUno: "Primer bloque con datos",
+    bloqueDos: "Segundo bloque con datos",
+  },
 } as const;

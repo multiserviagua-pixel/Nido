@@ -332,14 +332,16 @@ describe("estados/ · código que no puede existir", () => {
     .filter((f) => /\.tsx?$/.test(f))
     .map((f) => [f, readFileSync(resolve(dir, f), "utf8").replace(/\/\/.*$/gm, "")] as const);
 
-  it("hay los siete archivos esperados", () => {
+  it("hay los nueve archivos esperados", () => {
     expect(fuentes.map(([f]) => f).sort()).toEqual([
+      "AvisoConexion.tsx",
       "BloqueDatos.tsx",
       "Esqueleto.tsx",
       "EstadoError.tsx",
       "EstadoSinPermiso.tsx",
       "EstadoVacio.tsx",
       "bloque.ts",
+      "conexion.ts",
       "logica.ts",
     ]);
   });

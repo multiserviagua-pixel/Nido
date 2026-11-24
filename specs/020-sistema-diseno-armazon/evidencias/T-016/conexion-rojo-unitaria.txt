@@ -1,0 +1,25 @@
+      9| import { AvisoConexion, PresentacionDeAviso } from "../../../src/compo…
+       | ^
+     10| import { BloqueDatos } from "../../../src/components/estados/BloqueDat…
+     11| import { TEXTOS } from "../../../src/components/textos";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/diseno/conexion-logica.test.ts [ tests/unit/diseno/conexion-logica.test.ts ]
+Error: Cannot find module '../../../src/components/estados/conexion' imported from C:/dev/agentes-correo-humanaia/.claude/worktrees/c-020-t010a/tests/unit/diseno/conexion-logica.test.ts
+ ❯ tests/unit/diseno/conexion-logica.test.ts:6:1
+      4| // y su texto en la hora de Madrid. Escrita antes que el módulo (en ro…
+      5| import { afterEach, describe, expect, it, vi } from "vitest";
+      6| import {
+       | ^
+      7|   ESTADOS_DE_CONEXION,
+      8|   PLAZO_DE_RECUPERADA_MS,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  11:23:21
+   Duration  622ms (setup 81%, worker 12%, transform 6%)
+

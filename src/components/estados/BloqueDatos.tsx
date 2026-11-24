@@ -15,6 +15,11 @@
 // desaparece, pasa al bloque. Quién descarta la respuesta de un envío anterior es la vista, con
 // `reducirLectura` (`bloque.ts`).
 //
+// Sin conexión (REQ-060, `conexion.ts`): los datos que se ven llevan «Datos cargados el …» con la
+// hora de Madrid en que llegaron, para que no se tomen por actuales. El bloque anota esa hora al
+// pasar a `datos` y la pinta detrás del contenido (los hijos no cambian de sitio); no pide ni
+// recarga nada por su cuenta, tenga o no conexión.
+//
 // Con `plazos="externos"` (la zona del cambio de periodo) los plazos, los anuncios y el foco los
 // lleva quien lo usa; el bloque solo pinta. El error se anuncia una sola vez, también aquí
 // (menor 26 c): lo anuncia quien detecta el fallo y nunca `EstadoError`, que no es región viva.
@@ -38,6 +43,7 @@ import {
   type EstadoDeBloque,
   type FaseDeCarga,
 } from "./bloque";
+import { textoDeHoraDeCarga, useMomentoDeCarga, useSinConexion } from "./conexion";
 import { EstadoError } from "./EstadoError";
 import { EstadoSinPermiso } from "./EstadoSinPermiso";
 import { EstadoVacio, type PropiedadesDeEstadoVacio } from "./EstadoVacio";
@@ -100,8 +106,11 @@ export function BloqueDatos({
   // Solo un bloque que ha mostrado un error puede recibir el foco al retirarse el botón.
   const [huboError, fijarHuboError] = useState(false);
 
+  const sinConexion = useSinConexion();
+
   const resuelto = resolverBloque(estado, propios ? fase : "normal");
   const mostrado = resuelto.estado;
+  const cargadoEn = useMomentoDeCarga(mostrado);
   const enCarga = resolverBloque(estado, "normal").estado === "carga";
 
   // Plazos de la carga: 10 s avisa, 30 s da error. No cancelan nada.
@@ -208,6 +217,14 @@ export function BloqueDatos({
       ) : conservarHijos ? null : (
         hijos
       )}
+      {sinConexion && mostrado === "datos" && cargadoEn !== null ? (
+        <p
+          data-hora-de-carga=""
+          className="mt-2 break-words text-cuerpo-menor text-texto-secundario"
+        >
+          {textoDeHoraDeCarga(cargadoEn)}
+        </p>
+      ) : null}
     </div>
   );
 }

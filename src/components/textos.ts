@@ -213,6 +213,14 @@ export const TEXTOS = {
     datosCargadosEl: "Datos cargados el",
   },
 
+  /** Aviso de conexión del armazón (T-016 (e); REQ-060): «Sin conexión» se anuncia una vez; la
+   * recuperación, también. Textos fijos: el aviso no admite texto libre. */
+  conexion: {
+    sinConexion: "Sin conexión",
+    explicacion: "Los datos que ves se cargaron antes y no se están actualizando.",
+    recuperada: "Conexión recuperada",
+  },
+
   /** Estado vacío (T-016 (c); REQ-022): qué pasa y qué hacer. El genérico solo sale si quien lo
    * pinta no da un texto fijo válido. Los de `ejemplo` son de la muestra (como `cifras.ejemplo`):
    * cada vista da los suyos desde su propio grupo (`tabla.vacio`, `alertas.vacio`...). */

@@ -305,3 +305,62 @@ Copia temporal de la configuración con los tres proyectos (borrada), `--repeat-
 - `diseno.md` líneas ~574 y ~1004 (el «Reintentar» provisional hasta `BloqueDatos`): al arquitecto, ya desfasadas.
 - La carga de `ZonaDeDatos` es ahora un `Esqueleto` (antes texto): cambia el aspecto del cambio de periodo; a validar por el `disenador-ui`.
 - `EstadoSinPermiso` sigue con `/admin` por defecto (menor 26 b): `BloqueDatos` pasa la ruta tal cual.
+
+## Parte (e): `AvisoConexion` y hora de carga en los bloques (24/11/2026)
+
+Rama `tarea/020-T-016e` desde `main` (8245e93). REQ-060, REQ-075, REQ-023, CA-045; PRUEBA-016 (sin conexión), 013, 017, 021, 014 y 025.
+
+### Qué se ha hecho
+
+- `src/components/estados/conexion.ts`: **fuente única** del estado de conexión. `estaSinConexion()` es la única lectura de `navigator.onLine` de `src/components/`; `suscribirConexion` y `useSinConexion()` (con `useSyncExternalStore`, `false` en el servidor); estados del aviso `conectado | sin_conexion | recuperada` con un reductor puro que cierra en fallo (estado o evento desconocidos = `sin_conexion`); `momentoDeCarga`, `crearRegistroDeCarga`/`useMomentoDeCarga` (almacén por bloque) y `textoDeHoraDeCarga` («Datos cargados el 12 nov 2026, 08:04», con `formatearFechaHora`, horario de Madrid).
+- `AvisoConexion.tsx` (en `estados/`, montado en `Armazon` antes de `main`): «Sin conexión» con una explicación fija, anunciado una vez por la región cortés (el texto visible no es región viva); al volver la red lo retira, anuncia «Conexión recuperada» una vez y la deja a la vista 8 s, sin tocar el foco. La pérdida no caduca. Solo `TEXTOS.conexion`; no hay propiedad de texto libre.
+- `BloqueDatos`: sin conexión y con `datos` a la vista añade `<p data-hora-de-carga>` DETRÁS del contenido (los hijos conservados no cambian de tipo ni de sitio). No pide ni recarga nada, tenga o no red; los plazos de 10 s y 30 s no cambian (un bloque en `datos` no tiene plazos).
+- `SelectorPeriodo` usa `estaSinConexion()` en lugar de `navigator.onLine`: misma conducta y misma cobertura (`cabecera.test.tsx` sigue exigiendo la comprobación antes de `iniciar` y de `router.replace`, y `periodo-servidor.spec.ts` no se ha tocado). Su aviso propio «Sin conexión. El periodo no ha cambiado.» y el del armazón conviven: dicen cosas distintas y cada uno se anuncia una vez.
+- `TEXTOS.conexion` (`sinConexion`, `explicacion`, `recuperada`); `TEXTOS.bloque.datosCargadosEl` y `TEXTOS.bloque.sinConexion` ya existían.
+- Muestra: entrada `aviso-conexion` en `inventario.ts` (estados `sin-conexion` y `recuperada`, una carpeta de página fija cada uno) con `VistaDeAviso` (dos bloques con datos ficticios); las páginas son las mismas porque el aviso lo cambia la red del navegador, no la página.
+
+### Pruebas (escritas antes; rojo previo en `conexion-rojo-unitaria.txt`, «Cannot find module»)
+
+| Requisito | Prueba |
+| --- | --- |
+| REQ-060: estados, cierre en fallo, hora en Madrid | `conexion-logica.test.ts` (estados, `estaSinConexion` con `navigator` simulado, momento de carga, texto, registro) |
+| REQ-060: marcado, sin región viva, sin texto libre, una sola lectura de `navigator`, hora detrás de los hijos | `conexion-componente.test.tsx` |
+| REQ-060, CA-045: red cortada real | `aviso-conexion.spec.ts` (PRUEBA-016): aviso, anuncio único, hora de cada bloque (`12 nov 2026, 08:04` con reloj fijado), 0 peticiones en 35 s, recuperación, pérdida que no caduca |
+| PRUEBA-017, 021 | solo textos fijos; nada enfocable; el foco no se mueve |
+| PRUEBA-013, 014, 025 | desborde a 320 px con zum 400 %; borde e icono en colores forzados; axe a 320 y 1280 px en claro y oscuro, sin conexión y recuperada |
+
+Nota honesta: `crearRegistroDeCarga` y su prueba se añadieron tras ver `eslint` (`react-hooks/set-state-in-effect` y `react-hooks/refs`) rechazar la primera versión (estado escrito desde un efecto / referencia leída al pintar); esa prueba no tuvo rojo previo. La prueba de Playwright no se ejecutó en rojo contra un componente ausente.
+
+### Comandos y resultado (parte (e))
+
+| Comando | Resultado |
+| --- | --- |
+| `npx vitest run tests/unit/diseno --maxWorkers=2` | 57 archivos, 1809 en verde |
+| Playwright de `tests/e2e/muestra` completo, Chromium, puerto 3114 (copia temporal de la configuración, borrada), `--workers=2`, candado tomado y liberado; salida entera en `aviso-playwright-completo.txt` | **4211 en verde, 0 rojos** (23,5 min); `aviso-conexion.spec.ts` solo: 15 de 15 |
+| `npm run tipos` | 0 errores |
+| `npx eslint --max-warnings 0 .` | 0 avisos |
+| `prettier --check` de `src`, `tests/e2e/muestra`, `tests/unit/diseno` y esta evidencia | limpio |
+| `npm run build` | correcto |
+
+Capturas versionadas de `evidencias/T-014/capturas` restauradas con `git checkout`. Vitest completo: a cargo de la coordinación. Firefox y WebKit: NO EJECUTADOS (por orden).
+
+### No comprobado
+
+- Firefox y WebKit (la red cortada con `context.setOffline` y los eventos `online`/`offline` pueden diferir): T-018.
+- Un navegador que **carga ya sin conexión** (`navigator.onLine` falso al hidratar): el estado derivado lo cubre (avisa y anuncia), pero no hay prueba en navegador porque una página no se puede servir sin red; solo la unitaria de `estaSinConexion`.
+- Lector de pantalla real (PRUEBA-028).
+- `navigator.onLine` verdadero con la red caída a mitad: no se detecta (riesgo ya aceptado en el diseño, punto 7).
+
+### Decisiones del ingeniero (revocables)
+
+1. «Conexión recuperada» se pinta 8 s (como un aviso temporal) además de anunciarse, porque el diseño lista «recuperada» como estado del aviso.
+2. La hora de carga es la del navegador al pasar el bloque a `datos` (no una hora que dé la vista); si la vista real tiene la hora de su lectura, bastaría una propiedad opcional.
+3. El aviso se coloca en el flujo, entre la cabecera y `main`: al aparecer empuja el contenido (es un suceso, no la carga; REQ-064 no mide este caso). A validar por el `disenador-ui`.
+4. Las dos páginas de la muestra son iguales (el aviso lo da la red, no la página).
+5. Sin cambios en `docs/DISENO.md` ni en `excepciones.ts`, `valores.css`, `combinaciones.ts` ni `paquetes-de-cliente.ts`.
+
+### Menores
+
+- Comentario largo de `SelectorPeriodo.tsx` (líneas 16 a 19) sin reflujar.
+- `ZonaDeDatos` hereda la hora de carga por usar `BloqueDatos`; con `plazos="externos"` también se pinta.
+- `diseno.md` (~184, ~582) pide `AvisoConexion` «avisa a los bloques»: se hace por la fuente común, no por un aviso entre componentes; conviene anotarlo (al arquitecto).

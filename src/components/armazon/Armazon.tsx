@@ -4,6 +4,7 @@ import { Anunciador } from "../texto/Anunciador";
 import type { Area } from "./areas";
 import { Cabecera } from "./Cabecera";
 import type { DatosDeCuenta } from "./CuentaUsuario";
+import { AvisoConexion } from "../estados/AvisoConexion";
 import { EnlaceSaltar } from "./EnlaceSaltar";
 import { MenuLateral } from "./MenuLateral";
 import { ProveedorDeTransicion } from "./TransicionDePeriodo";
@@ -53,6 +54,7 @@ export function Armazon({
             cuenta={cuenta}
             periodo={periodo}
           />
+          <AvisoConexion />
           <main
             id={ID_CONTENIDO}
             tabIndex={-1}

@@ -248,12 +248,13 @@ describe("PRUEBA-012 · SelectorPeriodo: control nativo, etiqueta visible, lista
     expect(existsSync(resolve(RAIZ, "src/components/armazon/usePeriodo.ts"))).toBe(false);
   });
 
-  it("sin conexión no se navega: se comprueba navigator.onLine antes de iniciar la transición, con aviso visible y anunciado una vez, y se retira con `online`", () => {
+  it("sin conexión no se navega: se comprueba `estaSinConexion()` antes de iniciar la transición, con aviso visible y anunciado una vez, y se retira con `online`", () => {
     const f = leer("src/components/armazon/SelectorPeriodo.tsx");
     expect(TEXTOS.periodo.sinConexion).toBe("Sin conexión. El periodo no ha cambiado.");
-    expect(f).toMatch(/navigator\.onLine\s*===\s*false/);
+    expect(f).toMatch(/estaSinConexion\(\)/);
+    expect(f).not.toMatch(/navigator\./);
     // La comprobación va antes que `iniciar(` y que `router.replace(`.
-    const onLine = f.search(/if \(navigator\.onLine\s*===\s*false/);
+    const onLine = f.search(/if \(estaSinConexion\(\)/);
     expect(onLine).toBeGreaterThan(-1);
     expect(onLine).toBeLessThan(f.lastIndexOf("iniciar(() =>"));
     expect(onLine).toBeLessThan(f.lastIndexOf("router.replace(ruta"));

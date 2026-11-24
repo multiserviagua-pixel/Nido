@@ -13,13 +13,14 @@
 // falla o se descarta, vuelve al de la vista (`periodo.valor`, leído de la dirección en el
 // servidor). La ruta sale solo de `location.pathname` y pasa por `rutaParaCambiarPeriodo`, que la
 // descarta si no es interna; la consulta se lee de `location.search` solo a través del esquema de
-// la vista (`esquemaDeLaVista`). Con `navigator.onLine === false` al elegir no se navega (Next 16
+// la vista (`esquemaDeLaVista`). Sin conexión al elegir (`estaSinConexion()`, `estados/conexion.ts`) no se navega (Next 16
 // pasaría a una carga completa y el navegador enseñaría su página de error): el `select` se queda
 // en el periodo de las cifras que se ven, con el foco, y junto a él un aviso anunciado una vez que
 // se retira al siguiente cambio o con el evento `online` («Cambio de periodo», punto 7). No se guarda nada en el navegador (REQ-058). Este es el único
 // componente de `src/components/` que importa `next/navigation` (PRUEBA-008).
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useOptimistic, useRef, useState } from "react";
+import { estaSinConexion } from "../estados/conexion";
 import { anunciar } from "../texto/anuncios";
 import { TEXTOS } from "../textos";
 import {
@@ -68,7 +69,7 @@ export function SelectorPeriodo({ periodo }: { periodo: ConfiguracionDePeriodo }
           if (nueva === undefined) return;
           // Falso es fiable (no hay red): no se navega ni se abre la transición. El valor del
           // `select` sigue siendo el de la vista, así que React lo devuelve a él y el foco no sale.
-          if (navigator.onLine === false) {
+          if (estaSinConexion()) {
             fijarSinConexion(true);
             anunciar(TEXTOS.periodo.sinConexion);
             return;
